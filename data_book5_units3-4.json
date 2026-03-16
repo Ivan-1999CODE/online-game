@@ -1,0 +1,781 @@
+[
+    {
+        "category": "1. 單字",
+        "word": "temple",
+        "chinese": "寺廟",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "church",
+        "chinese": "教堂",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "space",
+        "chinese": "空間；空地",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "area",
+        "chinese": "地區；區域",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "movie",
+        "chinese": "電影",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "habit",
+        "chinese": "習慣",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "ticket",
+        "chinese": "票；券",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "trick",
+        "chinese": "把戲；騙局",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "action",
+        "chinese": "行動",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "Taiwanese",
+        "chinese": "臺灣人的；臺灣人",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "string",
+        "chinese": "細繩",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "tip",
+        "chinese": "指示；訣竅；小費",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "new",
+        "chinese": "新的",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "right",
+        "chinese": "對的；右邊的",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "same",
+        "chinese": "一樣的；相同的",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "different",
+        "chinese": "不同的",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "magic",
+        "chinese": "魔術(的)；魔法(的)",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "only",
+        "chinese": "唯一的；只；僅僅",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "hard",
+        "chinese": "辛苦的；困難的；硬的",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "easy",
+        "chinese": "容易的",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "difficult",
+        "chinese": "困難的",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "clean",
+        "chinese": "乾淨的；打掃",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "dirty",
+        "chinese": "骯髒的",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "free",
+        "chinese": "空閒的；免費的；自由的",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "bright",
+        "chinese": "鮮豔的；明亮的；晴朗的",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "public",
+        "chinese": "公眾的",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "convenient",
+        "chinese": "方便的",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "fresh",
+        "chinese": "新鮮的",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "dark",
+        "chinese": "黑暗的；深色的",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "possible",
+        "chinese": "可能的",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "correct",
+        "chinese": "正確的；訂正",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "dangerous",
+        "chinese": "危險的",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "common",
+        "chinese": "普遍的；共同的",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "national",
+        "chinese": "國家的；國立的",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "present",
+        "chinese": "出席的；現在",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "modern",
+        "chinese": "現代的",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "foreign",
+        "chinese": "外國的",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "carry",
+        "chinese": "攜帶；搬運",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "hide",
+        "chinese": "躲藏；隱藏",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "smoke",
+        "chinese": "抽菸；煙",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "fry",
+        "chinese": "煎；炸；炒",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "boil",
+        "chinese": "煮沸",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "lie",
+        "chinese": "說謊；躺",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "type",
+        "chinese": "打字；種類",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "notice",
+        "chinese": "注意(到)；公告",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "set",
+        "chinese": "設置；創立",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "burn",
+        "chinese": "燃燒；燒焦",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "explain",
+        "chinese": "解釋；說明",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "very",
+        "chinese": "非常；很",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "really",
+        "chinese": "真地",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "together",
+        "chinese": "一起",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "even",
+        "chinese": "甚至",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "then",
+        "chinese": "那麼；然後",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "still",
+        "chinese": "仍然",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "away",
+        "chinese": "離......之遠",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "just",
+        "chinese": "就；只；僅",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "else",
+        "chinese": "其他",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "maybe",
+        "chinese": "或許",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "however",
+        "chinese": "然而",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "probably",
+        "chinese": "或許",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "actually",
+        "chinese": "實際上",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "perhaps",
+        "chinese": "或許",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "yet",
+        "chinese": "還(沒)；尚(未)",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "quite",
+        "chinese": "相當",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "widely",
+        "chinese": "廣泛地",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "2. 片語搭配字",
+        "word": "fall",
+        "phrase": "fall off",
+        "chinese": "摔下；掉下",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "2. 片語搭配字",
+        "word": "fall",
+        "phrase": "fall asleep",
+        "chinese": "睡著",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "2. 片語搭配字",
+        "word": "fall",
+        "phrase": "fall behind",
+        "chinese": "落後",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "2. 片語搭配字",
+        "word": "fall",
+        "phrase": "fall in love",
+        "chinese": "墜入愛河",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "4. 一字多義",
+        "word": "hard",
+        "definitions": [
+            {
+                "pos": "形容詞",
+                "mean": "辛苦的；困難的",
+                "example": "much harder than last year's"
+            },
+            {
+                "pos": "形容詞",
+                "mean": "硬的",
+                "example": "hard stone floor"
+            },
+            {
+                "pos": "副詞",
+                "mean": "努力地",
+                "example": "studying hard for the test"
+            }
+        ],
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "4. 一字多義",
+        "word": "free",
+        "definitions": [
+            {
+                "pos": "形容詞",
+                "mean": "空閒的",
+                "example": "in my free time"
+            },
+            {
+                "pos": "形容詞",
+                "mean": "免費的",
+                "example": "get a free gift"
+            },
+            {
+                "pos": "形容詞",
+                "mean": "自由的",
+                "example": "set the bird free"
+            }
+        ],
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "4. 一字多義",
+        "word": "correct",
+        "definitions": [
+            {
+                "pos": "形容詞",
+                "mean": "正確的",
+                "example": "correct way to turn off"
+            },
+            {
+                "pos": "動詞",
+                "mean": "訂正；更正",
+                "example": "correct your answer"
+            }
+        ],
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "4. 一字多義",
+        "word": "type",
+        "definitions": [
+            {
+                "pos": "動詞",
+                "mean": "打字",
+                "example": "type very fast"
+            },
+            {
+                "pos": "名詞",
+                "mean": "種類；類型",
+                "example": "many different types of bread"
+            }
+        ],
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "4. 一字多義",
+        "word": "notice",
+        "definitions": [
+            {
+                "pos": "動詞",
+                "mean": "注意（到）",
+                "example": "Nobody noticed Helen leave."
+            },
+            {
+                "pos": "名詞",
+                "mean": "公告；通知",
+                "example": "paste the notice on the board"
+            }
+        ],
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "tidy up",
+        "chinese": "整理；收拾",
+        "group": "家事相關",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "mop the floor",
+        "chinese": "拖地",
+        "group": "家事相關",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "wash / do the dishes",
+        "chinese": "洗碗盤",
+        "group": "家事相關",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "wash clothes / do the laundry",
+        "chinese": "洗衣服",
+        "group": "家事相關",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "hang... out",
+        "chinese": "把……晾在外面",
+        "group": "家事相關",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "clean up the room",
+        "chinese": "打掃房間",
+        "group": "家事相關",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "take out the trash / garbage",
+        "chinese": "倒垃圾",
+        "group": "家事相關",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "show off",
+        "chinese": "炫耀",
+        "group": "off相關",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "start off",
+        "chinese": "出發",
+        "group": "off相關",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "take a day off",
+        "chinese": "請一天假",
+        "group": "off相關",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "feel like + V-ing",
+        "chinese": "想要……",
+        "group": "動作相關",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "set an example",
+        "chinese": "樹立榜樣",
+        "group": "動作相關",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "a set of",
+        "chinese": "一套",
+        "group": "其他",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "in common",
+        "chinese": "共同的",
+        "group": "其他",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "in order to",
+        "chinese": "為了",
+        "group": "其他",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "on the other hand",
+        "chinese": "另一方面",
+        "group": "其他",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "what's more",
+        "chinese": "而且",
+        "group": "其他",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "be made of",
+        "chinese": "由……製造",
+        "group": "其他",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "be covered with",
+        "chinese": "被……覆蓋",
+        "group": "其他",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "can't help but + V",
+        "chinese": "忍不住……",
+        "group": "其他",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "turn around / over",
+        "chinese": "迴轉 / 翻覆",
+        "group": "其他",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "Wait a minute / moment.",
+        "chinese": "等一下。",
+        "group": "佳句",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "Count me in.",
+        "chinese": "算我一份。",
+        "group": "佳句",
+        "book": 5,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "Rome wasn't built in a day.",
+        "chinese": "羅馬不是一天造成的。",
+        "group": "佳句",
+        "book": 5,
+        "unit": "3-4"
+    }
+]

@@ -1,0 +1,929 @@
+[
+    {
+        "category": "1. 單字",
+        "word": "hair",
+        "chinese": "頭髮",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "head",
+        "chinese": "頭",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "eye",
+        "chinese": "眼睛",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "nose",
+        "chinese": "鼻子",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "ear",
+        "chinese": "耳朵",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "mouth",
+        "chinese": "嘴巴",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "shoulder",
+        "chinese": "肩膀",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "arm",
+        "chinese": "手臂",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "hand",
+        "chinese": "手",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "finger",
+        "chinese": "手指",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "knee",
+        "chinese": "膝蓋",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "stomach",
+        "chinese": "胃",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "leg",
+        "chinese": "腿",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "foot",
+        "chinese": "腳",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "face",
+        "chinese": "臉",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "lip",
+        "chinese": "嘴唇",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "tooth",
+        "chinese": "牙齒",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "back",
+        "chinese": "背部",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "body",
+        "chinese": "身體",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "heart",
+        "chinese": "心（臟）",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "nail",
+        "chinese": "指甲；釘子",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "neck",
+        "chinese": "脖子",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "throat",
+        "chinese": "喉嚨",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "toe",
+        "chinese": "腳趾",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "Internet (Net)",
+        "chinese": "網際網路",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "e-mail",
+        "chinese": "電子郵件",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "mail",
+        "chinese": "郵件；信件",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "screen",
+        "chinese": "螢幕",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "leader",
+        "chinese": "領導者",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "idea",
+        "chinese": "主意；意見",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "matter",
+        "chinese": "事件",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "case",
+        "chinese": "案例；情況",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "chance",
+        "chinese": "機會",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "dream",
+        "chinese": "夢想；夢見",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "excuse",
+        "chinese": "理由；藉口",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "fact",
+        "chinese": "事實",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "mistake",
+        "chinese": "錯誤",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "meeting",
+        "chinese": "會議",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "way",
+        "chinese": "途徑；方法",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "thing",
+        "chinese": "事情；物品",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "interview",
+        "chinese": "面試；採訪",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "ghost",
+        "chinese": "鬼",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "sale",
+        "chinese": "拍賣",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "story",
+        "chinese": "樓層",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "side",
+        "chinese": "邊",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "tool",
+        "chinese": "工具",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "trouble",
+        "chinese": "麻煩",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "voice",
+        "chinese": "聲音；歌喉",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "sight",
+        "chinese": "視力；景象",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "mind",
+        "chinese": "想法；心意；介意",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "rule",
+        "chinese": "規則",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "angle",
+        "chinese": "觀點；角度",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "die",
+        "chinese": "死亡",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "send",
+        "chinese": "寄送；派遣",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "sell",
+        "chinese": "賣",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "give",
+        "chinese": "給",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "show",
+        "chinese": "展示；表演",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "teach",
+        "chinese": "教",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "smell",
+        "chinese": "聞起來；氣味",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "sound",
+        "chinese": "聽起來；聲音",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "taste",
+        "chinese": "嚐起來；味道",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "hear",
+        "chinese": "聽到；聽說",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "feel",
+        "chinese": "感覺",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "get",
+        "chinese": "獲得；變得",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "become",
+        "chinese": "成為；變成",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "order",
+        "chinese": "點餐；訂購；順序",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "move",
+        "chinese": "移動；搬家",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "drop",
+        "chinese": "掉下；掉落",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "kill",
+        "chinese": "殺",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "kiss",
+        "chinese": "親吻",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "allow",
+        "chinese": "允許",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "define",
+        "chinese": "定義",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "download",
+        "chinese": "下載",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "upload",
+        "chinese": "上傳",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "2. 片語搭配字",
+        "word": "put",
+        "phrase": "put away",
+        "chinese": "收拾；放好",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "2. 片語搭配字",
+        "word": "put",
+        "phrase": "put on",
+        "chinese": "穿上；戴上",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "2. 片語搭配字",
+        "word": "put",
+        "phrase": "put off",
+        "chinese": "延後",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "2. 片語搭配字",
+        "word": "put",
+        "phrase": "put out",
+        "chinese": "撲滅",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "4. 一字多義",
+        "word": "face",
+        "definitions": [
+            {
+                "pos": "名詞",
+                "mean": "臉",
+                "example": "Iris covered her face with her hands and cried."
+            },
+            {
+                "pos": "動詞",
+                "mean": "面對（事實）",
+                "example": "Face the fact, Tim. We don’t have enough money."
+            }
+        ],
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "4. 一字多義",
+        "word": "mail",
+        "definitions": [
+            {
+                "pos": "名詞",
+                "mean": "郵件；信件",
+                "example": "She opened her mail as she ate her breakfast."
+            },
+            {
+                "pos": "動詞",
+                "mean": "郵寄",
+                "example": "Check the stamp before you mail the letter."
+            }
+        ],
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "4. 一字多義",
+        "word": "mind",
+        "definitions": [
+            {
+                "pos": "名詞",
+                "mean": "想法；心意",
+                "example": "Is there any hope that Dad will change his mind?"
+            },
+            {
+                "pos": "動詞",
+                "mean": "介意；留意",
+                "example": "Would you mind waiting outside?"
+            }
+        ],
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "4. 一字多義",
+        "word": "rule",
+        "definitions": [
+            {
+                "pos": "名詞",
+                "mean": "規則",
+                "example": "Please follow the rules in the museum."
+            },
+            {
+                "pos": "動詞",
+                "mean": "統治",
+                "example": "The robots rule the world in the movie."
+            }
+        ],
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "4. 一字多義",
+        "word": "show",
+        "definitions": [
+            {
+                "pos": "動詞",
+                "mean": "展示；呈現",
+                "example": "Show me how the machine works."
+            },
+            {
+                "pos": "名詞",
+                "mean": "表演",
+                "example": "The show is free for children under 12 years old."
+            }
+        ],
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "4. 一字多義",
+        "word": "order",
+        "definitions": [
+            {
+                "pos": "動詞/名詞",
+                "mean": "點餐；訂購",
+                "example": "Steven ordered a large pizza for lunch."
+            },
+            {
+                "pos": "名詞",
+                "mean": "順序",
+                "example": "Make sure you put the books back in the right order."
+            },
+            {
+                "pos": "名詞",
+                "mean": "命令",
+                "example": "I want the report ready by noon, and that’s an order."
+            }
+        ],
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "hand in",
+        "chinese": "繳交",
+        "group": "身體部位相關",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "face the problem / music",
+        "chinese": "面對問題 / 現實",
+        "group": "身體部位相關",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "lose heart",
+        "chinese": "喪失信心",
+        "group": "身體部位相關",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "come to mind",
+        "chinese": "浮現在腦海",
+        "group": "身體部位相關",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "catch one's eye",
+        "chinese": "吸引某人注意",
+        "group": "身體部位相關",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "keep an eye on",
+        "chinese": "照顧；留意",
+        "group": "身體部位相關",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "on foot",
+        "chinese": "步行",
+        "group": "身體部位相關",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "long face",
+        "chinese": "哭喪著臉",
+        "group": "身體部位相關",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "from head to toe",
+        "chinese": "從頭到腳",
+        "group": "身體部位相關",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "give / lend... a hand",
+        "chinese": "幫助某人",
+        "group": "身體部位相關",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 協助",
+        "phrase": "give... a big hand",
+        "chinese": "給某人熱烈掌聲",
+        "group": "身體部位相關",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 協助",
+        "phrase": "keep... in mind",
+        "chinese": "記得……",
+        "group": "身體部位相關",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 協助",
+        "phrase": "have a sweet tooth",
+        "chinese": "愛吃甜食",
+        "group": "身體部位相關",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 協助",
+        "phrase": "have butterflies in one's stomach",
+        "chinese": "緊張",
+        "group": "身體部位相關",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 協助",
+        "phrase": "write down",
+        "chinese": "寫下來",
+        "group": "down相關",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 協助",
+        "phrase": "slow down",
+        "chinese": "慢下來；減速",
+        "group": "down相關",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 協助",
+        "phrase": "put down",
+        "chinese": "放下",
+        "group": "down相關",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 協助",
+        "phrase": "cut down",
+        "chinese": "砍下；減少",
+        "group": "down相關",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 協助",
+        "phrase": "knock down",
+        "chinese": "擊倒",
+        "group": "down相關",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 協助",
+        "phrase": "fall down / over",
+        "chinese": "掉落",
+        "group": "down相關",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 協助",
+        "phrase": "cool down",
+        "chinese": "冷靜",
+        "group": "down相關",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 協助",
+        "phrase": "pin down",
+        "chinese": "確定",
+        "group": "down相關",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 協助",
+        "phrase": "burn down",
+        "chinese": "燒毀",
+        "group": "down相關",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 協助",
+        "phrase": "after all",
+        "chinese": "畢竟",
+        "group": "其他",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 協助",
+        "phrase": "in person",
+        "chinese": "親自",
+        "group": "其他",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 協助",
+        "phrase": "in return",
+        "chinese": "回送；回報",
+        "group": "其他",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 協助",
+        "phrase": "in big trouble",
+        "chinese": "有大麻煩",
+        "group": "其他",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 協助",
+        "phrase": "each other / one another",
+        "chinese": "互相 / 彼此",
+        "group": "其他",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 協助",
+        "phrase": "move away / to...",
+        "chinese": "搬走 / 搬至……",
+        "group": "其他",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 協助",
+        "phrase": "Of course / Of course not.",
+        "chinese": "當然 / 當然不。",
+        "group": "佳句",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 協助",
+        "phrase": "Don't take a chance.",
+        "chinese": "別冒險。",
+        "group": "佳句",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 協助",
+        "phrase": "I'm all ears.",
+        "chinese": "洗耳恭聽。",
+        "group": "佳句",
+        "book": 4,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 協助",
+        "phrase": "I have green fingers.",
+        "chinese": "我擅長園藝。",
+        "group": "佳句",
+        "book": 4,
+        "unit": "1-2"
+    }
+]

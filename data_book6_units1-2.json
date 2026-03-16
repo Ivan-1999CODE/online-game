@@ -1,0 +1,603 @@
+[
+    {
+        "category": "1. 單字",
+        "word": "pond",
+        "chinese": "池塘",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "sea",
+        "chinese": "海",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "river",
+        "chinese": "河",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "hill",
+        "chinese": "小山；丘陵",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "mountain",
+        "chinese": "山",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "island",
+        "chinese": "島",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "lake",
+        "chinese": "湖",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "land",
+        "chinese": "土地；地面",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "earth",
+        "chinese": "地球",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "moon",
+        "chinese": "月亮",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "star",
+        "chinese": "星星",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "sun",
+        "chinese": "太陽",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "planet",
+        "chinese": "星球",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "nature",
+        "chinese": "自然",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "sky",
+        "chinese": "天空",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "air",
+        "chinese": "空氣",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "grass",
+        "chinese": "草（地）",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "ground",
+        "chinese": "地面",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "mud",
+        "chinese": "土；泥土",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "earthquake",
+        "chinese": "地震",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "tree",
+        "chinese": "樹",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "flower",
+        "chinese": "花",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "seed",
+        "chinese": "種子",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "rose",
+        "chinese": "玫瑰",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "rock",
+        "chinese": "岩石",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "honey",
+        "chinese": "蜂蜜",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "can",
+        "chinese": "（鐵、鋁）罐",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "fire",
+        "chinese": "火",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "garbage",
+        "chinese": "垃圾",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "trash",
+        "chinese": "垃圾",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "list",
+        "chinese": "清單；列出",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "business",
+        "chinese": "事業；生意",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "member",
+        "chinese": "成員",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "error",
+        "chinese": "錯誤",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "God",
+        "chinese": "上帝；神",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "pack",
+        "chinese": "打包",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "hang",
+        "chinese": "掛",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "tip",
+        "chinese": "給小費；訣竅",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "bite",
+        "chinese": "咬",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "before",
+        "chinese": "在......之前",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "after",
+        "chinese": "在......之後",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "above",
+        "chinese": "高於；在......上面",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "below",
+        "chinese": "低於；在......下面",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "beside",
+        "chinese": "在......旁邊",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "behind",
+        "chinese": "在......後面",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "outside",
+        "chinese": "在......外面",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "inside",
+        "chinese": "在......裡面",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "across",
+        "chinese": "橫越；穿過",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "between",
+        "chinese": "在......之間",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "through",
+        "chinese": "經由；通過",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "by",
+        "chinese": "在旁邊；藉由；被",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "2. 片語搭配字",
+        "word": "by",
+        "phrase": "by chance",
+        "chinese": "偶然",
+        "example": "I met Ms. Lin on the street by chance.",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "2. 片語搭配字",
+        "word": "by",
+        "phrase": "by hand",
+        "chinese": "手工",
+        "example": "The gloves were made by hand.",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "2. 片語搭配字",
+        "word": "by",
+        "phrase": "by turns",
+        "chinese": "輪流",
+        "example": "The kids play on the slide by turns.",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "2. 片語搭配字",
+        "word": "by",
+        "phrase": "by heart",
+        "chinese": "記在心裡；背下來",
+        "example": "He learned the poem by heart.",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "4. 一字多義",
+        "word": "honey",
+        "definitions": [
+            {
+                "pos": "名詞",
+                "mean": "蜂蜜",
+                "example": "Add some honey and mix it with the tea."
+            },
+            {
+                "pos": "名詞",
+                "mean": "親愛的",
+                "example": "I love you with all my heart, honey."
+            }
+        ],
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "4. 一字多義",
+        "word": "can",
+        "definitions": [
+            {
+                "pos": "名詞",
+                "mean": "（鐵、鋁）罐",
+                "example": "You'll need a can of beans."
+            },
+            {
+                "pos": "助動詞",
+                "mean": "能夠",
+                "example": "Can I borrow yours?"
+            }
+        ],
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "4. 一字多義",
+        "word": "list",
+        "definitions": [
+            {
+                "pos": "名詞",
+                "mean": "清單",
+                "example": "I didn't see your name on the list."
+            },
+            {
+                "pos": "動詞",
+                "mean": "列出",
+                "example": "Ben listed several questions."
+            }
+        ],
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "4. 一字多義",
+        "word": "tip",
+        "definitions": [
+            {
+                "pos": "動詞",
+                "mean": "給...小費",
+                "example": "I tipped the waitress three pounds."
+            },
+            {
+                "pos": "名詞",
+                "mean": "訣竅；小費",
+                "example": "helpful tips for learning English"
+            }
+        ],
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "pack up",
+        "chinese": "打包",
+        "group": "動詞相關",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "ask for",
+        "chinese": "要求",
+        "group": "動詞相關",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "stop by",
+        "chinese": "短暫拜訪",
+        "group": "動詞相關",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "hang out",
+        "chinese": "閒晃；消磨時間",
+        "group": "動詞相關",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "do one's part",
+        "chinese": "盡自己本分",
+        "group": "動詞相關",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "used to",
+        "chinese": "過去經常...",
+        "group": "動詞相關",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "make a fire",
+        "chinese": "生火",
+        "group": "動詞相關",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "at the bottom of...",
+        "chinese": "在......底部",
+        "group": "of相關",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "at the age of...",
+        "chinese": "在......歲時",
+        "group": "of相關",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "at the end of...",
+        "chinese": "在......結束時",
+        "group": "of相關",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "as soon as...",
+        "chinese": "一......就......",
+        "group": "其他",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "as long as",
+        "chinese": "只要......就......",
+        "group": "其他",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "as for",
+        "chinese": "至於",
+        "group": "其他",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "for a rainy day",
+        "chinese": "以備不時之需",
+        "group": "其他",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "It's not my business.",
+        "chinese": "這不關我的事。",
+        "group": "佳句",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "Thank goodness / God.",
+        "chinese": "謝天謝地。",
+        "group": "佳句",
+        "book": 6,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "God bless you.",
+        "chinese": "願上帝保佑你。",
+        "group": "佳句",
+        "book": 6,
+        "unit": "1-2"
+    }
+]

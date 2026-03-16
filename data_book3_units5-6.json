@@ -1,0 +1,893 @@
+[
+    {
+        "category": "1. 單字",
+        "word": "bicycle (bike)",
+        "chinese": "腳踏車",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "bus",
+        "chinese": "公車",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "car",
+        "chinese": "汽車",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "motorcycle",
+        "chinese": "重型機車",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "scooter",
+        "chinese": "輕型機車",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "train",
+        "chinese": "火車",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "taxi",
+        "chinese": "計程車",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "truck",
+        "chinese": "卡車",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "airplane (plane)",
+        "chinese": "飛機",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "ship",
+        "chinese": "船；艦",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "boat",
+        "chinese": "小船",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "metro",
+        "chinese": "大眾捷運系統",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "airport",
+        "chinese": "機場",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "block",
+        "chinese": "街區",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "station",
+        "chinese": "車站；（機構的）站、所、署、局",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "bridge",
+        "chinese": "橋梁",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "sidewalk",
+        "chinese": "人行道",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "traffic",
+        "chinese": "交通",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "season",
+        "chinese": "季節",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "spring",
+        "chinese": "春天；泉水",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "summer",
+        "chinese": "夏天",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "autumn / fall",
+        "chinese": "秋天",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "winter",
+        "chinese": "冬天",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "weather",
+        "chinese": "天氣",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "rainbow",
+        "chinese": "彩虹",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "typhoon",
+        "chinese": "颱風",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "cloud",
+        "chinese": "雲",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "wind",
+        "chinese": "風",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "snow",
+        "chinese": "雪；下雪",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "rain",
+        "chinese": "雨；下雨",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "shower",
+        "chinese": "陣雨；淋浴",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "hour",
+        "chinese": "小時",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "minute",
+        "chinese": "分鐘",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "second",
+        "chinese": "秒",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "moment",
+        "chinese": "時刻；瞬間",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "half",
+        "chinese": "一半",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "quarter",
+        "chinese": "十五分鐘；四分之一",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "day",
+        "chinese": "日；天",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "year",
+        "chinese": "年",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "time",
+        "chinese": "時間",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "today",
+        "chinese": "今天",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "tonight",
+        "chinese": "今晚",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "tomorrow",
+        "chinese": "明天",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "yesterday",
+        "chinese": "昨天",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "a.m.",
+        "chinese": "上午；凌晨",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "p.m.",
+        "chinese": "下午；晚上",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "o'clock",
+        "chinese": "整點鐘",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "now",
+        "chinese": "現在",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "future",
+        "chinese": "未來",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "past",
+        "chinese": "過去；經過",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "dry",
+        "chinese": "乾的",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "wet",
+        "chinese": "潮溼的",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "cloudy",
+        "chinese": "多雲的；陰天的",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "sunny",
+        "chinese": "晴朗的",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "warm",
+        "chinese": "溫暖的",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "cool",
+        "chinese": "涼爽的",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "cold",
+        "chinese": "冷的",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "rainy",
+        "chinese": "下雨的",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "snowy",
+        "chinese": "下雪的",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "windy",
+        "chinese": "多風的",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "clear",
+        "chinese": "晴朗的",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "pick",
+        "chinese": "撿；摘；挑選",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "arrive",
+        "chinese": "抵達",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "drive",
+        "chinese": "駕駛（車）",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "fly",
+        "chinese": "飛行；駕駛（飛機）",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "ride",
+        "chinese": "騎（車、馬）",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "sail",
+        "chinese": "航行；駕駛（船）",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "land",
+        "chinese": "著陸；降落",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "turn",
+        "chinese": "轉（向）；翻頁",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "end",
+        "chinese": "結束",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "check",
+        "chinese": "檢查；查詢",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "cross",
+        "chinese": "跨過；越過",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "enter",
+        "chinese": "進入",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "2. 片語搭配字",
+        "word": "get",
+        "phrase": "get along",
+        "chinese": "相處",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "2. 片語搭配字",
+        "word": "get",
+        "phrase": "get in",
+        "chinese": "上（小車）",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "2. 片語搭配字",
+        "word": "get",
+        "phrase": "get on",
+        "chinese": "上（大型交通工具）",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "2. 片語搭配字",
+        "word": "get",
+        "phrase": "get off",
+        "chinese": "下車",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "4. 一字多義",
+        "word": "train",
+        "definitions": [
+            {
+                "pos": "名詞",
+                "mean": "火車",
+                "example": "My dad goes to work by train."
+            },
+            {
+                "pos": "動詞",
+                "mean": "訓練",
+                "example": "My job is to train dogs."
+            }
+        ],
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "4. 一字多義",
+        "word": "block",
+        "definitions": [
+            {
+                "pos": "名詞",
+                "mean": "街區",
+                "example": "Let's take a walk around the block."
+            },
+            {
+                "pos": "動詞",
+                "mean": "堵住",
+                "example": "The police cars blocked the road."
+            }
+        ],
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "4. 一字多義",
+        "word": "past",
+        "definitions": [
+            {
+                "pos": "名詞",
+                "mean": "過去",
+                "example": "Few people know about his past."
+            },
+            {
+                "pos": "介系詞",
+                "mean": "經過",
+                "example": "It's half past ten."
+            }
+        ],
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "4. 一字多義",
+        "word": "clear",
+        "definitions": [
+            {
+                "pos": "形容詞",
+                "mean": "晴朗的",
+                "example": "We like to go on a picnic on a clear day."
+            },
+            {
+                "pos": "形容詞",
+                "mean": "清楚的；清澈的",
+                "example": "The question wasn't clear enough."
+            }
+        ],
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "4. 一字多義",
+        "word": "land",
+        "definitions": [
+            {
+                "pos": "動詞",
+                "mean": "著陸；降落",
+                "example": "The plane landed safely."
+            },
+            {
+                "pos": "名詞",
+                "mean": "土地；地面",
+                "example": "The farmer owns a lot of land."
+            }
+        ],
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "4. 一字多義",
+        "word": "turn",
+        "definitions": [
+            {
+                "pos": "動詞",
+                "mean": "轉（向）",
+                "example": "Turn left at the park."
+            },
+            {
+                "pos": "名詞",
+                "mean": "機會",
+                "example": "Judy and I take turns taking care of Grandma."
+            }
+        ],
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "get / be lost",
+        "chinese": "迷路",
+        "group": "方向指引",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "show someone the way",
+        "chinese": "指路",
+        "group": "方向指引",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "show someone around",
+        "chinese": "帶某人四處看",
+        "group": "方向指引",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "along the way",
+        "chinese": "沿途",
+        "group": "方向指引",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "pass by",
+        "chinese": "經過",
+        "group": "方向指引",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "turn right / left",
+        "chinese": "右／左轉",
+        "group": "方向指引",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "get to / arrive at / arrive in",
+        "chinese": "抵達",
+        "group": "方向指引",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "check in / check out",
+        "chinese": "登記住宿 / 退房",
+        "group": "方向指引",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "grow up",
+        "chinese": "長大",
+        "group": "up相關",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "show up",
+        "chinese": "出現",
+        "group": "up相關",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "pick up",
+        "chinese": "接人；撿起",
+        "group": "up相關",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "clean up",
+        "chinese": "徹底清掃",
+        "group": "up相關",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "light up",
+        "chinese": "照亮",
+        "group": "up相關",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "bring up",
+        "chinese": "扶養",
+        "group": "up相關",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "set up",
+        "chinese": "設定；建立",
+        "group": "up相關",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "open up",
+        "chinese": "吐露心聲",
+        "group": "up相關",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "in the past / future",
+        "chinese": "在過去 / 未來",
+        "group": "時間相關",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "in the end",
+        "chinese": "最後",
+        "group": "時間相關",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "in season",
+        "chinese": "當季的",
+        "group": "時間相關",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "some day",
+        "chinese": "有一天",
+        "group": "時間相關",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "all night / all day long",
+        "chinese": "整夜 / 整天",
+        "group": "時間相關",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "all the time",
+        "chinese": "一直",
+        "group": "時間相關",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "from now / then on",
+        "chinese": "從現在 / 那時起",
+        "group": "時間相關",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "around the clock",
+        "chinese": "不眠不休地",
+        "group": "時間相關",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "of all time",
+        "chinese": "有史以來",
+        "group": "時間相關",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "Excuse me.",
+        "chinese": "抱歉；不好意思。",
+        "group": "佳句",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "Time flies.",
+        "chinese": "光陰似箭。",
+        "group": "佳句",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "It rains cats and dogs.",
+        "chinese": "雨下得很大。",
+        "group": "佳句",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "Can I take a rain check?",
+        "chinese": "可以改日再約嗎？",
+        "group": "佳句",
+        "book": 3,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "Just a moment.",
+        "chinese": "等一下。",
+        "group": "佳句",
+        "book": 3,
+        "unit": "5-6"
+    }
+]

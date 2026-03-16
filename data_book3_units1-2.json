@@ -1,0 +1,928 @@
+[
+    {
+        "category": "1. 單字",
+        "word": "monkey",
+        "chinese": "猴子",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "horse",
+        "chinese": "馬",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "turtle",
+        "chinese": "烏龜",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "bird",
+        "chinese": "鳥",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "snake",
+        "chinese": "蛇",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "elephant",
+        "chinese": "大象",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "bear",
+        "chinese": "熊",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "lion",
+        "chinese": "獅子",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "tiger",
+        "chinese": "老虎",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "animal",
+        "chinese": "動物",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "pet",
+        "chinese": "寵物",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "dog",
+        "chinese": "狗",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "puppy",
+        "chinese": "小狗",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "mouse",
+        "chinese": "老鼠",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "rat",
+        "chinese": "大老鼠",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "chicken",
+        "chinese": "雞",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "hen",
+        "chinese": "母雞",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "cow",
+        "chinese": "母牛",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "duck",
+        "chinese": "鴨",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "goose",
+        "chinese": "鵝",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "sheep",
+        "chinese": "綿羊",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "goat",
+        "chinese": "山羊",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "zebra",
+        "chinese": "斑馬",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "cat",
+        "chinese": "貓",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "fox",
+        "chinese": "狐狸",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "frog",
+        "chinese": "青蛙",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "pig",
+        "chinese": "豬",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "rabbit",
+        "chinese": "兔子",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "guy",
+        "chinese": "傢伙",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "king",
+        "chinese": "國王",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "queen",
+        "chinese": "皇后",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "castle",
+        "chinese": "城堡",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "giant",
+        "chinese": "巨人；巨大的",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "neighbor",
+        "chinese": "鄰居",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "person",
+        "chinese": "人",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "people",
+        "chinese": "人們",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "stranger",
+        "chinese": "陌生人",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "teenager",
+        "chinese": "青少年",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "foreigner",
+        "chinese": "外國人",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "fool",
+        "chinese": "傻瓜；愚弄",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "visitor",
+        "chinese": "訪客；遊客",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "medicine",
+        "chinese": "藥",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "health",
+        "chinese": "健康",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "cold",
+        "chinese": "感冒",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "headache",
+        "chinese": "頭痛",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "fever",
+        "chinese": "發燒",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "death",
+        "chinese": "死亡",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "sore throat",
+        "chinese": "喉嚨痛",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "strong",
+        "chinese": "強壯的",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "well",
+        "chinese": "(身體) 好的",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "healthy",
+        "chinese": "健康的",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "comfortable",
+        "chinese": "舒服的",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "sick",
+        "chinese": "生病的",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "weak",
+        "chinese": "虛弱的",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "tired",
+        "chinese": "疲倦的",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "sore",
+        "chinese": "痛的",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "but",
+        "chinese": "但是",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "because",
+        "chinese": "因為",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "although / though",
+        "chinese": "雖然",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "so",
+        "chinese": "所以",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "while",
+        "chinese": "當......時",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "laugh",
+        "chinese": "大笑",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "smile",
+        "chinese": "微笑",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "climb",
+        "chinese": "爬；攀登",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "camp",
+        "chinese": "露營",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "surf",
+        "chinese": "衝浪",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "lose",
+        "chinese": "輸；失去",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "win",
+        "chinese": "贏",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "hope",
+        "chinese": "希望",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "visit",
+        "chinese": "拜訪；參觀",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "happen",
+        "chinese": "發生",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "hurt",
+        "chinese": "疼痛；傷害",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "tell",
+        "chinese": "告訴；分辨",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "guess",
+        "chinese": "猜測",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "change",
+        "chinese": "改變",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "feed",
+        "chinese": "餵",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "cheer",
+        "chinese": "歡呼",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "fail",
+        "chinese": "不及格；失敗",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "pass",
+        "chinese": "通過（考試）",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "work",
+        "chinese": "工作",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "build",
+        "chinese": "建造",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "must",
+        "chinese": "一定",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "may",
+        "chinese": "可能；可以",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "might",
+        "chinese": "可能；也許",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "will",
+        "chinese": "將會",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "should",
+        "chinese": "應該",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "2. 片語搭配字",
+        "word": "give",
+        "phrase": "give up",
+        "chinese": "放棄",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "2. 片語搭配字",
+        "word": "give",
+        "phrase": "give in",
+        "chinese": "繳交；投降",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "2. 片語搭配字",
+        "word": "give",
+        "phrase": "give away",
+        "chinese": "分送；給出",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "2. 片語搭配字",
+        "word": "give",
+        "phrase": "give back",
+        "chinese": "還回",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "4. 一字多義",
+        "word": "cold",
+        "definitions": [
+            {
+                "pos": "名詞",
+                "mean": "感冒",
+                "example": "Max caught a bad cold."
+            },
+            {
+                "pos": "形容詞",
+                "mean": "冷的",
+                "example": "It's cold in the house."
+            }
+        ],
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "4. 一字多義",
+        "word": "well",
+        "definitions": [
+            {
+                "pos": "形容詞",
+                "mean": "(身體)好的",
+                "example": "I hope you get well soon."
+            },
+            {
+                "pos": "副詞",
+                "mean": "好地",
+                "example": "My sister sings so well."
+            },
+            {
+                "pos": "名詞",
+                "mean": "水井",
+                "example": "She put the bucket into the well."
+            }
+        ],
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "4. 一字多義",
+        "word": "surf",
+        "definitions": [
+            {
+                "pos": "動詞",
+                "mean": "衝浪",
+                "example": "The waves now aren't big enough for surfing."
+            },
+            {
+                "pos": "動詞",
+                "mean": "上網",
+                "example": "Jim spent hours every day surfing the Net."
+            }
+        ],
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "4. 一字多義",
+        "word": "change",
+        "definitions": [
+            {
+                "pos": "動詞",
+                "mean": "改變",
+                "example": "I often change my password."
+            },
+            {
+                "pos": "名詞",
+                "mean": "零錢",
+                "example": "I told the waiter to keep the change."
+            }
+        ],
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "4. 一字多義",
+        "word": "work",
+        "definitions": [
+            {
+                "pos": "動詞",
+                "mean": "工作",
+                "example": "Fred works in a toy factory."
+            },
+            {
+                "pos": "名詞",
+                "mean": "作品",
+                "example": "We study many writers' works."
+            },
+            {
+                "pos": "名詞",
+                "mean": "工作",
+                "example": "My sister often brings her work home."
+            }
+        ],
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "catch / have a cold",
+        "chinese": "感冒",
+        "group": "痛症相關",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "have a bad cough",
+        "chinese": "咳得厲害",
+        "group": "痛症相關",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "have a runny nose",
+        "chinese": "流鼻水",
+        "group": "痛症相關",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "stay up",
+        "chinese": "熬夜",
+        "group": "痛症相關",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "under the weather",
+        "chinese": "不舒服",
+        "group": "痛症相關",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "take (the) medicine",
+        "chinese": "吃藥",
+        "group": "痛症相關",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "laugh at",
+        "chinese": "嘲笑",
+        "group": "動作相關",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "change into",
+        "chinese": "變成",
+        "group": "動作相關",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "run after",
+        "chinese": "追趕",
+        "group": "動作相關",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "cheer up",
+        "chinese": "振作",
+        "group": "動作相關",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "cheer for...",
+        "chinese": "為……喝采",
+        "group": "動作相關",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "care for...",
+        "chinese": "照顧……",
+        "group": "動作相關",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "care about",
+        "chinese": "關心；在乎",
+        "group": "動作相關",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "feed with",
+        "chinese": "餵食",
+        "group": "動作相關",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "keep / stop from...",
+        "chinese": "防止……",
+        "group": "動作相關",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "because of",
+        "chinese": "因為",
+        "group": "其他",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "thanks to",
+        "chinese": "幸虧；歸功於",
+        "group": "其他",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "thanks for + V-ing / N",
+        "chinese": "感謝……",
+        "group": "其他",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "goose egg",
+        "chinese": "零分",
+        "group": "其他",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "Guess what?",
+        "chinese": "你猜怎麼著？",
+        "group": "佳句",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "Lucky you.",
+        "chinese": "你真幸運。",
+        "group": "佳句",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "Poor you.",
+        "chinese": "你真可憐。",
+        "group": "佳句",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "Enough about me.",
+        "chinese": "關於我的部分講夠了。",
+        "group": "佳句",
+        "book": 3,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "What's the matter?",
+        "chinese": "怎麼了？",
+        "group": "佳句",
+        "book": 3,
+        "unit": "1-2"
+    }
+]

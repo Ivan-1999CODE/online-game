@@ -1,0 +1,772 @@
+[
+    {
+        "category": "1. 單字",
+        "word": "zero",
+        "chinese": "零（的）",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "dozen",
+        "chinese": "一打（十二個）",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "hundred",
+        "chinese": "百（的）",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "thousand",
+        "chinese": "千（的）",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "million",
+        "chinese": "百萬（的）",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "price",
+        "chinese": "價格；代價",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "money",
+        "chinese": "錢",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "dollar",
+        "chinese": "元",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "cent",
+        "chinese": "分（金錢單位）",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "change",
+        "chinese": "零錢",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "color",
+        "chinese": "顏色",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "black",
+        "chinese": "黑色（的）",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "blue",
+        "chinese": "藍色（的）",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "brown",
+        "chinese": "棕色（的）",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "gray",
+        "chinese": "灰色（的）",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "green",
+        "chinese": "綠色（的）",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "orange",
+        "chinese": "橘色（的）",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "pink",
+        "chinese": "粉紅色（的）",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "purple",
+        "chinese": "紫色（的）",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "red",
+        "chinese": "紅色（的）",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "white",
+        "chinese": "白色（的）",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "yellow",
+        "chinese": "黃色（的）",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "east",
+        "chinese": "東方（的）",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "west",
+        "chinese": "西方（的）",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "south",
+        "chinese": "南方（的）",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "north",
+        "chinese": "北方（的）",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "corner",
+        "chinese": "角落",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "top",
+        "chinese": "頂端；最好的",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "bottom",
+        "chinese": "底部",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "center",
+        "chinese": "中心；中央",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "here",
+        "chinese": "這裡",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "there",
+        "chinese": "那裡",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "back",
+        "chinese": "後面（的）",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "front",
+        "chinese": "前面（的）",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "left",
+        "chinese": "左邊（的）",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "right",
+        "chinese": "右邊（的）",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "middle",
+        "chinese": "中間（的）",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "act",
+        "chinese": "行動；表演",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "borrow",
+        "chinese": "借（入）",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "lend",
+        "chinese": "借（出）",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "spend",
+        "chinese": "花費（時間/金錢）",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "cost",
+        "chinese": "花費（金錢）；費用",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "pay",
+        "chinese": "付錢",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "clap",
+        "chinese": "拍手；鼓掌",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "mean",
+        "chinese": "意指；刻薄的",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "agree",
+        "chinese": "同意",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "pull",
+        "chinese": "拉；抽出",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "push",
+        "chinese": "推",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "roll",
+        "chinese": "滾動；（一）捲",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "bow",
+        "chinese": "鞠躬",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "cheat",
+        "chinese": "欺騙；作弊",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "treat",
+        "chinese": "對待；請客",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "ago",
+        "chinese": "在……之前",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "already",
+        "chinese": "已經",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "once",
+        "chinese": "一次",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "twice",
+        "chinese": "兩次",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "1. 單字",
+        "word": "soon",
+        "chinese": "很快地",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "2. 片語搭配字",
+        "word": "take",
+        "phrase": "take off",
+        "chinese": "脫下；起飛",
+        "example": "Take off your shoes. They're wet.",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "2. 片語搭配字",
+        "word": "take",
+        "phrase": "take down",
+        "chinese": "記下；寫下",
+        "example": "Make sure you take down notes.",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "2. 片語搭配字",
+        "word": "take",
+        "phrase": "take out",
+        "chinese": "拿出去；取出",
+        "example": "Can you take out the garbage?",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "2. 片語搭配字",
+        "word": "take",
+        "phrase": "take care of",
+        "chinese": "照顧",
+        "example": "My mom took care of me all night.",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "4. 一字多義",
+        "word": "kid",
+        "definitions": [
+            {
+                "pos": "名詞",
+                "mean": "小孩"
+            },
+            {
+                "pos": "動詞",
+                "mean": "開玩笑"
+            }
+        ],
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "4. 一字多義",
+        "word": "cook",
+        "definitions": [
+            {
+                "pos": "名詞",
+                "mean": "廚師"
+            },
+            {
+                "pos": "動詞",
+                "mean": "煮；烹飪"
+            }
+        ],
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "4. 一字多義",
+        "word": "pretty",
+        "definitions": [
+            {
+                "pos": "形容詞",
+                "mean": "漂亮的"
+            },
+            {
+                "pos": "副詞",
+                "mean": "相當"
+            }
+        ],
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "4. 一字多義",
+        "word": "heavy",
+        "definitions": [
+            {
+                "pos": "形容詞",
+                "mean": "重的；厚實的"
+            },
+            {
+                "pos": "形容詞",
+                "mean": "大量的",
+                "example": "heavy traffic"
+            }
+        ],
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "4. 一字多義",
+        "word": "fine",
+        "definitions": [
+            {
+                "pos": "形容詞",
+                "mean": "好的"
+            },
+            {
+                "pos": "形容詞",
+                "mean": "晴朗的"
+            },
+            {
+                "pos": "名詞",
+                "mean": "罰款"
+            }
+        ],
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "4. 一字多義",
+        "word": "back",
+        "definitions": [
+            {
+                "pos": "名詞",
+                "mean": "後面",
+                "example": "in the back of the car"
+            },
+            {
+                "pos": "名詞",
+                "mean": "背部",
+                "example": "back problem"
+            }
+        ],
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "4. 一字多義",
+        "word": "cost",
+        "definitions": [
+            {
+                "pos": "動詞",
+                "mean": "花費",
+                "example": "It cost me NT$10,000."
+            },
+            {
+                "pos": "名詞",
+                "mean": "費用；成本",
+                "example": "the cost of going to college"
+            }
+        ],
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "4. 一字多義",
+        "word": "mean",
+        "definitions": [
+            {
+                "pos": "動詞",
+                "mean": "意指",
+                "example": "What do you mean?"
+            },
+            {
+                "pos": "形容詞",
+                "mean": "刻薄的；吝嗇的",
+                "example": "Don't be so mean!"
+            }
+        ],
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "4. 一字多義",
+        "word": "roll",
+        "definitions": [
+            {
+                "pos": "動詞",
+                "mean": "滾動",
+                "example": "The ball is rolling quickly."
+            },
+            {
+                "pos": "名詞",
+                "mean": "（一）捲",
+                "example": "cheese roll"
+            }
+        ],
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "4. 一字多義",
+        "word": "bow",
+        "definitions": [
+            {
+                "pos": "動詞",
+                "mean": "鞠躬",
+                "example": "Matt bowed and left."
+            },
+            {
+                "pos": "名詞",
+                "mean": "弓；蝴蝶結",
+                "example": "tie the ribbon in a bow"
+            }
+        ],
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "pay for",
+        "chinese": "付錢；付出代價",
+        "group": "動作相關",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "hear of / from",
+        "chinese": "聽說 / 收到...訊息",
+        "group": "動作相關",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "drop out / stand out",
+        "chinese": "退出 / 突出",
+        "group": "動作相關",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "work out / pick on",
+        "chinese": "解決 / 找碴",
+        "group": "動作相關",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "borrow from / lend to",
+        "chinese": "借入 / 借出",
+        "group": "動作相關",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "get into trouble",
+        "chinese": "招惹麻煩",
+        "group": "動作相關",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "take turns / notes / pictures",
+        "chinese": "輪流 / 記筆記 / 拍照",
+        "group": "take相關",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "take a look / nap / walk / bath",
+        "chinese": "看一看 / 小睡 / 散步 / 泡澡",
+        "group": "take相關",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "take a break / rest",
+        "chinese": "休息",
+        "group": "take相關",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "take place / one's place",
+        "chinese": "發生 / 代替",
+        "group": "take相關",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "take action / up",
+        "chinese": "採取行動 / 開始從事",
+        "group": "take相關",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "take seriously / hard",
+        "chinese": "認真看待 / 受到沉重打擊",
+        "group": "take相關",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "had better",
+        "chinese": "最好......",
+        "group": "其他",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "not at all",
+        "chinese": "一點也不",
+        "group": "其他",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "in case / in that case",
+        "chinese": "倘若 / 既然那樣",
+        "group": "其他",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "in the shape of",
+        "chinese": "呈......的形狀",
+        "group": "其他",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "once / twice a year",
+        "chinese": "一年一/兩次",
+        "group": "其他",
+        "book": 4,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "I mean it.",
+        "chinese": "我是說真的。",
+        "group": "佳句",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "Speak of the devil.",
+        "chinese": "說曹操，曹操到。",
+        "group": "佳句",
+        "book": 4,
+        "unit": "5-6"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "Once in a blue moon.",
+        "chinese": "千載難逢。",
+        "group": "佳句",
+        "book": 4,
+        "unit": "5-6"
+    }
+]

@@ -1,0 +1,882 @@
+[
+    {
+        "category": "1. 單字",
+        "word": "blackboard",
+        "chinese": "黑板",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "chalk",
+        "chinese": "粉筆",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "glue",
+        "chinese": "膠水",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "notebook",
+        "chinese": "筆記本",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "ruler",
+        "chinese": "尺",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "pen",
+        "chinese": "筆；原子筆",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "pencil",
+        "chinese": "鉛筆",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "marker",
+        "chinese": "白板筆；色筆",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "clock",
+        "chinese": "時鐘",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "map",
+        "chinese": "地圖",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "picture",
+        "chinese": "圖畫",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "book",
+        "chinese": "書",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "eraser",
+        "chinese": "橡皮擦；板擦",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "paper",
+        "chinese": "紙（張）",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "workbook",
+        "chinese": "習作",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "dictionary",
+        "chinese": "字典",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "letter",
+        "chinese": "信件",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "postcard",
+        "chinese": "明信片",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "seat",
+        "chinese": "座位",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "envelope",
+        "chinese": "信封",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "glasses",
+        "chinese": "眼鏡",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "note",
+        "chinese": "便條；短籤；筆記",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "band",
+        "chinese": "樂團",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "drum",
+        "chinese": "鼓",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "guitar",
+        "chinese": "吉他",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "piano",
+        "chinese": "鋼琴",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "violin",
+        "chinese": "小提琴",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "club",
+        "chinese": "社團；俱樂部",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "card",
+        "chinese": "卡片；紙牌",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "game",
+        "chinese": "比賽；遊戲",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "course",
+        "chinese": "課程",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "subject",
+        "chinese": "學科",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "art",
+        "chinese": "美術",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "history",
+        "chinese": "歷史",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "math (mathematics)",
+        "chinese": "數學",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "music",
+        "chinese": "音樂",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "science",
+        "chinese": "科學",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "PE (Physical Education)",
+        "chinese": "體育",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "language",
+        "chinese": "語言",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "sport",
+        "chinese": "運動",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "badminton",
+        "chinese": "羽毛球",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "basketball",
+        "chinese": "籃球",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "baseball",
+        "chinese": "棒球",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "tennis",
+        "chinese": "網球",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "soccer",
+        "chinese": "足球",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "group",
+        "chinese": "團體；群",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "player",
+        "chinese": "運動員；選手；播放器",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "prize",
+        "chinese": "獎品；獎金",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "exercise",
+        "chinese": "運動；習題",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "count",
+        "chinese": "數數；計算",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "catch",
+        "chinese": "趕上；抓住",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "help",
+        "chinese": "幫忙",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "hike",
+        "chinese": "健行",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "jog",
+        "chinese": "慢跑",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "swim",
+        "chinese": "游泳",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "sing",
+        "chinese": "唱歌",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "dance",
+        "chinese": "跳舞",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "draw",
+        "chinese": "繪畫",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "paint",
+        "chinese": "(用顏料) 畫；顏料；油漆",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "brush",
+        "chinese": "刷；刷子",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "like",
+        "chinese": "喜歡",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "love",
+        "chinese": "愛",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "join",
+        "chinese": "參加；加入",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "learn",
+        "chinese": "學習",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "study",
+        "chinese": "學習；研讀",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "ask",
+        "chinese": "問；要求",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "write",
+        "chinese": "寫",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "practice",
+        "chinese": "練習；實踐",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "read",
+        "chinese": "閱讀",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "speak",
+        "chinese": "說話；講",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "say",
+        "chinese": "說",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "1. 單字",
+        "word": "talk",
+        "chinese": "講話；交談",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "2. 片語搭配字",
+        "word": "come",
+        "phrase": "come over",
+        "chinese": "順道來訪",
+        "example": "They came over from the north to see me.",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "2. 片語搭配字",
+        "word": "come",
+        "phrase": "come down with",
+        "chinese": "因……生病",
+        "example": "I came down with a cold.",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "2. 片語搭配字",
+        "word": "come",
+        "phrase": "come in",
+        "chinese": "進來",
+        "example": "This is my new house. Please come in.",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "2. 片語搭配字",
+        "word": "come",
+        "phrase": "come up with",
+        "chinese": "想出",
+        "example": "I came up with a great idea.",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "4. 一字多義",
+        "word": "book",
+        "definitions": [
+            {
+                "pos": "名詞",
+                "mean": "書",
+                "example": "I am reading a book by Ashley Bryan."
+            },
+            {
+                "pos": "動詞",
+                "mean": "預訂",
+                "example": "Sally booked a flight to the UK."
+            }
+        ],
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "4. 一字多義",
+        "word": "letter",
+        "definitions": [
+            {
+                "pos": "名詞",
+                "mean": "信件",
+                "example": "I sent Mr. Li a letter of thanks today."
+            },
+            {
+                "pos": "名詞",
+                "mean": "字母",
+                "example": "There are 26 letters in the English alphabet."
+            }
+        ],
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "4. 一字多義",
+        "word": "glass",
+        "definitions": [
+            {
+                "pos": "名詞",
+                "mean": "眼鏡 (恆用複數)",
+                "example": "I put on glasses to see things better."
+            },
+            {
+                "pos": "名詞",
+                "mean": "玻璃杯 (可數)",
+                "example": "There are four glasses in the box."
+            },
+            {
+                "pos": "名詞",
+                "mean": "玻璃 (不可數)",
+                "example": "This type of glass doesn't break easily."
+            }
+        ],
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "4. 一字多義",
+        "word": "exercise",
+        "definitions": [
+            {
+                "pos": "動詞",
+                "mean": "運動",
+                "example": "You should exercise more to lose weight."
+            },
+            {
+                "pos": "名詞",
+                "mean": "運動",
+                "example": "Swimming is good exercise for the old."
+            },
+            {
+                "pos": "名詞",
+                "mean": "習題",
+                "example": "Please do the math exercises on page 10."
+            }
+        ],
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "4. 一字多義",
+        "word": "paint",
+        "definitions": [
+            {
+                "pos": "動詞",
+                "mean": "(用顏料) 畫",
+                "example": "I made a guitar and painted it red."
+            },
+            {
+                "pos": "名詞",
+                "mean": "顏料；油漆",
+                "example": "The paint on the bench is still wet."
+            }
+        ],
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "get up",
+        "chinese": "起床",
+        "group": "日常活動",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "wash one's face",
+        "chinese": "洗臉",
+        "group": "日常活動",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "brush one's teeth",
+        "chinese": "刷牙",
+        "group": "日常活動",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "make the bed",
+        "chinese": "整理床鋪",
+        "group": "日常活動",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "make breakfast",
+        "chinese": "做早餐",
+        "group": "日常活動",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "go to work",
+        "chinese": "去上班",
+        "group": "日常活動",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "help someone with something",
+        "chinese": "幫某人做某事",
+        "group": "日常活動",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "read a book",
+        "chinese": "看書",
+        "group": "日常活動",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "listen to music",
+        "chinese": "聽音樂",
+        "group": "日常活動",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "do exercise",
+        "chinese": "做運動",
+        "group": "日常活動",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "walk the dog",
+        "chinese": "遛狗",
+        "group": "日常活動",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "watch TV",
+        "chinese": "看電視",
+        "group": "日常活動",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "go to bed / sleep",
+        "chinese": "上床睡覺",
+        "group": "日常活動",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "play sports",
+        "chinese": "做運動",
+        "group": "play相關",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "play basketball",
+        "chinese": "打籃球",
+        "group": "play相關",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "play badminton",
+        "chinese": "打羽毛球",
+        "group": "play相關",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "play the guitar",
+        "chinese": "彈吉他",
+        "group": "play相關",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "play the piano",
+        "chinese": "彈鋼琴",
+        "group": "play相關",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "play the violin",
+        "chinese": "拉小提琴",
+        "group": "play相關",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "play cards",
+        "chinese": "玩牌",
+        "group": "play相關",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "play on the seesaw",
+        "chinese": "玩蹺蹺板",
+        "group": "play相關",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "play on the slide",
+        "chinese": "玩溜滑梯",
+        "group": "play相關",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "play on the swing",
+        "chinese": "玩盪秋千",
+        "group": "play相關",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "for example",
+        "chinese": "舉例來說",
+        "group": "其他",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "at the same time",
+        "chinese": "同時",
+        "group": "其他",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "in town",
+        "chinese": "在鎮上",
+        "group": "其他",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "have / had to",
+        "chinese": "必須",
+        "group": "其他",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "You bet.",
+        "chinese": "當然；的確。",
+        "group": "佳句",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "How's it going?",
+        "chinese": "近況如何？",
+        "group": "佳句",
+        "book": 2,
+        "unit": "1-2"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "I don't get it.",
+        "chinese": "我不了解。",
+        "group": "佳句",
+        "book": 2,
+        "unit": "1-2"
+    }
+]

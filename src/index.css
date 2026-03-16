@@ -1,0 +1,124 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Google Fonts - Pixel Fonts */
+@import url('https://fonts.googleapis.com/css2?family=DotGothic16&family=Press+Start+2P&family=VT323&display=swap');
+
+/* RPG Base Styles */
+body {
+  background-color: #201533;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+  font-family: 'DotGothic16', 'VT323', monospace;
+  color: #333;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+body.loaded {
+  opacity: 1;
+}
+
+/* Pixel Border Effect */
+.nes-border {
+  position: relative;
+  background: #e3ce9c;
+  border-style: solid;
+  border-width: 4px;
+  border-color: #4a3c31;
+  box-shadow:
+    -4px 0 0 0 #4a3c31,
+    4px 0 0 0 #4a3c31,
+    0 -4px 0 0 #4a3c31,
+    0 4px 0 0 #4a3c31;
+  margin: 4px;
+}
+
+.nes-border[style*="position: absolute"] {
+  margin: 0 !important;
+}
+
+.nes-btn {
+  border: 4px solid #000;
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  transition: all 0.1s;
+}
+
+.nes-btn:active {
+  transform: translateY(4px);
+}
+
+/* Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #201533;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #e3ce9c;
+  border: 2px solid #201533;
+  border-radius: 4px;
+}
+
+/* Animations */
+@keyframes bounce-pixel {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes shake {
+  10%, 90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+  20%, 80% {
+    transform: translate3d(2px, 0, 0);
+  }
+  30%, 50%, 70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+  40%, 60% {
+    transform: translate3d(4px, 0, 0);
+  }
+}
+
+.shake-effect {
+  animation: shake 0.5s cubic-bezier(.36, .07, .19, .97) both;
+}
+
+.text-shadow {
+  text-shadow: 2px 2px 0px #000;
+}
+
+.photo-border {
+  background-color: #fff;
+  padding: 4px 4px 20px 4px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+  transform: rotate(-2deg);
+  transition: transform 0.2s;
+}
+
+.photo-border:hover {
+  transform: rotate(0deg) scale(1.05);
+  z-index: 10;
+}

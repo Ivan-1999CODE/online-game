@@ -1,0 +1,794 @@
+[
+    {
+        "category": "1. 單字",
+        "word": "hobby",
+        "chinese": "嗜好",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "interest",
+        "chinese": "興趣",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "comic",
+        "chinese": "漫畫",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "song",
+        "chinese": "歌曲",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "stamp",
+        "chinese": "郵票",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "doll",
+        "chinese": "玩偶；洋娃娃",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "kite",
+        "chinese": "風箏",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "robot",
+        "chinese": "機器人",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "toy",
+        "chinese": "玩具",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "trip",
+        "chinese": "旅程；旅行",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "picnic",
+        "chinese": "野餐",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "team",
+        "chinese": "隊伍",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "group",
+        "chinese": "團體",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "race",
+        "chinese": "競賽；賽跑",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "pot",
+        "chinese": "罐；鍋",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "bowl",
+        "chinese": "碗",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "plate",
+        "chinese": "盤子",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "chopstick(s)",
+        "chinese": "筷子",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "knife",
+        "chinese": "刀子",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "fork",
+        "chinese": "叉子",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "spoon",
+        "chinese": "湯匙",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "cup",
+        "chinese": "杯子",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "dish",
+        "chinese": "菜肴；盤子",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "insect",
+        "chinese": "昆蟲",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "ant",
+        "chinese": "螞蟻",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "bee",
+        "chinese": "蜜蜂",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "bug",
+        "chinese": "小蟲",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "butterfly",
+        "chinese": "蝴蝶",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "bat",
+        "chinese": "蝙蝠；球棒",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "spider",
+        "chinese": "蜘蛛",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "tail",
+        "chinese": "尾巴",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "gym",
+        "chinese": "體育館",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "playground",
+        "chinese": "遊樂場",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "seesaw",
+        "chinese": "蹺蹺板",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "slide",
+        "chinese": "溜滑梯",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "swing",
+        "chinese": "秋千",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "rope",
+        "chinese": "繩索",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "grow",
+        "chinese": "種植；增加；成長",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "walk",
+        "chinese": "走路",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "keep",
+        "chinese": "保持",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "stop",
+        "chinese": "停止",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "finish",
+        "chinese": "結束；完結",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "bring",
+        "chinese": "攜帶；帶來",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "begin",
+        "chinese": "開始",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "plan",
+        "chinese": "計畫",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "start",
+        "chinese": "開始",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "share",
+        "chinese": "分享；分攤",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "enjoy",
+        "chinese": "享受",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "save",
+        "chinese": "拯救；儲存；節省",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "plant",
+        "chinese": "種植；植物",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "try",
+        "chinese": "嘗試",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "mop",
+        "chinese": "拖地",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "fight",
+        "chinese": "打架；對抗",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "throw",
+        "chinese": "扔；丟",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "wave",
+        "chinese": "揮(手)；海浪",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "attack",
+        "chinese": "攻擊",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "invite",
+        "chinese": "邀請",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "answer",
+        "chinese": "回答；答案",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "1. 單字",
+        "word": "forget",
+        "chinese": "忘記",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "2. 片語搭配字",
+        "word": "get",
+        "phrase": "get away",
+        "chinese": "逃脫；遠離",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "2. 片語搭配字",
+        "word": "get",
+        "phrase": "get through",
+        "chinese": "熬過；通過",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "2. 片語搭配字",
+        "word": "get",
+        "phrase": "get over",
+        "chinese": "克服；恢復",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "2. 片語搭配字",
+        "word": "get",
+        "phrase": "get up",
+        "chinese": "起床",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "4. 一字多義",
+        "word": "stamp",
+        "definitions": [
+            {
+                "pos": "名詞",
+                "mean": "郵票",
+                "example": "Collecting stamps is my hobby."
+            },
+            {
+                "pos": "名詞",
+                "mean": "印章",
+                "example": "Please lend me your date stamp."
+            },
+            {
+                "pos": "動詞",
+                "mean": "跺腳",
+                "example": "She stamped her foot and shouted."
+            }
+        ],
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "4. 一字多義",
+        "word": "dish",
+        "definitions": [
+            {
+                "pos": "名詞",
+                "mean": "菜肴",
+                "example": "Everyone will bring one dish to the party."
+            },
+            {
+                "pos": "名詞",
+                "mean": "盤子",
+                "example": "It's your turn to do the dishes."
+            }
+        ],
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "4. 一字多義",
+        "word": "bat",
+        "definitions": [
+            {
+                "pos": "名詞",
+                "mean": "蝙蝠",
+                "example": "We seldom see bats in the daytime."
+            },
+            {
+                "pos": "名詞",
+                "mean": "球棒",
+                "example": "The baseball player swung his bat."
+            }
+        ],
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "4. 一字多義",
+        "word": "save",
+        "definitions": [
+            {
+                "pos": "動詞",
+                "mean": "拯救",
+                "example": "The doctor saved my life."
+            },
+            {
+                "pos": "動詞",
+                "mean": "儲存",
+                "example": "Let's save money for a new car."
+            },
+            {
+                "pos": "動詞",
+                "mean": "節省",
+                "example": "The sweep machine saves me a lot of time."
+            },
+            {
+                "pos": "動詞",
+                "mean": "留下；保留",
+                "example": "I'll save the cake and eat it later."
+            }
+        ],
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "4. 一字多義",
+        "word": "plant",
+        "definitions": [
+            {
+                "pos": "動詞",
+                "mean": "種植",
+                "example": "We planted some tomatoes in our garden."
+            },
+            {
+                "pos": "名詞",
+                "mean": "植物",
+                "example": "Bean plants are easy to grow."
+            }
+        ],
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "4. 一字多義",
+        "word": "wave",
+        "definitions": [
+            {
+                "pos": "動詞",
+                "mean": "揮 (手)",
+                "example": "Ted waved us goodbye."
+            },
+            {
+                "pos": "名詞",
+                "mean": "海浪",
+                "example": "The waves on a typhoon day are high."
+            }
+        ],
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "go on",
+        "chinese": "繼續",
+        "group": "go相關",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "go ahead",
+        "chinese": "去做吧",
+        "group": "go相關",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "go through",
+        "chinese": "經歷",
+        "group": "go相關",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "go out",
+        "chinese": "外出",
+        "group": "go相關",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "go back",
+        "chinese": "回去",
+        "group": "go相關",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "go on a trip",
+        "chinese": "去旅行",
+        "group": "go相關",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "go to church",
+        "chinese": "去教堂做禮拜",
+        "group": "go相關",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "go shopping",
+        "chinese": "去購物",
+        "group": "go+V-ing",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "go fishing",
+        "chinese": "去釣魚",
+        "group": "go+V-ing",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "go camping",
+        "chinese": "去露營",
+        "group": "go+V-ing",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "go jogging",
+        "chinese": "去慢跑",
+        "group": "go+V-ing",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "go swimming",
+        "chinese": "去游泳",
+        "group": "go+V-ing",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "go hiking",
+        "chinese": "去健行",
+        "group": "go+V-ing",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "go hunting",
+        "chinese": "去打獵",
+        "group": "go+V-ing",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "go mountain climbing",
+        "chinese": "去爬山",
+        "group": "go+V-ing",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "go bird-watching",
+        "chinese": "去賞鳥",
+        "group": "go+V-ing",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "fly a kite",
+        "chinese": "放風箏",
+        "group": "動作相關",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "look for a job",
+        "chinese": "找工作",
+        "group": "動作相關",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "lose one's job",
+        "chinese": "失業",
+        "group": "動作相關",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "stop by",
+        "chinese": "短暫拜訪",
+        "group": "動作相關",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "can't wait to...",
+        "chinese": "等不及......",
+        "group": "動作相關",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "do one's / the shopping",
+        "chinese": "購物",
+        "group": "動作相關",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "best wishes",
+        "chinese": "致上最誠摯祝福",
+        "group": "其他",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "in a... way",
+        "chinese": "以......的方式",
+        "group": "其他",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "way of life",
+        "chinese": "生活方式",
+        "group": "其他",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "No big deal.",
+        "chinese": "沒什麼大不了的。",
+        "group": "佳句",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "No worries.",
+        "chinese": "小事一樁 / 別擔心",
+        "group": "佳句",
+        "book": 3,
+        "unit": "3-4"
+    },
+    {
+        "category": "3. 片語 & 佳句",
+        "phrase": "Why not?",
+        "chinese": "為什麼不呢？",
+        "group": "佳句",
+        "book": 3,
+        "unit": "3-4"
+    }
+]
