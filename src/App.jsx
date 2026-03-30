@@ -215,8 +215,11 @@ const fetchLevelData = async (levelId) => {
                 // 搭配裝備：顯示完整片語，不是基礎動詞
                 categories.collocation.push({ ...item, word: data.phrase || data.word || '' });
             } else if (categoryStr.includes("4") || categoryStr.includes("一字多義")) {
-                // 支援 definitions[] 陣列格式和舊的單一 chinese 欄位
+                // 支援 details 欄位、definitions[] 陣列格式和舊的單一 chinese 欄位
                 let chineseStr = data.chinese || '';
+                if (!chineseStr && data.details) {
+                    chineseStr = data.details;
+                }
                 if (!chineseStr && data.definitions && Array.isArray(data.definitions)) {
                     chineseStr = data.definitions.map(d => `[${d.pos}] ${d.mean}`).join(' / ');
                 }
@@ -510,6 +513,7 @@ const AchievementGuide = ({ onClose }) => (
 
 const WorldMap = ({ onSelectNode, onViewJourney, onUltimateChallenge, onViewMistakeNotebook, onLogout, records = {} }) => {
     const [showGuide, setShowGuide] = useState(false);
+    const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
     return (
         <div className="flex flex-col h-full bg-[#3d2963]">
@@ -535,12 +539,23 @@ const WorldMap = ({ onSelectNode, onViewJourney, onUltimateChallenge, onViewMist
             </div>
             <div className="flex-1 overflow-y-auto relative p-4 space-y-6 bg-[url('https://www.transparenttextures.com/patterns/diagmonds-light.png')]">
                 <button
-                    onClick={onLogout}
+                    onClick={() => setShowLogoutConfirm(true)}
                     className="absolute top-3 right-3 bg-[#1a1a1a] p-1.5 rounded-full border-2 border-[#333] hover:bg-red-900 transition-colors shadow-black shadow-sm z-10"
                     title="登出"
                 >
                     <LogOut size={14} color="#aaa" />
                 </button>
+                {showLogoutConfirm && (
+                    <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+                        <RPGBorder className="bg-rpg-panel p-6 w-full max-w-xs text-center shadow-2xl">
+                            <h3 className="font-retro text-xl font-bold text-rpg-bg mb-6">確定要登出嗎?</h3>
+                            <div className="flex gap-4 justify-center">
+                                <RPGButton onClick={() => { playSound('click'); setShowLogoutConfirm(false); }} color="neutral">取消</RPGButton>
+                                <RPGButton onClick={() => { playSound('click'); setShowLogoutConfirm(false); onLogout(); }} color="primary">確定</RPGButton>
+                            </div>
+                        </RPGBorder>
+                    </div>
+                )}
                 {MAP_STRUCTURE.map((node, index) => {
                     const isBoss = node.type === 'boss';
                     const info = LEVEL_INFO[node.id];
@@ -1700,8 +1715,8 @@ const StudyMode = ({ unitId, categoryId, data, onBack, onStartQuiz }) => {
 };
 
 const BattleMode = ({ quizData, isBoss, isChallenge = false, onComplete, onFlee, currentRecord = null }) => {
-    // 終極試煉直接開始，BOSS 和一般關卡顯示 menu
-    const [status, setStatus] = useState(isChallenge ? 'playing' : 'menu');
+    // 所有模式都先顯示 menu 選擇作答模式
+    const [status, setStatus] = useState('menu');
     const [currentQIndex, setCurrentQIndex] = useState(0);
     const [questions, setQuestions] = useState([]);
     const [score, setScore] = useState(0);
@@ -1710,6 +1725,7 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, onComplete, onFlee,
     const [showQuitConfirm, setShowQuitConfirm] = useState(false);
     const [battleLog, setBattleLog] = useState([]); // 戰鬥回顧記錄
     const [isSubmitting, setIsSubmitting] = useState(false); // 防止重复提交
+    const [quizMode, setQuizMode] = useState(null); // 'standard' = 有發音, 'simple' = 無發音
 
     const MAX_TIME = 7.0;
     const [timeLeft, setTimeLeft] = useState(MAX_TIME);
@@ -1729,6 +1745,17 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, onComplete, onFlee,
         const limit = generatedQuestions.length > 20 ? 20 : generatedQuestions.length;
         setQuestions(shuffleArray(generatedQuestions).slice(0, limit));
     }, [quizData, isBoss]);
+
+    // 標準模式：每題出現時自動播放正確單字的發音
+    useEffect(() => {
+        if (status === 'playing' && !feedback && questions.length > 0 && quizMode === 'simple') {
+            const currentQ = questions[currentQIndex];
+            if (currentQ) {
+                // 不管題目是 en-ch 還是 ch-en，都播放正確單字的英文發音
+                speakText(currentQ.target.word);
+            }
+        }
+    }, [status, currentQIndex, feedback, questions, quizMode]);
 
     useEffect(() => {
         if (status === 'playing' && !feedback && questions.length > 0 && !showQuitConfirm) {
@@ -1841,13 +1868,13 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, onComplete, onFlee,
         const filledCount = Math.min(successCount, 5);
 
         return (
-            <div className="flex flex-col items-center justify-center h-full gap-6 text-center p-4 bg-black/90">
-                {isBoss ? <div className="animate-pulse"><PixelArt.MonsterBat /></div> : <PixelArt.MonsterSlime />}
-                <h2 className="font-pixel text-xl text-white leading-loose">{isBoss ? "BOSS BATTLE" : "MONSTER APPEARS"}<br /><span className="text-xs text-gray-400">{questions.length} Questions. 7 Seconds.</span></h2>
+            <div className="flex flex-col items-center justify-center h-full gap-4 text-center p-4 bg-black/90">
+                {isBoss ? <div className="animate-pulse"><PixelArt.MonsterBat /></div> : isChallenge ? <div className="animate-pulse"><PixelArt.MonsterBat /></div> : <PixelArt.MonsterSlime />}
+                <h2 className="font-pixel text-xl text-white leading-loose">{isBoss ? "BOSS BATTLE" : isChallenge ? "終極試煉" : "MONSTER APPEARS"}<br /><span className="text-xs text-gray-400">{questions.length} Questions. 7 Seconds.</span></h2>
 
                 {/* Boss Progress Checkboxes */}
                 {isBoss && (
-                    <div className="flex flex-col items-center gap-2 mb-2">
+                    <div className="flex flex-col items-center gap-2 mb-1">
                         <div className="flex gap-2">
                             {[...Array(5)].map((_, i) => (
                                 <div key={i} className={`w-8 h-8 border-4 ${i < filledCount ? 'bg-green-500 border-green-700' : 'bg-gray-800 border-gray-600'} flex items-center justify-center`}>
@@ -1859,8 +1886,46 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, onComplete, onFlee,
                     </div>
                 )}
 
-                <RPGButton onClick={() => setStatus('playing')} color="primary" className="text-lg px-8 py-4">FIGHT!</RPGButton>
-                <button onClick={onFlee} className="text-gray-500 font-pixel text-xs hover:text-white mt-4">RUN AWAY</button>
+                {/* 模式選擇 */}
+                <div className="w-full max-w-xs">
+                    <div className="font-pixel text-xs text-gray-400 mb-2">- 選擇作答模式 -</div>
+                    <div className="flex gap-3">
+                        <button
+                            onClick={() => { playSound('click'); setQuizMode('standard'); }}
+                            className={`flex-1 p-3 border-4 transition-all duration-200 flex flex-col items-center gap-1 ${
+                                quizMode === 'standard'
+                                    ? 'border-orange-400 bg-orange-900/60 scale-105 shadow-[0_0_15px_rgba(251,146,60,0.4)]'
+                                    : 'border-gray-600 bg-gray-800 hover:border-gray-400 hover:bg-gray-700'
+                            }`}
+                        >
+                            <Sword size={20} className={quizMode === 'standard' ? 'text-orange-300' : 'text-gray-400'} />
+                            <span className={`font-pixel text-xs ${quizMode === 'standard' ? 'text-orange-300' : 'text-gray-300'}`}>標準模式</span>
+                            <span className={`font-retro text-[10px] ${quizMode === 'standard' ? 'text-orange-400/70' : 'text-gray-500'}`}>純選擇題</span>
+                        </button>
+                        <button
+                            onClick={() => { playSound('click'); setQuizMode('simple'); }}
+                            className={`flex-1 p-3 border-4 transition-all duration-200 flex flex-col items-center gap-1 ${
+                                quizMode === 'simple'
+                                    ? 'border-cyan-400 bg-cyan-900/60 scale-105 shadow-[0_0_15px_rgba(34,211,238,0.4)]'
+                                    : 'border-gray-600 bg-gray-800 hover:border-gray-400 hover:bg-gray-700'
+                            }`}
+                        >
+                            <Volume2 size={20} className={quizMode === 'simple' ? 'text-cyan-300' : 'text-gray-400'} />
+                            <span className={`font-pixel text-xs ${quizMode === 'simple' ? 'text-cyan-300' : 'text-gray-300'}`}>簡易模式</span>
+                            <span className={`font-retro text-[10px] ${quizMode === 'simple' ? 'text-cyan-400/70' : 'text-gray-500'}`}>附帶發音</span>
+                        </button>
+                    </div>
+                </div>
+
+                <RPGButton
+                    onClick={() => setStatus('playing')}
+                    color="primary"
+                    className={`text-lg px-8 py-4 transition-all duration-300 ${quizMode ? 'opacity-100 translate-y-0' : 'opacity-30 pointer-events-none translate-y-2'}`}
+                    disabled={!quizMode}
+                >
+                    FIGHT!
+                </RPGButton>
+                <button onClick={onFlee} className="text-gray-500 font-pixel text-xs hover:text-white">{isChallenge ? 'BACK' : 'RUN AWAY'}</button>
             </div>
         );
     }
@@ -2068,6 +2133,16 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, onComplete, onFlee,
                     <h3 className="text-rpg-panel font-retro text-2xl md:text-3xl mb-1 text-shadow tracking-wider">
                         {currentQ.mode === 'en-ch' ? currentQ.target.word : currentQ.target.chinese}
                     </h3>
+                    {/* 簡易模式：顯示發音按鈕可重複播放 */}
+                    {quizMode === 'simple' && (
+                        <button
+                            onClick={(e) => { e.stopPropagation(); speakText(currentQ.target.word); }}
+                            className="mt-1 text-cyan-400 hover:text-cyan-200 transition-colors p-1 inline-block"
+                            title="再聽一次"
+                        >
+                            <Volume2 size={18} />
+                        </button>
+                    )}
                 </div>
 
                 {/* Feedback Overlay */}
