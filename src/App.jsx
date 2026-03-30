@@ -6,7 +6,7 @@ import {
     List, Grid, ArrowLeft, Lightbulb, MessageCircle, Clock, Award, Home, Lock, LogOut
 } from 'lucide-react';
 import { collection, query, where, getDocs, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
-import { signInWithPopup, signInWithRedirect, onAuthStateChanged, signOut } from 'firebase/auth';
+import { signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut } from 'firebase/auth';
 import { db, auth, googleProvider } from './config/firebase';
 import { speakText, playSound, shuffleArray, playMusic, stopMusic, setMute, getMuteStatus, setVolume, unlockAudio } from './utils/audio';
 import TeacherDashboard from './components/TeacherDashboard.jsx';
@@ -2112,6 +2112,7 @@ const App = () => {
 
     // New State for Async Loading
     const [loading, setLoading] = useState(false);
+    const [authChecking, setAuthChecking] = useState(true); // Added to prevent double clicking during redirect login
     const [levelDataCache, setLevelDataCache] = useState({});
 
     // 老師後台相關狀態
@@ -2128,12 +2129,29 @@ const App = () => {
     useEffect(() => { document.body.classList.add('loaded'); }, []);
 
     useEffect(() => {
+        let isMounted = true;
+
+        // Ensure we wait for redirect processing before abandoning the loading screen
+        getRedirectResult(auth)
+            .then(() => {
+                if (isMounted) setAuthChecking(false);
+            })
+            .catch(err => {
+                console.error("Redirect login error:", err);
+                if (isMounted) setAuthChecking(false);
+            });
+
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user && view === 'login') {
                 handleLogin(user);
+                if (isMounted) setAuthChecking(false);
             }
         });
-        return () => unsubscribe();
+
+        return () => {
+            isMounted = false;
+            unsubscribe();
+        };
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     // --- Background Music Logic ---
@@ -2650,8 +2668,8 @@ const App = () => {
     };
 
     const renderContent = () => {
-        // Show LoadingScreen if loading
-        if (loading) return <LoadingScreen />;
+        // Show LoadingScreen if loading or checking initial auth
+        if (loading || authChecking) return <LoadingScreen />;
 
         switch (view) {
             case 'login': return <LoginScreen onLogin={handleLogin} />;
