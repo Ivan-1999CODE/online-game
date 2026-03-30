@@ -1,12 +1,12 @@
-﻿import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
     Sword, Shield, Scroll, Skull, Coins, Heart, Star, ChevronLeft, ChevronRight,
     Volume2, Map as MapIcon, RefreshCw, XCircle, CheckCircle,
     HelpCircle, Backpack, Gem, Flame, Skull as SkullIcon, Book, User,
-    List, Grid, ArrowLeft, Lightbulb, MessageCircle, Clock, Award, Home, Lock
+    List, Grid, ArrowLeft, Lightbulb, MessageCircle, Clock, Award, Home, Lock, LogOut
 } from 'lucide-react';
 import { collection, query, where, getDocs, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
-import { signInWithPopup } from 'firebase/auth';
+import { signInWithPopup, signInWithRedirect, onAuthStateChanged, signOut } from 'firebase/auth';
 import { db, auth, googleProvider } from './config/firebase';
 import { speakText, playSound, shuffleArray, playMusic, stopMusic, setMute, getMuteStatus, setVolume, unlockAudio } from './utils/audio';
 import TeacherDashboard from './components/TeacherDashboard.jsx';
@@ -411,17 +411,30 @@ const LoadingScreen = () => (
 );
 
 const LoginScreen = ({ onLogin }) => {
-    const handleGoogleLogin = () => {
+    const handleGoogleLogin = async () => {
         playSound('start');
         unlockAudio(); // Unlock audio context on user gesture
-        signInWithPopup(auth, googleProvider)
-            .then((result) => {
-                const user = result.user;
-                onLogin(user);
-            }).catch((error) => {
-                console.error("Login Failed:", error);
-                // Optional: Show error to user
-            });
+        
+        const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+        const isInAppBrowser = /Line|FBAN|FBAV|Instagram/i.test(userAgent);
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
+
+        try {
+            if (isInAppBrowser || isMobile) {
+                // Use redirect for in-app browsers and mobile devices where popups are problematic
+                await signInWithRedirect(auth, googleProvider);
+            } else {
+                // Use popup for desktop
+                const result = await signInWithPopup(auth, googleProvider);
+                onLogin(result.user);
+            }
+        } catch (error) {
+            console.error("Login Failed:", error);
+            // If popup is blocked on desktop, fallback to redirect
+            if (error.code === 'auth/popup-blocked') {
+                await signInWithRedirect(auth, googleProvider);
+            }
+        }
     };
 
     return (
@@ -490,7 +503,7 @@ const AchievementGuide = ({ onClose }) => (
     </div>
 );
 
-const WorldMap = ({ onSelectNode, onViewJourney, onUltimateChallenge, onViewMistakeNotebook, records = {} }) => {
+const WorldMap = ({ onSelectNode, onViewJourney, onUltimateChallenge, onViewMistakeNotebook, onLogout, records = {} }) => {
     const [showGuide, setShowGuide] = useState(false);
 
     return (
@@ -507,12 +520,17 @@ const WorldMap = ({ onSelectNode, onViewJourney, onUltimateChallenge, onViewMist
                 </div>
                 <h2 className="font-pixel text-white text-center flex items-center justify-center gap-2"><MapIcon size={16} /> WORLD MAP</h2>
                 <div className="flex items-center gap-1">
-                    <button onClick={onViewMistakeNotebook} className="text-red-400 hover:text-red-300 p-1" title="錯題筆記本">
+                    <button onClick={onViewMistakeNotebook} className="text-red-400 hover:text-red-300 p-1 mb-6" title="錯題筆記本">
                         <Book size={20} />
                     </button>
-                    <button onClick={onViewJourney} className="text-rpg-accent hover:text-white p-1" title="我的冒險旅程">
-                        <Backpack size={20} />
-                    </button>
+                    <div className="flex flex-col gap-0.5 items-center">
+                        <button onClick={onViewJourney} className="text-rpg-accent hover:text-white p-1" title="我的冒險旅程">
+                            <Backpack size={20} />
+                        </button>
+                        <button onClick={onLogout} className="bg-[#1a1a1a] p-1.5 rounded-full border-2 border-[#333] hover:bg-red-900 transition-colors shadow-black shadow-sm" title="登出">
+                            <LogOut size={14} color="#aaa" />
+                        </button>
+                    </div>
                 </div>
             </div>
             <div className="flex-1 overflow-y-auto p-4 space-y-6 bg-[url('https://www.transparenttextures.com/patterns/diagmonds-light.png')]">
@@ -2102,6 +2120,15 @@ const App = () => {
 
     useEffect(() => { document.body.classList.add('loaded'); }, []);
 
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user && view === 'login') {
+                handleLogin(user);
+            }
+        });
+        return () => unsubscribe();
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
     // --- Background Music Logic ---
     useEffect(() => {
         // Only play music if logged in (userName exists)
@@ -2128,6 +2155,18 @@ const App = () => {
         const newVolume = parseInt(e.target.value, 10);
         setVolumeState(newVolume);
         setVolume(newVolume / 100);
+    };
+
+    const handleLogout = () => {
+        playSound('click');
+        signOut(auth).then(() => {
+            setUserName('');
+            setUserData(null);
+            setCurrentUser(null);
+            setView('login');
+        }).catch(err => {
+            console.error("Logout error", err);
+        });
     };
 
     const handleLogin = async (user) => {
@@ -2609,7 +2648,7 @@ const App = () => {
 
         switch (view) {
             case 'login': return <LoginScreen onLogin={handleLogin} />;
-            case 'map': return <WorldMap onSelectNode={handleNodeSelect} onViewJourney={() => { playSound('click'); setView('journey'); }} onUltimateChallenge={() => { playSound('click'); setView('challenge-setup'); }} onViewMistakeNotebook={() => { playSound('click'); setView('mistake-notebook'); }} records={userData?.levelRecords} />;
+            case 'map': return <WorldMap onLogout={handleLogout} onSelectNode={handleNodeSelect} onViewJourney={() => { playSound('click'); setView('journey'); }} onUltimateChallenge={() => { playSound('click'); setView('challenge-setup'); }} onViewMistakeNotebook={() => { playSound('click'); setView('mistake-notebook'); }} records={userData?.levelRecords} />;
             case 'mistake-notebook': return <MistakeNotebook onBack={() => { playSound('click'); setView('map'); }} mistakeStats={userData?.mistakeStats} onClearMistakes={handleClearMistakes} onRemoveMistake={handleRemoveMistake} />;
             case 'journey': return <JourneyMode onBack={() => { playSound('click'); setView('map'); }} onViewTrialLog={() => { playSound('click'); setView('trial-log'); }} records={userData?.levelRecords} />;
             case 'trial-log': return <TrialLogView onBack={() => { playSound('click'); setView('journey'); }} onRetry={() => { playSound('click'); setView('challenge-setup'); }} trialHistory={userData?.trialHistory} />;
