@@ -419,7 +419,7 @@ const LoginScreen = ({ onLogin }) => {
     const handleGoogleLogin = async () => {
         playSound('start');
         unlockAudio(); // Unlock audio context on user gesture
-        
+
         const userAgent = navigator.userAgent || navigator.vendor || window.opera;
         const isInAppBrowser = /Line|FBAN|FBAV|Instagram/i.test(userAgent);
         const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
@@ -525,20 +525,22 @@ const WorldMap = ({ onSelectNode, onViewJourney, onUltimateChallenge, onViewMist
                 </div>
                 <h2 className="font-pixel text-white text-center flex items-center justify-center gap-2"><MapIcon size={16} /> WORLD MAP</h2>
                 <div className="flex items-center gap-1">
-                    <button onClick={onViewMistakeNotebook} className="text-red-400 hover:text-red-300 p-1 mb-6" title="錯題筆記本">
+                    <button onClick={onViewMistakeNotebook} className="text-red-400 hover:text-red-300 p-1" title="錯題筆記本">
                         <Book size={20} />
                     </button>
-                    <div className="flex flex-col gap-0.5 items-center">
-                        <button onClick={onViewJourney} className="text-rpg-accent hover:text-white p-1" title="我的冒險旅程">
-                            <Backpack size={20} />
-                        </button>
-                        <button onClick={onLogout} className="bg-[#1a1a1a] p-1.5 rounded-full border-2 border-[#333] hover:bg-red-900 transition-colors shadow-black shadow-sm" title="登出">
-                            <LogOut size={14} color="#aaa" />
-                        </button>
-                    </div>
+                    <button onClick={onViewJourney} className="text-rpg-accent hover:text-white p-1" title="我的冒險旅程">
+                        <Backpack size={20} />
+                    </button>
                 </div>
             </div>
-            <div className="flex-1 overflow-y-auto p-4 space-y-6 bg-[url('https://www.transparenttextures.com/patterns/diagmonds-light.png')]">
+            <div className="flex-1 overflow-y-auto relative p-4 space-y-6 bg-[url('https://www.transparenttextures.com/patterns/diagmonds-light.png')]">
+                <button
+                    onClick={onLogout}
+                    className="absolute top-3 right-3 bg-[#1a1a1a] p-1.5 rounded-full border-2 border-[#333] hover:bg-red-900 transition-colors shadow-black shadow-sm z-10"
+                    title="登出"
+                >
+                    <LogOut size={14} color="#aaa" />
+                </button>
                 {MAP_STRUCTURE.map((node, index) => {
                     const isBoss = node.type === 'boss';
                     const info = LEVEL_INFO[node.id];
