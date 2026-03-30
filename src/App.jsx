@@ -422,14 +422,14 @@ const LoginScreen = ({ onLogin }) => {
 
         const userAgent = navigator.userAgent || navigator.vendor || window.opera;
         const isInAppBrowser = /Line|FBAN|FBAV|Instagram/i.test(userAgent);
-        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
 
         try {
-            if (isInAppBrowser || isMobile) {
-                // Use redirect for in-app browsers and mobile devices where popups are problematic
+            if (isInAppBrowser) {
+                // 僅針對 LINE, FB, IG 等會擋 Popup 的內建瀏覽器使用 Redirect
                 await signInWithRedirect(auth, googleProvider);
             } else {
-                // Use popup for desktop
+                // 桌面版與一般手機瀏覽器 (Safari, Chrome) 預設使用 Popup
+                // 這樣能避開 iOS Safari 預設阻擋跨站追蹤 (ITP) 造成的 Redirect 失敗問題
                 const result = await signInWithPopup(auth, googleProvider);
                 onLogin(result.user);
             }
