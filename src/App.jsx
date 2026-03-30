@@ -201,21 +201,26 @@ const fetchLevelData = async (levelId) => {
                 id: doc.id,
                 word: data.word || data.phrase || '',
                 chinese: data.chinese || '',
-                part: data.part || '',  // 不再強制預設為 n.，讓 UI 根據是否有值決定是否顯示
+                part: data.pos || data.part || '',  // 支援新的 pos 欄位和舊的 part 欄位
                 sentence: data.example || data.sentence || '',
                 sentence_ch: data.sentence_ch || '',
-                book: data.book || mapping.book,  // 記錄 book 資訊
-                unit: data.unit || mapping.unit   // 記錄 unit 資訊
+                book: data.book || mapping.book,
+                unit: data.unit || mapping.unit
             };
 
             const categoryStr = String(data.category);
             if (categoryStr.includes("1") || categoryStr.includes("單字")) {
                 categories.vocab.push(item);
             } else if (categoryStr.includes("2") || categoryStr.includes("搭配字")) {
-                categories.collocation.push(item);
+                // 搭配裝備：顯示完整片語，不是基礎動詞
+                categories.collocation.push({ ...item, word: data.phrase || data.word || '' });
             } else if (categoryStr.includes("4") || categoryStr.includes("一字多義")) {
-                // 直接使用 chinese 字段（已經是格式化後的單一字串）
-                categories.polysemy.push({ id: doc.id, word: data.word, chinese: data.chinese, book: data.book || mapping.book, unit: data.unit || mapping.unit });
+                // 支援 definitions[] 陣列格式和舊的單一 chinese 欄位
+                let chineseStr = data.chinese || '';
+                if (!chineseStr && data.definitions && Array.isArray(data.definitions)) {
+                    chineseStr = data.definitions.map(d => `[${d.pos}] ${d.mean}`).join(' / ');
+                }
+                categories.polysemy.push({ id: doc.id, word: data.word, chinese: chineseStr, definitions: data.definitions || [], book: data.book || mapping.book, unit: data.unit || mapping.unit });
             } else if (categoryStr.includes("3") || categoryStr.includes("片語") || categoryStr.includes("佳句")) {
                 categories.sentences.push(item);
             }

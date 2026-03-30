@@ -4,609 +4,696 @@
         "word": "meat",
         "chinese": "肉類",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "beef",
         "chinese": "牛肉",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "pork",
         "chinese": "豬肉",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "chicken",
         "chinese": "雞肉",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "fish",
         "chinese": "魚肉",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "vegetable",
         "chinese": "蔬菜",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "bean",
         "chinese": "豆子",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "pumpkin",
         "chinese": "南瓜",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "fruit",
         "chinese": "水果",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "apple",
         "chinese": "蘋果",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "banana",
         "chinese": "香蕉",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "grape",
         "chinese": "葡萄",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "guava",
         "chinese": "芭樂",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "lemon",
         "chinese": "檸檬",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "orange",
         "chinese": "柳橙",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "papaya",
         "chinese": "木瓜",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "peach",
         "chinese": "桃子",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "pear",
         "chinese": "梨子",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "strawberry",
         "chinese": "草莓",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "tomato",
         "chinese": "番茄",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "watermelon",
         "chinese": "西瓜",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "drink",
         "chinese": "飲料",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "water",
         "chinese": "水",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "milk",
         "chinese": "牛奶",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "tea",
         "chinese": "茶",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "coffee",
         "chinese": "咖啡",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "juice",
         "chinese": "果汁",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "ice",
         "chinese": "冰",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "butter",
         "chinese": "奶油",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "oil",
         "chinese": "油",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "sugar",
         "chinese": "糖",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "salt",
         "chinese": "鹽",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "snack",
         "chinese": "點心",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "cake",
         "chinese": "蛋糕",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "candy",
         "chinese": "糖果",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "chocolate",
         "chinese": "巧克力",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "ice cream",
         "chinese": "冰淇淋",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "popcorn",
         "chinese": "爆米花",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "cookie",
         "chinese": "餅乾",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "breakfast",
         "chinese": "早餐",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "lunch",
         "chinese": "午餐",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "dinner",
         "chinese": "晚餐",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "meal",
         "chinese": "餐",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "food",
         "chinese": "食物",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "bread",
         "chinese": "麵包",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "bun",
         "chinese": "小圓麵包",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "toast",
         "chinese": "烤吐司",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "rice",
         "chinese": "米；飯",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "noodle",
         "chinese": "麵",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "salad",
         "chinese": "沙拉",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "egg",
         "chinese": "蛋",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "sandwich",
         "chinese": "三明治",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "soup",
         "chinese": "湯",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "steak",
         "chinese": "牛排",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "cheese",
         "chinese": "起司",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "ham",
         "chinese": "火腿",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "fries",
         "chinese": "薯條",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "hamburger",
         "chinese": "漢堡",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "hot dog",
         "chinese": "熱狗",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "pie",
         "chinese": "派",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "pizza",
         "chinese": "披薩",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "menu",
         "chinese": "菜單",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "bottle",
         "chinese": "瓶子；一瓶的容量",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "cup",
         "chinese": "杯子；一杯的容量",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "pack",
         "chinese": "包；打包",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "package",
         "chinese": "包裹；包裝",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "pair",
         "chinese": "一雙；一對",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "piece",
         "chinese": "(一) 張；片；塊",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "glass",
         "chinese": "玻璃杯",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "pound",
         "chinese": "磅（重量單位）",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "full",
         "chinese": "飽的；滿的",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "delicious",
         "chinese": "美味的",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "yummy",
         "chinese": "好吃的",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "hungry",
         "chinese": "餓的",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "thirsty",
         "chinese": "口渴的",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "hot",
         "chinese": "熱的；辣的",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "sweet",
         "chinese": "甜的；貼心的",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "enough",
         "chinese": "足夠的",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "few",
         "chinese": "很少的；幾乎沒有",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "put",
         "chinese": "放",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "cut",
         "chinese": "切",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "wash",
         "chinese": "清洗",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "need",
         "chinese": "需要",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "remember",
         "chinese": "記得",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "live",
         "chinese": "居住",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "bake",
         "chinese": "烘焙；烤",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "fix",
         "chinese": "修理；解決",
         "book": 2,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "v."
     },
     {
         "category": "2. 片語搭配字",

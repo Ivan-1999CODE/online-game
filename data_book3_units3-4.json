@@ -4,413 +4,472 @@
         "word": "hobby",
         "chinese": "嗜好",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "interest",
         "chinese": "興趣",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "comic",
         "chinese": "漫畫",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "song",
         "chinese": "歌曲",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "stamp",
         "chinese": "郵票",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "doll",
         "chinese": "玩偶；洋娃娃",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "kite",
         "chinese": "風箏",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "robot",
         "chinese": "機器人",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "toy",
         "chinese": "玩具",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "trip",
         "chinese": "旅程；旅行",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "picnic",
         "chinese": "野餐",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "team",
         "chinese": "隊伍",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "group",
         "chinese": "團體",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "race",
         "chinese": "競賽；賽跑",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "pot",
         "chinese": "罐；鍋",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "bowl",
         "chinese": "碗",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "plate",
         "chinese": "盤子",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "chopstick(s)",
         "chinese": "筷子",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "knife",
         "chinese": "刀子",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "fork",
         "chinese": "叉子",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "spoon",
         "chinese": "湯匙",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "cup",
         "chinese": "杯子",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "dish",
         "chinese": "菜肴；盤子",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "insect",
         "chinese": "昆蟲",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "ant",
         "chinese": "螞蟻",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "bee",
         "chinese": "蜜蜂",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "bug",
         "chinese": "小蟲",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "butterfly",
         "chinese": "蝴蝶",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "bat",
         "chinese": "蝙蝠；球棒",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "spider",
         "chinese": "蜘蛛",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "tail",
         "chinese": "尾巴",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "gym",
         "chinese": "體育館",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "playground",
         "chinese": "遊樂場",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "seesaw",
         "chinese": "蹺蹺板",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "slide",
         "chinese": "溜滑梯",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "swing",
         "chinese": "秋千",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "rope",
         "chinese": "繩索",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "grow",
         "chinese": "種植；增加；成長",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "walk",
         "chinese": "走路",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "keep",
         "chinese": "保持",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "stop",
         "chinese": "停止",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "finish",
         "chinese": "結束；完結",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "bring",
         "chinese": "攜帶；帶來",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "begin",
         "chinese": "開始",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "plan",
         "chinese": "計畫",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "start",
         "chinese": "開始",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "share",
         "chinese": "分享；分攤",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "enjoy",
         "chinese": "享受",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "save",
         "chinese": "拯救；儲存；節省",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "plant",
         "chinese": "種植；植物",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "try",
         "chinese": "嘗試",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "mop",
         "chinese": "拖地",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "fight",
         "chinese": "打架；對抗",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "throw",
         "chinese": "扔；丟",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "wave",
         "chinese": "揮(手)；海浪",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "attack",
         "chinese": "攻擊",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "invite",
         "chinese": "邀請",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "answer",
         "chinese": "回答；答案",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "forget",
         "chinese": "忘記",
         "book": 3,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "v."
     },
     {
         "category": "2. 片語搭配字",

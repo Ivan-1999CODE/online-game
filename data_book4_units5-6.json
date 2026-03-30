@@ -4,399 +4,456 @@
         "word": "zero",
         "chinese": "零（的）",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "dozen",
         "chinese": "一打（十二個）",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "hundred",
         "chinese": "百（的）",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "thousand",
         "chinese": "千（的）",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "million",
         "chinese": "百萬（的）",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "price",
         "chinese": "價格；代價",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "money",
         "chinese": "錢",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "dollar",
         "chinese": "元",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "cent",
         "chinese": "分（金錢單位）",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "change",
         "chinese": "零錢",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "color",
         "chinese": "顏色",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "black",
         "chinese": "黑色（的）",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "blue",
         "chinese": "藍色（的）",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "brown",
         "chinese": "棕色（的）",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "gray",
         "chinese": "灰色（的）",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "green",
         "chinese": "綠色（的）",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "orange",
         "chinese": "橘色（的）",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "pink",
         "chinese": "粉紅色（的）",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "purple",
         "chinese": "紫色（的）",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "red",
         "chinese": "紅色（的）",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "white",
         "chinese": "白色（的）",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "yellow",
         "chinese": "黃色（的）",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "east",
         "chinese": "東方（的）",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "west",
         "chinese": "西方（的）",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "south",
         "chinese": "南方（的）",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "north",
         "chinese": "北方（的）",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "corner",
         "chinese": "角落",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "top",
         "chinese": "頂端；最好的",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "bottom",
         "chinese": "底部",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "center",
         "chinese": "中心；中央",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "here",
         "chinese": "這裡",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "there",
         "chinese": "那裡",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "back",
         "chinese": "後面（的）",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "front",
         "chinese": "前面（的）",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "left",
         "chinese": "左邊（的）",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "right",
         "chinese": "右邊（的）",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "middle",
         "chinese": "中間（的）",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "act",
         "chinese": "行動；表演",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "borrow",
         "chinese": "借（入）",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "lend",
         "chinese": "借（出）",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "spend",
         "chinese": "花費（時間/金錢）",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "cost",
         "chinese": "花費（金錢）；費用",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "pay",
         "chinese": "付錢",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "clap",
         "chinese": "拍手；鼓掌",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "mean",
         "chinese": "意指；刻薄的",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "agree",
         "chinese": "同意",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "pull",
         "chinese": "拉；抽出",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "push",
         "chinese": "推",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "roll",
         "chinese": "滾動；（一）捲",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "bow",
         "chinese": "鞠躬",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "cheat",
         "chinese": "欺騙；作弊",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "treat",
         "chinese": "對待；請客",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "ago",
         "chinese": "在……之前",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "already",
         "chinese": "已經",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "once",
         "chinese": "一次",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "twice",
         "chinese": "兩次",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "soon",
         "chinese": "很快地",
         "book": 4,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adv."
     },
     {
         "category": "2. 片語搭配字",

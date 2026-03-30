@@ -1,0 +1,5827 @@
+[
+  {
+    "file": "data.json",
+    "word": "family",
+    "chinese": "家人；家庭"
+  },
+  {
+    "file": "data.json",
+    "word": "father",
+    "chinese": "父親"
+  },
+  {
+    "file": "data.json",
+    "word": "mother",
+    "chinese": "母親"
+  },
+  {
+    "file": "data.json",
+    "word": "son",
+    "chinese": "兒子"
+  },
+  {
+    "file": "data.json",
+    "word": "daughter",
+    "chinese": "女兒"
+  },
+  {
+    "file": "data.json",
+    "word": "sister",
+    "chinese": "姐妹"
+  },
+  {
+    "file": "data.json",
+    "word": "brother",
+    "chinese": "兄弟"
+  },
+  {
+    "file": "data.json",
+    "word": "parents",
+    "chinese": "雙親"
+  },
+  {
+    "file": "data.json",
+    "word": "grandmother",
+    "chinese": "奶奶；外婆"
+  },
+  {
+    "file": "data.json",
+    "word": "grandfather",
+    "chinese": "爺爺；外公"
+  },
+  {
+    "file": "data.json",
+    "word": "uncle",
+    "chinese": "叔(伯)父；姑(姨)丈；舅舅"
+  },
+  {
+    "file": "data.json",
+    "word": "aunt",
+    "chinese": "伯母；舅(姑姨)媽；嬸嬸"
+  },
+  {
+    "file": "data.json",
+    "word": "cousin",
+    "chinese": "堂(表)兄弟姐妹"
+  },
+  {
+    "file": "data.json",
+    "word": "husband",
+    "chinese": "丈夫"
+  },
+  {
+    "file": "data.json",
+    "word": "wife",
+    "chinese": "妻子"
+  },
+  {
+    "file": "data.json",
+    "word": "relative",
+    "chinese": "親戚；親屬"
+  },
+  {
+    "file": "data.json",
+    "word": "Dr.",
+    "chinese": "醫生；博士"
+  },
+  {
+    "file": "data.json",
+    "word": "Mr.",
+    "chinese": "先生"
+  },
+  {
+    "file": "data.json",
+    "word": "Mrs.",
+    "chinese": "太太"
+  },
+  {
+    "file": "data.json",
+    "word": "Ms.",
+    "chinese": "女士"
+  },
+  {
+    "file": "data.json",
+    "word": "Miss",
+    "chinese": "小姐"
+  },
+  {
+    "file": "data.json",
+    "word": "sir",
+    "chinese": "先生"
+  },
+  {
+    "file": "data.json",
+    "word": "name",
+    "chinese": "名字"
+  },
+  {
+    "file": "data.json",
+    "word": "baby",
+    "chinese": "嬰兒"
+  },
+  {
+    "file": "data.json",
+    "word": "child",
+    "chinese": "孩子；兒童"
+  },
+  {
+    "file": "data.json",
+    "word": "kid",
+    "chinese": "小孩"
+  },
+  {
+    "file": "data.json",
+    "word": "boy",
+    "chinese": "男孩"
+  },
+  {
+    "file": "data.json",
+    "word": "girl",
+    "chinese": "女孩"
+  },
+  {
+    "file": "data.json",
+    "word": "man",
+    "chinese": "男人；人類"
+  },
+  {
+    "file": "data.json",
+    "word": "woman",
+    "chinese": "女人"
+  },
+  {
+    "file": "data.json",
+    "word": "classmate",
+    "chinese": "同班同學"
+  },
+  {
+    "file": "data.json",
+    "word": "friend",
+    "chinese": "朋友"
+  },
+  {
+    "file": "data.json",
+    "word": "student",
+    "chinese": "學生"
+  },
+  {
+    "file": "data.json",
+    "word": "teacher",
+    "chinese": "老師"
+  },
+  {
+    "file": "data.json",
+    "word": "cook",
+    "chinese": "廚師"
+  },
+  {
+    "file": "data.json",
+    "word": "police officer",
+    "chinese": "警察"
+  },
+  {
+    "file": "data.json",
+    "word": "doctor",
+    "chinese": "醫生；博士"
+  },
+  {
+    "file": "data.json",
+    "word": "nurse",
+    "chinese": "護士"
+  },
+  {
+    "file": "data.json",
+    "word": "singer",
+    "chinese": "歌手"
+  },
+  {
+    "file": "data.json",
+    "word": "farmer",
+    "chinese": "農夫"
+  },
+  {
+    "file": "data.json",
+    "word": "reporter",
+    "chinese": "記者"
+  },
+  {
+    "file": "data.json",
+    "word": "writer",
+    "chinese": "作者；作家"
+  },
+  {
+    "file": "data.json",
+    "word": "actor",
+    "chinese": "男演員"
+  },
+  {
+    "file": "data.json",
+    "word": "actress",
+    "chinese": "女演員"
+  },
+  {
+    "file": "data.json",
+    "word": "waiter",
+    "chinese": "男服務生"
+  },
+  {
+    "file": "data.json",
+    "word": "waitress",
+    "chinese": "女服務生"
+  },
+  {
+    "file": "data.json",
+    "word": "housewife",
+    "chinese": "家庭主婦"
+  },
+  {
+    "file": "data.json",
+    "word": "engineer",
+    "chinese": "工程師"
+  },
+  {
+    "file": "data.json",
+    "word": "businessman",
+    "chinese": "商人"
+  },
+  {
+    "file": "data.json",
+    "word": "salesman",
+    "chinese": "銷售員"
+  },
+  {
+    "file": "data.json",
+    "word": "world",
+    "chinese": "世界"
+  },
+  {
+    "file": "data.json",
+    "word": "country",
+    "chinese": "國家"
+  },
+  {
+    "file": "data.json",
+    "word": "America",
+    "chinese": "美國"
+  },
+  {
+    "file": "data.json",
+    "word": "China",
+    "chinese": "中國"
+  },
+  {
+    "file": "data.json",
+    "word": "Taiwan",
+    "chinese": "臺灣"
+  },
+  {
+    "file": "data.json",
+    "word": "R.O.C.",
+    "chinese": "中華民國"
+  },
+  {
+    "file": "data.json",
+    "word": "American",
+    "chinese": "美國人；美國的"
+  },
+  {
+    "file": "data.json",
+    "word": "Chinese",
+    "chinese": "中文；中國人"
+  },
+  {
+    "file": "data.json",
+    "word": "English",
+    "chinese": "英文；英國的"
+  },
+  {
+    "file": "data.json",
+    "word": "old",
+    "chinese": "老的"
+  },
+  {
+    "file": "data.json",
+    "word": "young",
+    "chinese": "年輕的"
+  },
+  {
+    "file": "data.json",
+    "word": "pretty",
+    "chinese": "漂亮的"
+  },
+  {
+    "file": "data.json",
+    "word": "beautiful",
+    "chinese": "美麗的"
+  },
+  {
+    "file": "data.json",
+    "word": "cute",
+    "chinese": "可愛的"
+  },
+  {
+    "file": "data.json",
+    "word": "handsome",
+    "chinese": "英俊的"
+  },
+  {
+    "file": "data.json",
+    "word": "ugly",
+    "chinese": "醜的"
+  },
+  {
+    "file": "data.json",
+    "word": "tall",
+    "chinese": "高的"
+  },
+  {
+    "file": "data.json",
+    "word": "short",
+    "chinese": "矮的"
+  },
+  {
+    "file": "data.json",
+    "word": "fat",
+    "chinese": "胖的"
+  },
+  {
+    "file": "data.json",
+    "word": "heavy",
+    "chinese": "重的"
+  },
+  {
+    "file": "data.json",
+    "word": "thin",
+    "chinese": "瘦的"
+  },
+  {
+    "file": "data.json",
+    "word": "slim",
+    "chinese": "苗條的"
+  },
+  {
+    "file": "data.json",
+    "word": "cool",
+    "chinese": "酷的"
+  },
+  {
+    "file": "data.json",
+    "word": "happy",
+    "chinese": "快樂的"
+  },
+  {
+    "file": "data.json",
+    "word": "nice",
+    "chinese": "好的"
+  },
+  {
+    "file": "data.json",
+    "word": "good",
+    "chinese": "好的"
+  },
+  {
+    "file": "data.json",
+    "word": "fine",
+    "chinese": "好的"
+  },
+  {
+    "file": "data.json",
+    "word": "bad",
+    "chinese": "壞的"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "bedroom",
+    "chinese": "臥室"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "bathroom",
+    "chinese": "浴室；廁所"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "study",
+    "chinese": "書房"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "living room",
+    "chinese": "客廳"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "dining room",
+    "chinese": "飯廳"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "kitchen",
+    "chinese": "廚房"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "apartment",
+    "chinese": "公寓"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "house",
+    "chinese": "房子"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "home",
+    "chinese": "家"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "room",
+    "chinese": "房間"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "door",
+    "chinese": "門"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "floor",
+    "chinese": "樓層；地板"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "gate",
+    "chinese": "大門"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "yard",
+    "chinese": "庭院"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "garden",
+    "chinese": "花園"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "balcony",
+    "chinese": "陽臺"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "bed",
+    "chinese": "床"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "chair",
+    "chinese": "椅子"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "couch",
+    "chinese": "長沙發"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "bench",
+    "chinese": "長椅"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "sofa",
+    "chinese": "沙發"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "wall",
+    "chinese": "牆壁"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "stair",
+    "chinese": "樓梯"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "table",
+    "chinese": "桌子"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "desk",
+    "chinese": "書桌"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "key",
+    "chinese": "鑰匙"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "fan",
+    "chinese": "電風扇；迷"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "light",
+    "chinese": "燈；輕（薄）的；淺色的"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "candle",
+    "chinese": "蠟燭"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "machine",
+    "chinese": "機器"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "camera",
+    "chinese": "照相機"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "computer",
+    "chinese": "電腦"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "telephone (phone)",
+    "chinese": "電話"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "cellphone",
+    "chinese": "手機"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "number",
+    "chinese": "數字"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "bakery",
+    "chinese": "麵包店"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "bank",
+    "chinese": "銀行；堤；岸"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "park",
+    "chinese": "公園"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "zoo",
+    "chinese": "動物園"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "farm",
+    "chinese": "農場"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "beach",
+    "chinese": "海灘"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "bookstore",
+    "chinese": "書店"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "factory",
+    "chinese": "工廠"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "hospital",
+    "chinese": "醫院"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "museum",
+    "chinese": "博物館"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "theater",
+    "chinese": "劇院；電影院"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "pool",
+    "chinese": "游泳池；水池"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "restaurant",
+    "chinese": "餐廳"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "library",
+    "chinese": "圖書館"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "fire station",
+    "chinese": "消防局"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "police station",
+    "chinese": "警察局"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "fast food restaurant",
+    "chinese": "速食餐廳"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "do / does",
+    "chinese": "做"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "have / has",
+    "chinese": "有"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "thank",
+    "chinese": "感謝"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "sleep",
+    "chinese": "睡覺"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "wake",
+    "chinese": "叫醒；醒來"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "take",
+    "chinese": "拿；帶領；搭乘"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "close",
+    "chinese": "關上"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "open",
+    "chinese": "打開"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "come",
+    "chinese": "回來；來到"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "go",
+    "chinese": "去"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "wait",
+    "chinese": "等"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "jump",
+    "chinese": "跳"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "find",
+    "chinese": "發現；找到"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "run",
+    "chinese": "跑；經營"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "shout",
+    "chinese": "喊叫"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "sit",
+    "chinese": "坐"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "buy",
+    "chinese": "買"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "stand",
+    "chinese": "站；忍受"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "cry",
+    "chinese": "哭"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "hurry",
+    "chinese": "快點"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "meet",
+    "chinese": "遇見"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "welcome",
+    "chinese": "歡迎"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "worry",
+    "chinese": "擔心"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "look",
+    "chinese": "看；看起來"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "watch",
+    "chinese": "觀看"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "listen",
+    "chinese": "聽"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "see",
+    "chinese": "看"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "fall",
+    "chinese": "掉落"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "follow",
+    "chinese": "跟隨；遵守"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "eat",
+    "chinese": "吃"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "leave",
+    "chinese": "離開；留下"
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "word": "prepare",
+    "chinese": "準備"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "blackboard",
+    "chinese": "黑板"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "chalk",
+    "chinese": "粉筆"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "glue",
+    "chinese": "膠水"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "notebook",
+    "chinese": "筆記本"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "ruler",
+    "chinese": "尺"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "pen",
+    "chinese": "筆；原子筆"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "pencil",
+    "chinese": "鉛筆"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "marker",
+    "chinese": "白板筆；色筆"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "clock",
+    "chinese": "時鐘"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "map",
+    "chinese": "地圖"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "picture",
+    "chinese": "圖畫"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "book",
+    "chinese": "書"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "eraser",
+    "chinese": "橡皮擦；板擦"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "paper",
+    "chinese": "紙（張）"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "workbook",
+    "chinese": "習作"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "dictionary",
+    "chinese": "字典"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "letter",
+    "chinese": "信件"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "postcard",
+    "chinese": "明信片"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "seat",
+    "chinese": "座位"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "envelope",
+    "chinese": "信封"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "glasses",
+    "chinese": "眼鏡"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "note",
+    "chinese": "便條；短籤；筆記"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "band",
+    "chinese": "樂團"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "drum",
+    "chinese": "鼓"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "guitar",
+    "chinese": "吉他"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "piano",
+    "chinese": "鋼琴"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "violin",
+    "chinese": "小提琴"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "club",
+    "chinese": "社團；俱樂部"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "card",
+    "chinese": "卡片；紙牌"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "game",
+    "chinese": "比賽；遊戲"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "course",
+    "chinese": "課程"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "subject",
+    "chinese": "學科"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "art",
+    "chinese": "美術"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "history",
+    "chinese": "歷史"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "math (mathematics)",
+    "chinese": "數學"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "music",
+    "chinese": "音樂"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "science",
+    "chinese": "科學"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "PE (Physical Education)",
+    "chinese": "體育"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "language",
+    "chinese": "語言"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "sport",
+    "chinese": "運動"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "badminton",
+    "chinese": "羽毛球"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "basketball",
+    "chinese": "籃球"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "baseball",
+    "chinese": "棒球"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "tennis",
+    "chinese": "網球"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "soccer",
+    "chinese": "足球"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "group",
+    "chinese": "團體；群"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "player",
+    "chinese": "運動員；選手；播放器"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "prize",
+    "chinese": "獎品；獎金"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "exercise",
+    "chinese": "運動；習題"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "count",
+    "chinese": "數數；計算"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "catch",
+    "chinese": "趕上；抓住"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "help",
+    "chinese": "幫忙"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "hike",
+    "chinese": "健行"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "jog",
+    "chinese": "慢跑"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "swim",
+    "chinese": "游泳"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "sing",
+    "chinese": "唱歌"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "dance",
+    "chinese": "跳舞"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "draw",
+    "chinese": "繪畫"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "paint",
+    "chinese": "(用顏料) 畫；顏料；油漆"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "brush",
+    "chinese": "刷；刷子"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "like",
+    "chinese": "喜歡"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "love",
+    "chinese": "愛"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "join",
+    "chinese": "參加；加入"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "learn",
+    "chinese": "學習"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "study",
+    "chinese": "學習；研讀"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "ask",
+    "chinese": "問；要求"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "write",
+    "chinese": "寫"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "practice",
+    "chinese": "練習；實踐"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "read",
+    "chinese": "閱讀"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "speak",
+    "chinese": "說話；講"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "say",
+    "chinese": "說"
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "word": "talk",
+    "chinese": "講話；交談"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "month",
+    "chinese": "月"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "January",
+    "chinese": "一月"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "February",
+    "chinese": "二月"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "March",
+    "chinese": "三月"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "April",
+    "chinese": "四月"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "May",
+    "chinese": "五月"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "June",
+    "chinese": "六月"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "July",
+    "chinese": "七月"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "August",
+    "chinese": "八月"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "September",
+    "chinese": "九月"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "October",
+    "chinese": "十月"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "November",
+    "chinese": "十一月"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "December",
+    "chinese": "十二月"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "morning",
+    "chinese": "早晨；上午"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "noon",
+    "chinese": "中午"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "afternoon",
+    "chinese": "下午"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "evening",
+    "chinese": "傍晚；晚上"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "night",
+    "chinese": "晚上"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "Monday",
+    "chinese": "星期一"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "Tuesday",
+    "chinese": "星期二"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "Wednesday",
+    "chinese": "星期三"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "Thursday",
+    "chinese": "星期四"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "Friday",
+    "chinese": "星期五"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "Saturday",
+    "chinese": "星期六"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "Sunday",
+    "chinese": "星期日"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "week",
+    "chinese": "週"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "weekend",
+    "chinese": "週末"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "date",
+    "chinese": "日期"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "place",
+    "chinese": "地方"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "shop",
+    "chinese": "商店；購物"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "store",
+    "chinese": "商店"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "department store",
+    "chinese": "百貨公司"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "hotel",
+    "chinese": "飯店；旅館"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "market",
+    "chinese": "市場"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "supermarket",
+    "chinese": "超級市場"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "office",
+    "chinese": "辦公室"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "post office",
+    "chinese": "郵局"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "restroom",
+    "chinese": "廁所"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "town",
+    "chinese": "小鎮"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "city",
+    "chinese": "城市"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "country",
+    "chinese": "鄉下"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "road",
+    "chinese": "路"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "street",
+    "chinese": "街道"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "class",
+    "chinese": "課；課程；班級"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "lesson",
+    "chinese": "課；課堂"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "classroom",
+    "chinese": "教室"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "story",
+    "chinese": "故事"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "page",
+    "chinese": "頁；頁數"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "example",
+    "chinese": "例子"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "word",
+    "chinese": "字；詞"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "sentence",
+    "chinese": "句子"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "problem",
+    "chinese": "問題；難題"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "question",
+    "chinese": "問題；題目"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "quiz",
+    "chinese": "小考"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "test",
+    "chinese": "測驗；考試"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "grade",
+    "chinese": "分數；年級"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "homework",
+    "chinese": "家庭作業"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "knowledge",
+    "chinese": "知識"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "bell",
+    "chinese": "鈴"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "noise",
+    "chinese": "噪音"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "first",
+    "chinese": "第一（的）"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "second",
+    "chinese": "第二（的）"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "third",
+    "chinese": "第三（的）"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "last",
+    "chinese": "最後的；前一個的"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "always",
+    "chinese": "總是"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "usually",
+    "chinese": "經常；通常"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "often",
+    "chinese": "時常"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "sometimes",
+    "chinese": "有時"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "seldom",
+    "chinese": "很少"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "never",
+    "chinese": "從不"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "call",
+    "chinese": "打電話；稱呼；呼叫"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "use",
+    "chinese": "使用"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "know",
+    "chinese": "知道；認識"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "think",
+    "chinese": "認為；想"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "wish",
+    "chinese": "希望"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "want",
+    "chinese": "想要"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "hold",
+    "chinese": "握住；舉行"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "miss",
+    "chinese": "想念；錯過"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "stay",
+    "chinese": "停留；保持"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "please",
+    "chinese": "使高興；使滿意"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "celebrate",
+    "chinese": "慶祝"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "understand",
+    "chinese": "了解"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "choose",
+    "chinese": "選擇"
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "word": "care",
+    "chinese": "關心；在乎"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "meat",
+    "chinese": "肉類"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "beef",
+    "chinese": "牛肉"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "pork",
+    "chinese": "豬肉"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "chicken",
+    "chinese": "雞肉"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "fish",
+    "chinese": "魚肉"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "vegetable",
+    "chinese": "蔬菜"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "bean",
+    "chinese": "豆子"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "pumpkin",
+    "chinese": "南瓜"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "fruit",
+    "chinese": "水果"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "apple",
+    "chinese": "蘋果"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "banana",
+    "chinese": "香蕉"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "grape",
+    "chinese": "葡萄"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "guava",
+    "chinese": "芭樂"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "lemon",
+    "chinese": "檸檬"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "orange",
+    "chinese": "柳橙"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "papaya",
+    "chinese": "木瓜"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "peach",
+    "chinese": "桃子"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "pear",
+    "chinese": "梨子"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "strawberry",
+    "chinese": "草莓"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "tomato",
+    "chinese": "番茄"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "watermelon",
+    "chinese": "西瓜"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "drink",
+    "chinese": "飲料"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "water",
+    "chinese": "水"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "milk",
+    "chinese": "牛奶"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "tea",
+    "chinese": "茶"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "coffee",
+    "chinese": "咖啡"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "juice",
+    "chinese": "果汁"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "ice",
+    "chinese": "冰"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "butter",
+    "chinese": "奶油"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "oil",
+    "chinese": "油"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "sugar",
+    "chinese": "糖"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "salt",
+    "chinese": "鹽"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "snack",
+    "chinese": "點心"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "cake",
+    "chinese": "蛋糕"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "candy",
+    "chinese": "糖果"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "chocolate",
+    "chinese": "巧克力"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "ice cream",
+    "chinese": "冰淇淋"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "popcorn",
+    "chinese": "爆米花"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "cookie",
+    "chinese": "餅乾"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "breakfast",
+    "chinese": "早餐"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "lunch",
+    "chinese": "午餐"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "dinner",
+    "chinese": "晚餐"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "meal",
+    "chinese": "餐"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "food",
+    "chinese": "食物"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "bread",
+    "chinese": "麵包"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "bun",
+    "chinese": "小圓麵包"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "toast",
+    "chinese": "烤吐司"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "rice",
+    "chinese": "米；飯"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "noodle",
+    "chinese": "麵"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "salad",
+    "chinese": "沙拉"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "egg",
+    "chinese": "蛋"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "sandwich",
+    "chinese": "三明治"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "soup",
+    "chinese": "湯"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "steak",
+    "chinese": "牛排"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "cheese",
+    "chinese": "起司"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "ham",
+    "chinese": "火腿"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "fries",
+    "chinese": "薯條"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "hamburger",
+    "chinese": "漢堡"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "hot dog",
+    "chinese": "熱狗"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "pie",
+    "chinese": "派"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "pizza",
+    "chinese": "披薩"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "menu",
+    "chinese": "菜單"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "bottle",
+    "chinese": "瓶子；一瓶的容量"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "cup",
+    "chinese": "杯子；一杯的容量"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "pack",
+    "chinese": "包；打包"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "package",
+    "chinese": "包裹；包裝"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "pair",
+    "chinese": "一雙；一對"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "piece",
+    "chinese": "(一) 張；片；塊"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "glass",
+    "chinese": "玻璃杯"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "pound",
+    "chinese": "磅（重量單位）"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "full",
+    "chinese": "飽的；滿的"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "delicious",
+    "chinese": "美味的"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "yummy",
+    "chinese": "好吃的"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "hungry",
+    "chinese": "餓的"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "thirsty",
+    "chinese": "口渴的"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "hot",
+    "chinese": "熱的；辣的"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "sweet",
+    "chinese": "甜的；貼心的"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "enough",
+    "chinese": "足夠的"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "few",
+    "chinese": "很少的；幾乎沒有"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "put",
+    "chinese": "放"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "cut",
+    "chinese": "切"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "wash",
+    "chinese": "清洗"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "need",
+    "chinese": "需要"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "remember",
+    "chinese": "記得"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "live",
+    "chinese": "居住"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "bake",
+    "chinese": "烘焙；烤"
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "word": "fix",
+    "chinese": "修理；解決"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "monkey",
+    "chinese": "猴子"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "horse",
+    "chinese": "馬"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "turtle",
+    "chinese": "烏龜"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "bird",
+    "chinese": "鳥"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "snake",
+    "chinese": "蛇"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "elephant",
+    "chinese": "大象"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "bear",
+    "chinese": "熊"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "lion",
+    "chinese": "獅子"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "tiger",
+    "chinese": "老虎"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "animal",
+    "chinese": "動物"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "pet",
+    "chinese": "寵物"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "dog",
+    "chinese": "狗"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "puppy",
+    "chinese": "小狗"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "mouse",
+    "chinese": "老鼠"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "rat",
+    "chinese": "大老鼠"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "chicken",
+    "chinese": "雞"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "hen",
+    "chinese": "母雞"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "cow",
+    "chinese": "母牛"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "duck",
+    "chinese": "鴨"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "goose",
+    "chinese": "鵝"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "sheep",
+    "chinese": "綿羊"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "goat",
+    "chinese": "山羊"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "zebra",
+    "chinese": "斑馬"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "cat",
+    "chinese": "貓"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "fox",
+    "chinese": "狐狸"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "frog",
+    "chinese": "青蛙"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "pig",
+    "chinese": "豬"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "rabbit",
+    "chinese": "兔子"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "guy",
+    "chinese": "傢伙"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "king",
+    "chinese": "國王"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "queen",
+    "chinese": "皇后"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "castle",
+    "chinese": "城堡"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "giant",
+    "chinese": "巨人；巨大的"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "neighbor",
+    "chinese": "鄰居"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "person",
+    "chinese": "人"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "people",
+    "chinese": "人們"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "stranger",
+    "chinese": "陌生人"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "teenager",
+    "chinese": "青少年"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "foreigner",
+    "chinese": "外國人"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "fool",
+    "chinese": "傻瓜；愚弄"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "visitor",
+    "chinese": "訪客；遊客"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "medicine",
+    "chinese": "藥"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "health",
+    "chinese": "健康"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "cold",
+    "chinese": "感冒"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "headache",
+    "chinese": "頭痛"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "fever",
+    "chinese": "發燒"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "death",
+    "chinese": "死亡"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "sore throat",
+    "chinese": "喉嚨痛"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "strong",
+    "chinese": "強壯的"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "well",
+    "chinese": "(身體) 好的"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "healthy",
+    "chinese": "健康的"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "comfortable",
+    "chinese": "舒服的"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "sick",
+    "chinese": "生病的"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "weak",
+    "chinese": "虛弱的"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "tired",
+    "chinese": "疲倦的"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "sore",
+    "chinese": "痛的"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "but",
+    "chinese": "但是"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "because",
+    "chinese": "因為"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "although / though",
+    "chinese": "雖然"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "so",
+    "chinese": "所以"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "while",
+    "chinese": "當......時"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "laugh",
+    "chinese": "大笑"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "smile",
+    "chinese": "微笑"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "climb",
+    "chinese": "爬；攀登"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "camp",
+    "chinese": "露營"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "surf",
+    "chinese": "衝浪"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "lose",
+    "chinese": "輸；失去"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "win",
+    "chinese": "贏"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "hope",
+    "chinese": "希望"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "visit",
+    "chinese": "拜訪；參觀"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "happen",
+    "chinese": "發生"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "hurt",
+    "chinese": "疼痛；傷害"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "tell",
+    "chinese": "告訴；分辨"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "guess",
+    "chinese": "猜測"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "change",
+    "chinese": "改變"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "feed",
+    "chinese": "餵"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "cheer",
+    "chinese": "歡呼"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "fail",
+    "chinese": "不及格；失敗"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "pass",
+    "chinese": "通過（考試）"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "work",
+    "chinese": "工作"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "build",
+    "chinese": "建造"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "must",
+    "chinese": "一定"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "may",
+    "chinese": "可能；可以"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "might",
+    "chinese": "可能；也許"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "will",
+    "chinese": "將會"
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "word": "should",
+    "chinese": "應該"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "hobby",
+    "chinese": "嗜好"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "interest",
+    "chinese": "興趣"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "comic",
+    "chinese": "漫畫"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "song",
+    "chinese": "歌曲"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "stamp",
+    "chinese": "郵票"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "doll",
+    "chinese": "玩偶；洋娃娃"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "kite",
+    "chinese": "風箏"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "robot",
+    "chinese": "機器人"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "toy",
+    "chinese": "玩具"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "trip",
+    "chinese": "旅程；旅行"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "picnic",
+    "chinese": "野餐"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "team",
+    "chinese": "隊伍"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "group",
+    "chinese": "團體"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "race",
+    "chinese": "競賽；賽跑"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "pot",
+    "chinese": "罐；鍋"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "bowl",
+    "chinese": "碗"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "plate",
+    "chinese": "盤子"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "chopstick(s)",
+    "chinese": "筷子"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "knife",
+    "chinese": "刀子"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "fork",
+    "chinese": "叉子"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "spoon",
+    "chinese": "湯匙"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "cup",
+    "chinese": "杯子"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "dish",
+    "chinese": "菜肴；盤子"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "insect",
+    "chinese": "昆蟲"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "ant",
+    "chinese": "螞蟻"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "bee",
+    "chinese": "蜜蜂"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "bug",
+    "chinese": "小蟲"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "butterfly",
+    "chinese": "蝴蝶"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "bat",
+    "chinese": "蝙蝠；球棒"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "spider",
+    "chinese": "蜘蛛"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "tail",
+    "chinese": "尾巴"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "gym",
+    "chinese": "體育館"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "playground",
+    "chinese": "遊樂場"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "seesaw",
+    "chinese": "蹺蹺板"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "slide",
+    "chinese": "溜滑梯"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "swing",
+    "chinese": "秋千"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "rope",
+    "chinese": "繩索"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "grow",
+    "chinese": "種植；增加；成長"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "walk",
+    "chinese": "走路"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "keep",
+    "chinese": "保持"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "stop",
+    "chinese": "停止"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "finish",
+    "chinese": "結束；完結"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "bring",
+    "chinese": "攜帶；帶來"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "begin",
+    "chinese": "開始"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "plan",
+    "chinese": "計畫"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "start",
+    "chinese": "開始"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "share",
+    "chinese": "分享；分攤"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "enjoy",
+    "chinese": "享受"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "save",
+    "chinese": "拯救；儲存；節省"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "plant",
+    "chinese": "種植；植物"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "try",
+    "chinese": "嘗試"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "mop",
+    "chinese": "拖地"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "fight",
+    "chinese": "打架；對抗"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "throw",
+    "chinese": "扔；丟"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "wave",
+    "chinese": "揮(手)；海浪"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "attack",
+    "chinese": "攻擊"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "invite",
+    "chinese": "邀請"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "answer",
+    "chinese": "回答；答案"
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "word": "forget",
+    "chinese": "忘記"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "bicycle (bike)",
+    "chinese": "腳踏車"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "bus",
+    "chinese": "公車"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "car",
+    "chinese": "汽車"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "motorcycle",
+    "chinese": "重型機車"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "scooter",
+    "chinese": "輕型機車"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "train",
+    "chinese": "火車"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "taxi",
+    "chinese": "計程車"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "truck",
+    "chinese": "卡車"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "airplane (plane)",
+    "chinese": "飛機"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "ship",
+    "chinese": "船；艦"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "boat",
+    "chinese": "小船"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "metro",
+    "chinese": "大眾捷運系統"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "airport",
+    "chinese": "機場"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "block",
+    "chinese": "街區"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "station",
+    "chinese": "車站；（機構的）站、所、署、局"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "bridge",
+    "chinese": "橋梁"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "sidewalk",
+    "chinese": "人行道"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "traffic",
+    "chinese": "交通"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "season",
+    "chinese": "季節"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "spring",
+    "chinese": "春天；泉水"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "summer",
+    "chinese": "夏天"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "autumn / fall",
+    "chinese": "秋天"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "winter",
+    "chinese": "冬天"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "weather",
+    "chinese": "天氣"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "rainbow",
+    "chinese": "彩虹"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "typhoon",
+    "chinese": "颱風"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "cloud",
+    "chinese": "雲"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "wind",
+    "chinese": "風"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "snow",
+    "chinese": "雪；下雪"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "rain",
+    "chinese": "雨；下雨"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "shower",
+    "chinese": "陣雨；淋浴"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "hour",
+    "chinese": "小時"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "minute",
+    "chinese": "分鐘"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "second",
+    "chinese": "秒"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "moment",
+    "chinese": "時刻；瞬間"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "half",
+    "chinese": "一半"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "quarter",
+    "chinese": "十五分鐘；四分之一"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "day",
+    "chinese": "日；天"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "year",
+    "chinese": "年"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "time",
+    "chinese": "時間"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "today",
+    "chinese": "今天"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "tonight",
+    "chinese": "今晚"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "tomorrow",
+    "chinese": "明天"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "yesterday",
+    "chinese": "昨天"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "a.m.",
+    "chinese": "上午；凌晨"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "p.m.",
+    "chinese": "下午；晚上"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "o'clock",
+    "chinese": "整點鐘"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "now",
+    "chinese": "現在"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "future",
+    "chinese": "未來"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "past",
+    "chinese": "過去；經過"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "dry",
+    "chinese": "乾的"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "wet",
+    "chinese": "潮溼的"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "cloudy",
+    "chinese": "多雲的；陰天的"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "sunny",
+    "chinese": "晴朗的"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "warm",
+    "chinese": "溫暖的"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "cool",
+    "chinese": "涼爽的"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "cold",
+    "chinese": "冷的"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "rainy",
+    "chinese": "下雨的"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "snowy",
+    "chinese": "下雪的"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "windy",
+    "chinese": "多風的"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "clear",
+    "chinese": "晴朗的"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "pick",
+    "chinese": "撿；摘；挑選"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "arrive",
+    "chinese": "抵達"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "drive",
+    "chinese": "駕駛（車）"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "fly",
+    "chinese": "飛行；駕駛（飛機）"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "ride",
+    "chinese": "騎（車、馬）"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "sail",
+    "chinese": "航行；駕駛（船）"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "land",
+    "chinese": "著陸；降落"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "turn",
+    "chinese": "轉（向）；翻頁"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "end",
+    "chinese": "結束"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "check",
+    "chinese": "檢查；查詢"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "cross",
+    "chinese": "跨過；越過"
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "word": "enter",
+    "chinese": "進入"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "hair",
+    "chinese": "頭髮"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "head",
+    "chinese": "頭"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "eye",
+    "chinese": "眼睛"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "nose",
+    "chinese": "鼻子"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "ear",
+    "chinese": "耳朵"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "mouth",
+    "chinese": "嘴巴"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "shoulder",
+    "chinese": "肩膀"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "arm",
+    "chinese": "手臂"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "hand",
+    "chinese": "手"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "finger",
+    "chinese": "手指"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "knee",
+    "chinese": "膝蓋"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "stomach",
+    "chinese": "胃"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "leg",
+    "chinese": "腿"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "foot",
+    "chinese": "腳"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "face",
+    "chinese": "臉"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "lip",
+    "chinese": "嘴唇"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "tooth",
+    "chinese": "牙齒"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "back",
+    "chinese": "背部"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "body",
+    "chinese": "身體"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "heart",
+    "chinese": "心（臟）"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "nail",
+    "chinese": "指甲；釘子"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "neck",
+    "chinese": "脖子"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "throat",
+    "chinese": "喉嚨"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "toe",
+    "chinese": "腳趾"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "Internet (Net)",
+    "chinese": "網際網路"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "e-mail",
+    "chinese": "電子郵件"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "mail",
+    "chinese": "郵件；信件"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "screen",
+    "chinese": "螢幕"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "leader",
+    "chinese": "領導者"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "idea",
+    "chinese": "主意；意見"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "matter",
+    "chinese": "事件"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "case",
+    "chinese": "案例；情況"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "chance",
+    "chinese": "機會"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "dream",
+    "chinese": "夢想；夢見"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "excuse",
+    "chinese": "理由；藉口"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "fact",
+    "chinese": "事實"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "mistake",
+    "chinese": "錯誤"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "meeting",
+    "chinese": "會議"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "way",
+    "chinese": "途徑；方法"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "thing",
+    "chinese": "事情；物品"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "interview",
+    "chinese": "面試；採訪"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "ghost",
+    "chinese": "鬼"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "sale",
+    "chinese": "拍賣"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "story",
+    "chinese": "樓層"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "side",
+    "chinese": "邊"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "tool",
+    "chinese": "工具"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "trouble",
+    "chinese": "麻煩"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "voice",
+    "chinese": "聲音；歌喉"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "sight",
+    "chinese": "視力；景象"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "mind",
+    "chinese": "想法；心意；介意"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "rule",
+    "chinese": "規則"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "angle",
+    "chinese": "觀點；角度"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "die",
+    "chinese": "死亡"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "send",
+    "chinese": "寄送；派遣"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "sell",
+    "chinese": "賣"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "give",
+    "chinese": "給"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "show",
+    "chinese": "展示；表演"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "teach",
+    "chinese": "教"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "smell",
+    "chinese": "聞起來；氣味"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "sound",
+    "chinese": "聽起來；聲音"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "taste",
+    "chinese": "嚐起來；味道"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "hear",
+    "chinese": "聽到；聽說"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "feel",
+    "chinese": "感覺"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "get",
+    "chinese": "獲得；變得"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "become",
+    "chinese": "成為；變成"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "order",
+    "chinese": "點餐；訂購；順序"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "move",
+    "chinese": "移動；搬家"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "drop",
+    "chinese": "掉下；掉落"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "kill",
+    "chinese": "殺"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "kiss",
+    "chinese": "親吻"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "allow",
+    "chinese": "允許"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "define",
+    "chinese": "定義"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "download",
+    "chinese": "下載"
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "word": "upload",
+    "chinese": "上傳"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "coat",
+    "chinese": "外套；大衣"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "hat",
+    "chinese": "帽子"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "dress",
+    "chinese": "洋裝"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "jeans",
+    "chinese": "牛仔褲"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "pants",
+    "chinese": "長褲"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "shorts",
+    "chinese": "短褲"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "ring",
+    "chinese": "戒指"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "shoe(s)",
+    "chinese": "鞋子"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "bag",
+    "chinese": "包包；提袋"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "tie",
+    "chinese": "領帶"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "sock(s)",
+    "chinese": "襪子"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "clothes",
+    "chinese": "衣服"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "jacket",
+    "chinese": "夾克"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "skirt",
+    "chinese": "裙子"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "shirt",
+    "chinese": "襯衫"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "T-shirt",
+    "chinese": "T恤"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "cap",
+    "chinese": "(前有遮簷的) 帽子"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "sweater",
+    "chinese": "毛衣"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "uniform",
+    "chinese": "制服"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "belt",
+    "chinese": "腰帶；帶子"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "comb",
+    "chinese": "梳子；梳"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "glove(s)",
+    "chinese": "手套"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "mask",
+    "chinese": "面具；口罩"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "pocket",
+    "chinese": "口袋"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "bow",
+    "chinese": "蝴蝶結"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "wallet",
+    "chinese": "皮夾"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "button",
+    "chinese": "鈕扣"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "centimeter (cm)",
+    "chinese": "公分"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "foot",
+    "chinese": "英尺"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "yard",
+    "chinese": "碼"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "gram",
+    "chinese": "公克"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "kilogram (kg)",
+    "chinese": "公斤"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "inch",
+    "chinese": "英寸"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "mile",
+    "chinese": "英里"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "circle",
+    "chinese": "圓圈"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "dot",
+    "chinese": "點；點狀物"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "point",
+    "chinese": "點；尖端；要點"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "line",
+    "chinese": "線；排"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "row",
+    "chinese": "列；排"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "shape",
+    "chinese": "形狀；身材"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "square",
+    "chinese": "正方形"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "size",
+    "chinese": "尺寸"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "height",
+    "chinese": "高度"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "glad",
+    "chinese": "高興的"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "unhappy",
+    "chinese": "不快樂的"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "afraid",
+    "chinese": "擔心的；害怕的"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "noisy",
+    "chinese": "吵鬧的"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "brave",
+    "chinese": "勇敢的"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "able",
+    "chinese": "可以的；有能力的"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "fine",
+    "chinese": "很好的"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "own",
+    "chinese": "自己的；擁有"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "dead",
+    "chinese": "死亡的；沒電的"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "dear",
+    "chinese": "親愛的"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "real",
+    "chinese": "真的；真實的"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "quiet",
+    "chinese": "安靜的"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "loud",
+    "chinese": "大聲的"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "lucky",
+    "chinese": "幸運的"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "favorite",
+    "chinese": "最喜愛的"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "great",
+    "chinese": "很棒的"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "excellent",
+    "chinese": "極佳的；優秀的"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "helpful",
+    "chinese": "有幫助的"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "important",
+    "chinese": "重要的"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "pop",
+    "chinese": "流行的"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "popular",
+    "chinese": "受歡迎的"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "ready",
+    "chinese": "準備好的"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "crazy",
+    "chinese": "瘋狂的"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "short",
+    "chinese": "短的"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "long",
+    "chinese": "長的"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "large",
+    "chinese": "大的"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "big",
+    "chinese": "大的"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "small",
+    "chinese": "小的"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "little",
+    "chinese": "小的"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "high",
+    "chinese": "高的"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "low",
+    "chinese": "低的"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "medium",
+    "chinese": "中間的；中等的"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "straight",
+    "chinese": "直的"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "round",
+    "chinese": "圓的"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "close",
+    "chinese": "接近的；親近的"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "far",
+    "chinese": "遠的"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "deep",
+    "chinese": "深的"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "cheap",
+    "chinese": "便宜的"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "expensive",
+    "chinese": "昂貴的"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "total",
+    "chinese": "總數(的)"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "let",
+    "chinese": "讓；使；允許"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "make",
+    "chinese": "使；讓；製造"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "believe",
+    "chinese": "相信"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "decide",
+    "chinese": "決定"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "sign",
+    "chinese": "簽名；標誌"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "blow",
+    "chinese": "吹；颳"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "hit",
+    "chinese": "打；擊"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "appear",
+    "chinese": "出現；似乎"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "shine",
+    "chinese": "照耀；發光"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "rest",
+    "chinese": "休息"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "expect",
+    "chinese": "期待；預計"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "shop",
+    "chinese": "購買；商店"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "wear",
+    "chinese": "穿；戴"
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "word": "shake",
+    "chinese": "搖晃"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "zero",
+    "chinese": "零（的）"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "dozen",
+    "chinese": "一打（十二個）"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "hundred",
+    "chinese": "百（的）"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "thousand",
+    "chinese": "千（的）"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "million",
+    "chinese": "百萬（的）"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "price",
+    "chinese": "價格；代價"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "money",
+    "chinese": "錢"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "dollar",
+    "chinese": "元"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "cent",
+    "chinese": "分（金錢單位）"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "change",
+    "chinese": "零錢"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "color",
+    "chinese": "顏色"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "black",
+    "chinese": "黑色（的）"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "blue",
+    "chinese": "藍色（的）"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "brown",
+    "chinese": "棕色（的）"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "gray",
+    "chinese": "灰色（的）"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "green",
+    "chinese": "綠色（的）"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "orange",
+    "chinese": "橘色（的）"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "pink",
+    "chinese": "粉紅色（的）"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "purple",
+    "chinese": "紫色（的）"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "red",
+    "chinese": "紅色（的）"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "white",
+    "chinese": "白色（的）"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "yellow",
+    "chinese": "黃色（的）"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "east",
+    "chinese": "東方（的）"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "west",
+    "chinese": "西方（的）"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "south",
+    "chinese": "南方（的）"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "north",
+    "chinese": "北方（的）"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "corner",
+    "chinese": "角落"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "top",
+    "chinese": "頂端；最好的"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "bottom",
+    "chinese": "底部"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "center",
+    "chinese": "中心；中央"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "here",
+    "chinese": "這裡"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "there",
+    "chinese": "那裡"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "back",
+    "chinese": "後面（的）"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "front",
+    "chinese": "前面（的）"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "left",
+    "chinese": "左邊（的）"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "right",
+    "chinese": "右邊（的）"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "middle",
+    "chinese": "中間（的）"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "act",
+    "chinese": "行動；表演"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "borrow",
+    "chinese": "借（入）"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "lend",
+    "chinese": "借（出）"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "spend",
+    "chinese": "花費（時間/金錢）"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "cost",
+    "chinese": "花費（金錢）；費用"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "pay",
+    "chinese": "付錢"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "clap",
+    "chinese": "拍手；鼓掌"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "mean",
+    "chinese": "意指；刻薄的"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "agree",
+    "chinese": "同意"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "pull",
+    "chinese": "拉；抽出"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "push",
+    "chinese": "推"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "roll",
+    "chinese": "滾動；（一）捲"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "bow",
+    "chinese": "鞠躬"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "cheat",
+    "chinese": "欺騙；作弊"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "treat",
+    "chinese": "對待；請客"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "ago",
+    "chinese": "在……之前"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "already",
+    "chinese": "已經"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "once",
+    "chinese": "一次"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "twice",
+    "chinese": "兩次"
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "word": "soon",
+    "chinese": "很快地"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "birthday",
+    "chinese": "生日"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "joy",
+    "chinese": "歡樂；喜悅"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "age",
+    "chinese": "年齡"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "gift",
+    "chinese": "禮物；天分"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "present",
+    "chinese": "禮物；展現"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "party",
+    "chinese": "宴會；派對"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "fun",
+    "chinese": "樂趣；有趣的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "pleasure",
+    "chinese": "樂趣；榮幸"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "photo",
+    "chinese": "相片"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "pin",
+    "chinese": "大頭針；別針"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "power",
+    "chinese": "力量；影響力"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "news",
+    "chinese": "消息；新聞"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "newspaper",
+    "chinese": "報紙"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "report",
+    "chinese": "報告；報導"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "file",
+    "chinese": "檔案"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "life",
+    "chinese": "生活"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "heat",
+    "chinese": "熱（度）；加熱"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "choice",
+    "chinese": "選擇"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "topic",
+    "chinese": "主題"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "reason",
+    "chinese": "原因"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "service",
+    "chinese": "服務"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "bored",
+    "chinese": "感到無聊的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "boring",
+    "chinese": "無聊的；無趣的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "excited",
+    "chinese": "感到興奮的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "exciting",
+    "chinese": "令人興奮的；刺激的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "interested",
+    "chinese": "感興趣的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "interesting",
+    "chinese": "有趣的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "surprised",
+    "chinese": "感到驚訝的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "angry",
+    "chinese": "生氣的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "blind",
+    "chinese": "瞎的；盲的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "busy",
+    "chinese": "忙碌的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "careful",
+    "chinese": "小心的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "famous",
+    "chinese": "有名的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "friendly",
+    "chinese": "友善的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "funny",
+    "chinese": "好笑的；滑稽的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "hard-working",
+    "chinese": "勤勉的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "honest",
+    "chinese": "誠實的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "kind",
+    "chinese": "親切的；種類"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "lazy",
+    "chinese": "懶惰的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "lonely",
+    "chinese": "寂寞的；孤獨的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "lovely",
+    "chinese": "可愛的；美好的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "mad",
+    "chinese": "惱火的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "polite",
+    "chinese": "有禮貌的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "poor",
+    "chinese": "貧窮的；可憐的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "proud",
+    "chinese": "驕傲的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "rich",
+    "chinese": "富有的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "sad",
+    "chinese": "難過的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "shy",
+    "chinese": "害羞的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "smart",
+    "chinese": "聰明的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "stupid",
+    "chinese": "愚蠢的；笨的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "successful",
+    "chinese": "成功的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "wise",
+    "chinese": "明智的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "safe",
+    "chinese": "安全的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "scared",
+    "chinese": "感到害怕的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "serious",
+    "chinese": "嚴肅的；認真的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "sharp",
+    "chinese": "鋒利的；尖銳的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "simple",
+    "chinese": "簡單的；單純的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "sorry",
+    "chinese": "感到抱歉的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "special",
+    "chinese": "特別的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "strange",
+    "chinese": "陌生的；奇怪的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "sure",
+    "chinese": "確定的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "terrible",
+    "chinese": "可怕的；糟糕的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "thick",
+    "chinese": "粗的；厚的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "tidy",
+    "chinese": "整齊的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "true",
+    "chinese": "真（實）的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "useful",
+    "chinese": "有用的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "wonderful",
+    "chinese": "很棒的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "wrong",
+    "chinese": "錯誤的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "main",
+    "chinese": "主要的"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "break",
+    "chinese": "打破；破壞"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "spell",
+    "chinese": "拼（字）"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "touch",
+    "chinese": "摸；碰觸"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "belong",
+    "chinese": "屬於；處在"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "collect",
+    "chinese": "收集"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "cover",
+    "chinese": "覆蓋；掩護"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "dig",
+    "chinese": "挖"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "lead",
+    "chinese": "帶領"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "surprise",
+    "chinese": "使驚訝；驚喜"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "experience",
+    "chinese": "經歷；經驗"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "date",
+    "chinese": "約會；日期"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "since",
+    "chinese": "自……以來"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "whether",
+    "chinese": "是否"
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "word": "as",
+    "chinese": "如同；作為"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "temple",
+    "chinese": "寺廟"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "church",
+    "chinese": "教堂"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "space",
+    "chinese": "空間；空地"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "area",
+    "chinese": "地區；區域"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "movie",
+    "chinese": "電影"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "habit",
+    "chinese": "習慣"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "ticket",
+    "chinese": "票；券"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "trick",
+    "chinese": "把戲；騙局"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "action",
+    "chinese": "行動"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "Taiwanese",
+    "chinese": "臺灣人的；臺灣人"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "string",
+    "chinese": "細繩"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "tip",
+    "chinese": "指示；訣竅；小費"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "new",
+    "chinese": "新的"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "right",
+    "chinese": "對的；右邊的"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "same",
+    "chinese": "一樣的；相同的"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "different",
+    "chinese": "不同的"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "magic",
+    "chinese": "魔術(的)；魔法(的)"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "only",
+    "chinese": "唯一的；只；僅僅"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "hard",
+    "chinese": "辛苦的；困難的；硬的"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "easy",
+    "chinese": "容易的"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "difficult",
+    "chinese": "困難的"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "clean",
+    "chinese": "乾淨的；打掃"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "dirty",
+    "chinese": "骯髒的"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "free",
+    "chinese": "空閒的；免費的；自由的"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "bright",
+    "chinese": "鮮豔的；明亮的；晴朗的"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "public",
+    "chinese": "公眾的"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "convenient",
+    "chinese": "方便的"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "fresh",
+    "chinese": "新鮮的"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "dark",
+    "chinese": "黑暗的；深色的"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "possible",
+    "chinese": "可能的"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "correct",
+    "chinese": "正確的；訂正"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "dangerous",
+    "chinese": "危險的"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "common",
+    "chinese": "普遍的；共同的"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "national",
+    "chinese": "國家的；國立的"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "present",
+    "chinese": "出席的；現在"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "modern",
+    "chinese": "現代的"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "foreign",
+    "chinese": "外國的"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "carry",
+    "chinese": "攜帶；搬運"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "hide",
+    "chinese": "躲藏；隱藏"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "smoke",
+    "chinese": "抽菸；煙"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "fry",
+    "chinese": "煎；炸；炒"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "boil",
+    "chinese": "煮沸"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "lie",
+    "chinese": "說謊；躺"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "type",
+    "chinese": "打字；種類"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "notice",
+    "chinese": "注意(到)；公告"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "set",
+    "chinese": "設置；創立"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "burn",
+    "chinese": "燃燒；燒焦"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "explain",
+    "chinese": "解釋；說明"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "very",
+    "chinese": "非常；很"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "really",
+    "chinese": "真地"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "together",
+    "chinese": "一起"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "even",
+    "chinese": "甚至"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "then",
+    "chinese": "那麼；然後"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "still",
+    "chinese": "仍然"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "away",
+    "chinese": "離......之遠"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "just",
+    "chinese": "就；只；僅"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "else",
+    "chinese": "其他"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "maybe",
+    "chinese": "或許"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "however",
+    "chinese": "然而"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "probably",
+    "chinese": "或許"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "actually",
+    "chinese": "實際上"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "perhaps",
+    "chinese": "或許"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "yet",
+    "chinese": "還(沒)；尚(未)"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "quite",
+    "chinese": "相當"
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "word": "widely",
+    "chinese": "廣泛地"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "job",
+    "chinese": "工作"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "boss",
+    "chinese": "老闆"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "dentist",
+    "chinese": "牙醫"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "driver",
+    "chinese": "駕駛；司機"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "clerk",
+    "chinese": "店員"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "shopkeeper",
+    "chinese": "店主"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "lawyer",
+    "chinese": "律師"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "soldier",
+    "chinese": "軍人；士兵"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "worker",
+    "chinese": "工作者"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "fisherman",
+    "chinese": "漁夫"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "mailman (mail carrier)",
+    "chinese": "郵差"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "secretary",
+    "chinese": "秘書"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "part",
+    "chinese": "部分"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "item",
+    "chinese": "項目"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "level",
+    "chinese": "程度；高度"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "joke",
+    "chinese": "笑話"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "any",
+    "chinese": "任何"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "some",
+    "chinese": "一些"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "both",
+    "chinese": "兩者"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "all",
+    "chinese": "全部"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "many",
+    "chinese": "許多 (的)"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "much",
+    "chinese": "許多 (的)"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "each",
+    "chinese": "每一；各自"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "other",
+    "chinese": "其他的"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "another",
+    "chinese": "另一個 (的)"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "anyone (anybody)",
+    "chinese": "任何人"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "someone (somebody)",
+    "chinese": "某人"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "everyone (everybody)",
+    "chinese": "每個人；各位"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "nobody",
+    "chinese": "沒有人"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "anything",
+    "chinese": "任何東西"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "something",
+    "chinese": "某事；某物"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "everything",
+    "chinese": "每樣事物"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "nothing",
+    "chinese": "無事；無物"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "more",
+    "chinese": "更多 (的)"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "most",
+    "chinese": "大多數；最多的"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "several",
+    "chinese": "數個 (的)；幾個 (的)"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "rise",
+    "chinese": "上升；升起；上漲"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "deal",
+    "chinese": "處理；交易"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "fill",
+    "chinese": "(使) 充滿／裝滿"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "pray",
+    "chinese": "祈禱"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "repeat",
+    "chinese": "重複；複誦"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "reach",
+    "chinese": "觸及；與……聯絡上"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "abroad",
+    "chinese": "在國外"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "ahead",
+    "chinese": "在前面；事前"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "somewhere",
+    "chinese": "在某處"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "again",
+    "chinese": "再次"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "also",
+    "chinese": "也"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "too",
+    "chinese": "也 (用於肯定句)"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "either",
+    "chinese": "也 (用於否定句)"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "almost",
+    "chinese": "幾乎"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "finally",
+    "chinese": "最後；終於"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "least",
+    "chinese": "最少；最不"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "later",
+    "chinese": "稍後"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "off",
+    "chinese": "離開；脫離"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "out",
+    "chinese": "(到) 外面"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "around",
+    "chinese": "到處；在周圍"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "neither",
+    "chinese": "也不；兩者皆非"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "near",
+    "chinese": "在……附近"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "along",
+    "chinese": "沿著"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "during",
+    "chinese": "在……期間"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "until",
+    "chinese": "直到"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "with",
+    "chinese": "和；用"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "without",
+    "chinese": "沒有"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "about",
+    "chinese": "關於"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "for",
+    "chinese": "給；為了"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "like",
+    "chinese": "像；喜歡"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "except",
+    "chinese": "除了……之外"
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "word": "from",
+    "chinese": "從……；由……"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "pond",
+    "chinese": "池塘"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "sea",
+    "chinese": "海"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "river",
+    "chinese": "河"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "hill",
+    "chinese": "小山；丘陵"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "mountain",
+    "chinese": "山"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "island",
+    "chinese": "島"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "lake",
+    "chinese": "湖"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "land",
+    "chinese": "土地；地面"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "earth",
+    "chinese": "地球"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "moon",
+    "chinese": "月亮"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "star",
+    "chinese": "星星"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "sun",
+    "chinese": "太陽"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "planet",
+    "chinese": "星球"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "nature",
+    "chinese": "自然"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "sky",
+    "chinese": "天空"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "air",
+    "chinese": "空氣"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "grass",
+    "chinese": "草（地）"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "ground",
+    "chinese": "地面"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "mud",
+    "chinese": "土；泥土"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "earthquake",
+    "chinese": "地震"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "tree",
+    "chinese": "樹"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "flower",
+    "chinese": "花"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "seed",
+    "chinese": "種子"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "rose",
+    "chinese": "玫瑰"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "rock",
+    "chinese": "岩石"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "honey",
+    "chinese": "蜂蜜"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "can",
+    "chinese": "（鐵、鋁）罐"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "fire",
+    "chinese": "火"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "garbage",
+    "chinese": "垃圾"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "trash",
+    "chinese": "垃圾"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "list",
+    "chinese": "清單；列出"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "business",
+    "chinese": "事業；生意"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "member",
+    "chinese": "成員"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "error",
+    "chinese": "錯誤"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "God",
+    "chinese": "上帝；神"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "pack",
+    "chinese": "打包"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "hang",
+    "chinese": "掛"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "tip",
+    "chinese": "給小費；訣竅"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "bite",
+    "chinese": "咬"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "before",
+    "chinese": "在......之前"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "after",
+    "chinese": "在......之後"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "above",
+    "chinese": "高於；在......上面"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "below",
+    "chinese": "低於；在......下面"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "beside",
+    "chinese": "在......旁邊"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "behind",
+    "chinese": "在......後面"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "outside",
+    "chinese": "在......外面"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "inside",
+    "chinese": "在......裡面"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "across",
+    "chinese": "橫越；穿過"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "between",
+    "chinese": "在......之間"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "through",
+    "chinese": "經由；通過"
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "word": "by",
+    "chinese": "在旁邊；藉由；被"
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "word": "towel",
+    "chinese": "毛巾"
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "word": "blanket",
+    "chinese": "毛毯"
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "word": "basket",
+    "chinese": "籃子"
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "word": "window",
+    "chinese": "窗戶"
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "word": "umbrella",
+    "chinese": "雨傘"
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "word": "drawer",
+    "chinese": "抽屜"
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "word": "lamp",
+    "chinese": "燈"
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "word": "radio",
+    "chinese": "收音機"
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "word": "tape",
+    "chinese": "錄音帶；膠帶"
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "word": "video",
+    "chinese": "影片"
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "word": "television (TV)",
+    "chinese": "電視"
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "word": "telephone (phone)",
+    "chinese": "電話"
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "word": "smartphone",
+    "chinese": "智慧型手機"
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "word": "refrigerator (fridge)",
+    "chinese": "冰箱"
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "word": "washing machine",
+    "chinese": "洗衣機"
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "word": "elementary school",
+    "chinese": "小學"
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "word": "junior high school",
+    "chinese": "國中"
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "word": "senior high school",
+    "chinese": "高中"
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "word": "eve",
+    "chinese": "前夕"
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "word": "Christmas Eve",
+    "chinese": "平安夜"
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "word": "Easter",
+    "chinese": "復活節"
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "word": "Halloween",
+    "chinese": "萬聖節前夕"
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "word": "Christmas",
+    "chinese": "聖誕節"
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "word": "festival",
+    "chinese": "節慶"
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "word": "holiday",
+    "chinese": "節日；假日"
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "word": "vacation",
+    "chinese": "假期"
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "word": "gas",
+    "chinese": "汽油；瓦斯"
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "word": "pipe",
+    "chinese": "管子"
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "word": "program",
+    "chinese": "計畫；節目"
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "word": "root",
+    "chinese": "根源；根"
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "word": "quick",
+    "chinese": "快速的；敏捷的"
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "word": "slow",
+    "chinese": "緩慢的"
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "word": "next",
+    "chinese": "下一個的"
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "word": "fast",
+    "chinese": "快的；快地"
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "word": "early",
+    "chinese": "早的；早地"
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "word": "late",
+    "chinese": "晚的；晚地"
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "word": "married",
+    "chinese": "已婚的"
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "word": "blank",
+    "chinese": "空白的；空格"
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "word": "born",
+    "chinese": "出生的；誕生的"
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "word": "raise",
+    "chinese": "舉起；提高；養育；募（款）"
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "word": "hunt",
+    "chinese": "狩獵"
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "word": "copy",
+    "chinese": "複製；抄襲；副本；影本"
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "word": "hate",
+    "chinese": "討厭；憎恨"
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "word": "mark",
+    "chinese": "標記；記號；成績"
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "word": "kick",
+    "chinese": "踢"
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "word": "knock",
+    "chinese": "擊；敲"
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "word": "paste",
+    "chinese": "黏貼；漿糊"
+  }
+]

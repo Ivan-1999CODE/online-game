@@ -4,588 +4,672 @@
         "word": "bedroom",
         "chinese": "臥室",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "bathroom",
         "chinese": "浴室；廁所",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "study",
         "chinese": "書房",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "living room",
         "chinese": "客廳",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "dining room",
         "chinese": "飯廳",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "kitchen",
         "chinese": "廚房",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "apartment",
         "chinese": "公寓",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "house",
         "chinese": "房子",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "home",
         "chinese": "家",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "room",
         "chinese": "房間",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "door",
         "chinese": "門",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "floor",
         "chinese": "樓層；地板",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "gate",
         "chinese": "大門",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "yard",
         "chinese": "庭院",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "garden",
         "chinese": "花園",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "balcony",
         "chinese": "陽臺",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "bed",
         "chinese": "床",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "chair",
         "chinese": "椅子",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "couch",
         "chinese": "長沙發",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "bench",
         "chinese": "長椅",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "sofa",
         "chinese": "沙發",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "wall",
         "chinese": "牆壁",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "stair",
         "chinese": "樓梯",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "table",
         "chinese": "桌子",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "desk",
         "chinese": "書桌",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "key",
         "chinese": "鑰匙",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "fan",
         "chinese": "電風扇；迷",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "light",
         "chinese": "燈；輕（薄）的；淺色的",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "candle",
         "chinese": "蠟燭",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "machine",
         "chinese": "機器",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "camera",
         "chinese": "照相機",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "computer",
         "chinese": "電腦",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
-        "word": "telephone (phone)",
+        "word": "telephone",
         "chinese": "電話",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "cellphone",
         "chinese": "手機",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "number",
         "chinese": "數字",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "bakery",
         "chinese": "麵包店",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "bank",
         "chinese": "銀行；堤；岸",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "park",
         "chinese": "公園",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "zoo",
         "chinese": "動物園",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "farm",
         "chinese": "農場",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "beach",
         "chinese": "海灘",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "bookstore",
         "chinese": "書店",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "factory",
         "chinese": "工廠",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "hospital",
         "chinese": "醫院",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "museum",
         "chinese": "博物館",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "theater",
         "chinese": "劇院；電影院",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "pool",
         "chinese": "游泳池；水池",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "restaurant",
         "chinese": "餐廳",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "library",
         "chinese": "圖書館",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "fire station",
         "chinese": "消防局",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "police station",
         "chinese": "警察局",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "fast food restaurant",
         "chinese": "速食餐廳",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
-        "word": "do / does",
+        "word": "do",
         "chinese": "做",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
-        "word": "have / has",
+        "word": "have",
         "chinese": "有",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "thank",
         "chinese": "感謝",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "sleep",
         "chinese": "睡覺",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "wake",
         "chinese": "叫醒；醒來",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "take",
         "chinese": "拿；帶領；搭乘",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "close",
         "chinese": "關上",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "open",
         "chinese": "打開",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "come",
         "chinese": "回來；來到",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "go",
         "chinese": "去",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "wait",
         "chinese": "等",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "jump",
         "chinese": "跳",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "find",
         "chinese": "發現；找到",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "run",
         "chinese": "跑；經營",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "shout",
         "chinese": "喊叫",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "sit",
         "chinese": "坐",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "buy",
         "chinese": "買",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "stand",
         "chinese": "站；忍受",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "cry",
         "chinese": "哭",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "hurry",
         "chinese": "快點",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "meet",
         "chinese": "遇見",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "welcome",
         "chinese": "歡迎",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "worry",
         "chinese": "擔心",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "look",
         "chinese": "看；看起來",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "watch",
         "chinese": "觀看",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "listen",
         "chinese": "聽",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "see",
         "chinese": "看",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "fall",
         "chinese": "掉落",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "follow",
         "chinese": "跟隨；遵守",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "eat",
         "chinese": "吃",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "leave",
         "chinese": "離開；留下",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "prepare",
         "chinese": "準備",
         "book": 1,
-        "unit": "4-6"
+        "unit": "4-6",
+        "pos": "v."
     },
     {
         "category": "2. 片語搭配字",

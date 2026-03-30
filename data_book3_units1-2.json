@@ -4,602 +4,688 @@
         "word": "monkey",
         "chinese": "猴子",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "horse",
         "chinese": "馬",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "turtle",
         "chinese": "烏龜",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "bird",
         "chinese": "鳥",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "snake",
         "chinese": "蛇",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "elephant",
         "chinese": "大象",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "bear",
         "chinese": "熊",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "lion",
         "chinese": "獅子",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "tiger",
         "chinese": "老虎",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "animal",
         "chinese": "動物",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "pet",
         "chinese": "寵物",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "dog",
         "chinese": "狗",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "puppy",
         "chinese": "小狗",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "mouse",
         "chinese": "老鼠",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "rat",
         "chinese": "大老鼠",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "chicken",
         "chinese": "雞",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "hen",
         "chinese": "母雞",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "cow",
         "chinese": "母牛",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "duck",
         "chinese": "鴨",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "goose",
         "chinese": "鵝",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "sheep",
         "chinese": "綿羊",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "goat",
         "chinese": "山羊",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "zebra",
         "chinese": "斑馬",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "cat",
         "chinese": "貓",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "fox",
         "chinese": "狐狸",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "frog",
         "chinese": "青蛙",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "pig",
         "chinese": "豬",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "rabbit",
         "chinese": "兔子",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "guy",
         "chinese": "傢伙",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "king",
         "chinese": "國王",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "queen",
         "chinese": "皇后",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "castle",
         "chinese": "城堡",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "giant",
         "chinese": "巨人；巨大的",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "neighbor",
         "chinese": "鄰居",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "person",
         "chinese": "人",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "people",
         "chinese": "人們",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "stranger",
         "chinese": "陌生人",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "teenager",
         "chinese": "青少年",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "foreigner",
         "chinese": "外國人",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "fool",
         "chinese": "傻瓜；愚弄",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "visitor",
         "chinese": "訪客；遊客",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "medicine",
         "chinese": "藥",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "health",
         "chinese": "健康",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "cold",
         "chinese": "感冒",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "headache",
         "chinese": "頭痛",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "fever",
         "chinese": "發燒",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "death",
         "chinese": "死亡",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "sore throat",
         "chinese": "喉嚨痛",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "strong",
         "chinese": "強壯的",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "well",
         "chinese": "(身體) 好的",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "healthy",
         "chinese": "健康的",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "comfortable",
         "chinese": "舒服的",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "sick",
         "chinese": "生病的",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "weak",
         "chinese": "虛弱的",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "tired",
         "chinese": "疲倦的",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "sore",
         "chinese": "痛的",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "but",
         "chinese": "但是",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "conj."
     },
     {
         "category": "1. 單字",
         "word": "because",
         "chinese": "因為",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "conj."
     },
     {
         "category": "1. 單字",
         "word": "although / though",
         "chinese": "雖然",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "conj."
     },
     {
         "category": "1. 單字",
         "word": "so",
         "chinese": "所以",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "conj."
     },
     {
         "category": "1. 單字",
         "word": "while",
         "chinese": "當......時",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "conj."
     },
     {
         "category": "1. 單字",
         "word": "laugh",
         "chinese": "大笑",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "smile",
         "chinese": "微笑",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "climb",
         "chinese": "爬；攀登",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "camp",
         "chinese": "露營",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "surf",
         "chinese": "衝浪",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "lose",
         "chinese": "輸；失去",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "win",
         "chinese": "贏",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "hope",
         "chinese": "希望",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "visit",
         "chinese": "拜訪；參觀",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "happen",
         "chinese": "發生",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "hurt",
         "chinese": "疼痛；傷害",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "tell",
         "chinese": "告訴；分辨",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "guess",
         "chinese": "猜測",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "change",
         "chinese": "改變",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "feed",
         "chinese": "餵",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "cheer",
         "chinese": "歡呼",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "fail",
         "chinese": "不及格；失敗",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "pass",
         "chinese": "通過（考試）",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "work",
         "chinese": "工作",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "build",
         "chinese": "建造",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "must",
         "chinese": "一定",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "aux."
     },
     {
         "category": "1. 單字",
         "word": "may",
         "chinese": "可能；可以",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "aux."
     },
     {
         "category": "1. 單字",
         "word": "might",
         "chinese": "可能；也許",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "aux."
     },
     {
         "category": "1. 單字",
         "word": "will",
         "chinese": "將會",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "aux."
     },
     {
         "category": "1. 單字",
         "word": "should",
         "chinese": "應該",
         "book": 3,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "aux."
     },
     {
         "category": "2. 片語搭配字",

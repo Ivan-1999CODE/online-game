@@ -4,588 +4,672 @@
         "word": "month",
         "chinese": "月",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "January",
         "chinese": "一月",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "February",
         "chinese": "二月",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "March",
         "chinese": "三月",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "April",
         "chinese": "四月",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "May",
         "chinese": "五月",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "June",
         "chinese": "六月",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "July",
         "chinese": "七月",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "August",
         "chinese": "八月",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "September",
         "chinese": "九月",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "October",
         "chinese": "十月",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "November",
         "chinese": "十一月",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "December",
         "chinese": "十二月",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "morning",
         "chinese": "早晨；上午",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "noon",
         "chinese": "中午",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "afternoon",
         "chinese": "下午",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "evening",
         "chinese": "傍晚；晚上",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "night",
         "chinese": "晚上",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "Monday",
         "chinese": "星期一",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "Tuesday",
         "chinese": "星期二",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "Wednesday",
         "chinese": "星期三",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "Thursday",
         "chinese": "星期四",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "Friday",
         "chinese": "星期五",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "Saturday",
         "chinese": "星期六",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "Sunday",
         "chinese": "星期日",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "week",
         "chinese": "週",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "weekend",
         "chinese": "週末",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "date",
         "chinese": "日期",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "place",
         "chinese": "地方",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "shop",
         "chinese": "商店；購物",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "store",
         "chinese": "商店",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "department store",
         "chinese": "百貨公司",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "hotel",
         "chinese": "飯店；旅館",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "market",
         "chinese": "市場",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "supermarket",
         "chinese": "超級市場",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "office",
         "chinese": "辦公室",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "post office",
         "chinese": "郵局",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "restroom",
         "chinese": "廁所",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "town",
         "chinese": "小鎮",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "city",
         "chinese": "城市",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "country",
         "chinese": "鄉下",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "road",
         "chinese": "路",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "street",
         "chinese": "街道",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "class",
         "chinese": "課；課程；班級",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "lesson",
         "chinese": "課；課堂",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "classroom",
         "chinese": "教室",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "story",
         "chinese": "故事",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "page",
         "chinese": "頁；頁數",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "example",
         "chinese": "例子",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "word",
         "chinese": "字；詞",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "sentence",
         "chinese": "句子",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "problem",
         "chinese": "問題；難題",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "question",
         "chinese": "問題；題目",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "quiz",
         "chinese": "小考",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "test",
         "chinese": "測驗；考試",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "grade",
         "chinese": "分數；年級",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "homework",
         "chinese": "家庭作業",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "knowledge",
         "chinese": "知識",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "bell",
         "chinese": "鈴",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "noise",
         "chinese": "噪音",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "first",
         "chinese": "第一（的）",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adv."
     },
     {
         "category": "1. 單字",
         "word": "second",
         "chinese": "第二（的）",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adv."
     },
     {
         "category": "1. 單字",
         "word": "third",
         "chinese": "第三（的）",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adv."
     },
     {
         "category": "1. 單字",
         "word": "last",
         "chinese": "最後的；前一個的",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adv."
     },
     {
         "category": "1. 單字",
         "word": "always",
         "chinese": "總是",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adv."
     },
     {
         "category": "1. 單字",
         "word": "usually",
         "chinese": "經常；通常",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adv."
     },
     {
         "category": "1. 單字",
         "word": "often",
         "chinese": "時常",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adv."
     },
     {
         "category": "1. 單字",
         "word": "sometimes",
         "chinese": "有時",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adv."
     },
     {
         "category": "1. 單字",
         "word": "seldom",
         "chinese": "很少",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adv."
     },
     {
         "category": "1. 單字",
         "word": "never",
         "chinese": "從不",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adv."
     },
     {
         "category": "1. 單字",
         "word": "call",
         "chinese": "打電話；稱呼；呼叫",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "use",
         "chinese": "使用",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "know",
         "chinese": "知道；認識",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "think",
         "chinese": "認為；想",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "wish",
         "chinese": "希望",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "want",
         "chinese": "想要",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "hold",
         "chinese": "握住；舉行",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "miss",
         "chinese": "想念；錯過",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "stay",
         "chinese": "停留；保持",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "please",
         "chinese": "使高興；使滿意",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "celebrate",
         "chinese": "慶祝",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "understand",
         "chinese": "了解",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "choose",
         "chinese": "選擇",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "care",
         "chinese": "關心；在乎",
         "book": 2,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "v."
     },
     {
         "category": "2. 片語搭配字",

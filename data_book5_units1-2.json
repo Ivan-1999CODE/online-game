@@ -4,581 +4,664 @@
         "word": "birthday",
         "chinese": "生日",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "joy",
         "chinese": "歡樂；喜悅",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "age",
         "chinese": "年齡",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "gift",
         "chinese": "禮物；天分",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "present",
         "chinese": "禮物；展現",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "party",
         "chinese": "宴會；派對",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "fun",
         "chinese": "樂趣；有趣的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "pleasure",
         "chinese": "樂趣；榮幸",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "photo",
         "chinese": "相片",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "pin",
         "chinese": "大頭針；別針",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "power",
         "chinese": "力量；影響力",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "news",
         "chinese": "消息；新聞",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "newspaper",
         "chinese": "報紙",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "report",
         "chinese": "報告；報導",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "file",
         "chinese": "檔案",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "life",
         "chinese": "生活",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "heat",
         "chinese": "熱（度）；加熱",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "choice",
         "chinese": "選擇",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "topic",
         "chinese": "主題",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "reason",
         "chinese": "原因",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "service",
         "chinese": "服務",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "bored",
         "chinese": "感到無聊的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "boring",
         "chinese": "無聊的；無趣的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "excited",
         "chinese": "感到興奮的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "exciting",
         "chinese": "令人興奮的；刺激的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "interested",
         "chinese": "感興趣的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "interesting",
         "chinese": "有趣的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "surprised",
         "chinese": "感到驚訝的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "angry",
         "chinese": "生氣的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "blind",
         "chinese": "瞎的；盲的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "busy",
         "chinese": "忙碌的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "careful",
         "chinese": "小心的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "famous",
         "chinese": "有名的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "friendly",
         "chinese": "友善的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "funny",
         "chinese": "好笑的；滑稽的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "hard-working",
         "chinese": "勤勉的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "honest",
         "chinese": "誠實的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "kind",
         "chinese": "親切的；種類",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "lazy",
         "chinese": "懶惰的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "lonely",
         "chinese": "寂寞的；孤獨的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "lovely",
         "chinese": "可愛的；美好的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "mad",
         "chinese": "惱火的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "polite",
         "chinese": "有禮貌的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "poor",
         "chinese": "貧窮的；可憐的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "proud",
         "chinese": "驕傲的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "rich",
         "chinese": "富有的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "sad",
         "chinese": "難過的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "shy",
         "chinese": "害羞的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "smart",
         "chinese": "聰明的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "stupid",
         "chinese": "愚蠢的；笨的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "successful",
         "chinese": "成功的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "wise",
         "chinese": "明智的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "safe",
         "chinese": "安全的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "scared",
         "chinese": "感到害怕的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "serious",
         "chinese": "嚴肅的；認真的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "sharp",
         "chinese": "鋒利的；尖銳的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "simple",
         "chinese": "簡單的；單純的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "sorry",
         "chinese": "感到抱歉的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "special",
         "chinese": "特別的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "strange",
         "chinese": "陌生的；奇怪的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "sure",
         "chinese": "確定的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "terrible",
         "chinese": "可怕的；糟糕的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "thick",
         "chinese": "粗的；厚的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "tidy",
         "chinese": "整齊的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "true",
         "chinese": "真（實）的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "useful",
         "chinese": "有用的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "wonderful",
         "chinese": "很棒的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "wrong",
         "chinese": "錯誤的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "main",
         "chinese": "主要的",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "break",
         "chinese": "打破；破壞",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "spell",
         "chinese": "拼（字）",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "touch",
         "chinese": "摸；碰觸",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "belong",
         "chinese": "屬於；處在",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "collect",
         "chinese": "收集",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "cover",
         "chinese": "覆蓋；掩護",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "dig",
         "chinese": "挖",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "lead",
         "chinese": "帶領",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "surprise",
         "chinese": "使驚訝；驚喜",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "experience",
         "chinese": "經歷；經驗",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "date",
         "chinese": "約會；日期",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "since",
         "chinese": "自……以來",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "whether",
         "chinese": "是否",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "as",
         "chinese": "如同；作為",
         "book": 5,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "2. 片語搭配字",

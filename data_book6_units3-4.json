@@ -4,329 +4,376 @@
         "word": "towel",
         "chinese": "毛巾",
         "book": 6,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "blanket",
         "chinese": "毛毯",
         "book": 6,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "basket",
         "chinese": "籃子",
         "book": 6,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "window",
         "chinese": "窗戶",
         "book": 6,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "umbrella",
         "chinese": "雨傘",
         "book": 6,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "drawer",
         "chinese": "抽屜",
         "book": 6,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "lamp",
         "chinese": "燈",
         "book": 6,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "radio",
         "chinese": "收音機",
         "book": 6,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "tape",
         "chinese": "錄音帶；膠帶",
         "book": 6,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "video",
         "chinese": "影片",
         "book": 6,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "television (TV)",
         "chinese": "電視",
         "book": 6,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
-        "word": "telephone (phone)",
+        "word": "telephone",
         "chinese": "電話",
         "book": 6,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "smartphone",
         "chinese": "智慧型手機",
         "book": 6,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "refrigerator (fridge)",
         "chinese": "冰箱",
         "book": 6,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "washing machine",
         "chinese": "洗衣機",
         "book": 6,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "elementary school",
         "chinese": "小學",
         "book": 6,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "junior high school",
         "chinese": "國中",
         "book": 6,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "senior high school",
         "chinese": "高中",
         "book": 6,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "eve",
         "chinese": "前夕",
         "book": 6,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "Christmas Eve",
         "chinese": "平安夜",
         "book": 6,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "Easter",
         "chinese": "復活節",
         "book": 6,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "Halloween",
         "chinese": "萬聖節前夕",
         "book": 6,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "Christmas",
         "chinese": "聖誕節",
         "book": 6,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "festival",
         "chinese": "節慶",
         "book": 6,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "holiday",
         "chinese": "節日；假日",
         "book": 6,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "vacation",
         "chinese": "假期",
         "book": 6,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "gas",
         "chinese": "汽油；瓦斯",
         "book": 6,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "pipe",
         "chinese": "管子",
         "book": 6,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "program",
         "chinese": "計畫；節目",
         "book": 6,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "root",
         "chinese": "根源；根",
         "book": 6,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "quick",
         "chinese": "快速的；敏捷的",
         "book": 6,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "slow",
         "chinese": "緩慢的",
         "book": 6,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "next",
         "chinese": "下一個的",
         "book": 6,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "fast",
         "chinese": "快的；快地",
         "book": 6,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "early",
         "chinese": "早的；早地",
         "book": 6,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "late",
         "chinese": "晚的；晚地",
         "book": 6,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "married",
         "chinese": "已婚的",
         "book": 6,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "blank",
         "chinese": "空白的；空格",
         "book": 6,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "born",
         "chinese": "出生的；誕生的",
         "book": 6,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "raise",
         "chinese": "舉起；提高；養育；募（款）",
         "book": 6,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "hunt",
         "chinese": "狩獵",
         "book": 6,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "copy",
         "chinese": "複製；抄襲；副本；影本",
         "book": 6,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "hate",
         "chinese": "討厭；憎恨",
         "book": 6,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "mark",
         "chinese": "標記；記號；成績",
         "book": 6,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "kick",
         "chinese": "踢",
         "book": 6,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "knock",
         "chinese": "擊；敲",
         "book": 6,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "paste",
         "chinese": "黏貼；漿糊",
         "book": 6,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "2. 片語搭配字",

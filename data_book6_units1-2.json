@@ -4,357 +4,408 @@
         "word": "pond",
         "chinese": "池塘",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "sea",
         "chinese": "海",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "river",
         "chinese": "河",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "hill",
         "chinese": "小山；丘陵",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "mountain",
         "chinese": "山",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "island",
         "chinese": "島",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "lake",
         "chinese": "湖",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "land",
         "chinese": "土地；地面",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "earth",
         "chinese": "地球",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "moon",
         "chinese": "月亮",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "star",
         "chinese": "星星",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "sun",
         "chinese": "太陽",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "planet",
         "chinese": "星球",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "nature",
         "chinese": "自然",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "sky",
         "chinese": "天空",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "air",
         "chinese": "空氣",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "grass",
         "chinese": "草（地）",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "ground",
         "chinese": "地面",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "mud",
         "chinese": "土；泥土",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "earthquake",
         "chinese": "地震",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "tree",
         "chinese": "樹",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "flower",
         "chinese": "花",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "seed",
         "chinese": "種子",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "rose",
         "chinese": "玫瑰",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "rock",
         "chinese": "岩石",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "honey",
         "chinese": "蜂蜜",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "can",
         "chinese": "（鐵、鋁）罐",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "fire",
         "chinese": "火",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "garbage",
         "chinese": "垃圾",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "trash",
         "chinese": "垃圾",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "list",
         "chinese": "清單；列出",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "business",
         "chinese": "事業；生意",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "member",
         "chinese": "成員",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "error",
         "chinese": "錯誤",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "God",
         "chinese": "上帝；神",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "pack",
         "chinese": "打包",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "hang",
         "chinese": "掛",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "tip",
         "chinese": "給小費；訣竅",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "bite",
         "chinese": "咬",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "before",
         "chinese": "在......之前",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "after",
         "chinese": "在......之後",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "above",
         "chinese": "高於；在......上面",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "below",
         "chinese": "低於；在......下面",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "beside",
         "chinese": "在......旁邊",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "behind",
         "chinese": "在......後面",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "outside",
         "chinese": "在......外面",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "inside",
         "chinese": "在......裡面",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "across",
         "chinese": "橫越；穿過",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "between",
         "chinese": "在......之間",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "through",
         "chinese": "經由；通過",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "by",
         "chinese": "在旁邊；藉由；被",
         "book": 6,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "2. 片語搭配字",

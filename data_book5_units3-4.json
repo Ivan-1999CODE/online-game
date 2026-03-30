@@ -4,455 +4,520 @@
         "word": "temple",
         "chinese": "寺廟",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "church",
         "chinese": "教堂",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "space",
         "chinese": "空間；空地",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adv."
     },
     {
         "category": "1. 單字",
         "word": "area",
         "chinese": "地區；區域",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "movie",
         "chinese": "電影",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "habit",
         "chinese": "習慣",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "ticket",
         "chinese": "票；券",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "trick",
         "chinese": "把戲；騙局",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "action",
         "chinese": "行動",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "Taiwanese",
         "chinese": "臺灣人的；臺灣人",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "string",
         "chinese": "細繩",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "tip",
         "chinese": "指示；訣竅；小費",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "new",
         "chinese": "新的",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "right",
         "chinese": "對的；右邊的",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "same",
         "chinese": "一樣的；相同的",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "different",
         "chinese": "不同的",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "magic",
         "chinese": "魔術(的)；魔法(的)",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "only",
         "chinese": "唯一的；只；僅僅",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "hard",
         "chinese": "辛苦的；困難的；硬的",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "easy",
         "chinese": "容易的",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "difficult",
         "chinese": "困難的",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "clean",
         "chinese": "乾淨的；打掃",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "dirty",
         "chinese": "骯髒的",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "free",
         "chinese": "空閒的；免費的；自由的",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "bright",
         "chinese": "鮮豔的；明亮的；晴朗的",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "public",
         "chinese": "公眾的",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "convenient",
         "chinese": "方便的",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "fresh",
         "chinese": "新鮮的",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "dark",
         "chinese": "黑暗的；深色的",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "possible",
         "chinese": "可能的",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "correct",
         "chinese": "正確的；訂正",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "dangerous",
         "chinese": "危險的",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "common",
         "chinese": "普遍的；共同的",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "national",
         "chinese": "國家的；國立的",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "present",
         "chinese": "出席的；現在",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "modern",
         "chinese": "現代的",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "foreign",
         "chinese": "外國的",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "carry",
         "chinese": "攜帶；搬運",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "hide",
         "chinese": "躲藏；隱藏",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "smoke",
         "chinese": "抽菸；煙",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "fry",
         "chinese": "煎；炸；炒",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "boil",
         "chinese": "煮沸",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "lie",
         "chinese": "說謊；躺",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "type",
         "chinese": "打字；種類",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "notice",
         "chinese": "注意(到)；公告",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "set",
         "chinese": "設置；創立",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "burn",
         "chinese": "燃燒；燒焦",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "explain",
         "chinese": "解釋；說明",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "very",
         "chinese": "非常；很",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "really",
         "chinese": "真地",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adv."
     },
     {
         "category": "1. 單字",
         "word": "together",
         "chinese": "一起",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "even",
         "chinese": "甚至",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "then",
         "chinese": "那麼；然後",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "still",
         "chinese": "仍然",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "away",
         "chinese": "離......之遠",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "just",
         "chinese": "就；只；僅",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "else",
         "chinese": "其他",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "maybe",
         "chinese": "或許",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "however",
         "chinese": "然而",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "probably",
         "chinese": "或許",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "actually",
         "chinese": "實際上",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "perhaps",
         "chinese": "或許",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "yet",
         "chinese": "還(沒)；尚(未)",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "quite",
         "chinese": "相當",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "widely",
         "chinese": "廣泛地",
         "book": 5,
-        "unit": "3-4"
+        "unit": "3-4",
+        "pos": "adv."
     },
     {
         "category": "2. 片語搭配字",

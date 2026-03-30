@@ -1,0 +1,6992 @@
+[
+  {
+    "file": "data.json",
+    "oldWord": "family",
+    "newWord": "family",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "father",
+    "newWord": "father",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "mother",
+    "newWord": "mother",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "son",
+    "newWord": "son",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "daughter",
+    "newWord": "daughter",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "sister",
+    "newWord": "sister",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "brother",
+    "newWord": "brother",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "parents",
+    "newWord": "parents",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "grandmother",
+    "newWord": "grandmother",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "grandfather",
+    "newWord": "grandfather",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "uncle",
+    "newWord": "uncle",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "aunt",
+    "newWord": "aunt",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "cousin",
+    "newWord": "cousin",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "husband",
+    "newWord": "husband",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "wife",
+    "newWord": "wife",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "relative",
+    "newWord": "relative",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "Dr.",
+    "newWord": "Dr.",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "Mr.",
+    "newWord": "Mr.",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "Mrs.",
+    "newWord": "Mrs.",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "Ms.",
+    "newWord": "Ms.",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "Miss",
+    "newWord": "Miss",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "sir",
+    "newWord": "sir",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "name",
+    "newWord": "name",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "baby",
+    "newWord": "baby",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "child",
+    "newWord": "child",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "kid",
+    "newWord": "kid",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "boy",
+    "newWord": "boy",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "girl",
+    "newWord": "girl",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "man",
+    "newWord": "man",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "woman",
+    "newWord": "woman",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "classmate",
+    "newWord": "classmate",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "friend",
+    "newWord": "friend",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "student",
+    "newWord": "student",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "teacher",
+    "newWord": "teacher",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "cook",
+    "newWord": "cook",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "police officer",
+    "newWord": "police officer",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "doctor",
+    "newWord": "doctor",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "nurse",
+    "newWord": "nurse",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "singer",
+    "newWord": "singer",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "farmer",
+    "newWord": "farmer",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "reporter",
+    "newWord": "reporter",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "writer",
+    "newWord": "writer",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "actor",
+    "newWord": "actor",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "actress",
+    "newWord": "actress",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "waiter",
+    "newWord": "waiter",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "waitress",
+    "newWord": "waitress",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "housewife",
+    "newWord": "housewife",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "engineer",
+    "newWord": "engineer",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "businessman",
+    "newWord": "businessman",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "salesman",
+    "newWord": "salesman",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "world",
+    "newWord": "world",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "country",
+    "newWord": "country",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "America",
+    "newWord": "America",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "China",
+    "newWord": "China",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "Taiwan",
+    "newWord": "Taiwan",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "R.O.C.",
+    "newWord": "R.O.C.",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "American",
+    "newWord": "American",
+    "newPos": "adj."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "Chinese",
+    "newWord": "Chinese",
+    "newPos": "n."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "English",
+    "newWord": "English",
+    "newPos": "adj."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "old",
+    "newWord": "old",
+    "newPos": "adj."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "young",
+    "newWord": "young",
+    "newPos": "adj."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "pretty",
+    "newWord": "pretty",
+    "newPos": "adj."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "beautiful",
+    "newWord": "beautiful",
+    "newPos": "adj."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "cute",
+    "newWord": "cute",
+    "newPos": "adj."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "handsome",
+    "newWord": "handsome",
+    "newPos": "adj."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "ugly",
+    "newWord": "ugly",
+    "newPos": "adj."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "tall",
+    "newWord": "tall",
+    "newPos": "adj."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "short",
+    "newWord": "short",
+    "newPos": "adj."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "fat",
+    "newWord": "fat",
+    "newPos": "adj."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "heavy",
+    "newWord": "heavy",
+    "newPos": "adj."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "thin",
+    "newWord": "thin",
+    "newPos": "adj."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "slim",
+    "newWord": "slim",
+    "newPos": "adj."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "cool",
+    "newWord": "cool",
+    "newPos": "adj."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "happy",
+    "newWord": "happy",
+    "newPos": "adj."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "nice",
+    "newWord": "nice",
+    "newPos": "adj."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "good",
+    "newWord": "good",
+    "newPos": "adj."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "fine",
+    "newWord": "fine",
+    "newPos": "adj."
+  },
+  {
+    "file": "data.json",
+    "oldWord": "bad",
+    "newWord": "bad",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "bedroom",
+    "newWord": "bedroom",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "bathroom",
+    "newWord": "bathroom",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "study",
+    "newWord": "study",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "living room",
+    "newWord": "living room",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "dining room",
+    "newWord": "dining room",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "kitchen",
+    "newWord": "kitchen",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "apartment",
+    "newWord": "apartment",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "house",
+    "newWord": "house",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "home",
+    "newWord": "home",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "room",
+    "newWord": "room",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "door",
+    "newWord": "door",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "floor",
+    "newWord": "floor",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "gate",
+    "newWord": "gate",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "yard",
+    "newWord": "yard",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "garden",
+    "newWord": "garden",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "balcony",
+    "newWord": "balcony",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "bed",
+    "newWord": "bed",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "chair",
+    "newWord": "chair",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "couch",
+    "newWord": "couch",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "bench",
+    "newWord": "bench",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "sofa",
+    "newWord": "sofa",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "wall",
+    "newWord": "wall",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "stair",
+    "newWord": "stair",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "table",
+    "newWord": "table",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "desk",
+    "newWord": "desk",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "key",
+    "newWord": "key",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "fan",
+    "newWord": "fan",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "light",
+    "newWord": "light",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "candle",
+    "newWord": "candle",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "machine",
+    "newWord": "machine",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "camera",
+    "newWord": "camera",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "computer",
+    "newWord": "computer",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "telephone (phone)",
+    "newWord": "telephone",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "cellphone",
+    "newWord": "cellphone",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "number",
+    "newWord": "number",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "bakery",
+    "newWord": "bakery",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "bank",
+    "newWord": "bank",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "park",
+    "newWord": "park",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "zoo",
+    "newWord": "zoo",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "farm",
+    "newWord": "farm",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "beach",
+    "newWord": "beach",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "bookstore",
+    "newWord": "bookstore",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "factory",
+    "newWord": "factory",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "hospital",
+    "newWord": "hospital",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "museum",
+    "newWord": "museum",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "theater",
+    "newWord": "theater",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "pool",
+    "newWord": "pool",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "restaurant",
+    "newWord": "restaurant",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "library",
+    "newWord": "library",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "fire station",
+    "newWord": "fire station",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "police station",
+    "newWord": "police station",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "fast food restaurant",
+    "newWord": "fast food restaurant",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "do / does",
+    "newWord": "do",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "have / has",
+    "newWord": "have",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "thank",
+    "newWord": "thank",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "sleep",
+    "newWord": "sleep",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "wake",
+    "newWord": "wake",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "take",
+    "newWord": "take",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "close",
+    "newWord": "close",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "open",
+    "newWord": "open",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "come",
+    "newWord": "come",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "go",
+    "newWord": "go",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "wait",
+    "newWord": "wait",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "jump",
+    "newWord": "jump",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "find",
+    "newWord": "find",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "run",
+    "newWord": "run",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "shout",
+    "newWord": "shout",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "sit",
+    "newWord": "sit",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "buy",
+    "newWord": "buy",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "stand",
+    "newWord": "stand",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "cry",
+    "newWord": "cry",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "hurry",
+    "newWord": "hurry",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "meet",
+    "newWord": "meet",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "welcome",
+    "newWord": "welcome",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "worry",
+    "newWord": "worry",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "look",
+    "newWord": "look",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "watch",
+    "newWord": "watch",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "listen",
+    "newWord": "listen",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "see",
+    "newWord": "see",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "fall",
+    "newWord": "fall",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "follow",
+    "newWord": "follow",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "eat",
+    "newWord": "eat",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "leave",
+    "newWord": "leave",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book1_units4-6.json",
+    "oldWord": "prepare",
+    "newWord": "prepare",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "blackboard",
+    "newWord": "blackboard",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "chalk",
+    "newWord": "chalk",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "glue",
+    "newWord": "glue",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "notebook",
+    "newWord": "notebook",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "ruler",
+    "newWord": "ruler",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "pen",
+    "newWord": "pen",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "pencil",
+    "newWord": "pencil",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "marker",
+    "newWord": "marker",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "clock",
+    "newWord": "clock",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "map",
+    "newWord": "map",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "picture",
+    "newWord": "picture",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "book",
+    "newWord": "book",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "eraser",
+    "newWord": "eraser",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "paper",
+    "newWord": "paper",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "workbook",
+    "newWord": "workbook",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "dictionary",
+    "newWord": "dictionary",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "letter",
+    "newWord": "letter",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "postcard",
+    "newWord": "postcard",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "seat",
+    "newWord": "seat",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "envelope",
+    "newWord": "envelope",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "glasses",
+    "newWord": "glasses",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "note",
+    "newWord": "note",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "band",
+    "newWord": "band",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "drum",
+    "newWord": "drum",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "guitar",
+    "newWord": "guitar",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "piano",
+    "newWord": "piano",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "violin",
+    "newWord": "violin",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "club",
+    "newWord": "club",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "card",
+    "newWord": "card",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "game",
+    "newWord": "game",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "course",
+    "newWord": "course",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "subject",
+    "newWord": "subject",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "art",
+    "newWord": "art",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "history",
+    "newWord": "history",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "math (mathematics)",
+    "newWord": "math",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "music",
+    "newWord": "music",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "science",
+    "newWord": "science",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "PE (Physical Education)",
+    "newWord": "PE",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "language",
+    "newWord": "language",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "sport",
+    "newWord": "sport",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "badminton",
+    "newWord": "badminton",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "basketball",
+    "newWord": "basketball",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "baseball",
+    "newWord": "baseball",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "tennis",
+    "newWord": "tennis",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "soccer",
+    "newWord": "soccer",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "group",
+    "newWord": "group",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "player",
+    "newWord": "player",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "prize",
+    "newWord": "prize",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "exercise",
+    "newWord": "exercise",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "count",
+    "newWord": "count",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "catch",
+    "newWord": "catch",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "help",
+    "newWord": "help",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "hike",
+    "newWord": "hike",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "jog",
+    "newWord": "jog",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "swim",
+    "newWord": "swim",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "sing",
+    "newWord": "sing",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "dance",
+    "newWord": "dance",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "draw",
+    "newWord": "draw",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "paint",
+    "newWord": "paint",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "brush",
+    "newWord": "brush",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "like",
+    "newWord": "like",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "love",
+    "newWord": "love",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "join",
+    "newWord": "join",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "learn",
+    "newWord": "learn",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "study",
+    "newWord": "study",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "ask",
+    "newWord": "ask",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "write",
+    "newWord": "write",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "practice",
+    "newWord": "practice",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "read",
+    "newWord": "read",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "speak",
+    "newWord": "speak",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "say",
+    "newWord": "say",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book2_units1-2.json",
+    "oldWord": "talk",
+    "newWord": "talk",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "month",
+    "newWord": "month",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "January",
+    "newWord": "January",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "February",
+    "newWord": "February",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "March",
+    "newWord": "March",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "April",
+    "newWord": "April",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "May",
+    "newWord": "May",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "June",
+    "newWord": "June",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "July",
+    "newWord": "July",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "August",
+    "newWord": "August",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "September",
+    "newWord": "September",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "October",
+    "newWord": "October",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "November",
+    "newWord": "November",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "December",
+    "newWord": "December",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "morning",
+    "newWord": "morning",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "noon",
+    "newWord": "noon",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "afternoon",
+    "newWord": "afternoon",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "evening",
+    "newWord": "evening",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "night",
+    "newWord": "night",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "Monday",
+    "newWord": "Monday",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "Tuesday",
+    "newWord": "Tuesday",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "Wednesday",
+    "newWord": "Wednesday",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "Thursday",
+    "newWord": "Thursday",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "Friday",
+    "newWord": "Friday",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "Saturday",
+    "newWord": "Saturday",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "Sunday",
+    "newWord": "Sunday",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "week",
+    "newWord": "week",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "weekend",
+    "newWord": "weekend",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "date",
+    "newWord": "date",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "place",
+    "newWord": "place",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "shop",
+    "newWord": "shop",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "store",
+    "newWord": "store",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "department store",
+    "newWord": "department store",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "hotel",
+    "newWord": "hotel",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "market",
+    "newWord": "market",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "supermarket",
+    "newWord": "supermarket",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "office",
+    "newWord": "office",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "post office",
+    "newWord": "post office",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "restroom",
+    "newWord": "restroom",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "town",
+    "newWord": "town",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "city",
+    "newWord": "city",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "country",
+    "newWord": "country",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "road",
+    "newWord": "road",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "street",
+    "newWord": "street",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "class",
+    "newWord": "class",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "lesson",
+    "newWord": "lesson",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "classroom",
+    "newWord": "classroom",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "story",
+    "newWord": "story",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "page",
+    "newWord": "page",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "example",
+    "newWord": "example",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "word",
+    "newWord": "word",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "sentence",
+    "newWord": "sentence",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "problem",
+    "newWord": "problem",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "question",
+    "newWord": "question",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "quiz",
+    "newWord": "quiz",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "test",
+    "newWord": "test",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "grade",
+    "newWord": "grade",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "homework",
+    "newWord": "homework",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "knowledge",
+    "newWord": "knowledge",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "bell",
+    "newWord": "bell",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "noise",
+    "newWord": "noise",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "first",
+    "newWord": "first",
+    "newPos": "adv."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "second",
+    "newWord": "second",
+    "newPos": "adv."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "third",
+    "newWord": "third",
+    "newPos": "adv."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "last",
+    "newWord": "last",
+    "newPos": "adv."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "always",
+    "newWord": "always",
+    "newPos": "adv."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "usually",
+    "newWord": "usually",
+    "newPos": "adv."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "often",
+    "newWord": "often",
+    "newPos": "adv."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "sometimes",
+    "newWord": "sometimes",
+    "newPos": "adv."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "seldom",
+    "newWord": "seldom",
+    "newPos": "adv."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "never",
+    "newWord": "never",
+    "newPos": "adv."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "call",
+    "newWord": "call",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "use",
+    "newWord": "use",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "know",
+    "newWord": "know",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "think",
+    "newWord": "think",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "wish",
+    "newWord": "wish",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "want",
+    "newWord": "want",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "hold",
+    "newWord": "hold",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "miss",
+    "newWord": "miss",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "stay",
+    "newWord": "stay",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "please",
+    "newWord": "please",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "celebrate",
+    "newWord": "celebrate",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "understand",
+    "newWord": "understand",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "choose",
+    "newWord": "choose",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book2_units3-4.json",
+    "oldWord": "care",
+    "newWord": "care",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "meat",
+    "newWord": "meat",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "beef",
+    "newWord": "beef",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "pork",
+    "newWord": "pork",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "chicken",
+    "newWord": "chicken",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "fish",
+    "newWord": "fish",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "vegetable",
+    "newWord": "vegetable",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "bean",
+    "newWord": "bean",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "pumpkin",
+    "newWord": "pumpkin",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "fruit",
+    "newWord": "fruit",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "apple",
+    "newWord": "apple",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "banana",
+    "newWord": "banana",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "grape",
+    "newWord": "grape",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "guava",
+    "newWord": "guava",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "lemon",
+    "newWord": "lemon",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "orange",
+    "newWord": "orange",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "papaya",
+    "newWord": "papaya",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "peach",
+    "newWord": "peach",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "pear",
+    "newWord": "pear",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "strawberry",
+    "newWord": "strawberry",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "tomato",
+    "newWord": "tomato",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "watermelon",
+    "newWord": "watermelon",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "drink",
+    "newWord": "drink",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "water",
+    "newWord": "water",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "milk",
+    "newWord": "milk",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "tea",
+    "newWord": "tea",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "coffee",
+    "newWord": "coffee",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "juice",
+    "newWord": "juice",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "ice",
+    "newWord": "ice",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "butter",
+    "newWord": "butter",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "oil",
+    "newWord": "oil",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "sugar",
+    "newWord": "sugar",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "salt",
+    "newWord": "salt",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "snack",
+    "newWord": "snack",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "cake",
+    "newWord": "cake",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "candy",
+    "newWord": "candy",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "chocolate",
+    "newWord": "chocolate",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "ice cream",
+    "newWord": "ice cream",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "popcorn",
+    "newWord": "popcorn",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "cookie",
+    "newWord": "cookie",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "breakfast",
+    "newWord": "breakfast",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "lunch",
+    "newWord": "lunch",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "dinner",
+    "newWord": "dinner",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "meal",
+    "newWord": "meal",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "food",
+    "newWord": "food",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "bread",
+    "newWord": "bread",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "bun",
+    "newWord": "bun",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "toast",
+    "newWord": "toast",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "rice",
+    "newWord": "rice",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "noodle",
+    "newWord": "noodle",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "salad",
+    "newWord": "salad",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "egg",
+    "newWord": "egg",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "sandwich",
+    "newWord": "sandwich",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "soup",
+    "newWord": "soup",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "steak",
+    "newWord": "steak",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "cheese",
+    "newWord": "cheese",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "ham",
+    "newWord": "ham",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "fries",
+    "newWord": "fries",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "hamburger",
+    "newWord": "hamburger",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "hot dog",
+    "newWord": "hot dog",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "pie",
+    "newWord": "pie",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "pizza",
+    "newWord": "pizza",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "menu",
+    "newWord": "menu",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "bottle",
+    "newWord": "bottle",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "cup",
+    "newWord": "cup",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "pack",
+    "newWord": "pack",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "package",
+    "newWord": "package",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "pair",
+    "newWord": "pair",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "piece",
+    "newWord": "piece",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "glass",
+    "newWord": "glass",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "pound",
+    "newWord": "pound",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "full",
+    "newWord": "full",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "delicious",
+    "newWord": "delicious",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "yummy",
+    "newWord": "yummy",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "hungry",
+    "newWord": "hungry",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "thirsty",
+    "newWord": "thirsty",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "hot",
+    "newWord": "hot",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "sweet",
+    "newWord": "sweet",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "enough",
+    "newWord": "enough",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "few",
+    "newWord": "few",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "put",
+    "newWord": "put",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "cut",
+    "newWord": "cut",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "wash",
+    "newWord": "wash",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "need",
+    "newWord": "need",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "remember",
+    "newWord": "remember",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "live",
+    "newWord": "live",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "bake",
+    "newWord": "bake",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book2_units5-6.json",
+    "oldWord": "fix",
+    "newWord": "fix",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "monkey",
+    "newWord": "monkey",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "horse",
+    "newWord": "horse",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "turtle",
+    "newWord": "turtle",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "bird",
+    "newWord": "bird",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "snake",
+    "newWord": "snake",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "elephant",
+    "newWord": "elephant",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "bear",
+    "newWord": "bear",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "lion",
+    "newWord": "lion",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "tiger",
+    "newWord": "tiger",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "animal",
+    "newWord": "animal",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "pet",
+    "newWord": "pet",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "dog",
+    "newWord": "dog",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "puppy",
+    "newWord": "puppy",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "mouse",
+    "newWord": "mouse",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "rat",
+    "newWord": "rat",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "chicken",
+    "newWord": "chicken",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "hen",
+    "newWord": "hen",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "cow",
+    "newWord": "cow",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "duck",
+    "newWord": "duck",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "goose",
+    "newWord": "goose",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "sheep",
+    "newWord": "sheep",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "goat",
+    "newWord": "goat",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "zebra",
+    "newWord": "zebra",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "cat",
+    "newWord": "cat",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "fox",
+    "newWord": "fox",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "frog",
+    "newWord": "frog",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "pig",
+    "newWord": "pig",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "rabbit",
+    "newWord": "rabbit",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "guy",
+    "newWord": "guy",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "king",
+    "newWord": "king",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "queen",
+    "newWord": "queen",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "castle",
+    "newWord": "castle",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "giant",
+    "newWord": "giant",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "neighbor",
+    "newWord": "neighbor",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "person",
+    "newWord": "person",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "people",
+    "newWord": "people",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "stranger",
+    "newWord": "stranger",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "teenager",
+    "newWord": "teenager",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "foreigner",
+    "newWord": "foreigner",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "fool",
+    "newWord": "fool",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "visitor",
+    "newWord": "visitor",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "medicine",
+    "newWord": "medicine",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "health",
+    "newWord": "health",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "cold",
+    "newWord": "cold",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "headache",
+    "newWord": "headache",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "fever",
+    "newWord": "fever",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "death",
+    "newWord": "death",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "sore throat",
+    "newWord": "sore throat",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "strong",
+    "newWord": "strong",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "well",
+    "newWord": "well",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "healthy",
+    "newWord": "healthy",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "comfortable",
+    "newWord": "comfortable",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "sick",
+    "newWord": "sick",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "weak",
+    "newWord": "weak",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "tired",
+    "newWord": "tired",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "sore",
+    "newWord": "sore",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "but",
+    "newWord": "but",
+    "newPos": "conj."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "because",
+    "newWord": "because",
+    "newPos": "conj."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "although / though",
+    "newWord": "although / though",
+    "newPos": "conj."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "so",
+    "newWord": "so",
+    "newPos": "conj."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "while",
+    "newWord": "while",
+    "newPos": "conj."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "laugh",
+    "newWord": "laugh",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "smile",
+    "newWord": "smile",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "climb",
+    "newWord": "climb",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "camp",
+    "newWord": "camp",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "surf",
+    "newWord": "surf",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "lose",
+    "newWord": "lose",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "win",
+    "newWord": "win",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "hope",
+    "newWord": "hope",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "visit",
+    "newWord": "visit",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "happen",
+    "newWord": "happen",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "hurt",
+    "newWord": "hurt",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "tell",
+    "newWord": "tell",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "guess",
+    "newWord": "guess",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "change",
+    "newWord": "change",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "feed",
+    "newWord": "feed",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "cheer",
+    "newWord": "cheer",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "fail",
+    "newWord": "fail",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "pass",
+    "newWord": "pass",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "work",
+    "newWord": "work",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "build",
+    "newWord": "build",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "must",
+    "newWord": "must",
+    "newPos": "aux."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "may",
+    "newWord": "may",
+    "newPos": "aux."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "might",
+    "newWord": "might",
+    "newPos": "aux."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "will",
+    "newWord": "will",
+    "newPos": "aux."
+  },
+  {
+    "file": "data_book3_units1-2.json",
+    "oldWord": "should",
+    "newWord": "should",
+    "newPos": "aux."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "hobby",
+    "newWord": "hobby",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "interest",
+    "newWord": "interest",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "comic",
+    "newWord": "comic",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "song",
+    "newWord": "song",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "stamp",
+    "newWord": "stamp",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "doll",
+    "newWord": "doll",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "kite",
+    "newWord": "kite",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "robot",
+    "newWord": "robot",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "toy",
+    "newWord": "toy",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "trip",
+    "newWord": "trip",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "picnic",
+    "newWord": "picnic",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "team",
+    "newWord": "team",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "group",
+    "newWord": "group",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "race",
+    "newWord": "race",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "pot",
+    "newWord": "pot",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "bowl",
+    "newWord": "bowl",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "plate",
+    "newWord": "plate",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "chopstick(s)",
+    "newWord": "chopstick(s)",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "knife",
+    "newWord": "knife",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "fork",
+    "newWord": "fork",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "spoon",
+    "newWord": "spoon",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "cup",
+    "newWord": "cup",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "dish",
+    "newWord": "dish",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "insect",
+    "newWord": "insect",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "ant",
+    "newWord": "ant",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "bee",
+    "newWord": "bee",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "bug",
+    "newWord": "bug",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "butterfly",
+    "newWord": "butterfly",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "bat",
+    "newWord": "bat",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "spider",
+    "newWord": "spider",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "tail",
+    "newWord": "tail",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "gym",
+    "newWord": "gym",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "playground",
+    "newWord": "playground",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "seesaw",
+    "newWord": "seesaw",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "slide",
+    "newWord": "slide",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "swing",
+    "newWord": "swing",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "rope",
+    "newWord": "rope",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "grow",
+    "newWord": "grow",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "walk",
+    "newWord": "walk",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "keep",
+    "newWord": "keep",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "stop",
+    "newWord": "stop",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "finish",
+    "newWord": "finish",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "bring",
+    "newWord": "bring",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "begin",
+    "newWord": "begin",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "plan",
+    "newWord": "plan",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "start",
+    "newWord": "start",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "share",
+    "newWord": "share",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "enjoy",
+    "newWord": "enjoy",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "save",
+    "newWord": "save",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "plant",
+    "newWord": "plant",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "try",
+    "newWord": "try",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "mop",
+    "newWord": "mop",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "fight",
+    "newWord": "fight",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "throw",
+    "newWord": "throw",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "wave",
+    "newWord": "wave",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "attack",
+    "newWord": "attack",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "invite",
+    "newWord": "invite",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "answer",
+    "newWord": "answer",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units3-4.json",
+    "oldWord": "forget",
+    "newWord": "forget",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "bicycle (bike)",
+    "newWord": "bicycle (bike)",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "bus",
+    "newWord": "bus",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "car",
+    "newWord": "car",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "motorcycle",
+    "newWord": "motorcycle",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "scooter",
+    "newWord": "scooter",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "train",
+    "newWord": "train",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "taxi",
+    "newWord": "taxi",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "truck",
+    "newWord": "truck",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "airplane (plane)",
+    "newWord": "airplane (plane)",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "ship",
+    "newWord": "ship",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "boat",
+    "newWord": "boat",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "metro",
+    "newWord": "metro",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "airport",
+    "newWord": "airport",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "block",
+    "newWord": "block",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "station",
+    "newWord": "station",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "bridge",
+    "newWord": "bridge",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "sidewalk",
+    "newWord": "sidewalk",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "traffic",
+    "newWord": "traffic",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "season",
+    "newWord": "season",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "spring",
+    "newWord": "spring",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "summer",
+    "newWord": "summer",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "autumn / fall",
+    "newWord": "autumn",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "winter",
+    "newWord": "winter",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "weather",
+    "newWord": "weather",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "rainbow",
+    "newWord": "rainbow",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "typhoon",
+    "newWord": "typhoon",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "cloud",
+    "newWord": "cloud",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "wind",
+    "newWord": "wind",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "snow",
+    "newWord": "snow",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "rain",
+    "newWord": "rain",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "shower",
+    "newWord": "shower",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "hour",
+    "newWord": "hour",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "minute",
+    "newWord": "minute",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "second",
+    "newWord": "second",
+    "newPos": "adv."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "moment",
+    "newWord": "moment",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "half",
+    "newWord": "half",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "quarter",
+    "newWord": "quarter",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "day",
+    "newWord": "day",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "year",
+    "newWord": "year",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "time",
+    "newWord": "time",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "today",
+    "newWord": "today",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "tonight",
+    "newWord": "tonight",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "tomorrow",
+    "newWord": "tomorrow",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "yesterday",
+    "newWord": "yesterday",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "a.m.",
+    "newWord": "a.m.",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "p.m.",
+    "newWord": "p.m.",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "o'clock",
+    "newWord": "o'clock",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "now",
+    "newWord": "now",
+    "newPos": "adv."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "future",
+    "newWord": "future",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "past",
+    "newWord": "past",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "dry",
+    "newWord": "dry",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "wet",
+    "newWord": "wet",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "cloudy",
+    "newWord": "cloudy",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "sunny",
+    "newWord": "sunny",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "warm",
+    "newWord": "warm",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "cool",
+    "newWord": "cool",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "cold",
+    "newWord": "cold",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "rainy",
+    "newWord": "rainy",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "snowy",
+    "newWord": "snowy",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "windy",
+    "newWord": "windy",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "clear",
+    "newWord": "clear",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "pick",
+    "newWord": "pick",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "arrive",
+    "newWord": "arrive",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "drive",
+    "newWord": "drive",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "fly",
+    "newWord": "fly",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "ride",
+    "newWord": "ride",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "sail",
+    "newWord": "sail",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "land",
+    "newWord": "land",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "turn",
+    "newWord": "turn",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "end",
+    "newWord": "end",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "check",
+    "newWord": "check",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "cross",
+    "newWord": "cross",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book3_units5-6.json",
+    "oldWord": "enter",
+    "newWord": "enter",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "hair",
+    "newWord": "hair",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "head",
+    "newWord": "head",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "eye",
+    "newWord": "eye",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "nose",
+    "newWord": "nose",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "ear",
+    "newWord": "ear",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "mouth",
+    "newWord": "mouth",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "shoulder",
+    "newWord": "shoulder",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "arm",
+    "newWord": "arm",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "hand",
+    "newWord": "hand",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "finger",
+    "newWord": "finger",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "knee",
+    "newWord": "knee",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "stomach",
+    "newWord": "stomach",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "leg",
+    "newWord": "leg",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "foot",
+    "newWord": "foot",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "face",
+    "newWord": "face",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "lip",
+    "newWord": "lip",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "tooth",
+    "newWord": "tooth",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "back",
+    "newWord": "back",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "body",
+    "newWord": "body",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "heart",
+    "newWord": "heart",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "nail",
+    "newWord": "nail",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "neck",
+    "newWord": "neck",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "throat",
+    "newWord": "throat",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "toe",
+    "newWord": "toe",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "Internet (Net)",
+    "newWord": "Internet",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "e-mail",
+    "newWord": "e-mail",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "mail",
+    "newWord": "mail",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "screen",
+    "newWord": "screen",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "leader",
+    "newWord": "leader",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "idea",
+    "newWord": "idea",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "matter",
+    "newWord": "matter",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "case",
+    "newWord": "case",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "chance",
+    "newWord": "chance",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "dream",
+    "newWord": "dream",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "excuse",
+    "newWord": "excuse",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "fact",
+    "newWord": "fact",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "mistake",
+    "newWord": "mistake",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "meeting",
+    "newWord": "meeting",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "way",
+    "newWord": "way",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "thing",
+    "newWord": "thing",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "interview",
+    "newWord": "interview",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "ghost",
+    "newWord": "ghost",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "sale",
+    "newWord": "sale",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "story",
+    "newWord": "story",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "side",
+    "newWord": "side",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "tool",
+    "newWord": "tool",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "trouble",
+    "newWord": "trouble",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "voice",
+    "newWord": "voice",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "sight",
+    "newWord": "sight",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "mind",
+    "newWord": "mind",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "rule",
+    "newWord": "rule",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "angle",
+    "newWord": "angle",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "die",
+    "newWord": "die",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "send",
+    "newWord": "send",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "sell",
+    "newWord": "sell",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "give",
+    "newWord": "give",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "show",
+    "newWord": "show",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "teach",
+    "newWord": "teach",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "smell",
+    "newWord": "smell",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "sound",
+    "newWord": "sound",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "taste",
+    "newWord": "taste",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "hear",
+    "newWord": "hear",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "feel",
+    "newWord": "feel",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "get",
+    "newWord": "get",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "become",
+    "newWord": "become",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "order",
+    "newWord": "order",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "move",
+    "newWord": "move",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "drop",
+    "newWord": "drop",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "kill",
+    "newWord": "kill",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "kiss",
+    "newWord": "kiss",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "allow",
+    "newWord": "allow",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "define",
+    "newWord": "define",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "download",
+    "newWord": "download",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book4_units1-2.json",
+    "oldWord": "upload",
+    "newWord": "upload",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "coat",
+    "newWord": "coat",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "hat",
+    "newWord": "hat",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "dress",
+    "newWord": "dress",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "jeans",
+    "newWord": "jeans",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "pants",
+    "newWord": "pants",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "shorts",
+    "newWord": "shorts",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "ring",
+    "newWord": "ring",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "shoe(s)",
+    "newWord": "shoe(s)",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "bag",
+    "newWord": "bag",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "tie",
+    "newWord": "tie",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "sock(s)",
+    "newWord": "sock(s)",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "clothes",
+    "newWord": "clothes",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "jacket",
+    "newWord": "jacket",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "skirt",
+    "newWord": "skirt",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "shirt",
+    "newWord": "shirt",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "T-shirt",
+    "newWord": "T-shirt",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "cap",
+    "newWord": "cap",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "sweater",
+    "newWord": "sweater",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "uniform",
+    "newWord": "uniform",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "belt",
+    "newWord": "belt",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "comb",
+    "newWord": "comb",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "glove(s)",
+    "newWord": "glove(s)",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "mask",
+    "newWord": "mask",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "pocket",
+    "newWord": "pocket",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "bow",
+    "newWord": "bow",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "wallet",
+    "newWord": "wallet",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "button",
+    "newWord": "button",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "centimeter (cm)",
+    "newWord": "centimeter (cm)",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "foot",
+    "newWord": "foot",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "yard",
+    "newWord": "yard",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "gram",
+    "newWord": "gram",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "kilogram (kg)",
+    "newWord": "kilogram (kg)",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "inch",
+    "newWord": "inch",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "mile",
+    "newWord": "mile",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "circle",
+    "newWord": "circle",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "dot",
+    "newWord": "dot",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "point",
+    "newWord": "point",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "line",
+    "newWord": "line",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "row",
+    "newWord": "row",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "shape",
+    "newWord": "shape",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "square",
+    "newWord": "square",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "size",
+    "newWord": "size",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "height",
+    "newWord": "height",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "glad",
+    "newWord": "glad",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "unhappy",
+    "newWord": "unhappy",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "afraid",
+    "newWord": "afraid",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "noisy",
+    "newWord": "noisy",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "brave",
+    "newWord": "brave",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "able",
+    "newWord": "able",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "fine",
+    "newWord": "fine",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "own",
+    "newWord": "own",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "dead",
+    "newWord": "dead",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "dear",
+    "newWord": "dear",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "real",
+    "newWord": "real",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "quiet",
+    "newWord": "quiet",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "loud",
+    "newWord": "loud",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "lucky",
+    "newWord": "lucky",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "favorite",
+    "newWord": "favorite",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "great",
+    "newWord": "great",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "excellent",
+    "newWord": "excellent",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "helpful",
+    "newWord": "helpful",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "important",
+    "newWord": "important",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "pop",
+    "newWord": "pop",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "popular",
+    "newWord": "popular",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "ready",
+    "newWord": "ready",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "crazy",
+    "newWord": "crazy",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "short",
+    "newWord": "short",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "long",
+    "newWord": "long",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "large",
+    "newWord": "large",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "big",
+    "newWord": "big",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "small",
+    "newWord": "small",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "little",
+    "newWord": "little",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "high",
+    "newWord": "high",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "low",
+    "newWord": "low",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "medium",
+    "newWord": "medium",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "straight",
+    "newWord": "straight",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "round",
+    "newWord": "round",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "close",
+    "newWord": "close",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "far",
+    "newWord": "far",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "deep",
+    "newWord": "deep",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "cheap",
+    "newWord": "cheap",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "expensive",
+    "newWord": "expensive",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "total",
+    "newWord": "total",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "let",
+    "newWord": "let",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "make",
+    "newWord": "make",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "believe",
+    "newWord": "believe",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "decide",
+    "newWord": "decide",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "sign",
+    "newWord": "sign",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "blow",
+    "newWord": "blow",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "hit",
+    "newWord": "hit",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "appear",
+    "newWord": "appear",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "shine",
+    "newWord": "shine",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "rest",
+    "newWord": "rest",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "expect",
+    "newWord": "expect",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "shop",
+    "newWord": "shop",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "wear",
+    "newWord": "wear",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book4_units3-4.json",
+    "oldWord": "shake",
+    "newWord": "shake",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "zero",
+    "newWord": "zero",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "dozen",
+    "newWord": "dozen",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "hundred",
+    "newWord": "hundred",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "thousand",
+    "newWord": "thousand",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "million",
+    "newWord": "million",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "price",
+    "newWord": "price",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "money",
+    "newWord": "money",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "dollar",
+    "newWord": "dollar",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "cent",
+    "newWord": "cent",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "change",
+    "newWord": "change",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "color",
+    "newWord": "color",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "black",
+    "newWord": "black",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "blue",
+    "newWord": "blue",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "brown",
+    "newWord": "brown",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "gray",
+    "newWord": "gray",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "green",
+    "newWord": "green",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "orange",
+    "newWord": "orange",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "pink",
+    "newWord": "pink",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "purple",
+    "newWord": "purple",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "red",
+    "newWord": "red",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "white",
+    "newWord": "white",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "yellow",
+    "newWord": "yellow",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "east",
+    "newWord": "east",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "west",
+    "newWord": "west",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "south",
+    "newWord": "south",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "north",
+    "newWord": "north",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "corner",
+    "newWord": "corner",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "top",
+    "newWord": "top",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "bottom",
+    "newWord": "bottom",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "center",
+    "newWord": "center",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "here",
+    "newWord": "here",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "there",
+    "newWord": "there",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "back",
+    "newWord": "back",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "front",
+    "newWord": "front",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "left",
+    "newWord": "left",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "right",
+    "newWord": "right",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "middle",
+    "newWord": "middle",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "act",
+    "newWord": "act",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "borrow",
+    "newWord": "borrow",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "lend",
+    "newWord": "lend",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "spend",
+    "newWord": "spend",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "cost",
+    "newWord": "cost",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "pay",
+    "newWord": "pay",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "clap",
+    "newWord": "clap",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "mean",
+    "newWord": "mean",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "agree",
+    "newWord": "agree",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "pull",
+    "newWord": "pull",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "push",
+    "newWord": "push",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "roll",
+    "newWord": "roll",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "bow",
+    "newWord": "bow",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "cheat",
+    "newWord": "cheat",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "treat",
+    "newWord": "treat",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "ago",
+    "newWord": "ago",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "already",
+    "newWord": "already",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "once",
+    "newWord": "once",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "twice",
+    "newWord": "twice",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book4_units5-6.json",
+    "oldWord": "soon",
+    "newWord": "soon",
+    "newPos": "adv."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "birthday",
+    "newWord": "birthday",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "joy",
+    "newWord": "joy",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "age",
+    "newWord": "age",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "gift",
+    "newWord": "gift",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "present",
+    "newWord": "present",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "party",
+    "newWord": "party",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "fun",
+    "newWord": "fun",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "pleasure",
+    "newWord": "pleasure",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "photo",
+    "newWord": "photo",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "pin",
+    "newWord": "pin",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "power",
+    "newWord": "power",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "news",
+    "newWord": "news",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "newspaper",
+    "newWord": "newspaper",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "report",
+    "newWord": "report",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "file",
+    "newWord": "file",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "life",
+    "newWord": "life",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "heat",
+    "newWord": "heat",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "choice",
+    "newWord": "choice",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "topic",
+    "newWord": "topic",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "reason",
+    "newWord": "reason",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "service",
+    "newWord": "service",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "bored",
+    "newWord": "bored",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "boring",
+    "newWord": "boring",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "excited",
+    "newWord": "excited",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "exciting",
+    "newWord": "exciting",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "interested",
+    "newWord": "interested",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "interesting",
+    "newWord": "interesting",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "surprised",
+    "newWord": "surprised",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "angry",
+    "newWord": "angry",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "blind",
+    "newWord": "blind",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "busy",
+    "newWord": "busy",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "careful",
+    "newWord": "careful",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "famous",
+    "newWord": "famous",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "friendly",
+    "newWord": "friendly",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "funny",
+    "newWord": "funny",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "hard-working",
+    "newWord": "hard-working",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "honest",
+    "newWord": "honest",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "kind",
+    "newWord": "kind",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "lazy",
+    "newWord": "lazy",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "lonely",
+    "newWord": "lonely",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "lovely",
+    "newWord": "lovely",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "mad",
+    "newWord": "mad",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "polite",
+    "newWord": "polite",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "poor",
+    "newWord": "poor",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "proud",
+    "newWord": "proud",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "rich",
+    "newWord": "rich",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "sad",
+    "newWord": "sad",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "shy",
+    "newWord": "shy",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "smart",
+    "newWord": "smart",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "stupid",
+    "newWord": "stupid",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "successful",
+    "newWord": "successful",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "wise",
+    "newWord": "wise",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "safe",
+    "newWord": "safe",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "scared",
+    "newWord": "scared",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "serious",
+    "newWord": "serious",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "sharp",
+    "newWord": "sharp",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "simple",
+    "newWord": "simple",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "sorry",
+    "newWord": "sorry",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "special",
+    "newWord": "special",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "strange",
+    "newWord": "strange",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "sure",
+    "newWord": "sure",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "terrible",
+    "newWord": "terrible",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "thick",
+    "newWord": "thick",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "tidy",
+    "newWord": "tidy",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "true",
+    "newWord": "true",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "useful",
+    "newWord": "useful",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "wonderful",
+    "newWord": "wonderful",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "wrong",
+    "newWord": "wrong",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "main",
+    "newWord": "main",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "break",
+    "newWord": "break",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "spell",
+    "newWord": "spell",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "touch",
+    "newWord": "touch",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "belong",
+    "newWord": "belong",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "collect",
+    "newWord": "collect",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "cover",
+    "newWord": "cover",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "dig",
+    "newWord": "dig",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "lead",
+    "newWord": "lead",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "surprise",
+    "newWord": "surprise",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "experience",
+    "newWord": "experience",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "date",
+    "newWord": "date",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "since",
+    "newWord": "since",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "whether",
+    "newWord": "whether",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units1-2.json",
+    "oldWord": "as",
+    "newWord": "as",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "temple",
+    "newWord": "temple",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "church",
+    "newWord": "church",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "space",
+    "newWord": "space",
+    "newPos": "adv."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "area",
+    "newWord": "area",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "movie",
+    "newWord": "movie",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "habit",
+    "newWord": "habit",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "ticket",
+    "newWord": "ticket",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "trick",
+    "newWord": "trick",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "action",
+    "newWord": "action",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "Taiwanese",
+    "newWord": "Taiwanese",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "string",
+    "newWord": "string",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "tip",
+    "newWord": "tip",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "new",
+    "newWord": "new",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "right",
+    "newWord": "right",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "same",
+    "newWord": "same",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "different",
+    "newWord": "different",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "magic",
+    "newWord": "magic",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "only",
+    "newWord": "only",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "hard",
+    "newWord": "hard",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "easy",
+    "newWord": "easy",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "difficult",
+    "newWord": "difficult",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "clean",
+    "newWord": "clean",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "dirty",
+    "newWord": "dirty",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "free",
+    "newWord": "free",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "bright",
+    "newWord": "bright",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "public",
+    "newWord": "public",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "convenient",
+    "newWord": "convenient",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "fresh",
+    "newWord": "fresh",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "dark",
+    "newWord": "dark",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "possible",
+    "newWord": "possible",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "correct",
+    "newWord": "correct",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "dangerous",
+    "newWord": "dangerous",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "common",
+    "newWord": "common",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "national",
+    "newWord": "national",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "present",
+    "newWord": "present",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "modern",
+    "newWord": "modern",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "foreign",
+    "newWord": "foreign",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "carry",
+    "newWord": "carry",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "hide",
+    "newWord": "hide",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "smoke",
+    "newWord": "smoke",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "fry",
+    "newWord": "fry",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "boil",
+    "newWord": "boil",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "lie",
+    "newWord": "lie",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "type",
+    "newWord": "type",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "notice",
+    "newWord": "notice",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "set",
+    "newWord": "set",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "burn",
+    "newWord": "burn",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "explain",
+    "newWord": "explain",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "very",
+    "newWord": "very",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "really",
+    "newWord": "really",
+    "newPos": "adv."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "together",
+    "newWord": "together",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "even",
+    "newWord": "even",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "then",
+    "newWord": "then",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "still",
+    "newWord": "still",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "away",
+    "newWord": "away",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "just",
+    "newWord": "just",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "else",
+    "newWord": "else",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "maybe",
+    "newWord": "maybe",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "however",
+    "newWord": "however",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "probably",
+    "newWord": "probably",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "actually",
+    "newWord": "actually",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "perhaps",
+    "newWord": "perhaps",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "yet",
+    "newWord": "yet",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "quite",
+    "newWord": "quite",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units3-4.json",
+    "oldWord": "widely",
+    "newWord": "widely",
+    "newPos": "adv."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "job",
+    "newWord": "job",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "boss",
+    "newWord": "boss",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "dentist",
+    "newWord": "dentist",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "driver",
+    "newWord": "driver",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "clerk",
+    "newWord": "clerk",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "shopkeeper",
+    "newWord": "shopkeeper",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "lawyer",
+    "newWord": "lawyer",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "soldier",
+    "newWord": "soldier",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "worker",
+    "newWord": "worker",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "fisherman",
+    "newWord": "fisherman",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "mailman (mail carrier)",
+    "newWord": "mailman (mail carrier)",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "secretary",
+    "newWord": "secretary",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "part",
+    "newWord": "part",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "item",
+    "newWord": "item",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "level",
+    "newWord": "level",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "joke",
+    "newWord": "joke",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "any",
+    "newWord": "any",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "some",
+    "newWord": "some",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "both",
+    "newWord": "both",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "all",
+    "newWord": "all",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "many",
+    "newWord": "many",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "much",
+    "newWord": "much",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "each",
+    "newWord": "each",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "other",
+    "newWord": "other",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "another",
+    "newWord": "another",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "anyone (anybody)",
+    "newWord": "anyone (anybody)",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "someone (somebody)",
+    "newWord": "someone (somebody)",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "everyone (everybody)",
+    "newWord": "everyone (everybody)",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "nobody",
+    "newWord": "nobody",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "anything",
+    "newWord": "anything",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "something",
+    "newWord": "something",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "everything",
+    "newWord": "everything",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "nothing",
+    "newWord": "nothing",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "more",
+    "newWord": "more",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "most",
+    "newWord": "most",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "several",
+    "newWord": "several",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "rise",
+    "newWord": "rise",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "deal",
+    "newWord": "deal",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "fill",
+    "newWord": "fill",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "pray",
+    "newWord": "pray",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "repeat",
+    "newWord": "repeat",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "reach",
+    "newWord": "reach",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "abroad",
+    "newWord": "abroad",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "ahead",
+    "newWord": "ahead",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "somewhere",
+    "newWord": "somewhere",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "again",
+    "newWord": "again",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "also",
+    "newWord": "also",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "too",
+    "newWord": "too",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "either",
+    "newWord": "either",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "almost",
+    "newWord": "almost",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "finally",
+    "newWord": "finally",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "least",
+    "newWord": "least",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "later",
+    "newWord": "later",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "off",
+    "newWord": "off",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "out",
+    "newWord": "out",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "around",
+    "newWord": "around",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "neither",
+    "newWord": "neither",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "near",
+    "newWord": "near",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "along",
+    "newWord": "along",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "during",
+    "newWord": "during",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "until",
+    "newWord": "until",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "with",
+    "newWord": "with",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "without",
+    "newWord": "without",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "about",
+    "newWord": "about",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "for",
+    "newWord": "for",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "like",
+    "newWord": "like",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "except",
+    "newWord": "except",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book5_units5-6.json",
+    "oldWord": "from",
+    "newWord": "from",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "pond",
+    "newWord": "pond",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "sea",
+    "newWord": "sea",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "river",
+    "newWord": "river",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "hill",
+    "newWord": "hill",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "mountain",
+    "newWord": "mountain",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "island",
+    "newWord": "island",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "lake",
+    "newWord": "lake",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "land",
+    "newWord": "land",
+    "newPos": "v."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "earth",
+    "newWord": "earth",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "moon",
+    "newWord": "moon",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "star",
+    "newWord": "star",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "sun",
+    "newWord": "sun",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "planet",
+    "newWord": "planet",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "nature",
+    "newWord": "nature",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "sky",
+    "newWord": "sky",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "air",
+    "newWord": "air",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "grass",
+    "newWord": "grass",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "ground",
+    "newWord": "ground",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "mud",
+    "newWord": "mud",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "earthquake",
+    "newWord": "earthquake",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "tree",
+    "newWord": "tree",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "flower",
+    "newWord": "flower",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "seed",
+    "newWord": "seed",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "rose",
+    "newWord": "rose",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "rock",
+    "newWord": "rock",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "honey",
+    "newWord": "honey",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "can",
+    "newWord": "can",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "fire",
+    "newWord": "fire",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "garbage",
+    "newWord": "garbage",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "trash",
+    "newWord": "trash",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "list",
+    "newWord": "list",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "business",
+    "newWord": "business",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "member",
+    "newWord": "member",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "error",
+    "newWord": "error",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "God",
+    "newWord": "God",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "pack",
+    "newWord": "pack",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "hang",
+    "newWord": "hang",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "tip",
+    "newWord": "tip",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "bite",
+    "newWord": "bite",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "before",
+    "newWord": "before",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "after",
+    "newWord": "after",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "above",
+    "newWord": "above",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "below",
+    "newWord": "below",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "beside",
+    "newWord": "beside",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "behind",
+    "newWord": "behind",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "outside",
+    "newWord": "outside",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "inside",
+    "newWord": "inside",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "across",
+    "newWord": "across",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "between",
+    "newWord": "between",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "through",
+    "newWord": "through",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units1-2.json",
+    "oldWord": "by",
+    "newWord": "by",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "oldWord": "towel",
+    "newWord": "towel",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "oldWord": "blanket",
+    "newWord": "blanket",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "oldWord": "basket",
+    "newWord": "basket",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "oldWord": "window",
+    "newWord": "window",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "oldWord": "umbrella",
+    "newWord": "umbrella",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "oldWord": "drawer",
+    "newWord": "drawer",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "oldWord": "lamp",
+    "newWord": "lamp",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "oldWord": "radio",
+    "newWord": "radio",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "oldWord": "tape",
+    "newWord": "tape",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "oldWord": "video",
+    "newWord": "video",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "oldWord": "television (TV)",
+    "newWord": "television (TV)",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "oldWord": "telephone (phone)",
+    "newWord": "telephone",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "oldWord": "smartphone",
+    "newWord": "smartphone",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "oldWord": "refrigerator (fridge)",
+    "newWord": "refrigerator (fridge)",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "oldWord": "washing machine",
+    "newWord": "washing machine",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "oldWord": "elementary school",
+    "newWord": "elementary school",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "oldWord": "junior high school",
+    "newWord": "junior high school",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "oldWord": "senior high school",
+    "newWord": "senior high school",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "oldWord": "eve",
+    "newWord": "eve",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "oldWord": "Christmas Eve",
+    "newWord": "Christmas Eve",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "oldWord": "Easter",
+    "newWord": "Easter",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "oldWord": "Halloween",
+    "newWord": "Halloween",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "oldWord": "Christmas",
+    "newWord": "Christmas",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "oldWord": "festival",
+    "newWord": "festival",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "oldWord": "holiday",
+    "newWord": "holiday",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "oldWord": "vacation",
+    "newWord": "vacation",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "oldWord": "gas",
+    "newWord": "gas",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "oldWord": "pipe",
+    "newWord": "pipe",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "oldWord": "program",
+    "newWord": "program",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "oldWord": "root",
+    "newWord": "root",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "oldWord": "quick",
+    "newWord": "quick",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "oldWord": "slow",
+    "newWord": "slow",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "oldWord": "next",
+    "newWord": "next",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "oldWord": "fast",
+    "newWord": "fast",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "oldWord": "early",
+    "newWord": "early",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "oldWord": "late",
+    "newWord": "late",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "oldWord": "married",
+    "newWord": "married",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "oldWord": "blank",
+    "newWord": "blank",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "oldWord": "born",
+    "newWord": "born",
+    "newPos": "adj."
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "oldWord": "raise",
+    "newWord": "raise",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "oldWord": "hunt",
+    "newWord": "hunt",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "oldWord": "copy",
+    "newWord": "copy",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "oldWord": "hate",
+    "newWord": "hate",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "oldWord": "mark",
+    "newWord": "mark",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "oldWord": "kick",
+    "newWord": "kick",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "oldWord": "knock",
+    "newWord": "knock",
+    "newPos": "n."
+  },
+  {
+    "file": "data_book6_units3-4.json",
+    "oldWord": "paste",
+    "newWord": "paste",
+    "newPos": "n."
+  }
+]

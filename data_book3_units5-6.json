@@ -4,511 +4,584 @@
         "word": "bicycle (bike)",
         "chinese": "腳踏車",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "bus",
         "chinese": "公車",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "car",
         "chinese": "汽車",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "motorcycle",
         "chinese": "重型機車",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "scooter",
         "chinese": "輕型機車",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "train",
         "chinese": "火車",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "taxi",
         "chinese": "計程車",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "truck",
         "chinese": "卡車",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "airplane (plane)",
         "chinese": "飛機",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "ship",
         "chinese": "船；艦",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "boat",
         "chinese": "小船",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "metro",
         "chinese": "大眾捷運系統",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "airport",
         "chinese": "機場",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "block",
         "chinese": "街區",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "station",
         "chinese": "車站；（機構的）站、所、署、局",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "bridge",
         "chinese": "橋梁",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "sidewalk",
         "chinese": "人行道",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "traffic",
         "chinese": "交通",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "season",
         "chinese": "季節",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "spring",
         "chinese": "春天；泉水",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "summer",
         "chinese": "夏天",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
-        "word": "autumn / fall",
+        "word": "autumn",
         "chinese": "秋天",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "winter",
         "chinese": "冬天",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "weather",
         "chinese": "天氣",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "rainbow",
         "chinese": "彩虹",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "typhoon",
         "chinese": "颱風",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "cloud",
         "chinese": "雲",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "wind",
         "chinese": "風",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "snow",
         "chinese": "雪；下雪",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "rain",
         "chinese": "雨；下雨",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "shower",
         "chinese": "陣雨；淋浴",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "hour",
         "chinese": "小時",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "minute",
         "chinese": "分鐘",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "second",
         "chinese": "秒",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "moment",
         "chinese": "時刻；瞬間",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "half",
         "chinese": "一半",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "quarter",
         "chinese": "十五分鐘；四分之一",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "day",
         "chinese": "日；天",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "year",
         "chinese": "年",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "time",
         "chinese": "時間",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "today",
         "chinese": "今天",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "tonight",
         "chinese": "今晚",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "tomorrow",
         "chinese": "明天",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "yesterday",
         "chinese": "昨天",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "a.m.",
         "chinese": "上午；凌晨",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "p.m.",
         "chinese": "下午；晚上",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "o'clock",
         "chinese": "整點鐘",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "now",
         "chinese": "現在",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adv."
     },
     {
         "category": "1. 單字",
         "word": "future",
         "chinese": "未來",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "past",
         "chinese": "過去；經過",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "dry",
         "chinese": "乾的",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "wet",
         "chinese": "潮溼的",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "cloudy",
         "chinese": "多雲的；陰天的",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "sunny",
         "chinese": "晴朗的",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "warm",
         "chinese": "溫暖的",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "cool",
         "chinese": "涼爽的",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "cold",
         "chinese": "冷的",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "rainy",
         "chinese": "下雨的",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "snowy",
         "chinese": "下雪的",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "windy",
         "chinese": "多風的",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "clear",
         "chinese": "晴朗的",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "pick",
         "chinese": "撿；摘；挑選",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "arrive",
         "chinese": "抵達",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "drive",
         "chinese": "駕駛（車）",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "fly",
         "chinese": "飛行；駕駛（飛機）",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "ride",
         "chinese": "騎（車、馬）",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "sail",
         "chinese": "航行；駕駛（船）",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "land",
         "chinese": "著陸；降落",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "turn",
         "chinese": "轉（向）；翻頁",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "end",
         "chinese": "結束",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "check",
         "chinese": "檢查；查詢",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "cross",
         "chinese": "跨過；越過",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "enter",
         "chinese": "進入",
         "book": 3,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "v."
     },
     {
         "category": "2. 片語搭配字",

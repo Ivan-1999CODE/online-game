@@ -4,518 +4,592 @@
         "word": "hair",
         "chinese": "頭髮",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "head",
         "chinese": "頭",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "eye",
         "chinese": "眼睛",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "nose",
         "chinese": "鼻子",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "ear",
         "chinese": "耳朵",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "mouth",
         "chinese": "嘴巴",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "shoulder",
         "chinese": "肩膀",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "arm",
         "chinese": "手臂",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "hand",
         "chinese": "手",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "finger",
         "chinese": "手指",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "knee",
         "chinese": "膝蓋",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "stomach",
         "chinese": "胃",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "leg",
         "chinese": "腿",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "foot",
         "chinese": "腳",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "face",
         "chinese": "臉",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "lip",
         "chinese": "嘴唇",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "tooth",
         "chinese": "牙齒",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "back",
         "chinese": "背部",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "body",
         "chinese": "身體",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "heart",
         "chinese": "心（臟）",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "nail",
         "chinese": "指甲；釘子",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "neck",
         "chinese": "脖子",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "throat",
         "chinese": "喉嚨",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "toe",
         "chinese": "腳趾",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
-        "word": "Internet (Net)",
+        "word": "Internet",
         "chinese": "網際網路",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "e-mail",
         "chinese": "電子郵件",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "mail",
         "chinese": "郵件；信件",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "screen",
         "chinese": "螢幕",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "leader",
         "chinese": "領導者",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "idea",
         "chinese": "主意；意見",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "matter",
         "chinese": "事件",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "case",
         "chinese": "案例；情況",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "chance",
         "chinese": "機會",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "dream",
         "chinese": "夢想；夢見",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "excuse",
         "chinese": "理由；藉口",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "fact",
         "chinese": "事實",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "mistake",
         "chinese": "錯誤",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "meeting",
         "chinese": "會議",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "way",
         "chinese": "途徑；方法",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "thing",
         "chinese": "事情；物品",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "interview",
         "chinese": "面試；採訪",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "ghost",
         "chinese": "鬼",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "sale",
         "chinese": "拍賣",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "story",
         "chinese": "樓層",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "side",
         "chinese": "邊",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "tool",
         "chinese": "工具",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "trouble",
         "chinese": "麻煩",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "voice",
         "chinese": "聲音；歌喉",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "sight",
         "chinese": "視力；景象",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "mind",
         "chinese": "想法；心意；介意",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "rule",
         "chinese": "規則",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "angle",
         "chinese": "觀點；角度",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "die",
         "chinese": "死亡",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "send",
         "chinese": "寄送；派遣",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "sell",
         "chinese": "賣",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "give",
         "chinese": "給",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "show",
         "chinese": "展示；表演",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "teach",
         "chinese": "教",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "smell",
         "chinese": "聞起來；氣味",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "sound",
         "chinese": "聽起來；聲音",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "taste",
         "chinese": "嚐起來；味道",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "hear",
         "chinese": "聽到；聽說",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "feel",
         "chinese": "感覺",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "get",
         "chinese": "獲得；變得",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "become",
         "chinese": "成為；變成",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "order",
         "chinese": "點餐；訂購；順序",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "move",
         "chinese": "移動；搬家",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "drop",
         "chinese": "掉下；掉落",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "kill",
         "chinese": "殺",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "kiss",
         "chinese": "親吻",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "allow",
         "chinese": "允許",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "define",
         "chinese": "定義",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "download",
         "chinese": "下載",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "upload",
         "chinese": "上傳",
         "book": 4,
-        "unit": "1-2"
+        "unit": "1-2",
+        "pos": "v."
     },
     {
         "category": "2. 片語搭配字",

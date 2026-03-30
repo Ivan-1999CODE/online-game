@@ -4,476 +4,544 @@
         "word": "job",
         "chinese": "工作",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "boss",
         "chinese": "老闆",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "dentist",
         "chinese": "牙醫",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "driver",
         "chinese": "駕駛；司機",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "clerk",
         "chinese": "店員",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "shopkeeper",
         "chinese": "店主",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "lawyer",
         "chinese": "律師",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "soldier",
         "chinese": "軍人；士兵",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "worker",
         "chinese": "工作者",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "fisherman",
         "chinese": "漁夫",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "mailman (mail carrier)",
         "chinese": "郵差",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "secretary",
         "chinese": "秘書",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "part",
         "chinese": "部分",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "item",
         "chinese": "項目",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "level",
         "chinese": "程度；高度",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "joke",
         "chinese": "笑話",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "any",
         "chinese": "任何",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "some",
         "chinese": "一些",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "both",
         "chinese": "兩者",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "all",
         "chinese": "全部",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "many",
         "chinese": "許多 (的)",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "much",
         "chinese": "許多 (的)",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "each",
         "chinese": "每一；各自",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "other",
         "chinese": "其他的",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "another",
         "chinese": "另一個 (的)",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "anyone (anybody)",
         "chinese": "任何人",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "someone (somebody)",
         "chinese": "某人",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "everyone (everybody)",
         "chinese": "每個人；各位",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "nobody",
         "chinese": "沒有人",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "anything",
         "chinese": "任何東西",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "something",
         "chinese": "某事；某物",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "everything",
         "chinese": "每樣事物",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "nothing",
         "chinese": "無事；無物",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "more",
         "chinese": "更多 (的)",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "most",
         "chinese": "大多數；最多的",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "several",
         "chinese": "數個 (的)；幾個 (的)",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "adj."
     },
     {
         "category": "1. 單字",
         "word": "rise",
         "chinese": "上升；升起；上漲",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "deal",
         "chinese": "處理；交易",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "fill",
         "chinese": "(使) 充滿／裝滿",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "pray",
         "chinese": "祈禱",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "repeat",
         "chinese": "重複；複誦",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "reach",
         "chinese": "觸及；與……聯絡上",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "abroad",
         "chinese": "在國外",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "ahead",
         "chinese": "在前面；事前",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "somewhere",
         "chinese": "在某處",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "again",
         "chinese": "再次",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "also",
         "chinese": "也",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "too",
         "chinese": "也 (用於肯定句)",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "either",
         "chinese": "也 (用於否定句)",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "almost",
         "chinese": "幾乎",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "finally",
         "chinese": "最後；終於",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "least",
         "chinese": "最少；最不",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "later",
         "chinese": "稍後",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "off",
         "chinese": "離開；脫離",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "out",
         "chinese": "(到) 外面",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "around",
         "chinese": "到處；在周圍",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "neither",
         "chinese": "也不；兩者皆非",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "near",
         "chinese": "在……附近",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "along",
         "chinese": "沿著",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "during",
         "chinese": "在……期間",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "until",
         "chinese": "直到",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "with",
         "chinese": "和；用",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "without",
         "chinese": "沒有",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "about",
         "chinese": "關於",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "for",
         "chinese": "給；為了",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "like",
         "chinese": "像；喜歡",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "v."
     },
     {
         "category": "1. 單字",
         "word": "except",
         "chinese": "除了……之外",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "1. 單字",
         "word": "from",
         "chinese": "從……；由……",
         "book": 5,
-        "unit": "5-6"
+        "unit": "5-6",
+        "pos": "n."
     },
     {
         "category": "2. 片語搭配字",
