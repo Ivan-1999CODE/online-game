@@ -361,12 +361,16 @@ const getUnitAchievementStatus = (record) => {
     // If any category is missing (null or undefined), achievement not possible
     if (grades.some(g => !g)) return null;
 
+    const rankWeights = { 'S': 5, 'A': 4, 'B': 3, 'C': 2, 'D': 1, 'E': 0, '?': 0 };
+
     const isAllS = grades.every(g => g === 'S');
     if (isAllS) return 'COMPLETE';
 
-    const rankWeights = { 'S': 5, 'A': 4, 'B': 3, 'C': 2, 'D': 1, 'E': 0, '?': 0 };
     const isAllClear = grades.every(g => rankWeights[g] && rankWeights[g] >= 4); // >= A
     if (isAllClear) return 'CLEAR';
+
+    const isAllPass = grades.every(g => rankWeights[g] && rankWeights[g] >= 3); // >= B
+    if (isAllPass) return 'PASS';
 
     return null;
 };
@@ -469,6 +473,19 @@ const AchievementGuide = ({ onClose }) => (
             </h3>
 
             <div className="space-y-4 font-retro text-sm text-gray-300">
+                <div className="bg-slate-800 p-3 rounded-lg border border-slate-700">
+                    <div className="flex items-center gap-2 mb-2 border-b border-slate-700 pb-2">
+                        <div className="text-blue-400 font-pixel text-xl">✔</div>
+                        <span className="text-blue-400 font-bold text-lg">PASS (及格)</span>
+                    </div>
+                    <ul className="space-y-2 ml-1">
+                        <li className="flex gap-2">
+                            <span className="text-rpg-primary font-bold min-w-[4rem]">一般關卡:</span>
+                            <span>所有項目 (寶箱/裝備/藥水/卷軸) 皆獲得 <span className="text-blue-400 font-bold">B 級以上</span>。</span>
+                        </li>
+                    </ul>
+                </div>
+
                 <div className="bg-slate-800 p-3 rounded-lg border border-slate-700">
                     <div className="flex items-center gap-2 mb-2 border-b border-slate-700 pb-2">
                         <div className="text-green-500 font-pixel text-xl">✔</div>
@@ -618,7 +635,7 @@ const WorldMap = ({ onSelectNode, onViewJourney, onUltimateChallenge, onViewMist
                                         if (!status) {
                                             return (
                                                 <div className="flex flex-col items-center justify-center opacity-30">
-                                                    <div className="w-6 h-6 border-2 border-gray-400 rounded bg-black/20" title="Complete all categories with A rank or higher"></div>
+                                                    <div className="w-6 h-6 border-2 border-gray-400 rounded bg-black/20" title="Complete all categories with B rank or higher"></div>
                                                 </div>
                                             );
                                         }
@@ -629,6 +646,9 @@ const WorldMap = ({ onSelectNode, onViewJourney, onUltimateChallenge, onViewMist
                                                 )}
                                                 {status === 'CLEAR' && (
                                                     <div className="text-green-500 font-pixel text-xl drop-shadow-[0_0_5px_rgba(34,197,94,0.8)]" title="CLEAR (All A+)">✔</div>
+                                                )}
+                                                {status === 'PASS' && (
+                                                    <div className="text-blue-400 font-pixel text-xl drop-shadow-[0_0_5px_rgba(96,165,250,0.8)]" title="PASS (All B+)">✔</div>
                                                 )}
                                             </div>
                                         );
