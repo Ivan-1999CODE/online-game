@@ -2069,18 +2069,33 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, onComplete, onFlee,
 
                 {/* 底部按鈕區域 */}
                 <div className="flex-shrink-0 p-4 z-10 w-full max-w-xs mx-auto">
-                    <RPGButton
-                        onClick={() => {
-                            if (isSubmitting) return; // 如果正在提交，直接返回
-                            setIsSubmitting(true); // 设置为提交中
-                            onComplete({ score, rank: rankData.rank, battleLog });
-                        }}
-                        disabled={isSubmitting}
-                        color="neutral"
-                        className="w-full py-3"
-                    >
-                        {isSubmitting ? 'SAVING...' : 'CONTINUE'}
-                    </RPGButton>
+                    <div className="flex gap-3">
+                        <RPGButton
+                            onClick={() => {
+                                if (isSubmitting) return;
+                                setIsSubmitting(true);
+                                onComplete({ score, rank: rankData.rank, battleLog });
+                            }}
+                            disabled={isSubmitting}
+                            color="neutral"
+                            className="flex-1 py-3"
+                        >
+                            {isSubmitting ? 'SAVING...' : 'CONTINUE'}
+                        </RPGButton>
+                        <RPGButton
+                            onClick={() => {
+                                if (isSubmitting) return;
+                                setIsSubmitting(true);
+                                // 先存檔，存完後重置戰鬥狀態
+                                onComplete({ score, rank: rankData.rank, battleLog, retry: true });
+                            }}
+                            disabled={isSubmitting}
+                            color="primary"
+                            className="flex-1 py-3"
+                        >
+                            {isSubmitting ? 'SAVING...' : '⚔ RETRY'}
+                        </RPGButton>
+                    </div>
                 </div>
 
                 {/* Stamping Animation Logic for BOSS - Trigger only if we just hit 5 */}
@@ -2204,6 +2219,7 @@ const App = () => {
     const [selectedNode, setSelectedNode] = useState(null);
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [challengeUnits, setChallengeUnits] = useState([]);
+    const [battleKey, setBattleKey] = useState(0); // 用來強制 BattleMode 重新掛載 (retry)
 
     // New State for Async Loading
     const [loading, setLoading] = useState(false);
@@ -2547,7 +2563,12 @@ const App = () => {
         // 5. 最終寫入
         // ==========================================
         setUserData(updatedUserData);
-        setView('map');
+        if (result.retry) {
+            // Retry: 不跳回地圖，直接重新掛載 BattleMode
+            setBattleKey(prev => prev + 1);
+        } else {
+            setView('map');
+        }
 
         try {
             if (Object.keys(updatesForFirestore).length > 0) {
@@ -2777,7 +2798,7 @@ const App = () => {
             case 'study': return <StudyMode unitId={selectedNode?.id} categoryId={selectedCategory} data={levelDataCache[selectedNode?.id] || GAME_DATA[selectedNode?.id].content} onBack={() => setView('unit-hub')} onStartQuiz={handleForceQuiz} />;
             case 'quiz':
             case 'challenge-quiz':
-                return <BattleMode quizData={getQuizData()} isBoss={selectedNode?.type === 'boss'} isChallenge={view === 'challenge-quiz'} onComplete={handleBattleComplete} onFlee={() => setView('map')} currentRecord={userData?.levelRecords?.[selectedNode?.id]} />;
+                return <BattleMode key={battleKey} quizData={getQuizData()} isBoss={selectedNode?.type === 'boss'} isChallenge={view === 'challenge-quiz'} onComplete={handleBattleComplete} onFlee={() => setView('map')} currentRecord={userData?.levelRecords?.[selectedNode?.id]} />;
             default: return <div>Error</div>;
         }
     };
