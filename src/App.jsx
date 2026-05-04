@@ -2078,7 +2078,7 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, onComplete, onFlee,
                             }}
                             disabled={isSubmitting}
                             color="neutral"
-                            className="flex-1 py-3"
+                            className="flex-1 py-3 tracking-normal"
                         >
                             {isSubmitting ? 'SAVING...' : 'CONTINUE'}
                         </RPGButton>
@@ -2091,9 +2091,9 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, onComplete, onFlee,
                             }}
                             disabled={isSubmitting}
                             color="primary"
-                            className="flex-1 py-3"
+                            className="flex-1 py-3 tracking-normal"
                         >
-                            {isSubmitting ? 'SAVING...' : '⚔ RETRY'}
+                            {isSubmitting ? 'SAVING...' : 'RETRY'}
                         </RPGButton>
                     </div>
                 </div>
