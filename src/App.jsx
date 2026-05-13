@@ -857,9 +857,11 @@ const JourneyMode = ({ onBack, onViewTrialLog, records = {} }) => {
 
             <div className="flex-1 overflow-y-auto p-4 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]">
                 <div className="grid grid-cols-1 gap-6">
-                    {/* Merge Unit and Boss cards */}
-                    {[...Object.entries(LEVEL_INFO), ...Object.entries(BOSS_INFO)].map(([id, info]) => {
-                        const isBoss = id.startsWith('b');
+                    {/* Follow MAP_STRUCTURE order (same as world map) */}
+                    {MAP_STRUCTURE.map((node) => {
+                        const id = node.id;
+                        const isBoss = node.type === 'boss';
+                        const info = isBoss ? BOSS_INFO[id] : LEVEL_INFO[id];
                         const record = records[id] || {};
                         const isUnlocked = Object.keys(record).length > 0;
                         const levelNum = isBoss ? id : parseInt(id);
