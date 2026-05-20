@@ -979,7 +979,7 @@ const JourneyMode = ({ onBack, onViewTrialLog, records = {} }) => {
                                             {isBoss ? (
                                                 <div className="flex flex-col gap-2 my-3 text-white">
                                                     <div className="flex justify-between items-center bg-white/10 p-2 rounded">
-                                                        <span className="font-pixel text-xs text-green-400">CLEARS (A+)</span>
+                                                        <span className="font-pixel text-xs text-green-400">CLEARS (B+)</span>
                                                         <span className="font-pixel text-xl">{record.successCount || 0}</span>
                                                     </div>
                                                     <div className="flex justify-between items-center bg-white/10 p-2 rounded">
@@ -1904,7 +1904,7 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, onComplete, onFlee,
                                 </div>
                             ))}
                         </div>
-                        <span className="font-pixel text-[10px] text-gray-400">CLEAR 5 TIMES (RANK A+) TO UNLOCK</span>
+                        <span className="font-pixel text-[10px] text-gray-400">CLEAR 5 TIMES (RANK B+) TO UNLOCK</span>
                     </div>
                 )}
 
@@ -2104,7 +2104,7 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, onComplete, onFlee,
                 {(() => {
                     if (!isBoss || !currentRecord) return null;
                     const prevCount = currentRecord.successCount || 0;
-                    const isSuccess = ['S', 'A'].includes(rankData.rank);
+                    const isSuccess = ['S', 'A', 'B'].includes(rankData.rank);
                     const newCount = isSuccess ? Math.min(prevCount + 1, 5) : prevCount;
                     const justFinished = isSuccess && prevCount === 4;
 
@@ -2496,7 +2496,7 @@ const App = () => {
                 let sCount = prevRecord.sCount || 0;
                 let bestStatus = prevRecord.bestStatus || 'NONE';
 
-                if (['S', 'A'].includes(result.rank)) successCount += 1;
+                if (['S', 'A', 'B'].includes(result.rank)) successCount += 1;
                 if (result.rank === 'S') sCount += 1;
 
                 if (sCount >= 5) bestStatus = 'COMPLETE';
@@ -2524,6 +2524,14 @@ const App = () => {
         // ==========================================
         let historyUnitTitle = "";
         let historyType = "practice";
+        let historyCategoryKey = null;
+        let historyCategoryLabel = null;
+        const historyCategoryLabels = {
+            vocab: '單字',
+            collocation: '搭配詞',
+            polysemy: '多義字',
+            sentences: '句子'
+        };
 
         if (view === 'challenge-quiz') {
             historyType = "quiz";
@@ -2540,6 +2548,8 @@ const App = () => {
                 const unitId = selectedNode.id;
                 const info = LEVEL_INFO[unitId];
                 historyUnitTitle = info ? `Level ${unitId < 10 ? '0' + unitId : unitId}: ${info.title}` : `Unit ${unitId}`;
+                historyCategoryKey = selectedCategory || 'vocab';
+                historyCategoryLabel = historyCategoryLabels[historyCategoryKey] || null;
             }
         }
 
@@ -2551,11 +2561,13 @@ const App = () => {
                 rank: result.rank,
                 type: historyType,
                 unit: historyUnitTitle,
-                units: view === 'challenge-quiz' ? challengeUnits : [selectedNode?.id]
+                units: view === 'challenge-quiz' ? challengeUnits : [selectedNode?.id],
+                ...(historyCategoryKey ? { categoryKey: historyCategoryKey } : {}),
+                ...(historyCategoryLabel ? { categoryLabel: historyCategoryLabel } : {})
             };
 
             const currentHistory = updatedUserData.trialHistory || [];
-            const updatedHistory = [newTrialRecord, ...currentHistory].slice(0, 20);
+            const updatedHistory = [newTrialRecord, ...currentHistory];
 
             updatedUserData.trialHistory = updatedHistory;
             updatesForFirestore.trialHistory = updatedHistory;
