@@ -1816,8 +1816,10 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, onComplete, onFlee,
         nextQuestion(hp <= 1);
     };
 
+    const isAnswerLocked = feedback !== null || showQuitConfirm;
+
     const handleAnswer = (selectedOption) => {
-        if (feedback) return;
+        if (isAnswerLocked) return;
         clearInterval(timerRef.current);
         const currentQ = questions[currentQIndex];
         const isCorrect = selectedOption.id === currentQ.target.id;
@@ -2186,30 +2188,31 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, onComplete, onFlee,
                 {feedback === 'hit' && <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none"><span className="font-pixel text-6xl text-yellow-300 text-shadow animate-bounce-pixel drop-shadow-[0_5px_5px_rgba(0,0,0,0.8)]">CRITICAL!</span></div>}
                 {feedback === 'miss' && <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none"><span className="font-pixel text-6xl text-red-500 text-shadow drop-shadow-[0_5px_5px_rgba(0,0,0,0.8)]">MISS!</span></div>}
 
-                {/* Quit Confirmation Modal */}
-                {showQuitConfirm && (
-                    <div className="absolute inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-                        <RPGBorder className="bg-rpg-panel p-6 w-full max-w-xs text-center shadow-2xl">
-                            <h3 className="font-retro text-xl font-bold text-rpg-bg mb-6">你確定要離開戰鬥嗎?</h3>
-                            <div className="flex gap-4 justify-center">
-                                <RPGButton onClick={() => { playSound('click'); setShowQuitConfirm(false); }} color="neutral">取消</RPGButton>
-                                <RPGButton onClick={() => { playSound('click'); onFlee(); }} color="primary">確定</RPGButton>
-                            </div>
-                        </RPGBorder>
-                    </div>
-                )}
             </div>
 
             {/* Options */}
             <div className="bg-black p-3 pb-6 border-t-4 border-rpg-border z-10">
                 <div className="grid grid-cols-2 gap-3 max-w-sm mx-auto">
                     {currentQ.options.map((opt, i) => (
-                        <button key={i} onClick={() => { playSound('click'); handleAnswer(opt); }} disabled={feedback !== null} className={`h-14 border-4 border-gray-600 bg-gray-800 text-white font-retro hover:bg-gray-700 active:translate-y-1 active:border-b-0 flex items-center justify-center text-center leading-tight px-2 transition-colors ${currentQ.mode === 'en-ch' ? 'text-lg' : 'text-xl'} ${feedback !== null && opt.id === currentQ.target.id ? 'bg-green-600 border-green-400' : ''} ${feedback === 'miss' && opt.id !== currentQ.target.id ? 'opacity-50' : ''}`}>
+                        <button key={i} onClick={() => { playSound('click'); handleAnswer(opt); }} disabled={isAnswerLocked} className={`h-14 border-4 border-gray-600 bg-gray-800 text-white font-retro hover:bg-gray-700 active:translate-y-1 active:border-b-0 flex items-center justify-center text-center leading-tight px-2 transition-colors disabled:cursor-not-allowed ${currentQ.mode === 'en-ch' ? 'text-lg' : 'text-xl'} ${feedback !== null && opt.id === currentQ.target.id ? 'bg-green-600 border-green-400' : ''} ${feedback === 'miss' && opt.id !== currentQ.target.id ? 'opacity-50' : ''}`}>
                             {currentQ.mode === 'en-ch' ? opt.chinese : opt.word}
                         </button>
                     ))}
                 </div>
             </div>
+
+            {/* Quit Confirmation Modal */}
+            {showQuitConfirm && (
+                <div className="absolute inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+                    <RPGBorder className="bg-rpg-panel p-6 w-full max-w-xs text-center shadow-2xl">
+                        <h3 className="font-retro text-xl font-bold text-rpg-bg mb-6">你確定要離開戰鬥嗎?</h3>
+                        <div className="flex gap-4 justify-center">
+                            <RPGButton onClick={() => { playSound('click'); setShowQuitConfirm(false); }} color="neutral">取消</RPGButton>
+                            <RPGButton onClick={() => { playSound('click'); onFlee(); }} color="primary">確定</RPGButton>
+                        </div>
+                    </RPGBorder>
+                </div>
+            )}
         </div>
     );
 };
