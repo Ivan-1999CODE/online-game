@@ -1577,13 +1577,18 @@ const ChallengeSetup = ({ onBack, onStart }) => {
     );
 };
 
-const UnitHub = ({ unitId, onBack, onSelectCategory }) => {
+const UnitHub = ({ unitId, onBack, onSelectCategory, difficulty, onChangeDifficulty }) => {
     const categories = [
         { id: 'vocab', label: '單字寶箱', icon: <PixelArt.Chest />, color: 'primary', desc: 'LOOT WORDS' },
         { id: 'collocation', label: '搭配裝備', icon: <PixelArt.SwordShield />, color: 'secondary', desc: 'EQUIPMENT' },
         { id: 'polysemy', label: '多義藥水', icon: <PixelArt.Potion />, color: 'accent', desc: 'ALCHEMY' },
         { id: 'sentences', label: '片語捲軸', icon: <PixelArt.Scroll />, color: 'success', desc: 'ANCIENT SCROLL' },
     ];
+
+    // 簡單模式只開放「單字」與「片語」兩類（中間兩類題數太少）
+    const visibleCategories = difficulty === 'easy'
+        ? categories.filter(cat => cat.id === 'vocab' || cat.id === 'sentences')
+        : categories;
 
     const info = LEVEL_INFO[unitId];
 
@@ -1598,8 +1603,36 @@ const UnitHub = ({ unitId, onBack, onSelectCategory }) => {
                 <div className="w-8"></div>
             </div>
             <div className="flex-1 p-4 grid grid-cols-1 gap-4 content-start overflow-y-auto">
+                {/* 難度選擇 */}
+                <div className="flex flex-col items-center gap-2">
+                    <div className="font-pixel text-gray-400 text-xs">- 選擇難度 -</div>
+                    <div className="flex gap-3 w-full max-w-xs">
+                        <button
+                            onClick={() => { playSound('click'); onChangeDifficulty('easy'); }}
+                            className={`flex-1 p-2 border-4 transition-all duration-200 flex flex-col items-center gap-1 ${
+                                difficulty === 'easy'
+                                    ? 'border-cyan-400 bg-cyan-900/60 scale-105 shadow-[0_0_15px_rgba(34,211,238,0.4)]'
+                                    : 'border-gray-600 bg-gray-800 hover:border-gray-400'
+                            }`}
+                        >
+                            <span className={`font-pixel text-xs ${difficulty === 'easy' ? 'text-cyan-300' : 'text-gray-300'}`}>簡單模式</span>
+                            <span className={`font-retro text-[10px] ${difficulty === 'easy' ? 'text-cyan-400/70' : 'text-gray-500'}`}>5命 · 評級上限B</span>
+                        </button>
+                        <button
+                            onClick={() => { playSound('click'); onChangeDifficulty('hard'); }}
+                            className={`flex-1 p-2 border-4 transition-all duration-200 flex flex-col items-center gap-1 ${
+                                difficulty === 'hard'
+                                    ? 'border-orange-400 bg-orange-900/60 scale-105 shadow-[0_0_15px_rgba(251,146,60,0.4)]'
+                                    : 'border-gray-600 bg-gray-800 hover:border-gray-400'
+                            }`}
+                        >
+                            <span className={`font-pixel text-xs ${difficulty === 'hard' ? 'text-orange-300' : 'text-gray-300'}`}>困難模式</span>
+                            <span className={`font-retro text-[10px] ${difficulty === 'hard' ? 'text-orange-400/70' : 'text-gray-500'}`}>3命 · 完整題庫</span>
+                        </button>
+                    </div>
+                </div>
                 <div className="font-pixel text-center text-gray-400 text-xs mb-2">- SELECT YOUR LOOT -</div>
-                {categories.map(cat => (
+                {visibleCategories.map(cat => (
                     <button key={cat.id} onClick={() => { playSound('click'); onSelectCategory(cat.id); }} className={`group relative h-24 nes-border flex items-center px-4 gap-4 transition-all hover:brightness-110 active:translate-y-1 ${cat.color === 'primary' ? 'bg-[#5c3c2e]' : cat.color === 'secondary' ? 'bg-[#2e3c5c]' : cat.color === 'accent' ? 'bg-[#5c562e]' : 'bg-[#2e5c3c]'}`}>
                         <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
                         <div className="relative z-10 filter drop-shadow-lg group-hover:scale-110 transition-transform">
@@ -1736,13 +1769,15 @@ const StudyMode = ({ unitId, categoryId, data, onBack, onStartQuiz }) => {
     );
 };
 
-const BattleMode = ({ quizData, isBoss, isChallenge = false, onComplete, onFlee, currentRecord = null }) => {
+const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard', onComplete, onFlee, currentRecord = null }) => {
     // 所有模式都先顯示 menu 選擇作答模式
+    const isEasy = difficulty === 'easy';
+    const maxHp = isEasy ? 5 : 3; // 簡單模式 5 條命，困難模式維持 3 條
     const [status, setStatus] = useState('menu');
     const [currentQIndex, setCurrentQIndex] = useState(0);
     const [questions, setQuestions] = useState([]);
     const [score, setScore] = useState(0);
-    const [hp, setHp] = useState(3);
+    const [hp, setHp] = useState(maxHp);
     const [feedback, setFeedback] = useState(null);
     const [showQuitConfirm, setShowQuitConfirm] = useState(false);
     const [battleLog, setBattleLog] = useState([]); // 戰鬥回顧記錄
@@ -1878,8 +1913,9 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, onComplete, onFlee,
         const maxPossible = questions.length * 100;
         const normalized = maxPossible > 0 ? (finalScore / maxPossible) * 1000 : 0;
 
-        if (normalized >= 900) return { rank: 'S', color: 'text-yellow-400', bg: 'bg-yellow-400', title: 'LEGENDARY!' };
-        if (normalized >= 800) return { rank: 'A', color: 'text-orange-500', bg: 'bg-orange-500', title: 'EXCELLENT!' };
+        // 簡單模式評級上限為 B：分數再高也只給到 B（要拿 S/A 必須玩困難模式）
+        if (!isEasy && normalized >= 900) return { rank: 'S', color: 'text-yellow-400', bg: 'bg-yellow-400', title: 'LEGENDARY!' };
+        if (!isEasy && normalized >= 800) return { rank: 'A', color: 'text-orange-500', bg: 'bg-orange-500', title: 'EXCELLENT!' };
         if (normalized >= 700) return { rank: 'B', color: 'text-blue-400', bg: 'bg-blue-400', title: 'GREAT!' };
         if (normalized >= 600) return { rank: 'C', color: 'text-green-400', bg: 'bg-green-400', title: 'GOOD' };
         return { rank: 'D', color: 'text-gray-400', bg: 'bg-gray-400', title: 'TRY AGAIN' };
@@ -1895,6 +1931,10 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, onComplete, onFlee,
             <div className="flex flex-col items-center justify-center h-full gap-4 text-center p-4 bg-black/90">
                 {isBoss ? <div className="animate-pulse"><PixelArt.MonsterBat /></div> : isChallenge ? <div className="animate-pulse"><PixelArt.MonsterBat /></div> : <PixelArt.MonsterSlime />}
                 <h2 className="font-pixel text-xl text-white leading-loose">{isBoss ? "BOSS BATTLE" : isChallenge ? "終極試煉" : "MONSTER APPEARS"}<br /><span className="text-xs text-gray-400">{questions.length} Questions. 7 Seconds.</span></h2>
+
+                {isEasy && (
+                    <div className="font-pixel text-[10px] text-cyan-300 border-2 border-cyan-500/60 bg-cyan-900/30 px-3 py-1">簡單模式 · 5命 · 評級上限 B</div>
+                )}
 
                 {/* Boss Progress Checkboxes */}
                 {isBoss && (
@@ -2146,7 +2186,7 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, onComplete, onFlee,
                         <ArrowLeft size={20} />
                     </button>
                     <div className="flex gap-1 text-rpg-primary">
-                        {[...Array(3)].map((_, i) => <Heart key={i} size={20} fill={i < hp ? "currentColor" : "none"} className={i < hp ? "animate-pulse" : "opacity-30"} />)}
+                        {[...Array(maxHp)].map((_, i) => <Heart key={i} size={20} fill={i < hp ? "currentColor" : "none"} className={i < hp ? "animate-pulse" : "opacity-30"} />)}
                     </div>
                 </div>
                 <div className="font-pixel text-rpg-accent text-lg flex items-center gap-2"><Coins size={16} /> {score}</div>
@@ -2223,6 +2263,7 @@ const App = () => {
     const [userData, setUserData] = useState(null); // { levelRecords: {}, ... }
     const [selectedNode, setSelectedNode] = useState(null);
     const [selectedCategory, setSelectedCategory] = useState(null);
+    const [selectedDifficulty, setSelectedDifficulty] = useState('hard'); // 'easy' = 5命/僅單字+片語/評級上限B, 'hard' = 3命/現狀
     const [challengeUnits, setChallengeUnits] = useState([]);
     const [battleKey, setBattleKey] = useState(0); // 用來強制 BattleMode 重新掛載 (retry)
 
@@ -2811,11 +2852,11 @@ const App = () => {
             case 'journey': return <JourneyMode onBack={() => { playSound('click'); setView('map'); }} onViewTrialLog={() => { playSound('click'); setView('trial-log'); }} records={userData?.levelRecords} />;
             case 'trial-log': return <TrialLogView onBack={() => { playSound('click'); setView('journey'); }} onRetry={() => { playSound('click'); setView('challenge-setup'); }} trialHistory={userData?.trialHistory} />;
             case 'challenge-setup': return <ChallengeSetup onBack={() => { playSound('click'); setView('map'); }} onStart={handleStartChallenge} />;
-            case 'unit-hub': return <UnitHub unitId={selectedNode?.id} onBack={() => setView('map')} onSelectCategory={(cat) => { setSelectedCategory(cat); setView('study'); }} />;
+            case 'unit-hub': return <UnitHub unitId={selectedNode?.id} onBack={() => setView('map')} onSelectCategory={(cat) => { setSelectedCategory(cat); setView('study'); }} difficulty={selectedDifficulty} onChangeDifficulty={setSelectedDifficulty} />;
             case 'study': return <StudyMode unitId={selectedNode?.id} categoryId={selectedCategory} data={levelDataCache[selectedNode?.id] || GAME_DATA[selectedNode?.id].content} onBack={() => setView('unit-hub')} onStartQuiz={handleForceQuiz} />;
             case 'quiz':
             case 'challenge-quiz':
-                return <BattleMode key={battleKey} quizData={getQuizData()} isBoss={selectedNode?.type === 'boss'} isChallenge={view === 'challenge-quiz'} onComplete={handleBattleComplete} onFlee={() => setView('map')} currentRecord={userData?.levelRecords?.[selectedNode?.id]} />;
+                return <BattleMode key={battleKey} quizData={getQuizData()} isBoss={selectedNode?.type === 'boss'} isChallenge={view === 'challenge-quiz'} difficulty={(view === 'quiz' && selectedNode?.type !== 'boss') ? selectedDifficulty : 'hard'} onComplete={handleBattleComplete} onFlee={() => setView('map')} currentRecord={userData?.levelRecords?.[selectedNode?.id]} />;
             default: return <div>Error</div>;
         }
     };
