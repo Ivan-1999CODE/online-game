@@ -2038,12 +2038,16 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard'
                         <div className="w-full bg-black/50 border-2 border-rpg-border p-2 mt-1">
                             <h4 className="text-rpg-accent font-pixel text-[10px] mb-1">- RANKING -</h4>
                             <div className="grid grid-cols-2 gap-x-4 gap-y-0.5 text-[10px] font-pixel">
-                                {ranks.map(r => (
-                                    <div key={r.label} className={`flex justify-between ${r.color} ${rankData.rank === r.label ? 'bg-white/20 px-1 rounded' : ''}`}>
-                                        <span>RANK {r.label}</span>
-                                        <span>{r.min}+</span>
-                                    </div>
-                                ))}
+                                {ranks.map(r => {
+                                    // 簡單模式評級上限 B：S/A 顯示為鎖定（拿不到）
+                                    const isLocked = isEasy && (r.label === 'S' || r.label === 'A');
+                                    return (
+                                        <div key={r.label} className={`flex justify-between ${isLocked ? 'text-gray-600 opacity-60' : r.color} ${(!isLocked && rankData.rank === r.label) ? 'bg-white/20 px-1 rounded' : ''}`}>
+                                            <span>RANK {r.label}</span>
+                                            <span>{isLocked ? '🔒 LOCK' : `${r.min}+`}</span>
+                                        </div>
+                                    );
+                                })}
                             </div>
                         </div>
 
