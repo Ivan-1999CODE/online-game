@@ -3,7 +3,7 @@ import {
     Sword, Shield, Scroll, Skull, Coins, Heart, Star, ChevronLeft, ChevronRight,
     Volume2, Map as MapIcon, RefreshCw, XCircle, CheckCircle,
     HelpCircle, Backpack, Gem, Flame, Skull as SkullIcon, Book, User,
-    List, Grid, ArrowLeft, Lightbulb, MessageCircle, Clock, Award, Home, Lock, LogOut
+    List, Grid, ArrowLeft, Lightbulb, MessageCircle, Clock, Award, Home, Lock, LogOut, Headphones
 } from 'lucide-react';
 import { collection, query, where, getDocs, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import { signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut } from 'firebase/auth';
@@ -1803,9 +1803,9 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard'
         setQuestions(shuffleArray(generatedQuestions).slice(0, limit));
     }, [quizData, isBoss]);
 
-    // 標準模式：每題出現時自動播放正確單字的發音
+    // 簡易 / 聽力模式：每題出現時自動播放正確單字的發音
     useEffect(() => {
-        if (status === 'playing' && !feedback && questions.length > 0 && quizMode === 'simple') {
+        if (status === 'playing' && !feedback && questions.length > 0 && (quizMode === 'simple' || quizMode === 'listening')) {
             const currentQ = questions[currentQIndex];
             if (currentQ) {
                 // 不管題目是 en-ch 還是 ch-en，都播放正確單字的英文發音
@@ -1953,10 +1953,10 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard'
                 {/* 模式選擇 */}
                 <div className="w-full max-w-xs">
                     <div className="font-pixel text-xs text-gray-400 mb-2">- 選擇作答模式 -</div>
-                    <div className="flex gap-3">
+                    <div className="grid grid-cols-3 gap-2">
                         <button
                             onClick={() => { playSound('click'); setQuizMode('standard'); }}
-                            className={`flex-1 p-3 border-4 transition-all duration-200 flex flex-col items-center gap-1 ${
+                            className={`p-2 border-4 transition-all duration-200 flex flex-col items-center gap-1 ${
                                 quizMode === 'standard'
                                     ? 'border-orange-400 bg-orange-900/60 scale-105 shadow-[0_0_15px_rgba(251,146,60,0.4)]'
                                     : 'border-gray-600 bg-gray-800 hover:border-gray-400 hover:bg-gray-700'
@@ -1964,11 +1964,11 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard'
                         >
                             <Sword size={20} className={quizMode === 'standard' ? 'text-orange-300' : 'text-gray-400'} />
                             <span className={`font-pixel text-xs ${quizMode === 'standard' ? 'text-orange-300' : 'text-gray-300'}`}>標準模式</span>
-                            <span className={`font-retro text-[10px] ${quizMode === 'standard' ? 'text-orange-400/70' : 'text-gray-500'}`}>純選擇題</span>
+                            <span className={`font-retro text-[10px] leading-tight ${quizMode === 'standard' ? 'text-orange-400/70' : 'text-gray-500'}`}>純選擇題</span>
                         </button>
                         <button
                             onClick={() => { playSound('click'); setQuizMode('simple'); }}
-                            className={`flex-1 p-3 border-4 transition-all duration-200 flex flex-col items-center gap-1 ${
+                            className={`p-2 border-4 transition-all duration-200 flex flex-col items-center gap-1 ${
                                 quizMode === 'simple'
                                     ? 'border-cyan-400 bg-cyan-900/60 scale-105 shadow-[0_0_15px_rgba(34,211,238,0.4)]'
                                     : 'border-gray-600 bg-gray-800 hover:border-gray-400 hover:bg-gray-700'
@@ -1976,13 +1976,31 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard'
                         >
                             <Volume2 size={20} className={quizMode === 'simple' ? 'text-cyan-300' : 'text-gray-400'} />
                             <span className={`font-pixel text-xs ${quizMode === 'simple' ? 'text-cyan-300' : 'text-gray-300'}`}>簡易模式</span>
-                            <span className={`font-retro text-[10px] ${quizMode === 'simple' ? 'text-cyan-400/70' : 'text-gray-500'}`}>附帶發音</span>
+                            <span className={`font-retro text-[10px] leading-tight ${quizMode === 'simple' ? 'text-cyan-400/70' : 'text-gray-500'}`}>附帶發音</span>
+                        </button>
+                        <button
+                            onClick={() => { playSound('click'); setQuizMode('listening'); }}
+                            className={`p-2 border-4 transition-all duration-200 flex flex-col items-center gap-1 ${
+                                quizMode === 'listening'
+                                    ? 'border-purple-400 bg-purple-900/60 scale-105 shadow-[0_0_15px_rgba(192,132,252,0.4)]'
+                                    : 'border-gray-600 bg-gray-800 hover:border-gray-400 hover:bg-gray-700'
+                            }`}
+                        >
+                            <Headphones size={20} className={quizMode === 'listening' ? 'text-purple-300' : 'text-gray-400'} />
+                            <span className={`font-pixel text-xs ${quizMode === 'listening' ? 'text-purple-300' : 'text-gray-300'}`}>聽力模式</span>
+                            <span className={`font-retro text-[10px] leading-tight ${quizMode === 'listening' ? 'text-purple-400/70' : 'text-gray-500'}`}>聽音選中文</span>
                         </button>
                     </div>
                 </div>
 
                 <RPGButton
-                    onClick={() => setStatus('playing')}
+                    onClick={() => {
+                        // 聽力模式：所有題目統一為「聽英文發音、選中文」(en-ch)
+                        if (quizMode === 'listening') {
+                            setQuestions(prev => prev.map(q => ({ ...q, mode: 'en-ch' })));
+                        }
+                        setStatus('playing');
+                    }}
                     color="primary"
                     className={`text-lg px-8 py-4 transition-all duration-300 ${quizMode ? 'opacity-100 translate-y-0' : 'opacity-30 pointer-events-none translate-y-2'}`}
                     disabled={!quizMode}
@@ -2213,18 +2231,32 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard'
 
                 {/* Question Box */}
                 <div className={`relative w-full max-w-xs bg-black/80 border-4 border-rpg-panel p-4 text-center shadow-2xl backdrop-blur-sm transition-transform duration-100 ${feedback === 'hit' ? 'scale-0 opacity-0' : 'scale-100 opacity-100'} ${feedback === 'miss' ? 'shake-effect border-red-500' : ''}`}>
-                    <h3 className="text-rpg-panel font-retro text-2xl md:text-3xl mb-1 text-shadow tracking-wider">
-                        {currentQ.mode === 'en-ch' ? currentQ.target.word : currentQ.target.chinese}
-                    </h3>
-                    {/* 簡易模式：顯示發音按鈕可重複播放 */}
-                    {quizMode === 'simple' && (
+                    {quizMode === 'listening' ? (
+                        /* 聽力模式：不顯示單字，只放發音按鈕（點擊可重複播放） */
                         <button
                             onClick={(e) => { e.stopPropagation(); speakText(currentQ.target.word); }}
-                            className="mt-1 text-cyan-400 hover:text-cyan-200 transition-colors p-1 inline-block"
+                            className="flex flex-col items-center gap-1 mx-auto text-purple-300 hover:text-purple-100 transition-colors py-2"
                             title="再聽一次"
                         >
-                            <Volume2 size={18} />
+                            <Headphones size={40} />
+                            <span className="font-pixel text-[10px] text-gray-400">點擊再聽一次</span>
                         </button>
+                    ) : (
+                        <>
+                            <h3 className="text-rpg-panel font-retro text-2xl md:text-3xl mb-1 text-shadow tracking-wider">
+                                {currentQ.mode === 'en-ch' ? currentQ.target.word : currentQ.target.chinese}
+                            </h3>
+                            {/* 簡易模式：顯示發音按鈕可重複播放 */}
+                            {quizMode === 'simple' && (
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); speakText(currentQ.target.word); }}
+                                    className="mt-1 text-cyan-400 hover:text-cyan-200 transition-colors p-1 inline-block"
+                                    title="再聽一次"
+                                >
+                                    <Volume2 size={18} />
+                                </button>
+                            )}
+                        </>
                     )}
                 </div>
 
