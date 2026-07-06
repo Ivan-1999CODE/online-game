@@ -372,7 +372,10 @@ const TeacherDashboard = ({ onClose }) => {
                         <p className="text-xs font-bold">目前沒有學生資料</p>
                     </div>
                 ) : (
-                    <div className="h-full overflow-y-auto p-2 pb-10">
+                    <div
+                        className="h-full overflow-y-auto p-2"
+                        style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 4rem)' }}
+                    >
                         <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                             <table className="w-full text-left">
                                 <thead className="bg-slate-50 border-b border-slate-200 text-xs uppercase text-slate-500">
