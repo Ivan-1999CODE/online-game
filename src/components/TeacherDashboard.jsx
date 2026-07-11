@@ -12,10 +12,11 @@ import {
 } from "lucide-react";
 import { BOSS_INFO, LEVEL_INFO, MAP_STRUCTURE } from "../constants/gameData";
 
-const TOTAL_TASKS = 94; // (16 units * 4 categories) + (6 bosses * 5 clears)
+const TOTAL_TASKS = 110; // (16 units * 5 categories) + (6 bosses * 5 clears)
 
 const CATEGORY_DEFS = [
-    { recordKey: 'vocab', historyKey: 'vocab', label: '單字' },
+    { recordKey: 'vocabA', historyKey: 'vocab_a', label: '單字A' },
+    { recordKey: 'vocabB', historyKey: 'vocab_b', label: '單字B' },
     { recordKey: 'equip', historyKey: 'collocation', label: '搭配詞' },
     { recordKey: 'alchemy', historyKey: 'polysemy', label: '多義字' },
     { recordKey: 'scroll', historyKey: 'sentences', label: '句子' }
@@ -74,6 +75,11 @@ const getCategoryData = (record = {}, recordKey) => {
     const legacyScore = record[`${recordKey}Score`];
     if (legacyGrade || legacyScore !== undefined) {
         return { score: legacyScore ?? null, rank: legacyGrade || '?' };
+    }
+
+    // 拆箱前的舊紀錄：單字A/B 沿用原本的 vocab 成績
+    if (recordKey === 'vocabA' || recordKey === 'vocabB') {
+        return getCategoryData(record, 'vocab');
     }
 
     return { score: null, rank: '?' };

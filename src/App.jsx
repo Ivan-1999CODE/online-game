@@ -228,9 +228,57 @@ const fetchLevelData = async (levelId) => {
                 categories.sentences.push(item);
             }
         });
+
+        // 單字寶箱拆成 A/B 兩箱：依字母序切半，確保切法固定、學生可對照課本複習
+        const sortedVocab = [...categories.vocab].sort((a, b) => a.word.localeCompare(b.word));
+        const half = Math.ceil(sortedVocab.length / 2);
+        categories.vocab_a = sortedVocab.slice(0, half);
+        categories.vocab_b = sortedVocab.slice(half);
+
         return categories;
     } catch (err) {
         console.error("Error fetching data:", err);
+        return null;
+    }
+};
+
+// --- 進階書（獨立地圖分頁）---
+const ADV_LESSONS_PER_SECTION = 10; // 進階地圖每 10 課一卷
+const ADV_CLEARS_TO_COMPLETE = 3;   // 通關 3 次才算完成
+
+const advLessonId = (lesson) => `adv_${lesson}`;
+
+// 進階書目錄：meta/advanced 文件 { totalLessons, titles: { "1": "篇章名" } }，由匯入腳本維護
+const fetchAdvancedMeta = async () => {
+    try {
+        const snap = await getDoc(doc(db, 'meta', 'advanced'));
+        return snap.exists() ? snap.data() : null;
+    } catch (err) {
+        console.error("Error fetching advanced meta:", err);
+        return null;
+    }
+};
+
+const fetchAdvancedLesson = async (lesson) => {
+    try {
+        const q = query(collection(db, 'vocabulary'), where('series', '==', 'advanced'), where('lesson', '==', lesson));
+        const snapshot = await getDocs(q);
+        const vocab = [];
+        snapshot.forEach(docSnap => {
+            const data = docSnap.data();
+            vocab.push({
+                id: docSnap.id,
+                word: data.word || '',
+                chinese: data.chinese || '',
+                part: data.pos || data.part || '',
+                sentence: data.example || data.sentence || '',
+                sentence_ch: data.sentence_ch || ''
+            });
+        });
+        vocab.sort((a, b) => a.word.localeCompare(b.word));
+        return { vocab, vocab_a: [], vocab_b: [], collocation: [], polysemy: [], sentences: [] };
+    } catch (err) {
+        console.error("Error fetching advanced lesson:", err);
         return null;
     }
 };
@@ -269,7 +317,7 @@ for (let i = 1; i <= 16; i++) {
     GAME_DATA[i] = {
         title: LEVEL_INFO[i] ? `Level ${i < 10 ? '0' + i : i}: ${LEVEL_INFO[i].title}` : `Unit ${i}`,
         // Content will be loaded asynchronously, but we initialize with empty arrays to prevent crashes in synchronous checks if any exist.
-        content: { vocab: [], collocation: [], polysemy: [], sentences: [] }
+        content: { vocab: [], vocab_a: [], vocab_b: [], collocation: [], polysemy: [], sentences: [] }
     };
 }
 
@@ -347,16 +395,22 @@ const getLevelIcon = (id) => {
 };
 
 // --- Achievement Logic Helper ---
+// 取得類別評級；vocabA/vocabB 在沒有新紀錄時回退到拆箱前的 vocab 舊成績
+const getGradeWithVocabFallback = (record, cat) => {
+    if (record[cat] && typeof record[cat] === 'object' && record[cat].grade) return record[cat].grade;
+    if (record[`${cat}Grade`]) return record[`${cat}Grade`];
+    if (cat === 'vocabA' || cat === 'vocabB') {
+        if (record.vocab && typeof record.vocab === 'object' && record.vocab.grade) return record.vocab.grade;
+        if (record.vocabGrade) return record.vocabGrade;
+    }
+    return null;
+};
+
+const ACHIEVEMENT_CATS = ['vocabA', 'vocabB', 'equip', 'alchemy', 'scroll'];
+
 const getUnitAchievementStatus = (record) => {
     if (!record) return null;
-    const cats = ['vocab', 'equip', 'alchemy', 'scroll'];
-    const grades = cats.map(c => {
-        // New structure: record[c] = { score, grade }
-        if (record[c] && typeof record[c] === 'object') return record[c].grade;
-        // Legacy: record[c + 'Grade']
-        if (record[`${c}Grade`]) return record[`${c}Grade`];
-        return null;
-    });
+    const grades = ACHIEVEMENT_CATS.map(c => getGradeWithVocabFallback(record, c));
 
     // If any category is missing (null or undefined), achievement not possible
     if (grades.some(g => !g)) return null;
@@ -528,7 +582,7 @@ const AchievementGuide = ({ onClose }) => (
     </div>
 );
 
-const WorldMap = ({ onSelectNode, onViewJourney, onUltimateChallenge, onViewMistakeNotebook, onLogout, records = {} }) => {
+const WorldMap = ({ onSelectNode, onViewJourney, onUltimateChallenge, onViewMistakeNotebook, onLogout, records = {}, advMeta = null, activeTab = 'main', onChangeTab }) => {
     const [showGuide, setShowGuide] = useState(false);
     const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
@@ -554,6 +608,21 @@ const WorldMap = ({ onSelectNode, onViewJourney, onUltimateChallenge, onViewMist
                     </button>
                 </div>
             </div>
+            {/* 主線 / 進階 地圖切換 */}
+            <div className="flex bg-black/60 border-b-4 border-rpg-border z-10">
+                <button
+                    onClick={() => { playSound('click'); onChangeTab && onChangeTab('main'); }}
+                    className={`flex-1 py-2 font-pixel text-xs transition-colors ${activeTab === 'main' ? 'bg-rpg-primary text-white' : 'text-gray-400 hover:text-white'}`}
+                >
+                    ⚔ 主線冒險
+                </button>
+                <button
+                    onClick={() => { playSound('click'); onChangeTab && onChangeTab('adv'); }}
+                    className={`flex-1 py-2 font-pixel text-xs transition-colors ${activeTab === 'adv' ? 'bg-purple-700 text-white' : 'text-gray-400 hover:text-white'}`}
+                >
+                    ✦ 進階篇章
+                </button>
+            </div>
             <div className="flex-1 overflow-y-auto relative p-4 space-y-6 bg-[url('https://www.transparenttextures.com/patterns/diagmonds-light.png')]">
                 <button
                     onClick={() => setShowLogoutConfirm(true)}
@@ -573,7 +642,7 @@ const WorldMap = ({ onSelectNode, onViewJourney, onUltimateChallenge, onViewMist
                         </RPGBorder>
                     </div>
                 )}
-                {MAP_STRUCTURE.map((node, index) => {
+                {activeTab === 'main' && MAP_STRUCTURE.map((node, index) => {
                     const isBoss = node.type === 'boss';
                     const info = LEVEL_INFO[node.id];
                     const sectionHeader = !isBoss && SECTION_HEADERS[node.id];
@@ -659,6 +728,65 @@ const WorldMap = ({ onSelectNode, onViewJourney, onUltimateChallenge, onViewMist
                         </div>
                     );
                 })}
+                {activeTab === 'adv' && (() => {
+                    const totalLessons = advMeta?.totalLessons || 0;
+                    if (totalLessons === 0) {
+                        return (
+                            <div className="flex flex-col items-center justify-center py-24 gap-4 text-center">
+                                <Lock size={48} className="text-gray-400" />
+                                <p className="font-pixel text-gray-300 text-sm">進階篇章準備中...</p>
+                                <p className="font-retro text-gray-400 text-xs">COMING SOON</p>
+                            </div>
+                        );
+                    }
+                    return Array.from({ length: totalLessons }, (_, i) => i + 1).map(n => {
+                        const isSectionStart = (n - 1) % ADV_LESSONS_PER_SECTION === 0;
+                        const sectionIdx = Math.floor((n - 1) / ADV_LESSONS_PER_SECTION) + 1;
+                        const sectionEnd = Math.min(sectionIdx * ADV_LESSONS_PER_SECTION, totalLessons);
+                        const record = records[advLessonId(n)] || {};
+                        const clears = record.clears || 0;
+                        const starCount = Math.min(clears, ADV_CLEARS_TO_COMPLETE);
+                        const isDone = clears >= ADV_CLEARS_TO_COMPLETE;
+                        const title = advMeta?.titles?.[String(n)] || `進階單字 第 ${n} 課`;
+
+                        return (
+                            <div key={n} className="flex flex-col items-center">
+                                {isSectionStart && (
+                                    <div className="w-full max-w-xs mb-4 mt-2">
+                                        <div className="bg-gradient-to-r from-transparent via-purple-400 to-transparent h-[2px] w-full mb-1"></div>
+                                        <h3 className="text-center font-pixel text-purple-300 text-sm tracking-widest text-shadow">進階 第 {sectionIdx} 卷</h3>
+                                        <p className="text-center font-retro text-gray-300 text-xs">Lesson {(sectionIdx - 1) * ADV_LESSONS_PER_SECTION + 1} - {sectionEnd}</p>
+                                        <div className="bg-gradient-to-r from-transparent via-purple-400 to-transparent h-[2px] w-full mt-1"></div>
+                                    </div>
+                                )}
+                                <div className="relative flex justify-center w-full">
+                                    {!isSectionStart && <div className="absolute -top-6 h-6 w-1 bg-purple-400/40"></div>}
+                                    <button
+                                        onClick={() => { playSound('click'); onSelectNode({ type: 'adv', id: advLessonId(n), lesson: n }); }}
+                                        className={`relative w-full max-w-xs p-2 border-4 transition-all hover:scale-105 active:scale-95 text-left group flex items-center gap-3 shadow-xl ${isDone ? 'bg-purple-950 border-yellow-400' : 'bg-rpg-panel border-purple-400'}`}
+                                    >
+                                        <div className="w-14 h-14 flex-shrink-0 border-2 border-black overflow-hidden flex items-center justify-center bg-purple-900">
+                                            <PixelArt.Chest />
+                                        </div>
+                                        <div className="flex-1 overflow-hidden">
+                                            <div className="flex justify-between items-baseline">
+                                                <h3 className={`font-pixel text-lg leading-tight ${isDone ? 'text-yellow-300' : 'text-rpg-bg'}`}>L{n < 10 ? '0' + n : n}</h3>
+                                                <span className={`font-pixel text-sm tracking-widest ${isDone ? 'text-yellow-400' : 'text-purple-300'}`}>
+                                                    {'★'.repeat(starCount)}{'☆'.repeat(ADV_CLEARS_TO_COMPLETE - starCount)}
+                                                </span>
+                                            </div>
+                                            <p className={`font-retro text-[12px] mt-1 leading-snug truncate ${isDone ? 'text-purple-200' : 'text-gray-700'}`}>{title}</p>
+                                        </div>
+                                        {isDone && (
+                                            <div className="text-yellow-400 font-pixel text-xl drop-shadow-[0_0_5px_rgba(250,204,21,0.8)]" title="通關 3 次達成！">✔</div>
+                                        )}
+                                        <ChevronRight className={isDone ? 'text-yellow-400' : 'text-rpg-bg'} size={16} />
+                                    </button>
+                                </div>
+                            </div>
+                        );
+                    });
+                })()}
                 <div className="h-10"></div>
             </div>
         </div>
@@ -670,27 +798,16 @@ const calculateTotalRank = (record) => {
     if (!record) return { rank: '?', color: '#9ca3af' }; // Gray
 
     const weights = { 'S': 5, 'A': 4, 'B': 3, 'C': 2, 'D': 1 };
-    const categories = ['vocab', 'equip', 'alchemy', 'scroll'];
     let sum = 0;
 
-    categories.forEach(cat => {
-        let grade = null;
-        // New structure: record.vocab.grade
-        if (record[cat] && typeof record[cat] === 'object' && record[cat].grade) {
-            grade = record[cat].grade;
-        }
-        // Legacy structure: record.vocabGrade
-        else if (record[`${cat}Grade`]) {
-            grade = record[`${cat}Grade`];
-        }
-
+    ACHIEVEMENT_CATS.forEach(cat => {
+        const grade = getGradeWithVocabFallback(record, cat);
         if (grade && weights[grade]) {
             sum += weights[grade];
         }
     });
 
-    // Formula: ceil(sum / 4)
-    const avg = Math.ceil(sum / 4);
+    const avg = Math.ceil(sum / ACHIEVEMENT_CATS.length);
 
     const map = { 5: 'S', 4: 'A', 3: 'B', 2: 'C', 1: 'D', 0: '?' };
     const rank = map[avg] || '?';
@@ -774,7 +891,9 @@ const JourneyMode = ({ onBack, onViewTrialLog, records = {} }) => {
 
     const getMiniIcon = (type) => {
         switch (type) {
-            case 'vocab': return <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5"><path d="M2 12H22M2 12V6C2 4.89543 2.89543 4 4 4H20C21.1046 4 22 4.89543 22 6V12M2 12V18C2 19.1046 2.89543 20 4 20H20C21.1046 20 22 19.1046 22 18V12" stroke="currentColor" strokeWidth="2" fill="none" /></svg>;
+            case 'vocab':
+            case 'vocabA':
+            case 'vocabB': return <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5"><path d="M2 12H22M2 12V6C2 4.89543 2.89543 4 4 4H20C21.1046 4 22 4.89543 22 6V12M2 12V18C2 19.1046 2.89543 20 4 20H20C21.1046 20 22 19.1046 22 18V12" stroke="currentColor" strokeWidth="2" fill="none" /></svg>;
             case 'equip': return <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5"><path d="M6 4L14 12L12 14L4 6L6 4Z" stroke="currentColor" strokeWidth="2" fill="none" /></svg>;
             case 'alchemy': return <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5"><path d="M10 2H14V6L19 12V20C19 21.1 18.1 22 17 22H7C5.9 22 5 21.1 5 20V12L10 6V2Z" stroke="currentColor" strokeWidth="2" fill="none" /></svg>;
             case 'scroll': return <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5"><path d="M4 4H20V20H4V4Z" stroke="currentColor" strokeWidth="2" fill="none" /></svg>;
@@ -785,6 +904,8 @@ const JourneyMode = ({ onBack, onViewTrialLog, records = {} }) => {
     const getCategoryLabel = (type) => {
         switch (type) {
             case 'vocab': return '寶箱';
+            case 'vocabA': return '寶箱A';
+            case 'vocabB': return '寶箱B';
             case 'equip': return '裝備';
             case 'alchemy': return '藥水';
             case 'scroll': return '捲軸';
@@ -807,6 +928,10 @@ const JourneyMode = ({ onBack, onViewTrialLog, records = {} }) => {
         const legacyScore = record[`${cat}Score`];
         if (legacyGrade || legacyScore) {
             return { score: legacyScore ?? null, grade: legacyGrade || '?' };
+        }
+        // 拆箱前的舊紀錄：寶箱 A/B 沿用原本的 vocab 成績
+        if ((cat === 'vocabA' || cat === 'vocabB') && cat !== 'vocab') {
+            return getCategoryData(record, 'vocab');
         }
         return { score: null, grade: '?' };
     };
@@ -869,7 +994,7 @@ const JourneyMode = ({ onBack, onViewTrialLog, records = {} }) => {
                         const totalRank = isBoss ? { rank: record.rank || '?', color: '#ccc' } : calculateTotalRank(record);
                         const lastPlayed = formatLastPlayed(record.lastPlayed || record.timestamp);
 
-                        const categories = ['vocab', 'equip', 'alchemy', 'scroll'];
+                        const categories = ['vocabA', 'vocabB', 'equip', 'alchemy', 'scroll'];
 
                         return (
                             <div key={id} className={`relative transition-all duration-300 ${isUnlocked ? 'opacity-100' : 'opacity-60 grayscale'}`}>
@@ -1481,8 +1606,13 @@ const MistakeNotebook = ({ onBack, mistakeStats = {}, onClearMistakes, onRemoveM
     );
 };
 
-const ChallengeSetup = ({ onBack, onStart }) => {
+const ChallengeSetup = ({ onBack, onStart, advMeta = null }) => {
     const [selectedUnits, setSelectedUnits] = useState([]);
+    const [tab, setTab] = useState('main'); // 'main' | 'adv'
+
+    const totalLessons = advMeta?.totalLessons || 0;
+    const mainIds = Array.from({ length: 16 }, (_, i) => (i + 1).toString());
+    const advIds = Array.from({ length: totalLessons }, (_, i) => advLessonId(i + 1));
 
     const toggleUnit = (id) => {
         if (selectedUnits.includes(id)) {
@@ -1492,11 +1622,15 @@ const ChallengeSetup = ({ onBack, onStart }) => {
         }
     };
 
+    // 全選只切換「當前分頁」的項目
+    const currentTabIds = tab === 'main' ? mainIds : advIds;
+    const currentAllSelected = currentTabIds.length > 0 && currentTabIds.every(id => selectedUnits.includes(id));
     const toggleAll = () => {
-        if (selectedUnits.length === 16) {
-            setSelectedUnits([]);
+        if (currentAllSelected) {
+            setSelectedUnits(selectedUnits.filter(id => !currentTabIds.includes(id)));
         } else {
-            setSelectedUnits(Array.from({ length: 16 }, (_, i) => (i + 1).toString()));
+            const merged = new Set([...selectedUnits, ...currentTabIds]);
+            setSelectedUnits(Array.from(merged));
         }
     };
 
@@ -1508,14 +1642,56 @@ const ChallengeSetup = ({ onBack, onStart }) => {
                 <div className="w-8"></div>
             </div>
 
+            {/* 主線／進階頁籤 */}
+            <div className="flex bg-black/60 border-b-4 border-rpg-border z-10">
+                <button
+                    onClick={() => { playSound('click'); setTab('main'); }}
+                    className={`flex-1 py-2 font-pixel text-xs transition-colors ${tab === 'main' ? 'bg-rpg-primary text-white' : 'text-gray-400 hover:text-white'}`}
+                >
+                    ⚔ 主線冒險
+                </button>
+                <button
+                    onClick={() => { playSound('click'); setTab('adv'); }}
+                    className={`flex-1 py-2 font-pixel text-xs transition-colors ${tab === 'adv' ? 'bg-purple-700 text-white' : 'text-gray-400 hover:text-white'}`}
+                >
+                    ✦ 進階篇章
+                </button>
+            </div>
+
             <div className="flex-1 overflow-y-auto p-4 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]">
                 <div className="flex justify-between items-center mb-4 bg-black/40 p-2 rounded border border-gray-600 backdrop-blur-sm sticky top-0 z-10">
                     <p className="font-retro text-gray-300 text-sm">選擇試煉範圍：<span className="text-rpg-secondary">{selectedUnits.length}</span> 章</p>
                     <button onClick={() => { playSound('click'); toggleAll(); }} className="text-xs font-pixel text-white bg-rpg-primary px-2 py-1 border-2 border-white hover:bg-red-400">
-                        {selectedUnits.length === 16 ? "取消全選" : "全選"}
+                        {currentAllSelected ? "取消全選" : "全選"}
                     </button>
                 </div>
 
+                {tab === 'adv' ? (
+                    totalLessons === 0 ? (
+                        <div className="flex flex-col items-center justify-center py-16 text-center">
+                            <div className="font-pixel text-purple-300 text-sm mb-2">✦ 進階篇章準備中</div>
+                            <p className="font-retro text-gray-400 text-xs">老師尚未匯入進階單字書</p>
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-4 gap-2">
+                            {advIds.map((id) => {
+                                const lesson = parseInt(id.slice(4), 10);
+                                const isSelected = selectedUnits.includes(id);
+                                return (
+                                    <button
+                                        key={id}
+                                        onClick={() => { playSound('click'); toggleUnit(id); }}
+                                        title={advMeta?.titles?.[String(lesson)] || `進階單字 第 ${lesson} 課`}
+                                        className={`relative aspect-square flex items-center justify-center border-4 font-pixel text-xs transition-all ${isSelected ? 'bg-purple-600 border-white text-white scale-105 shadow-[0_0_10px_rgba(168,85,247,0.6)]' : 'bg-black/40 border-purple-800 text-purple-300 hover:border-purple-400'}`}
+                                    >
+                                        L{lesson}
+                                        {isSelected && <span className="absolute -top-1 -right-1 text-white text-[10px] bg-purple-500 rounded-full w-4 h-4 flex items-center justify-center border border-white">✔</span>}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    )
+                ) : (
                 <div className="grid grid-cols-2 gap-4">
                     {Object.entries(LEVEL_INFO).map(([id, info], index) => {
                         const isSelected = selectedUnits.includes(id);
@@ -1559,6 +1735,7 @@ const ChallengeSetup = ({ onBack, onStart }) => {
                         );
                     })}
                 </div>
+                )}
 
                 <div className="h-24"></div>
             </div>
@@ -1579,7 +1756,8 @@ const ChallengeSetup = ({ onBack, onStart }) => {
 
 const UnitHub = ({ unitId, onBack, onSelectCategory, difficulty, onChangeDifficulty }) => {
     const categories = [
-        { id: 'vocab', label: '單字寶箱', icon: <PixelArt.Chest />, color: 'primary', desc: 'LOOT WORDS' },
+        { id: 'vocab_a', label: '單字寶箱 A', icon: <PixelArt.Chest />, color: 'primary', desc: 'LOOT WORDS I' },
+        { id: 'vocab_b', label: '單字寶箱 B', icon: <PixelArt.Chest />, color: 'primary', desc: 'LOOT WORDS II' },
         { id: 'collocation', label: '搭配裝備', icon: <PixelArt.SwordShield />, color: 'secondary', desc: 'EQUIPMENT' },
         { id: 'polysemy', label: '多義藥水', icon: <PixelArt.Potion />, color: 'accent', desc: 'ALCHEMY' },
         { id: 'sentences', label: '片語捲軸', icon: <PixelArt.Scroll />, color: 'success', desc: 'ANCIENT SCROLL' },
@@ -1587,7 +1765,7 @@ const UnitHub = ({ unitId, onBack, onSelectCategory, difficulty, onChangeDifficu
 
     // 簡單模式只開放「單字」與「片語」兩類（中間兩類題數太少）
     const visibleCategories = difficulty === 'easy'
-        ? categories.filter(cat => cat.id === 'vocab' || cat.id === 'sentences')
+        ? categories.filter(cat => cat.id === 'vocab_a' || cat.id === 'vocab_b' || cat.id === 'sentences')
         : categories;
 
     const info = LEVEL_INFO[unitId];
@@ -1650,13 +1828,69 @@ const UnitHub = ({ unitId, onBack, onSelectCategory, difficulty, onChangeDifficu
     );
 };
 
+// 進階課程大廳：顯示通關進度（★x/3），提供學習與挑戰入口
+const AdvLessonHub = ({ node, advMeta, record, onBack, onStudy, onStartQuiz }) => {
+    const clears = record?.clears || 0;
+    const starCount = Math.min(clears, ADV_CLEARS_TO_COMPLETE);
+    const isDone = clears >= ADV_CLEARS_TO_COMPLETE;
+    const title = advMeta?.titles?.[String(node?.lesson)] || `進階單字 第 ${node?.lesson} 課`;
+
+    return (
+        <div className="flex flex-col h-full bg-rpg-bg">
+            <div className="flex items-center justify-between p-4 border-b-4 border-purple-400 bg-black/30">
+                <RPGButton onClick={onBack} color="dark" className="px-2"><ArrowLeft size={16} /></RPGButton>
+                <div className="flex-1 text-center mx-2">
+                    <h2 className="font-pixel text-white text-sm text-shadow leading-tight">{title}</h2>
+                    <p className="font-retro text-[10px] text-purple-300">ADVANCED LESSON {node?.lesson}</p>
+                </div>
+                <div className="w-8"></div>
+            </div>
+            <div className="flex-1 p-4 flex flex-col gap-4 content-start overflow-y-auto">
+                {/* 通關進度 */}
+                <div className="flex flex-col items-center gap-2 bg-black/40 border-4 border-purple-500/60 p-4">
+                    <div className="font-pixel text-purple-300 text-xs">- 通關進度 -</div>
+                    <div className={`font-pixel text-4xl tracking-widest ${isDone ? 'text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.6)]' : 'text-purple-300'}`}>
+                        {'★'.repeat(starCount)}{'☆'.repeat(ADV_CLEARS_TO_COMPLETE - starCount)}
+                    </div>
+                    <p className="font-retro text-xs text-gray-300">
+                        {isDone ? '此課已完成！可繼續挑戰刷新紀錄' : `通關 ${ADV_CLEARS_TO_COMPLETE} 次即完成此課（目前 ${clears} / ${ADV_CLEARS_TO_COMPLETE}）`}
+                    </p>
+                    {record?.bestGrade && (
+                        <p className="font-pixel text-[10px] text-gray-400">BEST: {record.bestScore ?? 0} 分 · RANK {record.bestGrade}</p>
+                    )}
+                </div>
+
+                <button onClick={() => { playSound('click'); onStudy(); }} className="group relative h-24 nes-border flex items-center px-4 gap-4 transition-all hover:brightness-110 active:translate-y-1 bg-[#2e3c5c]">
+                    <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
+                    <div className="relative z-10 filter drop-shadow-lg group-hover:scale-110 transition-transform"><PixelArt.Scroll /></div>
+                    <div className="relative z-10 flex-1 text-left">
+                        <h3 className="font-pixel text-lg text-white text-shadow">學習模式</h3>
+                        <p className="font-retro text-xs text-yellow-200 tracking-widest opacity-80">STUDY FIRST</p>
+                    </div>
+                    <ChevronRight className="text-white/50 group-hover:text-white" />
+                </button>
+
+                <button onClick={() => { playSound('click'); onStartQuiz(); }} className="group relative h-24 nes-border flex items-center px-4 gap-4 transition-all hover:brightness-110 active:translate-y-1 bg-[#5c2e4c]">
+                    <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
+                    <div className="relative z-10 filter drop-shadow-lg group-hover:scale-110 transition-transform"><PixelArt.Chest /></div>
+                    <div className="relative z-10 flex-1 text-left">
+                        <h3 className="font-pixel text-lg text-white text-shadow">開始挑戰</h3>
+                        <p className="font-retro text-xs text-yellow-200 tracking-widest opacity-80">3 LIVES · FULL LESSON</p>
+                    </div>
+                    <ChevronRight className="text-white/50 group-hover:text-white" />
+                </button>
+            </div>
+        </div>
+    );
+};
+
 const StudyMode = ({ unitId, categoryId, data, onBack, onStartQuiz }) => {
     const [viewMode, setViewMode] = useState('card');
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isFlipped, setIsFlipped] = useState(false);
     const studyData = data[categoryId] || [];
 
-    const catTitles = { vocab: 'TREASURE', collocation: 'ARMORY', polysemy: 'ALCHEMY', sentences: 'SCROLLS' };
+    const catTitles = { vocab: 'TREASURE', vocab_a: 'TREASURE A', vocab_b: 'TREASURE B', collocation: 'ARMORY', polysemy: 'ALCHEMY', sentences: 'SCROLLS' };
     const currentItem = studyData[currentIndex];
     const handleNext = () => { setIsFlipped(false); setCurrentIndex((p) => (p + 1) % studyData.length); };
     const handlePrev = () => { setIsFlipped(false); setCurrentIndex((p) => (p - 1 + studyData.length) % studyData.length); };
@@ -2140,7 +2374,7 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard'
                             onClick={() => {
                                 if (isSubmitting) return;
                                 setIsSubmitting(true);
-                                onComplete({ score, rank: rankData.rank, battleLog });
+                                onComplete({ score, rank: rankData.rank, battleLog, victory: status === 'victory' });
                             }}
                             disabled={isSubmitting}
                             color="neutral"
@@ -2153,7 +2387,7 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard'
                                 if (isSubmitting) return;
                                 setIsSubmitting(true);
                                 // 先存檔，存完後重置戰鬥狀態
-                                onComplete({ score, rank: rankData.rank, battleLog, retry: true });
+                                onComplete({ score, rank: rankData.rank, battleLog, victory: status === 'victory', retry: true });
                             }}
                             disabled={isSubmitting}
                             color="primary"
@@ -2303,6 +2537,10 @@ const App = () => {
     const [challengeUnits, setChallengeUnits] = useState([]);
     const [battleKey, setBattleKey] = useState(0); // 用來強制 BattleMode 重新掛載 (retry)
 
+    // 進階書相關狀態
+    const [advMeta, setAdvMeta] = useState(null);     // meta/advanced 目錄
+    const [worldTab, setWorldTab] = useState('main'); // 'main' | 'adv'
+
     // New State for Async Loading
     const [loading, setLoading] = useState(false);
     const [authChecking, setAuthChecking] = useState(true); // Added to prevent double clicking during redirect login
@@ -2424,6 +2662,12 @@ const App = () => {
         }
     };
 
+    // 載入進階書目錄（登入後）
+    useEffect(() => {
+        if (!userName) return;
+        fetchAdvancedMeta().then(setAdvMeta);
+    }, [userName]);
+
     // 學生姓名補登檢查 - 監聽 user 和 userData
     useEffect(() => {
         if (currentUser && userData && !userData.studentName && !showNamePrompt) {
@@ -2534,8 +2778,8 @@ const App = () => {
             if (selectedNode.type === 'unit') {
                 const levelId = selectedNode.id;
                 const prevRecord = updatedUserData.levelRecords?.[levelId] || {};
-                const categoryMap = { 'vocab': 'vocab', 'collocation': 'equip', 'polysemy': 'alchemy', 'sentences': 'scroll' };
-                const catKey = categoryMap[selectedCategory || 'vocab'];
+                const categoryMap = { 'vocab': 'vocab', 'vocab_a': 'vocabA', 'vocab_b': 'vocabB', 'collocation': 'equip', 'polysemy': 'alchemy', 'sentences': 'scroll' };
+                const catKey = categoryMap[selectedCategory || 'vocab_a'];
 
                 let prevScore = 0;
                 let prevGrade = '?';
@@ -2596,6 +2840,23 @@ const App = () => {
                 const newLevelRecords = { ...updatedUserData.levelRecords, [bossId]: newRecord };
                 updatedUserData.levelRecords = newLevelRecords;
                 updatesForFirestore[`levelRecords.${bossId}`] = newRecord;
+            } else if (selectedNode.type === 'adv') {
+                const levelId = selectedNode.id;
+                const prevRecord = updatedUserData.levelRecords?.[levelId] || {};
+                const rankOrder = { 'S': 6, 'A': 5, 'B': 4, 'C': 3, 'D': 2, 'E': 1, '?': 0 };
+                const clears = (prevRecord.clears || 0) + (result.victory ? 1 : 0);
+                const bestGrade = (rankOrder[result.rank] || 0) > (rankOrder[prevRecord.bestGrade] || 0)
+                    ? result.rank : (prevRecord.bestGrade || result.rank);
+                const newRecord = {
+                    ...prevRecord,
+                    clears,
+                    bestScore: Math.max(prevRecord.bestScore || 0, result.score),
+                    bestGrade,
+                    lastPlayed: new Date().toISOString(),
+                    unlocked: true
+                };
+                updatedUserData.levelRecords = { ...updatedUserData.levelRecords, [levelId]: newRecord };
+                updatesForFirestore[`levelRecords.${levelId}`] = newRecord;
             }
         }
 
@@ -2608,6 +2869,8 @@ const App = () => {
         let historyCategoryLabel = null;
         const historyCategoryLabels = {
             vocab: '單字',
+            vocab_a: '單字A',
+            vocab_b: '單字B',
             collocation: '搭配詞',
             polysemy: '多義字',
             sentences: '句子'
@@ -2616,6 +2879,7 @@ const App = () => {
         if (view === 'challenge-quiz') {
             historyType = "quiz";
             historyUnitTitle = challengeUnits.map(unitId => {
+                if (String(unitId).startsWith('adv_')) return `進階 L${String(unitId).slice(4)}`;
                 const info = LEVEL_INFO[unitId];
                 return info ? `Level ${unitId < 10 ? '0' + unitId : unitId}: ${info.title}` : `Unit ${unitId}`;
             }).join(', ');
@@ -2623,12 +2887,17 @@ const App = () => {
             if (selectedNode.type === 'boss') {
                 historyType = "quiz";
                 historyUnitTitle = selectedNode.label || `BOSS ${selectedNode.id}`;
+            } else if (selectedNode.type === 'adv') {
+                historyType = "practice";
+                historyUnitTitle = `進階 L${selectedNode.lesson}`;
+                historyCategoryKey = 'vocab';
+                historyCategoryLabel = '進階單字';
             } else {
                 historyType = "practice";
                 const unitId = selectedNode.id;
                 const info = LEVEL_INFO[unitId];
                 historyUnitTitle = info ? `Level ${unitId < 10 ? '0' + unitId : unitId}: ${info.title}` : `Unit ${unitId}`;
-                historyCategoryKey = selectedCategory || 'vocab';
+                historyCategoryKey = selectedCategory || 'vocab_a';
                 historyCategoryLabel = historyCategoryLabels[historyCategoryKey] || null;
             }
         }
@@ -2713,9 +2982,19 @@ const App = () => {
                 if (hasNew) setLevelDataCache(newCache);
             } catch (e) { console.error("Boss Fetch failed", e); }
             finally { setLoading(false); }
+        } else if (node.type === 'adv') {
+            if (!levelDataCache[node.id]) {
+                setLoading(true);
+                try {
+                    const data = await fetchAdvancedLesson(node.lesson);
+                    if (data) setLevelDataCache(prev => ({ ...prev, [node.id]: data }));
+                } catch (e) { console.error("Fetch failed", e); }
+                finally { setLoading(false); }
+            }
         }
 
         if (node.type === 'boss') setView('quiz');
+        else if (node.type === 'adv') setView('adv-hub');
         else setView('unit-hub');
     };
 
@@ -2730,7 +3009,10 @@ const App = () => {
         try {
             const promises = selectedIds.map(async uid => {
                 if (!levelDataCache[uid]) {
-                    return { id: uid, data: await fetchLevelData(uid) };
+                    const data = String(uid).startsWith('adv_')
+                        ? await fetchAdvancedLesson(parseInt(String(uid).slice(4), 10))
+                        : await fetchLevelData(uid);
+                    return { id: uid, data };
                 }
                 return null;
             });
@@ -2866,10 +3148,15 @@ const App = () => {
 
         if (!selectedNode) return [];
 
+        // 進階課模式 - 整課單字（20 字對 20 題，無抽樣）
+        if (selectedNode.type === 'adv') {
+            return levelDataCache[selectedNode.id]?.vocab || [];
+        }
+
         // 一般單元模式 - 依據選擇的類別
         if (selectedNode.type === 'unit') {
             const content = levelDataCache[selectedNode.id] || GAME_DATA[selectedNode.id].content;
-            const cat = selectedCategory || 'vocab';
+            const cat = selectedCategory || 'vocab_a';
             return content[cat];
         } else {
             // BOSS 模式 - 使用混合出題
@@ -2883,16 +3170,24 @@ const App = () => {
 
         switch (view) {
             case 'login': return <LoginScreen onLogin={handleLogin} />;
-            case 'map': return <WorldMap onLogout={handleLogout} onSelectNode={handleNodeSelect} onViewJourney={() => { playSound('click'); setView('journey'); }} onUltimateChallenge={() => { playSound('click'); setView('challenge-setup'); }} onViewMistakeNotebook={() => { playSound('click'); setView('mistake-notebook'); }} records={userData?.levelRecords} />;
+            case 'map': return <WorldMap onLogout={handleLogout} onSelectNode={handleNodeSelect} onViewJourney={() => { playSound('click'); setView('journey'); }} onUltimateChallenge={() => { playSound('click'); setView('challenge-setup'); }} onViewMistakeNotebook={() => { playSound('click'); setView('mistake-notebook'); }} records={userData?.levelRecords} advMeta={advMeta} activeTab={worldTab} onChangeTab={setWorldTab} />;
             case 'mistake-notebook': return <MistakeNotebook onBack={() => { playSound('click'); setView('map'); }} mistakeStats={userData?.mistakeStats} onClearMistakes={handleClearMistakes} onRemoveMistake={handleRemoveMistake} />;
             case 'journey': return <JourneyMode onBack={() => { playSound('click'); setView('map'); }} onViewTrialLog={() => { playSound('click'); setView('trial-log'); }} records={userData?.levelRecords} />;
             case 'trial-log': return <TrialLogView onBack={() => { playSound('click'); setView('journey'); }} onRetry={() => { playSound('click'); setView('challenge-setup'); }} trialHistory={userData?.trialHistory} />;
-            case 'challenge-setup': return <ChallengeSetup onBack={() => { playSound('click'); setView('map'); }} onStart={handleStartChallenge} />;
+            case 'challenge-setup': return <ChallengeSetup onBack={() => { playSound('click'); setView('map'); }} onStart={handleStartChallenge} advMeta={advMeta} />;
             case 'unit-hub': return <UnitHub unitId={selectedNode?.id} onBack={() => setView('map')} onSelectCategory={(cat) => { setSelectedCategory(cat); setView('study'); }} difficulty={selectedDifficulty} onChangeDifficulty={setSelectedDifficulty} />;
-            case 'study': return <StudyMode unitId={selectedNode?.id} categoryId={selectedCategory} data={levelDataCache[selectedNode?.id] || GAME_DATA[selectedNode?.id].content} onBack={() => setView('unit-hub')} onStartQuiz={handleForceQuiz} />;
+            case 'adv-hub': return <AdvLessonHub
+                node={selectedNode}
+                advMeta={advMeta}
+                record={userData?.levelRecords?.[selectedNode?.id]}
+                onBack={() => { playSound('click'); setView('map'); }}
+                onStudy={() => { playSound('click'); setSelectedCategory('vocab'); setView('study'); }}
+                onStartQuiz={() => { playSound('click'); setView('quiz'); }}
+            />;
+            case 'study': return <StudyMode unitId={selectedNode?.id} categoryId={selectedCategory} data={levelDataCache[selectedNode?.id] || GAME_DATA[selectedNode?.id]?.content || { vocab: [], vocab_a: [], vocab_b: [], collocation: [], polysemy: [], sentences: [] }} onBack={() => setView(selectedNode?.type === 'adv' ? 'adv-hub' : 'unit-hub')} onStartQuiz={handleForceQuiz} />;
             case 'quiz':
             case 'challenge-quiz':
-                return <BattleMode key={battleKey} quizData={getQuizData()} isBoss={selectedNode?.type === 'boss'} isChallenge={view === 'challenge-quiz'} difficulty={(view === 'quiz' && selectedNode?.type !== 'boss') ? selectedDifficulty : 'hard'} onComplete={handleBattleComplete} onFlee={() => setView('map')} currentRecord={userData?.levelRecords?.[selectedNode?.id]} />;
+                return <BattleMode key={battleKey} quizData={getQuizData()} isBoss={selectedNode?.type === 'boss'} isChallenge={view === 'challenge-quiz'} difficulty={(view === 'quiz' && selectedNode?.type === 'unit') ? selectedDifficulty : 'hard'} onComplete={handleBattleComplete} onFlee={() => setView('map')} currentRecord={userData?.levelRecords?.[selectedNode?.id]} />;
             default: return <div>Error</div>;
         }
     };
