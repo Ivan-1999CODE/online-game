@@ -1661,7 +1661,7 @@ const ChallengeSetup = ({ onBack, onStart, advMeta = null }) => {
 
             <div className="flex-1 overflow-y-auto p-4 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]">
                 <div className="flex justify-between items-center mb-4 bg-black/40 p-2 rounded border border-gray-600 backdrop-blur-sm sticky top-0 z-10">
-                    <p className="font-retro text-gray-300 text-sm">選擇試煉範圍：<span className="text-rpg-secondary">{selectedUnits.length}</span> 章</p>
+                    <p className="font-retro text-gray-300 text-sm">選擇試煉範圍：<span className="text-rpg-secondary">{selectedUnits.length}</span> {tab === 'adv' ? '課' : '章'}</p>
                     <button onClick={() => { playSound('click'); toggleAll(); }} className="text-xs font-pixel text-white bg-rpg-primary px-2 py-1 border-2 border-white hover:bg-red-400">
                         {currentAllSelected ? "取消全選" : "全選"}
                     </button>
@@ -1674,20 +1674,64 @@ const ChallengeSetup = ({ onBack, onStart, advMeta = null }) => {
                             <p className="font-retro text-gray-400 text-xs">老師尚未匯入進階單字書</p>
                         </div>
                     ) : (
-                        <div className="grid grid-cols-4 gap-2">
-                            {advIds.map((id) => {
-                                const lesson = parseInt(id.slice(4), 10);
-                                const isSelected = selectedUnits.includes(id);
+                        <div className="space-y-7">
+                            {Array.from({ length: Math.ceil(totalLessons / ADV_LESSONS_PER_SECTION) }, (_, sectionIndex) => {
+                                const sectionIds = advIds.slice(sectionIndex * ADV_LESSONS_PER_SECTION, (sectionIndex + 1) * ADV_LESSONS_PER_SECTION);
                                 return (
-                                    <button
-                                        key={id}
-                                        onClick={() => { playSound('click'); toggleUnit(id); }}
-                                        title={advMeta?.titles?.[String(lesson)] || `進階單字 第 ${lesson} 課`}
-                                        className={`relative aspect-square flex items-center justify-center border-4 font-pixel text-xs transition-all ${isSelected ? 'bg-purple-600 border-white text-white scale-105 shadow-[0_0_10px_rgba(168,85,247,0.6)]' : 'bg-black/40 border-purple-800 text-purple-300 hover:border-purple-400'}`}
-                                    >
-                                        L{lesson}
-                                        {isSelected && <span className="absolute -top-1 -right-1 text-white text-[10px] bg-purple-500 rounded-full w-4 h-4 flex items-center justify-center border border-white">✔</span>}
-                                    </button>
+                                    <section key={sectionIndex}>
+                                        <div className="flex items-center gap-2 mb-3">
+                                            <div className="h-px flex-1 bg-gradient-to-r from-transparent via-pink-300/70 to-purple-300/70"></div>
+                                            <div className="px-3 py-1 rounded-full bg-pink-100 text-purple-800 border-2 border-white shadow font-pixel text-[9px]">
+                                                PHOTO STRIP {String(sectionIndex + 1).padStart(2, '0')}
+                                            </div>
+                                            <div className="h-px flex-1 bg-gradient-to-l from-transparent via-pink-300/70 to-purple-300/70"></div>
+                                        </div>
+
+                                        <div className="grid grid-cols-2 gap-4 px-1">
+                                            {sectionIds.map((id, index) => {
+                                                const lesson = parseInt(id.slice(4), 10);
+                                                const isSelected = selectedUnits.includes(id);
+                                                const title = advMeta?.titles?.[String(lesson)] || `進階單字 第 ${lesson} 課`;
+                                                const rotation = index % 3 === 0 ? '-rotate-1' : index % 3 === 1 ? 'rotate-1' : 'rotate-0';
+                                                return (
+                                                    <button
+                                                        key={id}
+                                                        onClick={() => { playSound('click'); toggleUnit(id); }}
+                                                        title={title}
+                                                        className={`relative text-left transition-all duration-300 transform ${isSelected ? 'scale-105 z-10' : `${rotation} opacity-90 hover:opacity-100 hover:scale-105`}`}
+                                                    >
+                                                        <div className={`relative bg-[#fffafd] p-2 pb-3 shadow-[0_8px_18px_rgba(23,8,45,0.45)] border transition-all ${isSelected ? 'border-pink-300 ring-4 ring-purple-400 ring-offset-2 ring-offset-[#1a0f2e]' : 'border-white'}`}>
+                                                            <div className="relative aspect-[4/3] overflow-hidden border border-pink-100 bg-gradient-to-br from-fuchsia-400 via-purple-500 to-indigo-600">
+                                                                <div className="absolute -top-5 -left-4 w-14 h-14 rounded-full bg-pink-200/40"></div>
+                                                                <div className="absolute -bottom-6 -right-5 w-20 h-20 rounded-full bg-cyan-200/25"></div>
+                                                                <span className="absolute top-2 left-2 text-white/80 font-pixel text-[7px]">ADV PHOTO</span>
+                                                                <span className="absolute top-1 right-2 text-yellow-200 text-lg rotate-12">✦</span>
+                                                                <div className="absolute inset-0 flex flex-col items-center justify-center text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.55)]">
+                                                                    <span className="font-pixel text-[9px] opacity-80">LESSON</span>
+                                                                    <span className="font-pixel text-2xl mt-1">{String(lesson).padStart(3, '0')}</span>
+                                                                </div>
+                                                                {isSelected && (
+                                                                    <div className="absolute inset-0 flex items-center justify-center bg-pink-500/25 backdrop-blur-[1px]">
+                                                                        <div className="w-10 h-10 rounded-full bg-white text-purple-600 border-4 border-pink-200 flex items-center justify-center font-pixel text-xl shadow-lg">✔</div>
+                                                                    </div>
+                                                                )}
+                                                            </div>
+
+                                                            <div className="pt-2 px-1">
+                                                                <div className="flex items-center justify-between mb-1">
+                                                                    <span className="font-pixel text-[8px] text-purple-500">SHOT #{String(lesson).padStart(3, '0')}</span>
+                                                                    <span className="text-[11px]">♡ ✦</span>
+                                                                </div>
+                                                                <div className="font-retro text-xs font-bold text-gray-800 leading-tight line-clamp-1" title={title}>{title}</div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-12 h-4 bg-pink-200/80 border border-white/60 shadow-sm rotate-2"></div>
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
+                                    </section>
                                 );
                             })}
                         </div>

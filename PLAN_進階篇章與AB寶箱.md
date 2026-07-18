@@ -237,7 +237,7 @@ onComplete({ score, rank: rankData.rank, battleLog, victory: status === 'victory
 
 - 新 prop `advMeta`；`renderContent` 的 `case 'challenge-setup'` 傳入。
 - 加 `const [tab, setTab] = useState('main')`，UI 同 WorldMap 的頁籤樣式。
-- 主線分頁維持現有 16 關卡拍立得選擇；進階分頁改為緊湊格子（`grid-cols-4`），每格顯示 `L1`…`L{totalLessons}` 與已選狀態，id 用 `adv_1` 格式。`advMeta` 為空時顯示「進階篇章準備中」。
+- 主線分頁維持現有 16 關卡拍立得選擇；進階分頁採拍貼機／拍立得卡片風格，每 10 課一條 `PHOTO STRIP`，卡片顯示課次、標題與已選狀態，id 用 `adv_1` 格式。`advMeta` 為空時顯示「進階篇章準備中」。
 - 「全選」只切換**當前分頁**的項目（主線 16 個或進階全部課次），選取數顯示 `selectedUnits.length` 不變。
 
 `handleStartChallenge` 的抓取改成：
@@ -284,7 +284,9 @@ Node ESM（專案 `"type": "module"`），用 firebase client SDK（config 抄 `
   2. 逐字寫入：`{ series: 'advanced', lesson, word, chinese, pos, category: '1. 單字' }`。
   3. 用 `setDoc(doc(db,'meta','advanced'), {...}, { merge: true })` 更新 `totalLessons`（取現有值與本次最大 lesson 的較大者）與 `titles`（merge）。
   4. 結尾 read-back 驗證：重新 query 每課筆數並列印，數量不符要報錯（exit 1）。
-- `data_advanced_sample.json`：從人工核對完成的來源 Markdown 擷取真實 Unit 1–2，共 15 字與 16 字，補上中文與詞性供端到端驗證；來源 Markdown 保持唯讀。完整 133 課整理完成後，可用同一腳本覆蓋匯入。
+- `data_advanced.json`：由人工核對完成的來源 Markdown 產生完整 Unit 1–133，共 2,152 筆不重複單字資料；來源 Markdown 全程保持唯讀。中文與詞性依序採用人工修正、既有 Firebase 題庫及 ECDICT，並以 OpenCC 轉為臺灣繁體。
+- `data_advanced_overrides.json`：保存需要依課文語境判斷，或既有詞典缺少的人工修正，不直接改動原始 Markdown。
+- `scripts/build_advanced_data.py`：可重現完整 JSON 的整理流程；同一課完全相同的單字會去重，任何缺少中文或詞性的項目都會讓建置失敗。
 
 ### 4.8 驗證清單（宣告完成前逐項執行）
 
@@ -292,7 +294,7 @@ Node ESM（專案 `"type": "module"`），用 firebase client SDK（config 抄 `
 
 1. `npm run build` 通過。
 2. 開 dev server 實測主線：關卡大廳顯示「單字寶箱 A / B」兩顆；簡單模式顯示 A、B、捲軸三顆；打完 A 箱，Firestore `levelRecords.{n}.vocabA` 有成績；冒險旅程卡片顯示寶箱A/寶箱B 兩列；教師後台類別欄顯示單字A/單字B。
-3. 跑 `node scripts/import_advanced.js data_advanced_sample.json`，重新整理後「進階篇章」分頁出現第 1 卷與課次節點。
+3. 跑 `node scripts/import_advanced.js data_advanced.json --dry-run` 驗證格式，再正式匯入；逐課回讀 Unit 1–133 的數量必須完全相符，總數為 2,152 筆。
 4. 進階課：學習模式可翻卡；每場從該課隨機抽 10 題；挑戰打贏一次 → 星星變 ★☆☆、`levelRecords.adv_1.clears == 1`；打滿 3 次 → 金框＋✔。戰死（HP 歸零）不增加 clears。
 5. 終極試煉：混選主線 1 關＋進階 1 課，出題包含兩邊單字；試煉日誌標題含「進階 L1」。
 6. 舊紀錄相容：找一個已有 `vocab` 成績的測試帳號，確認冒險旅程 A/B 兩列顯示舊成績、地圖成就勾勾邏輯正常。
