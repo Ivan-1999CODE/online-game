@@ -13,7 +13,7 @@
 本次要做三件事：
 
 1. **單字寶箱拆成 A/B 兩箱**：每關單字約 70–80 個，只抽 20 題導致覆蓋率靠運氣。拆成 A/B（依字母序切半）讓學生能確實練完整個範圍。
-2. **進階書獨立地圖分頁**：老師買了一本新的進階單字書，約 100 課、每課約 20 字。在世界地圖上方加「主線冒險／進階篇章」頁籤，進階地圖**一課一關**（20 字剛好對上一場 20 題，無抽樣漏字），每 10 課一「卷」做視覺分段。**每課通關 3 次才算完成**（顯示 ★★★）。
+2. **進階書獨立地圖分頁**：老師買了一本新的進階單字書，共 133 課、每課約 10–20 字。在世界地圖上方加「主線冒險／進階篇章」頁籤，進階地圖**一課一關**，每次隨機抽最多 10 題（不足 10 字則全出），每 10 課一「卷」做視覺分段。**每課通關 3 次才算完成**（顯示 ★★★）。
 3. **終極試煉（自選測驗）加進階範圍**：ChallengeSetup 加主線／進階頁籤，可混選出題。
 
 ### 已定案的設計決策（不要重新討論）
@@ -24,6 +24,7 @@
 | 進階目錄 | Firestore 文件 `meta/advanced`：`{ totalLessons: <數字>, titles: { "1": "篇章名", ... } }`，由匯入腳本維護，前端動態讀取 |
 | 關卡 ID | 進階第 N 課的 levelRecords key 與快取 key 都是 `adv_${N}`（helper：`advLessonId(n)`） |
 | 通關定義 | 一場戰鬥打完所有題目且沒死（BattleMode `status === 'victory'`）記 1 次 clear；3 次完成。困難模式（3 命）固定，無簡單模式 |
+| 進階出題數 | 每次從該課隨機抽最多 10 題；不足 10 字則全出。主線、BOSS 與終極試煉維持原本上限 |
 | A/B 切法 | 依 `word` 字母序排序後切半（`Math.ceil(len/2)`），切法固定、可對照課本 |
 | 舊紀錄相容 | 學生舊的 `record.vocab` 成績在 A/B 沒有新紀錄時作為兩箱的 fallback 顯示與計算 |
 | levelRecords 新 key | 單字寶箱 A/B 的成績存 `vocabA` / `vocabB`（category id 是 `vocab_a` / `vocab_b`，注意兩種命名的對應） |
@@ -283,7 +284,7 @@ Node ESM（專案 `"type": "module"`），用 firebase client SDK（config 抄 `
   2. 逐字寫入：`{ series: 'advanced', lesson, word, chinese, pos, category: '1. 單字' }`。
   3. 用 `setDoc(doc(db,'meta','advanced'), {...}, { merge: true })` 更新 `totalLessons`（取現有值與本次最大 lesson 的較大者）與 `titles`（merge）。
   4. 結尾 read-back 驗證：重新 query 每課筆數並列印，數量不符要報錯（exit 1）。
-- 另建 `data_advanced_sample.json`：2 課 × 20 個範例進階單字（可自行編，標題註明「範例」），供端到端驗證；真書資料進來後直接重跑匯入即可覆蓋。
+- `data_advanced_sample.json`：從人工核對完成的來源 Markdown 擷取真實 Unit 1–2，共 15 字與 16 字，補上中文與詞性供端到端驗證；來源 Markdown 保持唯讀。完整 133 課整理完成後，可用同一腳本覆蓋匯入。
 
 ### 4.8 驗證清單（宣告完成前逐項執行）
 
@@ -292,7 +293,7 @@ Node ESM（專案 `"type": "module"`），用 firebase client SDK（config 抄 `
 1. `npm run build` 通過。
 2. 開 dev server 實測主線：關卡大廳顯示「單字寶箱 A / B」兩顆；簡單模式顯示 A、B、捲軸三顆；打完 A 箱，Firestore `levelRecords.{n}.vocabA` 有成績；冒險旅程卡片顯示寶箱A/寶箱B 兩列；教師後台類別欄顯示單字A/單字B。
 3. 跑 `node scripts/import_advanced.js data_advanced_sample.json`，重新整理後「進階篇章」分頁出現第 1 卷與課次節點。
-4. 進階課：學習模式可翻卡；挑戰打贏一次 → 星星變 ★☆☆、`levelRecords.adv_1.clears == 1`；打滿 3 次 → 金框＋✔。戰死（HP 歸零）不增加 clears。
+4. 進階課：學習模式可翻卡；每場從該課隨機抽 10 題；挑戰打贏一次 → 星星變 ★☆☆、`levelRecords.adv_1.clears == 1`；打滿 3 次 → 金框＋✔。戰死（HP 歸零）不增加 clears。
 5. 終極試煉：混選主線 1 關＋進階 1 課，出題包含兩邊單字；試煉日誌標題含「進階 L1」。
 6. 舊紀錄相容：找一個已有 `vocab` 成績的測試帳號，確認冒險旅程 A/B 兩列顯示舊成績、地圖成就勾勾邏輯正常。
 

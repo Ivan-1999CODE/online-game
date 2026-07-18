@@ -245,6 +245,7 @@ const fetchLevelData = async (levelId) => {
 // --- 進階書（獨立地圖分頁）---
 const ADV_LESSONS_PER_SECTION = 10; // 進階地圖每 10 課一卷
 const ADV_CLEARS_TO_COMPLETE = 3;   // 通關 3 次才算完成
+const ADV_QUIZ_QUESTION_LIMIT = 10; // 進階課每次隨機抽最多 10 題
 
 const advLessonId = (lesson) => `adv_${lesson}`;
 
@@ -2003,7 +2004,7 @@ const StudyMode = ({ unitId, categoryId, data, onBack, onStartQuiz }) => {
     );
 };
 
-const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard', onComplete, onFlee, currentRecord = null }) => {
+const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard', questionLimit = 20, onComplete, onFlee, currentRecord = null }) => {
     // 所有模式都先顯示 menu 選擇作答模式
     const isEasy = difficulty === 'easy';
     const maxHp = isEasy ? 5 : 3; // 簡單模式 5 條命，困難模式維持 3 條
@@ -2032,10 +2033,9 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard'
             const mode = Math.random() > 0.5 ? 'en-ch' : 'ch-en';
             return { target: item, options, mode };
         });
-        // If more than 20, take 20. If <= 20, take all of them.
-        const limit = generatedQuestions.length > 20 ? 20 : generatedQuestions.length;
+        const limit = Math.min(generatedQuestions.length, questionLimit);
         setQuestions(shuffleArray(generatedQuestions).slice(0, limit));
-    }, [quizData, isBoss]);
+    }, [quizData, isBoss, questionLimit]);
 
     // 簡易 / 聽力模式：每題出現時自動播放正確單字的發音
     useEffect(() => {
@@ -3148,7 +3148,7 @@ const App = () => {
 
         if (!selectedNode) return [];
 
-        // 進階課模式 - 整課單字（20 字對 20 題，無抽樣）
+        // 進階課模式 - 交給 BattleMode 每次隨機抽最多 10 題
         if (selectedNode.type === 'adv') {
             return levelDataCache[selectedNode.id]?.vocab || [];
         }
@@ -3187,7 +3187,7 @@ const App = () => {
             case 'study': return <StudyMode unitId={selectedNode?.id} categoryId={selectedCategory} data={levelDataCache[selectedNode?.id] || GAME_DATA[selectedNode?.id]?.content || { vocab: [], vocab_a: [], vocab_b: [], collocation: [], polysemy: [], sentences: [] }} onBack={() => setView(selectedNode?.type === 'adv' ? 'adv-hub' : 'unit-hub')} onStartQuiz={handleForceQuiz} />;
             case 'quiz':
             case 'challenge-quiz':
-                return <BattleMode key={battleKey} quizData={getQuizData()} isBoss={selectedNode?.type === 'boss'} isChallenge={view === 'challenge-quiz'} difficulty={(view === 'quiz' && selectedNode?.type === 'unit') ? selectedDifficulty : 'hard'} onComplete={handleBattleComplete} onFlee={() => setView('map')} currentRecord={userData?.levelRecords?.[selectedNode?.id]} />;
+                return <BattleMode key={battleKey} quizData={getQuizData()} isBoss={selectedNode?.type === 'boss'} isChallenge={view === 'challenge-quiz'} difficulty={(view === 'quiz' && selectedNode?.type === 'unit') ? selectedDifficulty : 'hard'} questionLimit={(view === 'quiz' && selectedNode?.type === 'adv') ? ADV_QUIZ_QUESTION_LIMIT : 20} onComplete={handleBattleComplete} onFlee={() => setView('map')} currentRecord={userData?.levelRecords?.[selectedNode?.id]} />;
             default: return <div>Error</div>;
         }
     };
