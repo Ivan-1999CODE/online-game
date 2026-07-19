@@ -2495,24 +2495,28 @@ const AdvLessonHub = ({ node, advMeta, record, onBack, onStudy, onStartQuiz }) =
     );
 };
 
-const StudyMode = ({ unitId, categoryId, data, onBack, onStartQuiz }) => {
+const StudyMode = ({ unitId, categoryId, data, lessonTitle, onBack, onStartQuiz }) => {
     const [viewMode, setViewMode] = useState('card');
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isFlipped, setIsFlipped] = useState(false);
     const studyData = data[categoryId] || [];
+    const isAdvanced = String(unitId).startsWith('adv_');
 
     const catTitles = { vocab: 'TREASURE', vocab_a: 'TREASURE A', vocab_b: 'TREASURE B', collocation: 'ARMORY', polysemy: 'ALCHEMY', sentences: 'SCROLLS' };
     const currentItem = studyData[currentIndex];
-    const handleNext = () => { setIsFlipped(false); setCurrentIndex((p) => (p + 1) % studyData.length); };
-    const handlePrev = () => { setIsFlipped(false); setCurrentIndex((p) => (p - 1 + studyData.length) % studyData.length); };
+    const handleNext = () => { if (studyData.length === 0) return; setIsFlipped(false); setCurrentIndex((p) => (p + 1) % studyData.length); };
+    const handlePrev = () => { if (studyData.length === 0) return; setIsFlipped(false); setCurrentIndex((p) => (p - 1 + studyData.length) % studyData.length); };
     const handleSpeak = (e, text) => { e.stopPropagation(); speakText(text); };
 
     return (
         <div className="flex flex-col h-full bg-rpg-bg overflow-hidden">
             {/* Header Bar */}
-            <div className="flex items-center justify-between p-2 bg-black/50 border-b-2 border-rpg-border flex-shrink-0">
-                <RPGButton onClick={onStartQuiz} color="primary" className="gap-1 animate-pulse"><Sword size={14} /> FIGHT</RPGButton>
-                <div className="text-white font-pixel text-xs">{catTitles[categoryId]}</div>
+            <div className="grid grid-cols-[2.5rem_1fr_auto] items-center gap-2 p-2 bg-black/50 border-b-2 border-rpg-border flex-shrink-0">
+                <button onClick={() => { playSound('click'); onBack(); }} className="bg-black/40 border border-white/20 p-2 text-white hover:bg-red-500" title="返回上一頁"><ArrowLeft size={16} /></button>
+                <div className="min-w-0 text-center">
+                    <div className="text-white font-pixel text-[10px] truncate">{lessonTitle || catTitles[categoryId]}</div>
+                    <div className="font-retro text-[9px] text-gray-400">{isAdvanced ? '先複習，再挑戰' : 'STUDY MODE'}</div>
+                </div>
                 <button
                     onClick={() => { playSound('click'); setViewMode(m => m === 'card' ? 'list' : 'card'); }}
                     className="text-rpg-panel hover:text-white flex items-center gap-1"
@@ -2521,10 +2525,6 @@ const StudyMode = ({ unitId, categoryId, data, onBack, onStartQuiz }) => {
                     <span className="font-pixel text-[8px] opacity-70">{viewMode === 'card' ? 'LIST' : 'CARD'}</span>
                     {viewMode === 'card' ? <List size={20} /> : <Grid size={20} />}
                 </button>
-            </div>
-            {/* Back Button */}
-            <div className="absolute top-20 left-2 z-20">
-                <button onClick={() => { playSound('click'); onBack(); }} className="bg-black/50 p-2 rounded-full text-white hover:bg-red-500"><ArrowLeft size={16} /></button>
             </div>
             {/* Main Content Area */}
             {viewMode === 'list' ? (
@@ -2610,6 +2610,15 @@ const StudyMode = ({ unitId, categoryId, data, onBack, onStartQuiz }) => {
                     </div>
                 </div>
             )}
+            <div className="flex-shrink-0 bg-black/70 border-t-4 border-rpg-border p-3">
+                <div className="flex items-center justify-between mb-2 font-retro text-[10px] text-gray-400">
+                    <span>{studyData.length > 0 ? `共 ${studyData.length} 個單字` : '本課尚無可用單字'}</span>
+                    {isAdvanced && <span className="text-purple-300">挑戰 10 題 · 3 命</span>}
+                </div>
+                <RPGButton onClick={onStartQuiz} color="primary" disabled={studyData.length === 0} className="w-full py-3">
+                    <Sword size={16} /> {isAdvanced ? '學完了，開始 10 題挑戰' : '開始挑戰'}
+                </RPGButton>
+            </div>
         </div>
     );
 };
@@ -3664,8 +3673,11 @@ const App = () => {
         }
 
         if (node.type === 'boss') setView('quiz');
-        else if (node.type === 'adv') setView('adv-hub');
-        else setView('unit-hub');
+        else if (node.type === 'adv') {
+            // 進階課直接進學習頁，挑戰成為學習完成後的單一下一步。
+            setSelectedCategory('vocab');
+            setView('study');
+        } else setView('unit-hub');
     };
 
     const handleForceQuiz = () => setView('quiz');
@@ -3846,7 +3858,8 @@ const App = () => {
 
         switch (view) {
             case 'login': return <LoginScreen onLogin={handleLogin} />;
-            case 'map': return <WorldMap onLogout={handleLogout} onSelectNode={handleNodeSelect} onViewJourney={() => { playSound('click'); setView('journey'); }} onUltimateChallenge={() => { playSound('click'); setView('challenge-setup'); }} onViewMistakeNotebook={() => { playSound('click'); setView('mistake-notebook'); }} records={userData?.levelRecords} advMeta={advMeta} activeTab={worldTab} onChangeTab={setWorldTab} />;
+            case 'map': return <WorldMap onLogout={handleLogout} onSelectNode={handleNodeSelect} onViewJourney={() => { playSound('click'); setView('journey'); }} onViewWeeklyReport={() => { playSound('click'); setView('weekly-report'); }} onUltimateChallenge={() => { playSound('click'); setView('challenge-setup'); }} onViewMistakeNotebook={() => { playSound('click'); setView('mistake-notebook'); }} records={userData?.levelRecords} advMeta={advMeta} activeTab={worldTab} onChangeTab={setWorldTab} />;
+            case 'weekly-report': return <WeeklyReport onBack={() => { playSound('click'); setView('map'); }} currentUserId={currentUser?.uid} userData={userData} />;
             case 'mistake-notebook': return <MistakeNotebook onBack={() => { playSound('click'); setView('map'); }} mistakeStats={userData?.mistakeStats} onClearMistakes={handleClearMistakes} onRemoveMistake={handleRemoveMistake} />;
             case 'journey': return <JourneyMode onBack={() => { playSound('click'); setView('map'); }} onViewTrialLog={() => { playSound('click'); setView('trial-log'); }} records={userData?.levelRecords} advMeta={advMeta} mistakeStats={userData?.mistakeStats} />;
             case 'trial-log': return <TrialLogView onBack={() => { playSound('click'); setView('journey'); }} onRetry={() => { playSound('click'); setView('challenge-setup'); }} trialHistory={userData?.trialHistory} />;
@@ -3860,7 +3873,14 @@ const App = () => {
                 onStudy={() => { playSound('click'); setSelectedCategory('vocab'); setView('study'); }}
                 onStartQuiz={() => { playSound('click'); setView('quiz'); }}
             />;
-            case 'study': return <StudyMode unitId={selectedNode?.id} categoryId={selectedCategory} data={levelDataCache[selectedNode?.id] || GAME_DATA[selectedNode?.id]?.content || { vocab: [], vocab_a: [], vocab_b: [], collocation: [], polysemy: [], sentences: [] }} onBack={() => setView(selectedNode?.type === 'adv' ? 'adv-hub' : 'unit-hub')} onStartQuiz={handleForceQuiz} />;
+            case 'study': return <StudyMode
+                unitId={selectedNode?.id}
+                categoryId={selectedCategory}
+                lessonTitle={selectedNode?.type === 'adv' ? (advMeta?.titles?.[String(selectedNode?.lesson)] || `進階單字 第 ${selectedNode?.lesson} 課`) : null}
+                data={levelDataCache[selectedNode?.id] || GAME_DATA[selectedNode?.id]?.content || { vocab: [], vocab_a: [], vocab_b: [], collocation: [], polysemy: [], sentences: [] }}
+                onBack={() => setView(selectedNode?.type === 'adv' ? 'map' : 'unit-hub')}
+                onStartQuiz={handleForceQuiz}
+            />;
             case 'quiz':
             case 'challenge-quiz':
                 return <BattleMode key={battleKey} quizData={getQuizData()} isBoss={selectedNode?.type === 'boss'} isChallenge={view === 'challenge-quiz'} difficulty={(view === 'quiz' && selectedNode?.type === 'unit') ? selectedDifficulty : 'hard'} questionLimit={(view === 'quiz' && selectedNode?.type === 'adv') ? ADV_QUIZ_QUESTION_LIMIT : 20} onComplete={handleBattleComplete} onFlee={() => setView('map')} currentRecord={userData?.levelRecords?.[selectedNode?.id]} />;
