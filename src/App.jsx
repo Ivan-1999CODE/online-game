@@ -593,7 +593,19 @@ const ARENA_RIVAL_LIMIT = 7;
 const ARENA_RETAINED_REAL_LIMIT = 5;
 const ACTIVITY_STUDY_CARD_TARGET = 5;
 const ADVENTURE_MILESTONES = [7, 14, 30, 60, 100, 150, 200];
-const SIMULATED_ARENA_NAMES = ['林○宇', '陳○安', '王○晴', '張○恩', '李○辰', '黃○涵', '吳○樂', '劉○翔', '蔡○希', '楊○睿', '許○彤', '鄭○軒', '謝○妍', '郭○傑', '周○潔', '徐○宸'];
+const LOGIN_MILESTONES = [3, 7, 14, 30, 60, 100, 365];
+const SIMULATED_ARENA_NAMES = [
+    '功課失蹤中', '暴走布丁', '鯊魚吃泡麵', '今天不想睡', '火箭小宇',
+    '冰龍隊長', '閃電皮蛋', '傳說小蝦米', '奶茶半糖', '作業等等我',
+    '隔壁小恐龍', '會飛的地瓜', '鉛筆不見了', '睡過頭勇者', '章魚燒隊長',
+    '泡麵加顆蛋', '月亮追著我', '小熊不冬眠', '企鵝跑超快', '香蕉魔法師',
+    'MangoBoss', 'SleepyKevin', 'DinoLeo', 'AmyGoGo', 'CocoCat',
+    'HappyJason', 'RocketMia', 'SuperAndy', 'TinyTiger', 'PandaEmma',
+    'Leo_777', 'Kevin哈哈', '小宇超強', '安安出發', '樂樂衝第一',
+    '阿哲等等我', '米米愛冒險', '小晴放大招', '宇宙小涵', '辰辰不認輸',
+    '草莓騎士', '巧克力忍者', '雞塊守門員', '飛天小饅頭', '雲朵收藏家',
+    '貓咪開坦克', '恐龍寫功課', '飯糰大魔王', '週末才上線', '猜猜我是誰'
+];
 const SIMULATED_PERSONAS = [
     { id: 'steady', multiplier: [0.84, 1.04], weights: [0.12, 0.13, 0.14, 0.14, 0.15, 0.16, 0.16] },
     { id: 'diligent', multiplier: [1.05, 1.32], weights: [0.14, 0.15, 0.16, 0.16, 0.16, 0.12, 0.11] },
@@ -825,7 +837,7 @@ const splitSimulatedDayScore = (total, count, random) => {
 };
 
 const buildSimulatedRivals = ({ count, weekStart, referenceScore, seed }) => {
-    const random = createSeededRandom(`${seed}:${weekStart}:arena-v2`);
+    const random = createSeededRandom(`${seed}:${weekStart}:arena-v3`);
     const usedNames = new Set();
     const baseline = Math.max(Number(referenceScore) || 0, 900);
 
@@ -918,7 +930,7 @@ const buildArenaRoster = (entries, currentUserId, currentScore, options = {}) =>
         seed: options.seed || currentUserId
     });
     return {
-        version: 2,
+        version: 3,
         rivalIds,
         simulatedRivals,
         targetScore: roundArenaTarget(currentScore),
@@ -1180,7 +1192,7 @@ const WeeklyReport = ({ onBack, onOpenAlbum, currentUserId, userData, onSaveAren
         referenceScore: Math.max(currentStats.score, previousStats.score),
         seed: `${currentUserId}:${range.startMs}`
     });
-    const storedRosterIsCurrent = storedRoster?.version === 2 && Array.isArray(storedRoster.simulatedRivals);
+    const storedRosterIsCurrent = storedRoster?.version === 3 && Array.isArray(storedRoster.simulatedRivals);
     const activeRoster = storedRosterIsCurrent ? storedRoster : proposedRoster;
     const rivalIdSet = new Set(activeRoster.rivalIds || []);
     const simulatedEntries = (activeRoster.simulatedRivals || []).map(rival => (
@@ -1371,7 +1383,7 @@ const WeeklyReport = ({ onBack, onOpenAlbum, currentUserId, userData, onSaveAren
                         <span className="font-retro text-[10px] text-gray-500">台北時間每日計算一次</span>
                     </div>
                     <div className="grid grid-cols-2 gap-2 text-center">
-                        <div className="bg-black/40 border border-white/10 p-2"><div className="font-pixel text-lg text-cyan-300">{userData?.engagement?.login?.totalDays || 0}</div><div className="font-retro text-[10px] text-gray-300">累積登入天數</div><div className="font-retro text-[9px] text-gray-500">連續 {getVisibleStreak(userData?.engagement?.login)} 天</div></div>
+                        <div className="bg-black/40 border border-white/10 p-2"><div className="font-pixel text-lg text-cyan-300">{userData?.engagement?.login?.totalDays || 0}</div><div className="font-retro text-[10px] text-gray-300">累積登入天數</div><div className="font-retro text-[9px] text-gray-500">每天首次登入計算 1 天</div></div>
                         <div className="bg-black/40 border border-white/10 p-2"><div className="font-pixel text-lg text-green-300">{userData?.engagement?.adventure?.totalDays || 0}</div><div className="font-retro text-[10px] text-gray-300">累積冒險天數</div><div className="font-retro text-[9px] text-gray-500">連續 {getVisibleStreak(userData?.engagement?.adventure)} 天</div></div>
                     </div>
                 </section>
@@ -1406,6 +1418,9 @@ const WeeklyReport = ({ onBack, onOpenAlbum, currentUserId, userData, onSaveAren
 
 const LoginStampModal = ({ data, onClose }) => {
     if (!data) return null;
+    const totalDays = Number(data.totalDays) || 0;
+    const reachedMilestone = LOGIN_MILESTONES.includes(totalDays) ? totalDays : null;
+    const nextMilestone = LOGIN_MILESTONES.find(milestone => milestone > totalDays);
     const dateLabel = new Intl.DateTimeFormat('zh-TW', {
         timeZone: 'Asia/Taipei', month: 'long', day: 'numeric', weekday: 'short'
     }).format(new Date());
@@ -1422,10 +1437,17 @@ const LoginStampModal = ({ data, onClose }) => {
                     <span className="font-retro text-xl font-bold mt-1">打卡成功</span>
                 </div>
                 <h3 className="font-pixel text-sm text-purple-800">今日打卡成功！</h3>
-                <div className="grid grid-cols-2 gap-2 mt-4">
-                    <div className="border-2 border-purple-700 bg-white/60 p-2"><div className="font-pixel text-xl">{data.currentStreak}</div><div className="font-retro text-xs">連續登入天數</div></div>
-                    <div className="border-2 border-amber-700 bg-white/60 p-2"><div className="font-pixel text-xl">{data.totalDays}</div><div className="font-retro text-xs">累積登入天數</div></div>
+                <div className="border-2 border-amber-700 bg-white/60 p-3 mt-4">
+                    <div className="font-pixel text-2xl">{totalDays}</div>
+                    <div className="font-retro text-sm">已累積登入 {totalDays} 天</div>
                 </div>
+                <p className="font-retro text-sm font-bold text-purple-800 mt-3">
+                    {reachedMilestone
+                        ? `已獲得「${reachedMilestone} 日冒險家」徽章！`
+                        : nextMilestone
+                            ? `再登入 ${nextMilestone - totalDays} 天即可獲得「${nextMilestone} 日冒險家」徽章`
+                            : '所有累積登入徽章都已解鎖！'}
+                </p>
                 <button onClick={onClose} className="mt-4 font-retro text-sm underline text-purple-800">收下印章，開始冒險</button>
             </div>
         </div>
@@ -1434,14 +1456,14 @@ const LoginStampModal = ({ data, onClose }) => {
 
 const AchievementHall = ({ onBack, userData }) => {
     const stats = {
-        login: getVisibleStreak(userData?.engagement?.login),
+        login: Number(userData?.engagement?.login?.totalDays) || 0,
         adventure: Number(userData?.engagement?.adventure?.totalDays) || 0,
         sRanks: countUniqueSLevels(userData?.levelRecords || {}),
         words: new Set(userData?.discoveredWordIds || []).size,
         trivia: Object.keys(userData?.triviaCollection || {}).length
     };
     const sections = [
-        { id: 'login', title: '連續登入', icon: '📅', unit: '天', milestones: [3, 7, 14, 30, 60, 100, 365], special: [7, 30, 100, 365] },
+        { id: 'login', title: '累積登入', icon: '📅', unit: '天', milestones: LOGIN_MILESTONES, special: [7, 30, 100, 365] },
         { id: 'adventure', title: '累積冒險', icon: '⚔️', unit: '天', milestones: [7, 14, 30, 60, 100, 150, 200], special: [30, 100, 200] },
         { id: 'sRanks', title: 'S 級關卡', icon: '🏆', unit: '關', milestones: [1, 5, 10, 25, 50, 100], special: [25, 50, 100] },
         { id: 'words', title: '解鎖單字', icon: '🔤', unit: '個', milestones: [50, 100, 250, 500, 1000], special: [250, 500, 1000] },
@@ -3974,7 +3996,6 @@ const App = () => {
             discoveredWordSaveRef.current = new Set(hydratedData.discoveredWordIds || []);
             if (engagementResult.firstLoginToday) {
                 setLoginStampData({
-                    currentStreak: hydratedData.engagement.login.currentStreak || 1,
                     totalDays: hydratedData.engagement.login.totalDays || 1
                 });
             }
