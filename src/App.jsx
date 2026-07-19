@@ -273,7 +273,9 @@ const fetchAdvancedLesson = async (lesson) => {
                 chinese: data.chinese || '',
                 part: data.pos || data.part || '',
                 sentence: data.example || data.sentence || '',
-                sentence_ch: data.sentence_ch || ''
+                sentence_ch: data.sentence_ch || '',
+                series: 'advanced',
+                lesson
             });
         });
         vocab.sort((a, b) => a.word.localeCompare(b.word));
@@ -583,7 +585,269 @@ const AchievementGuide = ({ onClose }) => (
     </div>
 );
 
-const WorldMap = ({ onSelectNode, onViewJourney, onUltimateChallenge, onViewMistakeNotebook, onLogout, records = {}, advMeta = null, activeTab = 'main', onChangeTab }) => {
+const TAIPEI_OFFSET_MS = 8 * 60 * 60 * 1000;
+const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+
+const getTaipeiWeekRange = (weekOffset = 0) => {
+    const shiftedNow = new Date(Date.now() + TAIPEI_OFFSET_MS);
+    const daysSinceMonday = (shiftedNow.getUTCDay() + 6) % 7;
+    const mondayInTaipeiClock = Date.UTC(
+        shiftedNow.getUTCFullYear(),
+        shiftedNow.getUTCMonth(),
+        shiftedNow.getUTCDate() - daysSinceMonday
+    ) + (weekOffset * WEEK_MS);
+    const startMs = mondayInTaipeiClock - TAIPEI_OFFSET_MS;
+    return { startMs, endMs: startMs + WEEK_MS };
+};
+
+const getHistoryTime = (record) => {
+    const value = record?.timestamp || record?.date;
+    if (!value) return null;
+    if (typeof value?.toDate === 'function') return value.toDate().getTime();
+    const parsed = new Date(value).getTime();
+    return Number.isFinite(parsed) ? parsed : null;
+};
+
+const getWeeklyStats = (history = [], range) => {
+    const records = history.filter(record => {
+        const time = getHistoryTime(record);
+        return time !== null && time >= range.startMs && time < range.endMs;
+    });
+    const answered = records.reduce((sum, record) => sum + (Number(record.totalQuestions) || 0), 0);
+    const correct = records.reduce((sum, record) => {
+        if (Number.isFinite(Number(record.correctCount))) return sum + Number(record.correctCount);
+        const total = Number(record.totalQuestions) || 0;
+        const accuracy = Number(record.accuracy) || 0;
+        return sum + Math.round(total * accuracy / 100);
+    }, 0);
+    const accuracyValues = records
+        .map(record => Number(record.accuracy))
+        .filter(Number.isFinite);
+    const accuracy = answered > 0
+        ? (correct / answered) * 100
+        : (accuracyValues.length > 0 ? accuracyValues.reduce((sum, value) => sum + value, 0) / accuracyValues.length : 0);
+    const activeDays = new Set(records.map(record => {
+        const time = getHistoryTime(record);
+        return new Intl.DateTimeFormat('en-CA', {
+            timeZone: 'Asia/Taipei', year: 'numeric', month: '2-digit', day: '2-digit'
+        }).format(new Date(time));
+    })).size;
+
+    return {
+        sessions: records.length,
+        answered,
+        correct,
+        accuracy,
+        activeDays,
+        score: records.reduce((sum, record) => sum + (Number(record.score) || 0), 0)
+    };
+};
+
+const formatWeekRange = ({ startMs, endMs }) => {
+    const formatter = new Intl.DateTimeFormat('zh-TW', {
+        timeZone: 'Asia/Taipei', month: 'numeric', day: 'numeric'
+    });
+    return `${formatter.format(new Date(startMs))}－${formatter.format(new Date(endMs - 1))}`;
+};
+
+const maskStudentName = (name = '神秘勇者') => {
+    const trimmed = String(name).trim();
+    if (trimmed.length <= 1) return `${trimmed || '勇'}○`;
+    if (trimmed.length === 2) return `${trimmed[0]}○`;
+    return `${trimmed[0]}${'○'.repeat(Math.max(1, trimmed.length - 2))}${trimmed[trimmed.length - 1]}`;
+};
+
+const WEEKLY_TRIVIA = [
+    { icon: '🧠', title: '單字記憶不是一次完成', text: '把複習分散到不同天，通常比同一天重複背很多次更容易記久。' },
+    { icon: '🐙', title: 'octopus 的複數', text: 'octopuses 是最常見的英文複數；octopi 雖常聽見，來源其實是誤套拉丁文規則。' },
+    { icon: '✍️', title: '字母 i 的小點', text: '英文字母 i 和 j 上方的小點有名字，叫做 tittle。' },
+    { icon: '📚', title: '最常見的英文字母', text: '在一般英文文本中，e 通常是出現頻率最高的字母。' },
+    { icon: '⚔️', title: '錯題其實更有價值', text: '答錯後立刻回想正解，會讓大腦更清楚辨認原本混淆的線索。' },
+    { icon: '🌍', title: 'English 不只一種', text: '不同地區的英文在拼字、發音和用字上都可能不同，但不代表其中一種必然是錯的。' }
+];
+
+const WeeklyReport = ({ onBack, currentUserId, userData }) => {
+    const [period, setPeriod] = useState('current');
+    const [students, setStudents] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [loadError, setLoadError] = useState(false);
+    const [revealedFact, setRevealedFact] = useState(null);
+    const range = getTaipeiWeekRange(period === 'current' ? 0 : -1);
+
+    useEffect(() => {
+        let active = true;
+        getDocs(collection(db, 'users'))
+            .then(snapshot => {
+                if (!active) return;
+                const loaded = snapshot.docs.map(studentDoc => ({ id: studentDoc.id, ...studentDoc.data() }));
+                setStudents(loaded);
+            })
+            .catch(error => {
+                console.error('讀取每週排行榜失敗', error);
+                if (active) setLoadError(true);
+            })
+            .finally(() => { if (active) setIsLoading(false); });
+        return () => { active = false; };
+    }, []);
+
+    useEffect(() => { setRevealedFact(null); }, [period]);
+
+    const classEntries = students.map(student => ({
+        ...student,
+        weekly: getWeeklyStats(student.trialHistory || [], range)
+    }));
+    const remoteCurrent = classEntries.find(student => student.id === currentUserId);
+    const currentStats = getWeeklyStats(userData?.trialHistory || remoteCurrent?.trialHistory || [], range);
+    const activeStudents = classEntries.filter(student => student.weekly.sessions > 0);
+    const leaderboard = [...activeStudents].sort((a, b) => (
+        b.weekly.correct - a.weekly.correct ||
+        b.weekly.accuracy - a.weekly.accuracy ||
+        b.weekly.sessions - a.weekly.sessions
+    ));
+    const currentRank = leaderboard.findIndex(student => student.id === currentUserId) + 1;
+    const classAverage = activeStudents.length > 0 ? {
+        correct: activeStudents.reduce((sum, student) => sum + student.weekly.correct, 0) / activeStudents.length,
+        sessions: activeStudents.reduce((sum, student) => sum + student.weekly.sessions, 0) / activeStudents.length,
+        accuracy: activeStudents.reduce((sum, student) => sum + student.weekly.accuracy, 0) / activeStudents.length
+    } : { correct: 0, sessions: 0, accuracy: 0 };
+    const comparisonRows = [
+        { label: '答對題數', mine: currentStats.correct, average: classAverage.correct, suffix: ' 題' },
+        { label: '挑戰場次', mine: currentStats.sessions, average: classAverage.sessions, suffix: ' 場' },
+        { label: '答題準確率', mine: currentStats.accuracy, average: classAverage.accuracy, suffix: '%' }
+    ];
+    const visibleLeaderboard = leaderboard.slice(0, 5);
+    const currentOutsideTopFive = currentRank > 5 ? leaderboard[currentRank - 1] : null;
+    const factUnlocked = currentStats.sessions >= 3;
+
+    const drawTrivia = () => {
+        if (!factUnlocked) return;
+        const seed = Math.abs([...`${currentUserId || 'hero'}-${range.startMs}`]
+            .reduce((sum, char) => ((sum * 31) + char.charCodeAt(0)) | 0, 7));
+        setRevealedFact(WEEKLY_TRIVIA[seed % WEEKLY_TRIVIA.length]);
+        playSound('success');
+    };
+
+    return (
+        <div className="flex flex-col h-full bg-[#24173a] text-white">
+            <div className="flex items-center justify-between p-3 border-b-4 border-yellow-500/70 bg-black/40">
+                <RPGButton onClick={onBack} color="dark" className="px-2"><ArrowLeft size={16} /></RPGButton>
+                <div className="text-center">
+                    <h2 className="font-pixel text-sm text-yellow-300">每週冒險戰報</h2>
+                    <p className="font-retro text-[10px] text-gray-400">WEEKLY QUEST REPORT</p>
+                </div>
+                <div className="w-9 text-center text-xl">🏆</div>
+            </div>
+
+            <div className="grid grid-cols-2 bg-black/50 border-b-2 border-yellow-500/30">
+                <button onClick={() => setPeriod('current')} className={`py-2 font-pixel text-[10px] ${period === 'current' ? 'bg-yellow-500 text-black' : 'text-gray-400'}`}>本週累積</button>
+                <button onClick={() => setPeriod('previous')} className={`py-2 font-pixel text-[10px] ${period === 'previous' ? 'bg-purple-500 text-white' : 'text-gray-400'}`}>上週結算</button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-3 space-y-4">
+                <section className="border-4 border-yellow-500/60 bg-gradient-to-br from-[#513018] to-[#24173a] p-4 shadow-xl">
+                    <div className="flex justify-between items-start gap-3">
+                        <div>
+                            <p className="font-pixel text-[10px] text-yellow-300">{period === 'current' ? '本週累積戰力' : '上週最終戰績'}</p>
+                            <p className="font-retro text-[11px] text-gray-300 mt-1">{formatWeekRange(range)} · 週一至週日</p>
+                        </div>
+                        <div className="text-right">
+                            <div className="font-pixel text-3xl text-yellow-300">{currentStats.correct}</div>
+                            <div className="font-retro text-[10px] text-yellow-100">答對題數</div>
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-3 gap-2 mt-4 text-center">
+                        <div className="bg-black/35 border border-white/10 p-2"><div className="font-pixel text-lg text-cyan-300">{currentStats.sessions}</div><div className="font-retro text-[10px] text-gray-300">挑戰場次</div></div>
+                        <div className="bg-black/35 border border-white/10 p-2"><div className="font-pixel text-lg text-green-300">{Math.round(currentStats.accuracy)}%</div><div className="font-retro text-[10px] text-gray-300">準確率</div></div>
+                        <div className="bg-black/35 border border-white/10 p-2"><div className="font-pixel text-lg text-purple-300">{currentStats.activeDays}</div><div className="font-retro text-[10px] text-gray-300">活躍天數</div></div>
+                    </div>
+                    <p className="font-retro text-[10px] text-gray-400 mt-3">
+                        {period === 'current' ? '每週一 00:00 重新累積，週日 23:59 結算。' : '排行依答對題數計算；同分時依準確率與挑戰場次排序。'}
+                    </p>
+                </section>
+
+                <section className="border-2 border-purple-400/50 bg-black/30 p-3">
+                    <div className="flex items-center justify-between mb-3">
+                        <h3 className="font-pixel text-xs text-purple-200">我和班級的比較</h3>
+                        <span className="font-retro text-[10px] text-gray-400">{activeStudents.length} 位本週有作答</span>
+                    </div>
+                    <div className="space-y-3">
+                        {comparisonRows.map(row => {
+                            const scale = Math.max(row.mine, row.average, 1);
+                            return (
+                                <div key={row.label}>
+                                    <div className="flex justify-between font-retro text-[11px] mb-1">
+                                        <span>{row.label}</span>
+                                        <span className="text-cyan-300">我 {Math.round(row.mine)}{row.suffix} · 班平均 {Math.round(row.average)}{row.suffix}</span>
+                                    </div>
+                                    <div className="space-y-1">
+                                        <div className="h-2 bg-black/70"><div className="h-full bg-cyan-400" style={{ width: `${(row.mine / scale) * 100}%` }}></div></div>
+                                        <div className="h-1 bg-black/70"><div className="h-full bg-purple-400" style={{ width: `${(row.average / scale) * 100}%` }}></div></div>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </section>
+
+                <section className="border-2 border-yellow-500/50 bg-black/30 overflow-hidden">
+                    <div className="flex items-center justify-between p-3 border-b border-yellow-500/30">
+                        <h3 className="font-pixel text-xs text-yellow-300">班級排行榜</h3>
+                        <span className="font-retro text-[10px] text-gray-400">其他同學姓名已隱藏</span>
+                    </div>
+                    {isLoading ? (
+                        <div className="p-5 text-center font-retro text-sm text-gray-400 animate-pulse">載入班級戰績...</div>
+                    ) : loadError ? (
+                        <div className="p-5 text-center font-retro text-sm text-gray-400">目前無法讀取班級排行，個人戰報仍可正常使用。</div>
+                    ) : visibleLeaderboard.length === 0 ? (
+                        <div className="p-5 text-center font-retro text-sm text-gray-400">這一週還沒有人完成挑戰，搶下第一名吧！</div>
+                    ) : (
+                        <div>
+                            {visibleLeaderboard.map((student, index) => {
+                                const isMe = student.id === currentUserId;
+                                return (
+                                    <div key={student.id} className={`grid grid-cols-[2rem_1fr_auto] items-center gap-2 px-3 py-2 border-b border-white/10 ${isMe ? 'bg-cyan-900/40' : ''}`}>
+                                        <span className={`font-pixel text-sm ${index < 3 ? 'text-yellow-300' : 'text-gray-400'}`}>#{index + 1}</span>
+                                        <div className="min-w-0"><div className="font-retro text-sm truncate">{isMe ? `${student.studentName || userData?.studentName || '我'}（我）` : maskStudentName(student.studentName)}</div><div className="font-retro text-[9px] text-gray-500">準確率 {Math.round(student.weekly.accuracy)}%</div></div>
+                                        <span className="font-pixel text-xs text-yellow-300">{student.weekly.correct} 題</span>
+                                    </div>
+                                );
+                            })}
+                            {currentOutsideTopFive && (
+                                <div className="grid grid-cols-[2rem_1fr_auto] items-center gap-2 px-3 py-2 bg-cyan-900/40 border-t-2 border-dashed border-cyan-500/50">
+                                    <span className="font-pixel text-sm text-cyan-300">#{currentRank}</span>
+                                    <span className="font-retro text-sm">{currentOutsideTopFive.studentName || userData?.studentName || '我'}（我）</span>
+                                    <span className="font-pixel text-xs text-yellow-300">{currentOutsideTopFive.weekly.correct} 題</span>
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </section>
+
+                <section className={`border-4 p-4 text-center ${factUnlocked ? 'border-green-400/60 bg-green-950/40' : 'border-gray-600 bg-black/30'}`}>
+                    {revealedFact ? (
+                        <div className="animate-in fade-in">
+                            <div className="text-4xl mb-2">{revealedFact.icon}</div>
+                            <h3 className="font-pixel text-xs text-green-300 mb-2">{revealedFact.title}</h3>
+                            <p className="font-retro text-sm text-gray-200 leading-relaxed">{revealedFact.text}</p>
+                            <p className="font-retro text-[10px] text-gray-500 mt-3">本週冷知識卡已揭曉</p>
+                        </div>
+                    ) : (
+                        <>
+                            <div className="text-3xl mb-2">🎁</div>
+                            <h3 className="font-pixel text-xs text-green-300">冷知識抽卡</h3>
+                            <p className="font-retro text-xs text-gray-300 my-2">本週完成 3 場挑戰，即可抽出一張英文冷知識卡。</p>
+                            <RPGButton onClick={drawTrivia} color={factUnlocked ? 'success' : 'dark'} disabled={!factUnlocked} className="w-full mt-3">
+                                {factUnlocked ? '抽一張冷知識卡' : `還差 ${Math.max(0, 3 - currentStats.sessions)} 場解鎖`}
+                            </RPGButton>
+                        </>
+                    )}
+                </section>
+            </div>
+        </div>
+    );
+};
+
+const WorldMap = ({ onSelectNode, onViewJourney, onViewWeeklyReport, onUltimateChallenge, onViewMistakeNotebook, onLogout, records = {}, advMeta = null, activeTab = 'main', onChangeTab }) => {
     const [showGuide, setShowGuide] = useState(false);
     const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
@@ -601,6 +865,9 @@ const WorldMap = ({ onSelectNode, onViewJourney, onUltimateChallenge, onViewMist
                 </div>
                 <h2 className="font-pixel text-white text-center flex items-center justify-center gap-2"><MapIcon size={16} /> WORLD MAP</h2>
                 <div className="flex items-center gap-1">
+                    <button onClick={onViewWeeklyReport} className="text-yellow-400 hover:text-yellow-200 p-1" title="每週冒險戰報">
+                        <Award size={21} />
+                    </button>
                     <button onClick={onViewMistakeNotebook} className="text-red-400 hover:text-red-300 p-1" title="錯題筆記本">
                         <Book size={20} />
                     </button>
@@ -880,10 +1147,259 @@ const PasswordEntryModal = ({ onClose, onSuccess }) => {
     );
 };
 
-const JourneyMode = ({ onBack, onViewTrialLog, records = {} }) => {
+const AdvancedJourneyView = ({ records = {}, advMeta = null, mistakeStats = {} }) => {
+    const [expandedVolume, setExpandedVolume] = useState(null);
+    const totalLessons = Number(advMeta?.totalLessons) || 0;
+    const gradePoints = { S: 100, A: 90, B: 80, C: 70, D: 60, E: 0, '?': 0 };
+    const gradeColors = { S: '#fbbf24', A: '#fb923c', B: '#60a5fa', C: '#34d399', D: '#9ca3af', E: '#6b7280', '?': '#6b7280' };
+
+    const lessonRecords = Array.from({ length: totalLessons }, (_, index) => {
+        const lesson = index + 1;
+        return { lesson, record: records[advLessonId(lesson)] || {} };
+    });
+    const attemptedLessons = lessonRecords.filter(({ record }) =>
+        (record.attempts || 0) > 0 || (record.clears || 0) > 0 || Boolean(record.bestGrade)
+    );
+    const completedLessons = lessonRecords.filter(({ record }) => (record.clears || 0) >= ADV_CLEARS_TO_COMPLETE).length;
+    const earnedStars = lessonRecords.reduce((sum, { record }) => sum + Math.min(record.clears || 0, ADV_CLEARS_TO_COMPLETE), 0);
+    const maxStars = totalLessons * ADV_CLEARS_TO_COMPLETE;
+    const starProgress = maxStars > 0 ? earnedStars / maxStars : 0;
+    const gradeCoverage = totalLessons > 0
+        ? lessonRecords.reduce((sum, { record }) => sum + (gradePoints[record.bestGrade] || 0), 0) / (totalLessons * 100)
+        : 0;
+    const mastery = Math.round((starProgress * 0.6 + gradeCoverage * 0.4) * 100);
+    const title = mastery >= 95 ? '單字大師'
+        : mastery >= 80 ? '進階達人'
+            : mastery >= 60 ? '菁英勇者'
+                : mastery >= 40 ? '穩定挑戰者'
+                    : mastery >= 20 ? '進階學徒'
+                        : '初探者';
+    const gradeDistribution = ['S', 'A', 'B', 'C', 'D', 'E'].reduce((counts, grade) => {
+        counts[grade] = attemptedLessons.filter(({ record }) => record.bestGrade === grade).length;
+        return counts;
+    }, {});
+
+    const accuracyHistory = lessonRecords
+        .flatMap(({ lesson, record }) => (record.accuracyHistory || []).map(entry => ({ ...entry, lesson })))
+        .filter(entry => Number.isFinite(Number(entry.accuracy)))
+        .sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
+    const recentTen = accuracyHistory.slice(0, 10);
+    const recentAccuracy = recentTen.length > 0
+        ? recentTen.reduce((sum, entry) => sum + Number(entry.accuracy), 0) / recentTen.length
+        : null;
+    const newestFive = accuracyHistory.slice(0, 5);
+    const previousFive = accuracyHistory.slice(5, 10);
+    const average = (entries) => entries.reduce((sum, entry) => sum + Number(entry.accuracy), 0) / entries.length;
+    const trendDelta = newestFive.length === 5 && previousFive.length === 5
+        ? average(newestFive) - average(previousFive)
+        : null;
+    const trend = trendDelta === null
+        ? { label: '資料累積中', color: 'text-gray-400', symbol: '…' }
+        : trendDelta >= 5
+            ? { label: '進步中', color: 'text-green-300', symbol: '↑' }
+            : trendDelta <= -5
+                ? { label: '建議複習', color: 'text-red-300', symbol: '↓' }
+                : { label: '表現穩定', color: 'text-blue-300', symbol: '→' };
+
+    const advancedMistakes = Object.values(mistakeStats).filter(data =>
+        data?.source === 'advanced' && Number.isFinite(Number(data?.lesson)) && (data.count || 0) > 0
+    );
+    const mistakeByLesson = advancedMistakes.reduce((groups, data) => {
+        const lesson = Number(data.lesson);
+        if (!groups[lesson]) groups[lesson] = { lesson, wordCount: 0, errorCount: 0 };
+        groups[lesson].wordCount += 1;
+        groups[lesson].errorCount += data.count || 0;
+        return groups;
+    }, {});
+    const weakestLessons = Object.values(mistakeByLesson)
+        .sort((a, b) => b.wordCount - a.wordCount || b.errorCount - a.errorCount || a.lesson - b.lesson)
+        .slice(0, 3);
+    const totalErrorCount = advancedMistakes.reduce((sum, data) => sum + (data.count || 0), 0);
+
+    let recommendation = null;
+    if (weakestLessons.length > 0) {
+        recommendation = { lesson: weakestLessons[0].lesson, reason: '目前錯字最多，建議優先複習' };
+    } else {
+        const lowestAccuracy = attemptedLessons
+            .filter(({ record }) => Number.isFinite(Number(record.lastAccuracy)))
+            .sort((a, b) => Number(a.record.lastAccuracy) - Number(b.record.lastAccuracy))[0];
+        if (lowestAccuracy) recommendation = { lesson: lowestAccuracy.lesson, reason: '近期正確率較低，適合再次挑戰' };
+        else {
+            const nextLesson = lessonRecords.find(({ record }) => (record.clears || 0) < ADV_CLEARS_TO_COMPLETE);
+            if (nextLesson) recommendation = { lesson: nextLesson.lesson, reason: '繼續完成下一個尚未通關的篇章' };
+        }
+    }
+
+    const formatDate = (timestamp) => {
+        if (!timestamp) return '資料累積中';
+        const date = new Date(timestamp);
+        if (Number.isNaN(date.getTime())) return '資料累積中';
+        return `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`;
+    };
+
+    const averageGrade = (volumeLessons) => {
+        const played = volumeLessons.map(({ record }) => gradePoints[record.bestGrade] || 0).filter(score => score > 0);
+        if (played.length === 0) return '?';
+        const score = played.reduce((sum, value) => sum + value, 0) / played.length;
+        if (score >= 95) return 'S';
+        if (score >= 85) return 'A';
+        if (score >= 75) return 'B';
+        if (score >= 65) return 'C';
+        return 'D';
+    };
+
+    if (totalLessons === 0) {
+        return (
+            <div className="flex-1 flex flex-col items-center justify-center text-center p-6 bg-[#160d2b]">
+                <Book size={54} className="text-purple-400/50 mb-4" />
+                <p className="font-pixel text-purple-200 text-sm">進階旅程準備中</p>
+                <p className="font-retro text-gray-500 text-xs mt-2">進階目錄載入後會顯示能力報告</p>
+            </div>
+        );
+    }
+
+    return (
+        <div className="flex-1 overflow-y-auto p-4 bg-[#160d2b] bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]">
+            <section className="mb-5 border-4 border-purple-500 bg-gradient-to-b from-purple-950 to-black p-4 shadow-[0_0_24px_rgba(168,85,247,0.25)]">
+                <div className="flex items-center justify-between mb-3">
+                    <div>
+                        <p className="font-pixel text-[9px] text-purple-300">ADVENTURER REPORT</p>
+                        <h3 className="font-pixel text-sm text-white mt-1">冒險者能力報告</h3>
+                    </div>
+                    <div className="text-right">
+                        <div className="font-pixel text-yellow-300 text-sm">{title}</div>
+                        <div className="font-retro text-[10px] text-gray-400">進階掌握度 {mastery}%</div>
+                    </div>
+                </div>
+
+                <div className="h-3 bg-black border border-purple-700 mb-4 overflow-hidden">
+                    <div className="h-full bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-400 transition-all" style={{ width: `${mastery}%` }}></div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2 mb-3">
+                    <div className="bg-white/5 border border-purple-700/70 p-2">
+                        <div className="font-retro text-[10px] text-gray-400">完成進度</div>
+                        <div className="font-pixel text-sm text-white mt-1">{completedLessons}/{totalLessons} 課</div>
+                        <div className="font-retro text-[10px] text-yellow-300 mt-1">★ {earnedStars}/{maxStars}</div>
+                    </div>
+                    <div className="bg-white/5 border border-purple-700/70 p-2">
+                        <div className="font-retro text-[10px] text-gray-400">最近 10 次正確率</div>
+                        <div className="font-pixel text-sm text-white mt-1">{recentAccuracy === null ? '累積中' : `${Math.round(recentAccuracy)}%`}</div>
+                        <div className={`font-retro text-[10px] mt-1 ${trend.color}`}>{trend.symbol} {trend.label}</div>
+                    </div>
+                    <div className="bg-white/5 border border-purple-700/70 p-2">
+                        <div className="font-retro text-[10px] text-gray-400">目前進階錯題</div>
+                        <div className="font-pixel text-sm text-red-300 mt-1">{advancedMistakes.length} 字</div>
+                        <div className="font-retro text-[10px] text-gray-400 mt-1">累積 {totalErrorCount} 次錯誤</div>
+                    </div>
+                    <div className="bg-white/5 border border-purple-700/70 p-2">
+                        <div className="font-retro text-[10px] text-gray-400">已挑戰範圍</div>
+                        <div className="font-pixel text-sm text-cyan-300 mt-1">{attemptedLessons.length} 課</div>
+                        <div className="font-retro text-[10px] text-gray-400 mt-1">共 {accuracyHistory.length} 筆分析</div>
+                    </div>
+                </div>
+
+                {weakestLessons.length > 0 && (
+                    <div className="mb-3">
+                        <div className="font-retro text-[10px] text-gray-400 mb-1">錯題較多的課次</div>
+                        <div className="flex flex-wrap gap-2">
+                            {weakestLessons.map(item => (
+                                <span key={item.lesson} className="font-pixel text-[9px] text-red-200 bg-red-950 border border-red-700 px-2 py-1">
+                                    L{item.lesson} · {item.wordCount} 字
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                <div className="mb-3">
+                    <div className="font-retro text-[10px] text-gray-400 mb-1">各課最佳評級分布</div>
+                    <div className="grid grid-cols-6 gap-1">
+                        {['S', 'A', 'B', 'C', 'D', 'E'].map(grade => (
+                            <div key={grade} className="bg-black/50 border border-gray-700 py-1 text-center">
+                                <div className="font-pixel text-[9px]" style={{ color: gradeColors[grade] }}>{grade}</div>
+                                <div className="font-retro text-[10px] text-white mt-1">{gradeDistribution[grade]}</div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {recommendation && (
+                    <div className="bg-yellow-950/50 border-2 border-yellow-600 p-2 flex gap-2 items-start">
+                        <Lightbulb size={18} className="text-yellow-300 flex-shrink-0" />
+                        <div>
+                            <div className="font-pixel text-[10px] text-yellow-300">下一步：第 {recommendation.lesson} 課</div>
+                            <div className="font-retro text-xs text-gray-300 mt-1">{recommendation.reason}</div>
+                        </div>
+                    </div>
+                )}
+
+                <p className="font-retro text-[9px] text-gray-600 mt-3 text-center">此稱號代表 App 內的進階學習進度，不是正式英文檢定等級。</p>
+            </section>
+
+            <div className="space-y-3 pb-10">
+                {Array.from({ length: Math.ceil(totalLessons / ADV_LESSONS_PER_SECTION) }, (_, volumeIndex) => {
+                    const start = volumeIndex * ADV_LESSONS_PER_SECTION;
+                    const volumeLessons = lessonRecords.slice(start, Math.min(start + ADV_LESSONS_PER_SECTION, totalLessons));
+                    const volumeStars = volumeLessons.reduce((sum, { record }) => sum + Math.min(record.clears || 0, ADV_CLEARS_TO_COMPLETE), 0);
+                    const volumeCompleted = volumeLessons.filter(({ record }) => (record.clears || 0) >= ADV_CLEARS_TO_COMPLETE).length;
+                    const grade = averageGrade(volumeLessons);
+                    const isExpanded = expandedVolume === volumeIndex;
+                    return (
+                        <section key={volumeIndex} className="border-2 border-purple-700 bg-black/50">
+                            <button
+                                onClick={() => { playSound('click'); setExpandedVolume(isExpanded ? null : volumeIndex); }}
+                                className="w-full p-3 flex items-center justify-between text-left hover:bg-purple-900/40 transition-colors"
+                            >
+                                <div>
+                                    <div className="font-pixel text-xs text-purple-200">進階 第 {volumeIndex + 1} 卷</div>
+                                    <div className="font-retro text-[10px] text-gray-400 mt-1">第 {volumeLessons[0].lesson}～{volumeLessons[volumeLessons.length - 1].lesson} 課 · 完成 {volumeCompleted}/{volumeLessons.length}</div>
+                                </div>
+                                <div className="flex items-center gap-3">
+                                    <div className="text-right">
+                                        <div className="font-pixel text-[10px] text-yellow-300">★ {volumeStars}/{volumeLessons.length * ADV_CLEARS_TO_COMPLETE}</div>
+                                        <div className="font-pixel text-[10px] mt-1" style={{ color: gradeColors[grade] }}>AVG {grade}</div>
+                                    </div>
+                                    <ChevronRight size={18} className={`text-purple-300 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
+                                </div>
+                            </button>
+
+                            {isExpanded && (
+                                <div className="border-t border-purple-800 p-2 space-y-2">
+                                    {volumeLessons.map(({ lesson, record }) => {
+                                        const clears = Math.min(record.clears || 0, ADV_CLEARS_TO_COMPLETE);
+                                        const hasPlayed = Object.keys(record).length > 0;
+                                        const attempts = record.attempts ?? Math.max(record.clears || 0, 0);
+                                        return (
+                                            <div key={lesson} className={`p-2 border flex items-center justify-between ${hasPlayed ? 'bg-purple-950/50 border-purple-700' : 'bg-gray-900/50 border-gray-800 opacity-60'}`}>
+                                                <div className="min-w-0 pr-2">
+                                                    <div className="font-pixel text-[10px] text-white">L{String(lesson).padStart(3, '0')} · {advMeta?.titles?.[String(lesson)] || `進階單字 第 ${lesson} 課`}</div>
+                                                    <div className="font-retro text-[10px] text-gray-400 mt-1">{hasPlayed ? `${attempts} 次挑戰 · ${formatDate(record.lastPlayed)}` : '尚未挑戰'}</div>
+                                                </div>
+                                                <div className="text-right flex-shrink-0">
+                                                    <div className="font-pixel text-[11px] text-yellow-300">{'★'.repeat(clears)}{'☆'.repeat(ADV_CLEARS_TO_COMPLETE - clears)}</div>
+                                                    <div className="font-pixel text-[9px] mt-1" style={{ color: gradeColors[record.bestGrade || '?'] }}>
+                                                        {hasPlayed ? `${record.bestGrade || '?'} · ${record.bestScore ?? 0}` : '—'}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            )}
+                        </section>
+                    );
+                })}
+            </div>
+        </div>
+    );
+};
+
+const JourneyMode = ({ onBack, onViewTrialLog, records = {}, advMeta = null, mistakeStats = {} }) => {
     const [flippedCards, setFlippedCards] = useState({});
     const [showDashboard, setShowDashboard] = useState(false);
     const [showPasswordModal, setShowPasswordModal] = useState(false);
+    const [activeTab, setActiveTab] = useState('main');
 
     const toggleFlip = (id) => {
         playSound('click');
@@ -962,7 +1478,25 @@ const JourneyMode = ({ onBack, onViewTrialLog, records = {} }) => {
             )}
             {showDashboard && <TeacherDashboard onClose={() => setShowDashboard(false)} />}
 
+            <div className="flex bg-black/70 border-b-4 border-rpg-border">
+                <button
+                    onClick={() => { playSound('click'); setActiveTab('main'); }}
+                    className={`flex-1 py-2 font-pixel text-xs transition-colors ${activeTab === 'main' ? 'bg-rpg-primary text-white' : 'text-gray-400 hover:text-white'}`}
+                >
+                    ⚔ 一般旅程
+                </button>
+                <button
+                    onClick={() => { playSound('click'); setActiveTab('adv'); }}
+                    className={`flex-1 py-2 font-pixel text-xs transition-colors ${activeTab === 'adv' ? 'bg-purple-700 text-white' : 'text-gray-400 hover:text-white'}`}
+                >
+                    ✦ 進階旅程
+                </button>
+            </div>
 
+            {activeTab === 'adv' ? (
+                <AdvancedJourneyView records={records} advMeta={advMeta} mistakeStats={mistakeStats} />
+            ) : (
+                <>
             {/* 試煉日誌入口按鈕 */}
             <div className="px-4 pt-4 pb-2">
                 <button
@@ -1166,6 +1700,8 @@ const JourneyMode = ({ onBack, onViewTrialLog, records = {} }) => {
                 </div>
                 <div className="h-10"></div>
             </div>
+                </>
+            )}
         </div>
     );
 };
@@ -1374,16 +1910,30 @@ const MistakeNotebook = ({ onBack, mistakeStats = {}, onClearMistakes, onRemoveM
     const [showSlashConfirm, setShowSlashConfirm] = useState(false); // 斬除個別確認
     const [pendingRemoveId, setPendingRemoveId] = useState(null); // 待刪除的單字 ID
     const [selectedUnit, setSelectedUnit] = useState('all'); // 新增：單元選擇狀態
+    const [activeTab, setActiveTab] = useState('main'); // 'main' | 'adv'
+
+    useEffect(() => {
+        setSelectedUnit('all');
+    }, [activeTab]);
+
+    const isAdvancedMistake = (data = {}) => data.source === 'advanced' && Number.isFinite(Number(data.lesson));
 
     // 將 mistakeStats 轉換為陣列並排序（按錯誤次數由多到少）
     const sortedMistakes = Object.entries(mistakeStats)
-        .filter(([id, data]) => data.count > 0)
+        .filter(([, data]) => data.count > 0)
+        .filter(([, data]) => activeTab === 'adv' ? isAdvancedMistake(data) : !isAdvancedMistake(data))
         .sort((a, b) => b[1].count - a[1].count);
+
+    const availableUnits = activeTab === 'adv'
+        ? [...new Set(sortedMistakes.map(([, data]) => Number(data.lesson)))].sort((a, b) => a - b)
+        : Array.from({ length: 16 }, (_, i) => i + 1);
 
     // 根據選擇的單元過濾錯題
     const filteredMistakes = selectedUnit === 'all'
         ? sortedMistakes
-        : sortedMistakes.filter(([id, data]) => data.gameUnitId === parseInt(selectedUnit));
+        : sortedMistakes.filter(([, data]) => activeTab === 'adv'
+            ? Number(data.lesson) === parseInt(selectedUnit, 10)
+            : data.gameUnitId === parseInt(selectedUnit, 10));
 
     const totalMistakes = sortedMistakes.reduce((sum, [id, data]) => sum + data.count, 0);
 
@@ -1439,11 +1989,27 @@ const MistakeNotebook = ({ onBack, mistakeStats = {}, onClearMistakes, onRemoveM
                 <div className="flex justify-center mt-2">
                     <div className="bg-black/60 px-4 py-1 rounded border border-red-800 flex items-center gap-2">
                         <span className="font-pixel text-xs text-gray-400">殘留魔物:</span>
-                        <span className="font-pixel text-lg text-red-400" style={{ textShadow: '0 0 5px rgba(255,0,0,0.5)' }}>
-                            {totalMistakes}
+                        <span className="font-pixel text-sm text-red-400" style={{ textShadow: '0 0 5px rgba(255,0,0,0.5)' }}>
+                            {sortedMistakes.length} 字 / {totalMistakes} 次
                         </span>
                     </div>
                 </div>
+            </div>
+
+            {/* 一般／進階錯題切換 */}
+            <div className="flex bg-black/80 border-b-2 border-red-800">
+                <button
+                    onClick={() => { playSound('click'); setActiveTab('main'); }}
+                    className={`flex-1 py-2 font-pixel text-xs transition-colors ${activeTab === 'main' ? 'bg-red-900 text-white' : 'text-gray-500 hover:text-gray-200'}`}
+                >
+                    ⚔ 一般錯題
+                </button>
+                <button
+                    onClick={() => { playSound('click'); setActiveTab('adv'); }}
+                    className={`flex-1 py-2 font-pixel text-xs transition-colors ${activeTab === 'adv' ? 'bg-purple-800 text-white' : 'text-gray-500 hover:text-gray-200'}`}
+                >
+                    ✦ 進階錯題
+                </button>
             </div>
 
             {/* 單元切換標籤列 - 橫向可捲動 */}
@@ -1459,8 +2025,8 @@ const MistakeNotebook = ({ onBack, mistakeStats = {}, onClearMistakes, onRemoveM
                     全部
                 </button>
 
-                {/* Unit 1 - 16 */}
-                {Array.from({ length: 16 }, (_, i) => i + 1).map(unitNum => (
+                {/* 一般顯示 16 單元，進階只顯示目前有錯題的課次 */}
+                {availableUnits.map(unitNum => (
                     <button
                         key={unitNum}
                         onClick={() => setSelectedUnit(unitNum.toString())}
@@ -1469,7 +2035,7 @@ const MistakeNotebook = ({ onBack, mistakeStats = {}, onClearMistakes, onRemoveM
                             : 'text-gray-400 hover:text-gray-200'
                             }`}
                     >
-                        Unit {unitNum}
+                        {activeTab === 'adv' ? `第 ${unitNum} 課` : `Unit ${unitNum}`}
                     </button>
                 ))}
             </div>
@@ -1479,14 +2045,14 @@ const MistakeNotebook = ({ onBack, mistakeStats = {}, onClearMistakes, onRemoveM
                 {sortedMistakes.length === 0 ? (
                     <div className="flex flex-col items-center justify-center h-full text-center">
                         <CheckCircle size={64} className="text-green-500 opacity-50 mb-4" />
-                        <p className="font-pixel text-gray-400 text-sm">尚無錯題記錄</p>
+                        <p className="font-pixel text-gray-400 text-sm">{activeTab === 'adv' ? '尚無進階錯題' : '尚無一般錯題'}</p>
                         <p className="font-retro text-gray-600 text-xs mt-2">太棒了！繼續保持！</p>
                     </div>
                 ) : filteredMistakes.length === 0 ? (
                     // 選擇了特定單元但該單元無錯題
                     <div className="flex flex-col items-center justify-center h-full text-center">
                         <CheckCircle size={64} className="text-green-500 opacity-50 mb-4" />
-                        <p className="font-pixel text-gray-400 text-sm">本單元無戰敗紀錄</p>
+                        <p className="font-pixel text-gray-400 text-sm">本{activeTab === 'adv' ? '課' : '單元'}無戰敗紀錄</p>
                         <p className="font-retro text-gray-600 text-xs mt-2">勇者繼續保持！</p>
                     </div>
                 ) : (
@@ -1546,7 +2112,7 @@ const MistakeNotebook = ({ onBack, mistakeStats = {}, onClearMistakes, onRemoveM
                         className="w-full bg-gradient-to-r from-gray-800 to-gray-700 border-4 border-gray-600 p-3 font-pixel text-gray-400 text-sm hover:from-red-900 hover:to-red-800 hover:border-red-600 hover:text-red-300 transition-all active:translate-y-1 flex items-center justify-center gap-2"
                     >
                         <XCircle size={16} />
-                        清空紀錄
+                        清空{activeTab === 'adv' ? '進階' : '一般'}錯題
                     </button>
                 </div>
             )}
@@ -1584,8 +2150,8 @@ const MistakeNotebook = ({ onBack, mistakeStats = {}, onClearMistakes, onRemoveM
                 <div className="absolute inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4">
                     <div className="bg-gray-900 border-4 border-red-700 p-6 w-full max-w-xs text-center" style={{ boxShadow: '0 0 30px rgba(255,0,0,0.3)' }}>
                         <Skull size={48} className="text-red-500 mx-auto mb-4" />
-                        <h3 className="font-pixel text-lg text-white mb-2">確定要清空嗎?</h3>
-                        <p className="font-retro text-sm text-gray-400 mb-6">此操作無法復原</p>
+                        <h3 className="font-pixel text-lg text-white mb-2">確定要清空{activeTab === 'adv' ? '進階' : '一般'}錯題嗎?</h3>
+                        <p className="font-retro text-sm text-gray-400 mb-6">另一個頁籤的錯題會保留，此操作無法復原</p>
                         <div className="flex gap-4 justify-center">
                             <button
                                 onClick={() => setShowConfirm(false)}
@@ -1594,7 +2160,7 @@ const MistakeNotebook = ({ onBack, mistakeStats = {}, onClearMistakes, onRemoveM
                                 取消
                             </button>
                             <button
-                                onClick={() => { setShowConfirm(false); onClearMistakes(); }}
+                                onClick={() => { setShowConfirm(false); onClearMistakes(activeTab); }}
                                 className="bg-red-800 border-2 border-red-500 px-4 py-2 font-pixel text-sm text-white hover:bg-red-700"
                             >
                                 確定清空
@@ -2122,7 +2688,9 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard'
             targetWord: currentQ.target.word,
             targetChinese: currentQ.target.chinese,
             targetBook: currentQ.target.book,
-            targetUnit: currentQ.target.unit
+            targetUnit: currentQ.target.unit,
+            targetSeries: currentQ.target.series,
+            targetLesson: currentQ.target.lesson
         }]);
         setHp(h => h - 1);
         setFeedback('miss');
@@ -2173,7 +2741,9 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard'
             targetWord: currentQ.target.word,
             targetChinese: currentQ.target.chinese,
             targetBook: currentQ.target.book,
-            targetUnit: currentQ.target.unit
+            targetUnit: currentQ.target.unit,
+            targetSeries: currentQ.target.series,
+            targetLesson: currentQ.target.lesson
         }]);
 
         nextQuestion(isDead);
@@ -2748,15 +3318,16 @@ const App = () => {
         // 準備一個變數來累積所有的變更
         let updatedUserData = { ...userData };
         const updatesForFirestore = {};
+        const sessionLogs = result.battleLog || [];
+        const sessionCorrectCount = sessionLogs.filter(log => log.isCorrect).length;
+        const currentSessionAccuracy = sessionLogs.length > 0
+            ? (sessionCorrectCount / sessionLogs.length) * 100
+            : null;
 
         // ==========================================
         // 1. 【新增】計算平均準確率與練習次數 (修復 0% 問題)
         // ==========================================
-        if (result.battleLog && result.battleLog.length > 0) {
-            // 計算「這一場」的準確率
-            const correctCount = result.battleLog.filter(log => log.isCorrect).length;
-            const currentSessionAccuracy = (correctCount / result.battleLog.length) * 100;
-
+        if (currentSessionAccuracy !== null) {
             // 取得舊的數據
             const oldTotal = updatedUserData.totalSessions || 0;
             const oldAvg = updatedUserData.avgAccuracy || 0;
@@ -2777,8 +3348,8 @@ const App = () => {
         // ==========================================
         // 2. 處理錯誤單字 (Mistake Stats)
         // ==========================================
-        if (result.battleLog) {
-            const wrongAnswers = result.battleLog.filter(log => !log.isCorrect);
+        if (sessionLogs.length > 0) {
+            const wrongAnswers = sessionLogs.filter(log => !log.isCorrect);
             if (wrongAnswers.length > 0) {
                 const currentMistakeStats = { ...(updatedUserData.mistakeStats || {}) };
 
@@ -2792,7 +3363,9 @@ const App = () => {
 
                 wrongAnswers.forEach(log => {
                     if (log.targetId) {
-                        const key = log.targetId;
+                        const lesson = Number(log.targetLesson);
+                        const isAdvanced = log.targetSeries === 'advanced' && Number.isFinite(lesson);
+                        const key = isAdvanced ? `advanced:${lesson}:${log.targetId}` : log.targetId;
                         const gameUnitId = (log.targetBook && log.targetUnit)
                             ? getGameUnitId(log.targetBook, log.targetUnit)
                             : null;
@@ -2800,12 +3373,15 @@ const App = () => {
                         if (currentMistakeStats[key]) {
                             currentMistakeStats[key].count += 1;
                             if (gameUnitId !== null) currentMistakeStats[key].gameUnitId = gameUnitId;
+                            currentMistakeStats[key].lastWrongAt = new Date().toISOString();
                         } else {
                             currentMistakeStats[key] = {
                                 count: 1,
                                 word: log.targetWord || '',
                                 chinese: log.targetChinese || '',
-                                gameUnitId: gameUnitId
+                                gameUnitId,
+                                ...(isAdvanced ? { source: 'advanced', lesson } : { source: 'main' }),
+                                lastWrongAt: new Date().toISOString()
                             };
                         }
                     }
@@ -2818,7 +3394,39 @@ const App = () => {
         // ==========================================
         // 3. 處理單元/BOSS 通關紀錄 (Level Records)
         // ==========================================
-        if (selectedNode) {
+        const advancedSessionGroups = sessionLogs.reduce((groups, log) => {
+            const lesson = Number(log.targetLesson);
+            if (log.targetSeries !== 'advanced' || !Number.isFinite(lesson)) return groups;
+            if (!groups[lesson]) groups[lesson] = [];
+            groups[lesson].push(log);
+            return groups;
+        }, {});
+
+        const withAdvancedAttempt = (prevRecord, logs) => {
+            if (!logs || logs.length === 0) return prevRecord;
+            const correct = logs.filter(log => log.isCorrect).length;
+            const accuracy = (correct / logs.length) * 100;
+            const timestamp = new Date().toISOString();
+            const attemptEntry = {
+                timestamp,
+                correct,
+                total: logs.length,
+                accuracy
+            };
+            return {
+                ...prevRecord,
+                attempts: (prevRecord.attempts || 0) + 1,
+                totalCorrect: (prevRecord.totalCorrect || 0) + correct,
+                totalAnswered: (prevRecord.totalAnswered || 0) + logs.length,
+                lastAccuracy: accuracy,
+                bestAccuracy: Math.max(prevRecord.bestAccuracy || 0, accuracy),
+                accuracyHistory: [attemptEntry, ...(prevRecord.accuracyHistory || [])].slice(0, 20),
+                lastPlayed: timestamp,
+                unlocked: true
+            };
+        };
+
+        if (selectedNode && view !== 'challenge-quiz') {
             if (selectedNode.type === 'unit') {
                 const levelId = selectedNode.id;
                 const prevRecord = updatedUserData.levelRecords?.[levelId] || {};
@@ -2887,12 +3495,16 @@ const App = () => {
             } else if (selectedNode.type === 'adv') {
                 const levelId = selectedNode.id;
                 const prevRecord = updatedUserData.levelRecords?.[levelId] || {};
+                const performanceRecord = withAdvancedAttempt(
+                    prevRecord,
+                    advancedSessionGroups[selectedNode.lesson] || sessionLogs
+                );
                 const rankOrder = { 'S': 6, 'A': 5, 'B': 4, 'C': 3, 'D': 2, 'E': 1, '?': 0 };
                 const clears = (prevRecord.clears || 0) + (result.victory ? 1 : 0);
                 const bestGrade = (rankOrder[result.rank] || 0) > (rankOrder[prevRecord.bestGrade] || 0)
                     ? result.rank : (prevRecord.bestGrade || result.rank);
                 const newRecord = {
-                    ...prevRecord,
+                    ...performanceRecord,
                     clears,
                     bestScore: Math.max(prevRecord.bestScore || 0, result.score),
                     bestGrade,
@@ -2902,6 +3514,17 @@ const App = () => {
                 updatedUserData.levelRecords = { ...updatedUserData.levelRecords, [levelId]: newRecord };
                 updatesForFirestore[`levelRecords.${levelId}`] = newRecord;
             }
+        }
+
+        // 終極試煉可混合一般／進階題目；只補進階課次的分析資料，不改變原試煉通關規則
+        if (view === 'challenge-quiz') {
+            Object.entries(advancedSessionGroups).forEach(([lesson, logs]) => {
+                const levelId = advLessonId(lesson);
+                const prevRecord = updatedUserData.levelRecords?.[levelId] || {};
+                const newRecord = withAdvancedAttempt(prevRecord, logs);
+                updatedUserData.levelRecords = { ...updatedUserData.levelRecords, [levelId]: newRecord };
+                updatesForFirestore[`levelRecords.${levelId}`] = newRecord;
+            });
         }
 
         // ==========================================
@@ -2955,6 +3578,9 @@ const App = () => {
                 type: historyType,
                 unit: historyUnitTitle,
                 units: view === 'challenge-quiz' ? challengeUnits : [selectedNode?.id],
+                correctCount: sessionCorrectCount,
+                totalQuestions: sessionLogs.length,
+                accuracy: currentSessionAccuracy,
                 ...(historyCategoryKey ? { categoryKey: historyCategoryKey } : {}),
                 ...(historyCategoryLabel ? { categoryLabel: historyCategoryLabel } : {})
             };
@@ -3145,18 +3771,24 @@ const App = () => {
         return shuffleArray(finalPool);
     };
 
-    // 清空錯題紀錄
-    const handleClearMistakes = async () => {
+    // 只清空目前頁籤的錯題，避免一般／進階互相誤刪
+    const handleClearMistakes = async (scope = 'main') => {
         if (!auth.currentUser || !userData) return;
         try {
-            // 更新本地狀態
-            const updatedUserData = { ...userData, mistakeStats: {} };
+            const currentMistakeStats = { ...(userData.mistakeStats || {}) };
+            const remainingMistakes = Object.fromEntries(
+                Object.entries(currentMistakeStats).filter(([, data]) => {
+                    const isAdvanced = data?.source === 'advanced' && Number.isFinite(Number(data?.lesson));
+                    return scope === 'adv' ? !isAdvanced : isAdvanced;
+                })
+            );
+
+            const updatedUserData = { ...userData, mistakeStats: remainingMistakes };
             setUserData(updatedUserData);
 
-            // 更新 Firestore
             const userRef = doc(db, 'users', auth.currentUser.uid);
             await updateDoc(userRef, {
-                mistakeStats: {}
+                mistakeStats: remainingMistakes
             });
         } catch (e) {
             console.error("Failed to clear mistakes:", e);
@@ -3216,7 +3848,7 @@ const App = () => {
             case 'login': return <LoginScreen onLogin={handleLogin} />;
             case 'map': return <WorldMap onLogout={handleLogout} onSelectNode={handleNodeSelect} onViewJourney={() => { playSound('click'); setView('journey'); }} onUltimateChallenge={() => { playSound('click'); setView('challenge-setup'); }} onViewMistakeNotebook={() => { playSound('click'); setView('mistake-notebook'); }} records={userData?.levelRecords} advMeta={advMeta} activeTab={worldTab} onChangeTab={setWorldTab} />;
             case 'mistake-notebook': return <MistakeNotebook onBack={() => { playSound('click'); setView('map'); }} mistakeStats={userData?.mistakeStats} onClearMistakes={handleClearMistakes} onRemoveMistake={handleRemoveMistake} />;
-            case 'journey': return <JourneyMode onBack={() => { playSound('click'); setView('map'); }} onViewTrialLog={() => { playSound('click'); setView('trial-log'); }} records={userData?.levelRecords} />;
+            case 'journey': return <JourneyMode onBack={() => { playSound('click'); setView('map'); }} onViewTrialLog={() => { playSound('click'); setView('trial-log'); }} records={userData?.levelRecords} advMeta={advMeta} mistakeStats={userData?.mistakeStats} />;
             case 'trial-log': return <TrialLogView onBack={() => { playSound('click'); setView('journey'); }} onRetry={() => { playSound('click'); setView('challenge-setup'); }} trialHistory={userData?.trialHistory} />;
             case 'challenge-setup': return <ChallengeSetup onBack={() => { playSound('click'); setView('map'); }} onStart={handleStartChallenge} advMeta={advMeta} />;
             case 'unit-hub': return <UnitHub unitId={selectedNode?.id} onBack={() => setView('map')} onSelectCategory={(cat) => { setSelectedCategory(cat); setView('study'); }} difficulty={selectedDifficulty} onChangeDifficulty={setSelectedDifficulty} />;
