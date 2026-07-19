@@ -3,14 +3,14 @@ import {
     Sword, Shield, Scroll, Skull, Coins, Heart, Star, ChevronLeft, ChevronRight,
     Volume2, Map as MapIcon, RefreshCw, XCircle, CheckCircle,
     HelpCircle, Backpack, Gem, Flame, Skull as SkullIcon, Book, User,
-    List, Grid, ArrowLeft, Lightbulb, MessageCircle, Clock, Award, Home, Lock, LogOut, Headphones
+    List, Grid, ArrowLeft, Lightbulb, MessageCircle, Clock, Award, Home, Lock, LogOut, Headphones, CalendarDays
 } from 'lucide-react';
-import { collection, query, where, getDocs, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs, doc, getDoc, setDoc, updateDoc, arrayUnion } from 'firebase/firestore';
 import { signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut } from 'firebase/auth';
 import { db, auth, googleProvider } from './config/firebase';
 import { speakText, playSound, shuffleArray, playMusic, stopMusic, setMute, getMuteStatus, setVolume, unlockAudio } from './utils/audio';
 import TeacherDashboard from './components/TeacherDashboard.jsx';
-import { TRIVIA_CARDS, TRIVIA_CATEGORIES, TRIVIA_SOURCES } from './constants/triviaData';
+import { TRIVIA_CARDS, TRIVIA_CATEGORIES, TRIVIA_GROUPS, TRIVIA_LEGACY_ID_MAP, TRIVIA_SOURCES } from './constants/triviaData';
 
 // --- Pixel Art SVGs ---
 const PixelArt = {
@@ -444,7 +444,7 @@ const RPGBorder = ({ children, className = "", style = {} }) => (
     </div>
 );
 
-const RPGButton = ({ children, onClick, color = "primary", className = "", disabled = false, active = false, silent = false }) => {
+const RPGButton = ({ children, onClick, color = "primary", className = "", disabled = false, active = false, silent = false, type = "button" }) => {
     const colors = {
         primary: "bg-rpg-primary text-white hover:bg-red-600 shadow-pixel active:shadow-pixel-pressed",
         secondary: "bg-rpg-secondary text-white hover:bg-cyan-600 shadow-pixel active:shadow-pixel-pressed",
@@ -455,7 +455,7 @@ const RPGButton = ({ children, onClick, color = "primary", className = "", disab
     };
     const activeStyle = active ? "ring-2 ring-white ring-offset-2 ring-offset-black" : "";
     return (
-        <button onClick={(e) => { e.stopPropagation(); if (!disabled) { if (!silent) playSound('click'); onClick(e); } }} disabled={disabled} className={`border-2 border-black relative px-3 py-2 font-pixel text-xs sm:text-sm uppercase tracking-wide ${colors[color] || colors.neutral} ${activeStyle} disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-transform active:translate-y-1 ${className}`}>
+        <button type={type} onClick={(e) => { e.stopPropagation(); if (!disabled) { if (!silent) playSound('click'); onClick?.(e); } }} disabled={disabled} className={`border-2 border-black relative px-3 py-2 font-pixel text-xs sm:text-sm uppercase tracking-wide ${colors[color] || colors.neutral} ${activeStyle} disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-transform active:translate-y-1 ${className}`}>
             {children}
         </button>
     );
@@ -590,8 +590,17 @@ const TAIPEI_OFFSET_MS = 8 * 60 * 60 * 1000;
 const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 const DAY_MS = 24 * 60 * 60 * 1000;
 const ARENA_RIVAL_LIMIT = 7;
+const ARENA_RETAINED_REAL_LIMIT = 5;
 const ACTIVITY_STUDY_CARD_TARGET = 5;
 const ADVENTURE_MILESTONES = [7, 14, 30, 60, 100, 150, 200];
+const SIMULATED_ARENA_NAMES = ['林○宇', '陳○安', '王○晴', '張○恩', '李○辰', '黃○涵', '吳○樂', '劉○翔', '蔡○希', '楊○睿', '許○彤', '鄭○軒', '謝○妍', '郭○傑', '周○潔', '徐○宸'];
+const SIMULATED_PERSONAS = [
+    { id: 'steady', multiplier: [0.84, 1.04], weights: [0.12, 0.13, 0.14, 0.14, 0.15, 0.16, 0.16] },
+    { id: 'diligent', multiplier: [1.05, 1.32], weights: [0.14, 0.15, 0.16, 0.16, 0.16, 0.12, 0.11] },
+    { id: 'casual', multiplier: [0.62, 0.88], weights: [0, 0.18, 0, 0.22, 0.16, 0, 0.44] },
+    { id: 'weekend', multiplier: [0.88, 1.16], weights: [0.06, 0.07, 0.08, 0.09, 0.15, 0.27, 0.28] },
+    { id: 'burst', multiplier: [0.78, 1.22], weights: [0.05, 0, 0.35, 0, 0.1, 0, 0.5] }
+];
 
 const getTaipeiDateKey = (value = Date.now()) => {
     const date = new Date(value);
@@ -656,6 +665,12 @@ const getVisibleStreak = (tracker = {}) => {
     const gap = getDateKeyGap(tracker.lastDate, getTaipeiDateKey());
     return gap !== null && gap <= 1 ? (Number(tracker.currentStreak) || 0) : 0;
 };
+
+const countUniqueSLevels = (records = {}) => Object.values(records).filter(record => {
+    if (!record || typeof record !== 'object') return false;
+    if (record.bestGrade === 'S' || record.rank === 'S' || (Number(record.sCount) || 0) > 0) return true;
+    return Object.values(record).some(value => value && typeof value === 'object' && value.grade === 'S');
+}).length;
 
 const getTaipeiWeekRange = (weekOffset = 0) => {
     const shiftedNow = new Date(Date.now() + TAIPEI_OFFSET_MS);
@@ -737,7 +752,8 @@ const prepareEngagementOnLogin = (data = {}) => {
             login: stripTrackerFlag(loginWithFlag),
             adventure
         },
-        changed: loginWithFlag.changed || !data.engagement
+        changed: loginWithFlag.changed || !data.engagement,
+        firstLoginToday: loginWithFlag.changed
     };
 };
 
@@ -767,29 +783,144 @@ const getStableIndex = (seed, length) => {
     return Math.abs(hash) % length;
 };
 
-const buildArenaRoster = (entries, currentUserId, currentScore) => {
+const migrateTriviaProgress = (data = {}) => {
+    let changed = false;
+    const triviaCollection = Object.fromEntries(Object.entries(data.triviaCollection || {}).map(([cardId, unlock]) => {
+        const migratedId = TRIVIA_LEGACY_ID_MAP[cardId] || cardId;
+        if (migratedId !== cardId) changed = true;
+        return [migratedId, unlock];
+    }));
+    const triviaRewardClaims = Object.fromEntries(Object.entries(data.triviaRewardClaims || {}).map(([rewardKey, claim]) => {
+        const migratedCardId = TRIVIA_LEGACY_ID_MAP[claim?.cardId] || claim?.cardId;
+        if (migratedCardId !== claim?.cardId) changed = true;
+        return [rewardKey, { ...claim, cardId: migratedCardId }];
+    }));
+    return { triviaCollection, triviaRewardClaims, changed };
+};
+
+const getSeedNumber = (seed) => [...String(seed)].reduce(
+    (value, char) => Math.imul(value ^ char.charCodeAt(0), 16777619) >>> 0,
+    2166136261
+);
+
+const createSeededRandom = (seed) => {
+    let state = getSeedNumber(seed) || 1;
+    return () => {
+        state += 0x6D2B79F5;
+        let value = state;
+        value = Math.imul(value ^ (value >>> 15), value | 1);
+        value ^= value + Math.imul(value ^ (value >>> 7), value | 61);
+        return ((value ^ (value >>> 14)) >>> 0) / 4294967296;
+    };
+};
+
+const splitSimulatedDayScore = (total, count, random) => {
+    if (count <= 1) return [Math.max(0, Math.round(total))];
+    const weights = Array.from({ length: count }, () => 0.7 + random() * 0.6);
+    const weightTotal = weights.reduce((sum, value) => sum + value, 0);
+    const scores = weights.map(value => Math.max(100, Math.round((total * value / weightTotal) / 10) * 10));
+    const difference = Math.round(total) - scores.reduce((sum, value) => sum + value, 0);
+    scores[scores.length - 1] = Math.max(100, scores[scores.length - 1] + difference);
+    return scores;
+};
+
+const buildSimulatedRivals = ({ count, weekStart, referenceScore, seed }) => {
+    const random = createSeededRandom(`${seed}:${weekStart}:arena-v2`);
+    const usedNames = new Set();
+    const baseline = Math.max(Number(referenceScore) || 0, 900);
+
+    return Array.from({ length: count }, (_, index) => {
+        const persona = SIMULATED_PERSONAS[(index + Math.floor(random() * SIMULATED_PERSONAS.length)) % SIMULATED_PERSONAS.length];
+        const availableNames = SIMULATED_ARENA_NAMES.filter(name => !usedNames.has(name));
+        const namePool = availableNames.length > 0 ? availableNames : SIMULATED_ARENA_NAMES;
+        const maskedName = namePool[Math.floor(random() * namePool.length)];
+        usedNames.add(maskedName);
+        const multiplier = persona.multiplier[0] + random() * (persona.multiplier[1] - persona.multiplier[0]);
+        const targetScore = Math.max(500, Math.round((baseline * multiplier) / 10) * 10);
+        const updates = [];
+
+        persona.weights.forEach((weight, dayIndex) => {
+            if (weight <= 0) return;
+            const dayScore = targetScore * weight;
+            const sessionCount = Math.max(1, Math.min(3, Math.round(dayScore / 720)));
+            const scores = splitSimulatedDayScore(dayScore, sessionCount, random);
+            scores.forEach((score, sessionIndex) => {
+                const hour = 7 + Math.floor(random() * 16);
+                const minute = Math.floor(random() * 60);
+                updates.push({
+                    atMs: weekStart + (dayIndex * DAY_MS) + (hour * 60 + minute) * 60 * 1000 + sessionIndex,
+                    score
+                });
+            });
+        });
+
+        return {
+            id: `arena-${weekStart}-${getSeedNumber(`${seed}:${index}`).toString(36)}`,
+            maskedName,
+            persona: persona.id,
+            accuracy: Math.round(68 + random() * 27),
+            updates: updates.sort((a, b) => a.atMs - b.atMs)
+        };
+    });
+};
+
+const getSimulatedArenaEntry = (rival, asOfMs = Date.now()) => {
+    const completedUpdates = (rival.updates || []).filter(update => Number(update.atMs) <= asOfMs);
+    return {
+        id: rival.id,
+        maskedName: rival.maskedName,
+        simulated: true,
+        weekly: {
+            score: completedUpdates.reduce((sum, update) => sum + (Number(update.score) || 0), 0),
+            sessions: completedUpdates.length,
+            accuracy: Number(rival.accuracy) || 0,
+            hasAccuracy: completedUpdates.length > 0,
+            activeDays: new Set(completedUpdates.map(update => getTaipeiDateKey(update.atMs))).size,
+            correct: 0,
+            answered: 0
+        }
+    };
+};
+
+const buildArenaRoster = (entries, currentUserId, currentScore, options = {}) => {
     const others = entries.filter(entry => entry.id !== currentUserId && entry.weekly.sessions > 0);
-    const maximumReachableGap = Math.max(1000, currentScore * 0.35);
+    const matchScore = Math.max(Number(currentScore) || 0, Number(options.referenceScore) || 0);
+    const maximumReachableGap = Math.max(1000, matchScore * 0.35);
     const reachableOthers = others.filter(entry => (
         entry.weekly.score <= currentScore
         || entry.weekly.score - currentScore <= maximumReachableGap
     ));
-    const above = reachableOthers
-        .filter(entry => entry.weekly.score > currentScore && entry.weekly.score - currentScore <= maximumReachableGap)
-        .sort((a, b) => a.weekly.score - b.weekly.score);
-    const below = reachableOthers
-        .filter(entry => entry.weekly.score <= currentScore)
-        .sort((a, b) => b.weekly.score - a.weekly.score);
-    const selected = [...above.slice(0, 3), ...below.slice(0, 4)];
+    const reachableIds = new Set(reachableOthers.map(entry => entry.id));
+    const retainedIds = (options.previousRoster?.rivalIds || [])
+        .filter(id => reachableIds.has(id))
+        .slice(0, ARENA_RETAINED_REAL_LIMIT);
+    const previousRivalIds = new Set(options.previousRoster?.rivalIds || []);
+    const selected = retainedIds
+        .map(id => reachableOthers.find(entry => entry.id === id))
+        .filter(Boolean);
     if (selected.length < ARENA_RIVAL_LIMIT) {
         const selectedIds = new Set(selected.map(entry => entry.id));
-        const remaining = reachableOthers
-            .filter(entry => !selectedIds.has(entry.id))
-            .sort((a, b) => Math.abs(a.weekly.score - currentScore) - Math.abs(b.weekly.score - currentScore));
+        const sortByDistance = (a, b) => Math.abs(a.weekly.score - currentScore) - Math.abs(b.weekly.score - currentScore);
+        const freshOpponents = reachableOthers
+            .filter(entry => !selectedIds.has(entry.id) && !previousRivalIds.has(entry.id))
+            .sort(sortByDistance);
+        const returningOpponents = reachableOthers
+            .filter(entry => !selectedIds.has(entry.id) && previousRivalIds.has(entry.id))
+            .sort(sortByDistance);
+        const remaining = [...freshOpponents, ...returningOpponents];
         selected.push(...remaining.slice(0, ARENA_RIVAL_LIMIT - selected.length));
     }
+    const rivalIds = selected.slice(0, ARENA_RIVAL_LIMIT).map(entry => entry.id);
+    const simulatedRivals = buildSimulatedRivals({
+        count: Math.max(0, ARENA_RIVAL_LIMIT - rivalIds.length),
+        weekStart: options.weekStart,
+        referenceScore: options.referenceScore,
+        seed: options.seed || currentUserId
+    });
     return {
-        rivalIds: selected.slice(0, ARENA_RIVAL_LIMIT).map(entry => entry.id),
+        version: 2,
+        rivalIds,
+        simulatedRivals,
         targetScore: roundArenaTarget(currentScore),
         createdAt: new Date().toISOString()
     };
@@ -847,13 +978,48 @@ const syncWeeklyLeaderboard = async ({ userId, studentName, history }) => {
 };
 
 const TriviaAlbum = ({ onBack, userData }) => {
+    const [activeGroup, setActiveGroup] = useState('english');
     const [activeCategory, setActiveCategory] = useState('all');
     const [selectedCard, setSelectedCard] = useState(null);
+    const [showTeacherPassword, setShowTeacherPassword] = useState(false);
+    const [teacherPassword, setTeacherPassword] = useState('');
+    const [teacherError, setTeacherError] = useState(false);
+    const [teacherPreview, setTeacherPreview] = useState(false);
     const collection = userData?.triviaCollection || {};
     const ownedCount = Object.keys(collection).length;
-    const visibleCards = activeCategory === 'all'
-        ? TRIVIA_CARDS
-        : TRIVIA_CARDS.filter(card => card.category === activeCategory);
+    const groupCategories = TRIVIA_CATEGORIES.filter(category => category.group === activeGroup);
+    const visibleCards = TRIVIA_CARDS.filter(card => (
+        card.group === activeGroup && (activeCategory === 'all' || card.category === activeCategory)
+    ));
+
+    const changeGroup = groupId => {
+        setActiveGroup(groupId);
+        setActiveCategory('all');
+        setSelectedCard(null);
+    };
+
+    const openTeacherPrompt = () => {
+        if (teacherPreview) {
+            setTeacherPreview(false);
+            setSelectedCard(null);
+            return;
+        }
+        setTeacherPassword('');
+        setTeacherError(false);
+        setShowTeacherPassword(true);
+    };
+
+    const confirmTeacherPassword = event => {
+        event.preventDefault();
+        if (teacherPassword !== '1999') {
+            setTeacherError(true);
+            return;
+        }
+        setTeacherPreview(true);
+        setShowTeacherPassword(false);
+        setTeacherPassword('');
+        setTeacherError(false);
+    };
 
     return (
         <div className="flex flex-col h-full bg-[#171229] text-white">
@@ -863,12 +1029,27 @@ const TriviaAlbum = ({ onBack, userData }) => {
                     <h2 className="font-pixel text-sm text-amber-300">冷知識收藏冊</h2>
                     <p className="font-retro text-[10px] text-gray-400">KNOWLEDGE ALBUM · {ownedCount} / {TRIVIA_CARDS.length}</p>
                 </div>
-                <div className="w-9 text-center text-xl">📚</div>
+                <button onClick={openTeacherPrompt} className={`w-9 h-9 flex items-center justify-center border-2 ${teacherPreview ? 'bg-green-700 border-green-300' : 'bg-amber-950/60 border-amber-500/50'} text-xl hover:scale-105`} title={teacherPreview ? '退出教師預覽' : '教師預覽'}>📚</button>
+            </div>
+
+            {teacherPreview && (
+                <div className="bg-green-900/80 border-b-2 border-green-400 px-3 py-2 text-center font-pixel text-[9px] text-green-100">
+                    教師預覽 · 全部卡片已展開（不影響學生收藏）
+                </div>
+            )}
+
+            <div className="grid grid-cols-2 gap-2 p-2 bg-[#251b3d] border-b border-white/10">
+                {TRIVIA_GROUPS.map(group => (
+                    <button key={group.id} onClick={() => changeGroup(group.id)} className={`p-2 border-2 text-left ${activeGroup === group.id ? 'bg-amber-500 text-black border-yellow-200' : 'bg-black/30 text-gray-300 border-gray-700'}`}>
+                        <div className="font-pixel text-[10px]">{group.icon} {group.label}</div>
+                        <div className="font-retro text-[9px] mt-1 opacity-70">{group.description}</div>
+                    </button>
+                ))}
             </div>
 
             <div className="flex gap-2 overflow-x-auto p-2 bg-black/40 border-b border-white/10 flex-shrink-0">
                 <button onClick={() => setActiveCategory('all')} className={`px-3 py-2 whitespace-nowrap border-2 font-retro text-xs ${activeCategory === 'all' ? 'bg-amber-500 text-black border-yellow-200' : 'bg-black/30 text-gray-400 border-gray-700'}`}>全部</button>
-                {TRIVIA_CATEGORIES.map(category => (
+                {groupCategories.map(category => (
                     <button key={category.id} onClick={() => setActiveCategory(category.id)} className={`px-3 py-2 whitespace-nowrap border-2 font-retro text-xs ${activeCategory === category.id ? 'bg-purple-600 text-white border-purple-300' : 'bg-black/30 text-gray-400 border-gray-700'}`}>
                         {category.icon} {category.label}
                     </button>
@@ -877,21 +1058,24 @@ const TriviaAlbum = ({ onBack, userData }) => {
 
             <div className="flex-1 overflow-y-auto p-3">
                 <div className="grid grid-cols-4 gap-2 pb-6">
-                    {visibleCards.map((card, index) => {
+                    {visibleCards.map(card => {
                         const unlock = collection[card.id];
                         const category = TRIVIA_CATEGORIES.find(item => item.id === card.category);
+                        const canInspect = Boolean(unlock) || teacherPreview;
+                        const cardNumber = TRIVIA_CARDS.findIndex(item => item.id === card.id) + 1;
                         return (
                             <button
                                 key={card.id}
-                                onClick={() => unlock && setSelectedCard(card)}
-                                disabled={!unlock}
-                                className={`aspect-[3/4] border-2 p-1 flex flex-col items-center justify-center gap-1 transition-all ${unlock ? 'bg-gradient-to-b from-amber-100 to-amber-300 border-yellow-500 text-black hover:scale-105' : 'bg-black/40 border-gray-700 text-gray-600'}`}
-                                title={unlock ? card.title : `尚未解鎖 ${card.id}`}
+                                onClick={() => canInspect && setSelectedCard(card)}
+                                disabled={!canInspect}
+                                className={`aspect-[3/4] border-2 p-1 flex flex-col items-center justify-center gap-1 transition-all ${unlock ? 'bg-gradient-to-b from-amber-100 to-amber-300 border-yellow-500 text-black hover:scale-105' : teacherPreview ? 'bg-gradient-to-b from-green-950 to-purple-950 border-green-500 text-white hover:scale-105' : 'bg-black/40 border-gray-700 text-gray-600'}`}
+                                title={canInspect ? card.title : `尚未解鎖 ${card.id}`}
                             >
-                                <span className="font-pixel text-[8px]">#{String(index + 1).padStart(3, '0')}</span>
-                                <span className={`text-xl ${unlock ? '' : 'grayscale opacity-30'}`}>{unlock ? category?.icon : '❔'}</span>
-                                <span className="font-retro text-[9px] leading-tight line-clamp-2">{unlock ? card.title : '未解鎖'}</span>
+                                <span className="font-pixel text-[8px]">#{String(cardNumber).padStart(3, '0')}</span>
+                                <span className={`text-xl ${canInspect ? '' : 'grayscale opacity-30'}`}>{canInspect ? category?.icon : '❔'}</span>
+                                <span className="font-retro text-[9px] leading-tight line-clamp-2">{canInspect ? card.title : '未解鎖'}</span>
                                 {unlock?.isSpecial && <span className="font-pixel text-[7px] text-purple-700">SPECIAL</span>}
+                                {!unlock && teacherPreview && <span className="font-pixel text-[6px] text-green-300">PREVIEW</span>}
                             </button>
                         );
                     })}
@@ -901,6 +1085,7 @@ const TriviaAlbum = ({ onBack, userData }) => {
             {selectedCard && (() => {
                 const unlock = collection[selectedCard.id];
                 const category = TRIVIA_CATEGORIES.find(item => item.id === selectedCard.category);
+                const source = TRIVIA_SOURCES[selectedCard.category];
                 return (
                     <div className="absolute inset-0 z-50 bg-black/85 flex items-center justify-center p-5" onClick={() => setSelectedCard(null)}>
                         <div className={`w-full max-w-xs border-4 p-5 text-center ${unlock?.isSpecial ? 'bg-gradient-to-b from-purple-950 to-amber-950 border-yellow-400' : 'bg-[#2d2347] border-amber-500'}`} onClick={event => event.stopPropagation()}>
@@ -909,14 +1094,31 @@ const TriviaAlbum = ({ onBack, userData }) => {
                             <h3 className="font-pixel text-sm text-white mb-4 leading-relaxed">{selectedCard.title}</h3>
                             <p className="font-retro text-base text-gray-200 leading-relaxed">{selectedCard.text}</p>
                             <div className="mt-4 pt-3 border-t border-white/10 font-retro text-[10px] text-gray-400 space-y-1">
-                                <p>取得方式：{unlock?.sourceLabel || '冒險獎勵'}</p>
-                                <p>資料核對：{TRIVIA_SOURCES[selectedCard.category]}</p>
+                                <p>取得方式：{unlock?.sourceLabel || (teacherPreview ? '教師預覽（尚未解鎖）' : '冒險獎勵')}</p>
+                                <p>資料核對：{source?.label || '教學資料'}</p>
+                                {source?.url && <a href={source.url} target="_blank" rel="noreferrer" className="inline-block text-cyan-300 underline">查看核對來源</a>}
                             </div>
                             <RPGButton onClick={() => setSelectedCard(null)} color="accent" className="w-full mt-4">收回收藏冊</RPGButton>
                         </div>
                     </div>
                 );
             })()}
+
+            {showTeacherPassword && (
+                <div className="absolute inset-0 z-[70] bg-black/85 flex items-center justify-center p-5" onClick={() => setShowTeacherPassword(false)}>
+                    <form onSubmit={confirmTeacherPassword} className="w-full max-w-xs bg-[#2d2347] border-4 border-amber-500 p-5 text-center" onClick={event => event.stopPropagation()}>
+                        <div className="text-4xl mb-3">📚</div>
+                        <h3 className="font-pixel text-xs text-amber-300">教師預覽</h3>
+                        <p className="font-retro text-xs text-gray-300 mt-2">輸入教師密碼即可查看全部 100 張卡片</p>
+                        <input autoFocus type="password" inputMode="numeric" maxLength={4} value={teacherPassword} onChange={event => { setTeacherPassword(event.target.value); setTeacherError(false); }} className="w-full mt-4 bg-black/50 border-2 border-gray-500 p-3 text-center font-pixel text-lg tracking-[0.4em] text-white" aria-label="教師預覽密碼" />
+                        {teacherError && <p className="font-retro text-xs text-red-300 mt-2">密碼不正確</p>}
+                        <div className="grid grid-cols-2 gap-2 mt-4">
+                            <RPGButton type="button" onClick={() => setShowTeacherPassword(false)} color="dark">取消</RPGButton>
+                            <RPGButton type="submit" color="success">確認</RPGButton>
+                        </div>
+                    </form>
+                </div>
+            )}
         </div>
     );
 };
@@ -971,10 +1173,20 @@ const WeeklyReport = ({ onBack, onOpenAlbum, currentUserId, userData, onSaveAren
     const entriesWithSelf = [selfEntry, ...publicEntries.filter(student => student.id !== currentUserId)];
     const rosterKey = String(range.startMs);
     const storedRoster = userData?.weeklyArenaRosters?.[rosterKey];
-    const proposedRoster = buildArenaRoster(entriesWithSelf, currentUserId, currentStats.score);
-    const activeRoster = storedRoster || proposedRoster;
+    const priorRoster = userData?.weeklyArenaRosters?.[String(range.startMs - WEEK_MS)];
+    const proposedRoster = buildArenaRoster(entriesWithSelf, currentUserId, currentStats.score, {
+        previousRoster: storedRoster || priorRoster,
+        weekStart: range.startMs,
+        referenceScore: Math.max(currentStats.score, previousStats.score),
+        seed: `${currentUserId}:${range.startMs}`
+    });
+    const storedRosterIsCurrent = storedRoster?.version === 2 && Array.isArray(storedRoster.simulatedRivals);
+    const activeRoster = storedRosterIsCurrent ? storedRoster : proposedRoster;
     const rivalIdSet = new Set(activeRoster.rivalIds || []);
-    const arenaEntries = [selfEntry, ...publicEntries.filter(student => rivalIdSet.has(student.id))];
+    const simulatedEntries = (activeRoster.simulatedRivals || []).map(rival => (
+        getSimulatedArenaEntry(rival, Math.min(Date.now(), range.endMs - 1))
+    ));
+    const arenaEntries = [selfEntry, ...publicEntries.filter(student => rivalIdSet.has(student.id)), ...simulatedEntries];
     const leaderboard = [...arenaEntries].sort((a, b) => (
         b.weekly.score - a.weekly.score ||
         b.weekly.accuracy - a.weekly.accuracy ||
@@ -1021,10 +1233,10 @@ const WeeklyReport = ({ onBack, onOpenAlbum, currentUserId, userData, onSaveAren
                 : null;
 
     useEffect(() => {
-        if (period !== 'current' || isLoading || loadError || storedRoster || !onSaveArenaRoster || rosterSaveRequestedRef.current) return;
+        if (period !== 'current' || isLoading || loadError || storedRosterIsCurrent || !onSaveArenaRoster || rosterSaveRequestedRef.current) return;
         rosterSaveRequestedRef.current = true;
         onSaveArenaRoster(range.startMs, proposedRoster);
-    }, [period, isLoading, loadError, storedRoster, onSaveArenaRoster, range.startMs, proposedRoster]);
+    }, [period, isLoading, loadError, storedRosterIsCurrent, onSaveArenaRoster, range.startMs, proposedRoster]);
 
     const drawTrivia = async () => {
         if (!reward || isClaiming) return;
@@ -1111,7 +1323,8 @@ const WeeklyReport = ({ onBack, onOpenAlbum, currentUserId, userData, onSaveAren
                     <div className="flex items-center justify-between p-3 border-b border-yellow-500/30">
                         <div>
                             <h3 className="font-pixel text-xs text-yellow-300">英雄競技場</h3>
-                            <p className="font-retro text-[9px] text-gray-500 mt-1">依近期冒險進度安排真實同級對手</p>
+                            <p className="font-retro text-[9px] text-gray-400 mt-1">系統會依照近期冒險進度，安排實力接近的對手。</p>
+                            <p className="font-retro text-[8px] text-gray-600 mt-0.5">部分競技資料可能由系統產生</p>
                         </div>
                         <span className="font-retro text-[10px] text-gray-400">本週名單固定</span>
                     </div>
@@ -1143,7 +1356,7 @@ const WeeklyReport = ({ onBack, onOpenAlbum, currentUserId, userData, onSaveAren
                                     </>
                                 ) : nextOpponent ? (
                                     <>
-                                        <div className="font-pixel text-[10px] text-purple-300">下一位真實對手：{nextOpponent.maskedName}</div>
+                                        <div className="font-pixel text-[10px] text-purple-300">下一位對手：{nextOpponent.maskedName}</div>
                                         <p className="font-retro text-xs text-gray-300 mt-1">再獲得 {Math.max(0, nextOpponent.weekly.score - currentStats.score + 1)} 分即可超越</p>
                                     </>
                                 ) : null}
@@ -1166,7 +1379,7 @@ const WeeklyReport = ({ onBack, onOpenAlbum, currentUserId, userData, onSaveAren
                 <section className={`border-4 p-4 text-center ${reward ? 'border-green-400/60 bg-green-950/40' : 'border-gray-600 bg-black/30'}`}>
                     {revealedFact ? (
                         <div className="animate-in fade-in">
-                            <div className="text-4xl mb-2">{revealedFact.icon}</div>
+                            <div className="text-4xl mb-2">{TRIVIA_CATEGORIES.find(category => category.id === revealedFact.category)?.icon || '✨'}</div>
                             <h3 className="font-pixel text-xs text-green-300 mb-2">{revealedFact.title}</h3>
                             <p className="font-retro text-sm text-gray-200 leading-relaxed">{revealedFact.text}</p>
                             <p className="font-retro text-[10px] text-gray-500 mt-3">已永久收藏 · 目前 {collectionCount} / {TRIVIA_CARDS.length}</p>
@@ -1191,7 +1404,90 @@ const WeeklyReport = ({ onBack, onOpenAlbum, currentUserId, userData, onSaveAren
     );
 };
 
-const WorldMap = ({ onSelectNode, onViewJourney, onViewWeeklyReport, onUltimateChallenge, onViewMistakeNotebook, onLogout, records = {}, advMeta = null, activeTab = 'main', onChangeTab }) => {
+const LoginStampModal = ({ data, onClose }) => {
+    if (!data) return null;
+    const dateLabel = new Intl.DateTimeFormat('zh-TW', {
+        timeZone: 'Asia/Taipei', month: 'long', day: 'numeric', weekday: 'short'
+    }).format(new Date());
+    return (
+        <div className="absolute inset-0 z-[80] bg-black/80 flex items-center justify-center p-5" onClick={onClose}>
+            <div className="login-stamp-card w-full max-w-xs border-4 border-cyan-300 bg-gradient-to-b from-[#fff8dc] to-[#ead7a4] text-[#2d2347] p-5 text-center shadow-2xl" onClick={event => event.stopPropagation()}>
+                <div className="mx-auto w-20 border-4 border-[#2d2347] bg-white shadow-lg">
+                    <div className="bg-red-600 text-white font-pixel text-[8px] py-1">TODAY</div>
+                    <div className="font-pixel text-2xl py-3">{new Intl.DateTimeFormat('zh-TW', { timeZone: 'Asia/Taipei', day: '2-digit' }).format(new Date())}</div>
+                </div>
+                <p className="font-retro text-sm mt-2">{dateLabel}</p>
+                <div className="login-stamp-mark mx-auto my-4 w-28 h-28 rounded-full border-[6px] border-red-600 text-red-600 flex flex-col items-center justify-center -rotate-12 bg-white/40">
+                    <span className="font-pixel text-[10px]">CHECK IN</span>
+                    <span className="font-retro text-xl font-bold mt-1">打卡成功</span>
+                </div>
+                <h3 className="font-pixel text-sm text-purple-800">今日打卡成功！</h3>
+                <div className="grid grid-cols-2 gap-2 mt-4">
+                    <div className="border-2 border-purple-700 bg-white/60 p-2"><div className="font-pixel text-xl">{data.currentStreak}</div><div className="font-retro text-xs">連續登入天數</div></div>
+                    <div className="border-2 border-amber-700 bg-white/60 p-2"><div className="font-pixel text-xl">{data.totalDays}</div><div className="font-retro text-xs">累積登入天數</div></div>
+                </div>
+                <button onClick={onClose} className="mt-4 font-retro text-sm underline text-purple-800">收下印章，開始冒險</button>
+            </div>
+        </div>
+    );
+};
+
+const AchievementHall = ({ onBack, userData }) => {
+    const stats = {
+        login: getVisibleStreak(userData?.engagement?.login),
+        adventure: Number(userData?.engagement?.adventure?.totalDays) || 0,
+        sRanks: countUniqueSLevels(userData?.levelRecords || {}),
+        words: new Set(userData?.discoveredWordIds || []).size,
+        trivia: Object.keys(userData?.triviaCollection || {}).length
+    };
+    const sections = [
+        { id: 'login', title: '連續登入', icon: '📅', unit: '天', milestones: [3, 7, 14, 30, 60, 100, 365], special: [7, 30, 100, 365] },
+        { id: 'adventure', title: '累積冒險', icon: '⚔️', unit: '天', milestones: [7, 14, 30, 60, 100, 150, 200], special: [30, 100, 200] },
+        { id: 'sRanks', title: 'S 級關卡', icon: '🏆', unit: '關', milestones: [1, 5, 10, 25, 50, 100], special: [25, 50, 100] },
+        { id: 'words', title: '解鎖單字', icon: '🔤', unit: '個', milestones: [50, 100, 250, 500, 1000], special: [250, 500, 1000] },
+        { id: 'trivia', title: '冷知識收藏', icon: '📚', unit: '張', milestones: [10, 25, 50, 75, 100], special: [50, 100] }
+    ];
+
+    return (
+        <div className="flex flex-col h-full bg-[#171229] text-white">
+            <div className="flex items-center justify-between p-3 border-b-4 border-cyan-500/60 bg-black/50">
+                <RPGButton onClick={onBack} color="dark" className="px-2"><ArrowLeft size={16} /></RPGButton>
+                <div className="text-center"><h2 className="font-pixel text-sm text-cyan-300">英雄徽章館</h2><p className="font-retro text-[10px] text-gray-400">HERO BADGE HALL</p></div>
+                <CalendarDays size={23} className="text-cyan-300" />
+            </div>
+            <div className="flex-1 overflow-y-auto p-3 space-y-3">
+                <p className="font-retro text-xs text-gray-300 border-2 border-cyan-500/30 bg-cyan-950/30 p-3">完成冒險、取得 S 級與解鎖收藏，都會在這裡留下專屬徽章。</p>
+                {sections.map(section => {
+                    const current = stats[section.id];
+                    const next = section.milestones.find(value => value > current);
+                    return (
+                        <section key={section.id} className="border-2 border-white/15 bg-black/30 p-3">
+                            <div className="flex justify-between items-center mb-3">
+                                <div><h3 className="font-pixel text-[11px] text-yellow-300">{section.icon} {section.title}</h3><p className="font-retro text-[10px] text-gray-500 mt-1">目前 {current} {section.unit}{next ? ` · 下一個 ${next}` : ' · 全部完成'}</p></div>
+                                <span className="font-pixel text-xl text-cyan-300">{current}</span>
+                            </div>
+                            <div className="grid grid-cols-4 gap-2">
+                                {section.milestones.map(milestone => {
+                                    const unlocked = current >= milestone;
+                                    const isSpecial = section.special.includes(milestone);
+                                    return (
+                                        <div key={milestone} className={`aspect-square border-2 flex flex-col items-center justify-center text-center ${unlocked ? isSpecial ? 'achievement-special border-yellow-300 text-yellow-100' : 'bg-purple-800/70 border-purple-300 text-white' : 'bg-black/50 border-gray-700 text-gray-600'}`} title={`${section.title} ${milestone} ${section.unit}`}>
+                                            <span className={`text-xl ${unlocked ? '' : 'grayscale opacity-30'}`}>{unlocked ? section.icon : '🔒'}</span>
+                                            <span className="font-pixel text-[8px] mt-1">{milestone}</span>
+                                            {isSpecial && <span className="font-pixel text-[5px] mt-0.5">SPECIAL</span>}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </section>
+                    );
+                })}
+            </div>
+        </div>
+    );
+};
+
+const WorldMap = ({ onSelectNode, onViewJourney, onViewWeeklyReport, onViewAchievements, onUltimateChallenge, onViewMistakeNotebook, onLogout, records = {}, advMeta = null, activeTab = 'main', onChangeTab }) => {
     const [showGuide, setShowGuide] = useState(false);
     const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
@@ -1209,6 +1505,9 @@ const WorldMap = ({ onSelectNode, onViewJourney, onViewWeeklyReport, onUltimateC
                 </div>
                 <h2 className="font-pixel text-white text-center flex items-center justify-center gap-2"><MapIcon size={16} /> WORLD MAP</h2>
                 <div className="flex items-center gap-1">
+                    <button onClick={onViewAchievements} className="text-cyan-300 hover:text-white p-1" title="英雄徽章館">
+                        <CalendarDays size={21} />
+                    </button>
                     <button onClick={onViewWeeklyReport} className="text-yellow-400 hover:text-yellow-200 p-1" title="每週冒險戰報">
                         <Award size={21} />
                     </button>
@@ -2839,7 +3138,7 @@ const AdvLessonHub = ({ node, advMeta, record, onBack, onStudy, onStartQuiz }) =
     );
 };
 
-const StudyMode = ({ unitId, categoryId, data, lessonTitle, onBack, onStartQuiz, onStudyActivity }) => {
+const StudyMode = ({ unitId, categoryId, data, lessonTitle, onBack, onStartQuiz, onStudyActivity, onDiscoverWord }) => {
     const [viewMode, setViewMode] = useState('card');
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isFlipped, setIsFlipped] = useState(false);
@@ -2847,6 +3146,7 @@ const StudyMode = ({ unitId, categoryId, data, lessonTitle, onBack, onStartQuiz,
     const isAdvanced = String(unitId).startsWith('adv_');
     const [visitedCards, setVisitedCards] = useState(() => new Set(studyData.length > 0 ? [0] : []));
     const activityReportedRef = useRef(false);
+    const discoveredReportedRef = useRef(new Set());
     const activityTarget = Math.min(ACTIVITY_STUDY_CARD_TARGET, studyData.length);
 
     useEffect(() => {
@@ -2864,6 +3164,16 @@ const StudyMode = ({ unitId, categoryId, data, lessonTitle, onBack, onStartQuiz,
         activityReportedRef.current = true;
         onStudyActivity?.();
     }, [activityTarget, visitedCards, onStudyActivity]);
+
+    useEffect(() => {
+        if (viewMode !== 'card') return;
+        const item = studyData[currentIndex];
+        if (!item?.word) return;
+        const wordKey = `${unitId}:${categoryId}:${item.id || item.word}`;
+        if (discoveredReportedRef.current.has(wordKey)) return;
+        discoveredReportedRef.current.add(wordKey);
+        onDiscoverWord?.(wordKey);
+    }, [currentIndex, viewMode, studyData, unitId, categoryId, onDiscoverWord]);
 
     const catTitles = { vocab: 'TREASURE', vocab_a: 'TREASURE A', vocab_b: 'TREASURE B', collocation: 'ARMORY', polysemy: 'ALCHEMY', sentences: 'SCROLLS' };
     const currentItem = studyData[currentIndex];
@@ -3544,6 +3854,8 @@ const App = () => {
     const [currentUser, setCurrentUser] = useState(null);
     const [isMuted, setIsMuted] = useState(false); // UI state for mute button
     const [volume, setVolumeState] = useState(50); // Volume state (0-100)
+    const [loginStampData, setLoginStampData] = useState(null);
+    const discoveredWordSaveRef = useRef(new Set());
 
     useEffect(() => { document.body.classList.add('loaded'); }, []);
 
@@ -3607,6 +3919,8 @@ const App = () => {
             setUserName('');
             setUserData(null);
             setCurrentUser(null);
+            setLoginStampData(null);
+            discoveredWordSaveRef.current = new Set();
             setView('login');
         }).catch(err => {
             console.error("Logout error", err);
@@ -3628,11 +3942,18 @@ const App = () => {
                 trialHistory: [],
                 triviaCollection: {},
                 triviaRewardClaims: {},
-                weeklyArenaRosters: {}
+                weeklyArenaRosters: {},
+                discoveredWordIds: []
             };
-            const engagementResult = prepareEngagementOnLogin(baseData);
-            const hydratedData = {
+            const triviaMigration = migrateTriviaProgress(baseData);
+            const migratedBaseData = {
                 ...baseData,
+                triviaCollection: triviaMigration.triviaCollection,
+                triviaRewardClaims: triviaMigration.triviaRewardClaims
+            };
+            const engagementResult = prepareEngagementOnLogin(migratedBaseData);
+            const hydratedData = {
+                ...migratedBaseData,
                 engagement: engagementResult.engagement,
                 photoURL: user.photoURL || null,
                 email: user.email
@@ -3642,10 +3963,21 @@ const App = () => {
                 photoURL: hydratedData.photoURL,
                 email: hydratedData.email,
                 engagement: hydratedData.engagement,
-                ...(!userSnap.exists() ? baseData : {})
+                ...(triviaMigration.changed ? {
+                    triviaCollection: triviaMigration.triviaCollection,
+                    triviaRewardClaims: triviaMigration.triviaRewardClaims
+                } : {}),
+                ...(!userSnap.exists() ? migratedBaseData : {})
             }, { merge: true });
 
             setUserData(hydratedData);
+            discoveredWordSaveRef.current = new Set(hydratedData.discoveredWordIds || []);
+            if (engagementResult.firstLoginToday) {
+                setLoginStampData({
+                    currentStreak: hydratedData.engagement.login.currentStreak || 1,
+                    totalDays: hydratedData.engagement.login.totalDays || 1
+                });
+            }
             setView('map');
         } catch (e) {
             console.error("Error loading user data:", e);
@@ -3705,10 +4037,28 @@ const App = () => {
         }
     };
 
+    const handleDiscoverWord = async wordKey => {
+        if (!auth.currentUser || !wordKey || discoveredWordSaveRef.current.has(wordKey)) return;
+        discoveredWordSaveRef.current.add(wordKey);
+        setUserData(previous => previous ? {
+            ...previous,
+            discoveredWordIds: [...new Set([...(previous.discoveredWordIds || []), wordKey])]
+        } : previous);
+        try {
+            await updateDoc(doc(db, 'users', auth.currentUser.uid), {
+                discoveredWordIds: arrayUnion(wordKey)
+            });
+        } catch (error) {
+            discoveredWordSaveRef.current.delete(wordKey);
+            console.error('單字解鎖紀錄保存失敗:', error);
+        }
+    };
+
     const handleSaveArenaRoster = async (weekStart, roster) => {
         if (!auth.currentUser || !userData) return;
         const rosterKey = String(weekStart);
-        if (userData.weeklyArenaRosters?.[rosterKey]) return;
+        const existingRoster = userData.weeklyArenaRosters?.[rosterKey];
+        if (existingRoster?.version >= roster?.version) return;
         const nextRosters = {
             ...(userData.weeklyArenaRosters || {}),
             [rosterKey]: roster
@@ -4323,7 +4673,7 @@ const App = () => {
 
         switch (view) {
             case 'login': return <LoginScreen onLogin={handleLogin} />;
-            case 'map': return <WorldMap onLogout={handleLogout} onSelectNode={handleNodeSelect} onViewJourney={() => { playSound('click'); setView('journey'); }} onViewWeeklyReport={() => { playSound('click'); setView('weekly-report'); }} onUltimateChallenge={() => { playSound('click'); setView('challenge-setup'); }} onViewMistakeNotebook={() => { playSound('click'); setView('mistake-notebook'); }} records={userData?.levelRecords} advMeta={advMeta} activeTab={worldTab} onChangeTab={setWorldTab} />;
+            case 'map': return <WorldMap onLogout={handleLogout} onSelectNode={handleNodeSelect} onViewJourney={() => { playSound('click'); setView('journey'); }} onViewWeeklyReport={() => { playSound('click'); setView('weekly-report'); }} onViewAchievements={() => { playSound('click'); setView('achievement-hall'); }} onUltimateChallenge={() => { playSound('click'); setView('challenge-setup'); }} onViewMistakeNotebook={() => { playSound('click'); setView('mistake-notebook'); }} records={userData?.levelRecords} advMeta={advMeta} activeTab={worldTab} onChangeTab={setWorldTab} />;
             case 'weekly-report': return <WeeklyReport
                 onBack={() => { playSound('click'); setView('map'); }}
                 onOpenAlbum={() => { playSound('click'); setView('trivia-album'); }}
@@ -4333,6 +4683,7 @@ const App = () => {
                 onClaimTrivia={handleClaimTrivia}
             />;
             case 'trivia-album': return <TriviaAlbum onBack={() => { playSound('click'); setView('weekly-report'); }} userData={userData} />;
+            case 'achievement-hall': return <AchievementHall onBack={() => { playSound('click'); setView('map'); }} userData={userData} />;
             case 'mistake-notebook': return <MistakeNotebook onBack={() => { playSound('click'); setView('map'); }} mistakeStats={userData?.mistakeStats} onClearMistakes={handleClearMistakes} onRemoveMistake={handleRemoveMistake} />;
             case 'journey': return <JourneyMode onBack={() => { playSound('click'); setView('map'); }} onViewTrialLog={() => { playSound('click'); setView('trial-log'); }} records={userData?.levelRecords} advMeta={advMeta} mistakeStats={userData?.mistakeStats} />;
             case 'trial-log': return <TrialLogView onBack={() => { playSound('click'); setView('journey'); }} onRetry={() => { playSound('click'); setView('challenge-setup'); }} trialHistory={userData?.trialHistory} />;
@@ -4354,6 +4705,7 @@ const App = () => {
                 onBack={() => setView(selectedNode?.type === 'adv' ? 'map' : 'unit-hub')}
                 onStartQuiz={handleForceQuiz}
                 onStudyActivity={handleStudyActivity}
+                onDiscoverWord={handleDiscoverWord}
             />;
             case 'quiz':
             case 'challenge-quiz':
@@ -4371,6 +4723,8 @@ const App = () => {
                 <div className="bg-rpg-bg w-full aspect-[9/16] sm:aspect-[3/4] rounded-lg border-4 border-black overflow-hidden relative shadow-inner">
                     <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] z-10 pointer-events-none bg-[length:100%_2px,3px_100%]"></div>
                     <div className="relative z-0 h-full overflow-hidden">{renderContent()}</div>
+
+                    <LoginStampModal data={loginStampData} onClose={() => setLoginStampData(null)} />
 
                     {/* 老師後台面板 - 嵌入手機螢幕 */}
                     {showTeacherDashboard && (
