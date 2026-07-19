@@ -638,6 +638,7 @@ const getWeeklyStats = (history = [], range) => {
         answered,
         correct,
         accuracy,
+        hasAccuracy: answered > 0 || accuracyValues.length > 0,
         activeDays,
         score: records.reduce((sum, record) => sum + (Number(record.score) || 0), 0)
     };
@@ -655,6 +656,24 @@ const maskStudentName = (name = '神秘勇者') => {
     if (trimmed.length <= 1) return `${trimmed || '勇'}○`;
     if (trimmed.length === 2) return `${trimmed[0]}○`;
     return `${trimmed[0]}${'○'.repeat(Math.max(1, trimmed.length - 2))}${trimmed[trimmed.length - 1]}`;
+};
+
+const syncWeeklyLeaderboard = async ({ userId, studentName, history }) => {
+    if (!userId) return;
+    const range = getTaipeiWeekRange(0);
+    const weekly = getWeeklyStats(history || [], range);
+    if (weekly.sessions === 0) return;
+    await setDoc(doc(db, 'weeklyLeaderboard', `${range.startMs}_${userId}`), {
+        userId,
+        weekStart: range.startMs,
+        maskedName: maskStudentName(studentName),
+        score: weekly.score,
+        sessions: weekly.sessions,
+        accuracy: weekly.hasAccuracy ? weekly.accuracy : null,
+        hasAccuracy: weekly.hasAccuracy,
+        activeDays: weekly.activeDays,
+        updatedAt: new Date().toISOString()
+    }, { merge: true });
 };
 
 const WEEKLY_TRIVIA = [
@@ -676,7 +695,10 @@ const WeeklyReport = ({ onBack, currentUserId, userData }) => {
 
     useEffect(() => {
         let active = true;
-        getDocs(collection(db, 'users'))
+        setIsLoading(true);
+        setLoadError(false);
+        const leaderboardQuery = query(collection(db, 'weeklyLeaderboard'), where('weekStart', '==', range.startMs));
+        getDocs(leaderboardQuery)
             .then(snapshot => {
                 if (!active) return;
                 const loaded = snapshot.docs.map(studentDoc => ({ id: studentDoc.id, ...studentDoc.data() }));
@@ -688,32 +710,50 @@ const WeeklyReport = ({ onBack, currentUserId, userData }) => {
             })
             .finally(() => { if (active) setIsLoading(false); });
         return () => { active = false; };
-    }, []);
+    }, [range.startMs]);
 
     useEffect(() => { setRevealedFact(null); }, [period]);
 
-    const classEntries = students.map(student => ({
-        ...student,
-        weekly: getWeeklyStats(student.trialHistory || [], range)
+    const currentStats = getWeeklyStats(userData?.trialHistory || [], range);
+    const publicEntries = students.map(student => ({
+        id: student.userId || student.id,
+        maskedName: student.maskedName || '神秘勇者',
+        weekly: {
+            score: Number(student.score) || 0,
+            sessions: Number(student.sessions) || 0,
+            accuracy: Number(student.accuracy) || 0,
+            hasAccuracy: Boolean(student.hasAccuracy),
+            activeDays: Number(student.activeDays) || 0,
+            correct: 0,
+            answered: 0
+        }
     }));
-    const remoteCurrent = classEntries.find(student => student.id === currentUserId);
-    const currentStats = getWeeklyStats(userData?.trialHistory || remoteCurrent?.trialHistory || [], range);
+    const hasCurrentEntry = publicEntries.some(student => student.id === currentUserId);
+    const classEntries = currentStats.sessions > 0
+        ? (hasCurrentEntry
+            ? publicEntries.map(student => student.id === currentUserId ? { ...student, weekly: currentStats } : student)
+            : [...publicEntries, { id: currentUserId, maskedName: maskStudentName(userData?.studentName), weekly: currentStats }])
+        : publicEntries;
     const activeStudents = classEntries.filter(student => student.weekly.sessions > 0);
     const leaderboard = [...activeStudents].sort((a, b) => (
-        b.weekly.correct - a.weekly.correct ||
+        b.weekly.score - a.weekly.score ||
         b.weekly.accuracy - a.weekly.accuracy ||
         b.weekly.sessions - a.weekly.sessions
     ));
     const currentRank = leaderboard.findIndex(student => student.id === currentUserId) + 1;
+    const studentsWithAccuracy = activeStudents.filter(student => student.weekly.hasAccuracy);
     const classAverage = activeStudents.length > 0 ? {
+        score: activeStudents.reduce((sum, student) => sum + student.weekly.score, 0) / activeStudents.length,
         correct: activeStudents.reduce((sum, student) => sum + student.weekly.correct, 0) / activeStudents.length,
         sessions: activeStudents.reduce((sum, student) => sum + student.weekly.sessions, 0) / activeStudents.length,
-        accuracy: activeStudents.reduce((sum, student) => sum + student.weekly.accuracy, 0) / activeStudents.length
-    } : { correct: 0, sessions: 0, accuracy: 0 };
+        accuracy: studentsWithAccuracy.length > 0
+            ? studentsWithAccuracy.reduce((sum, student) => sum + student.weekly.accuracy, 0) / studentsWithAccuracy.length
+            : null
+    } : { score: 0, correct: 0, sessions: 0, accuracy: null };
     const comparisonRows = [
-        { label: '答對題數', mine: currentStats.correct, average: classAverage.correct, suffix: ' 題' },
+        { label: '累積戰力', mine: currentStats.score, average: classAverage.score, suffix: ' 分' },
         { label: '挑戰場次', mine: currentStats.sessions, average: classAverage.sessions, suffix: ' 場' },
-        { label: '答題準確率', mine: currentStats.accuracy, average: classAverage.accuracy, suffix: '%' }
+        { label: '答題準確率', mine: currentStats.hasAccuracy ? currentStats.accuracy : null, average: classAverage.accuracy, suffix: '%' }
     ];
     const visibleLeaderboard = leaderboard.slice(0, 5);
     const currentOutsideTopFive = currentRank > 5 ? leaderboard[currentRank - 1] : null;
@@ -751,17 +791,17 @@ const WeeklyReport = ({ onBack, currentUserId, userData }) => {
                             <p className="font-retro text-[11px] text-gray-300 mt-1">{formatWeekRange(range)} · 週一至週日</p>
                         </div>
                         <div className="text-right">
-                            <div className="font-pixel text-3xl text-yellow-300">{currentStats.correct}</div>
-                            <div className="font-retro text-[10px] text-yellow-100">答對題數</div>
+                            <div className="font-pixel text-3xl text-yellow-300">{currentStats.score}</div>
+                            <div className="font-retro text-[10px] text-yellow-100">累積戰力</div>
                         </div>
                     </div>
                     <div className="grid grid-cols-3 gap-2 mt-4 text-center">
                         <div className="bg-black/35 border border-white/10 p-2"><div className="font-pixel text-lg text-cyan-300">{currentStats.sessions}</div><div className="font-retro text-[10px] text-gray-300">挑戰場次</div></div>
-                        <div className="bg-black/35 border border-white/10 p-2"><div className="font-pixel text-lg text-green-300">{Math.round(currentStats.accuracy)}%</div><div className="font-retro text-[10px] text-gray-300">準確率</div></div>
+                        <div className="bg-black/35 border border-white/10 p-2"><div className="font-pixel text-lg text-green-300">{currentStats.hasAccuracy ? `${Math.round(currentStats.accuracy)}%` : '—'}</div><div className="font-retro text-[10px] text-gray-300">準確率</div></div>
                         <div className="bg-black/35 border border-white/10 p-2"><div className="font-pixel text-lg text-purple-300">{currentStats.activeDays}</div><div className="font-retro text-[10px] text-gray-300">活躍天數</div></div>
                     </div>
                     <p className="font-retro text-[10px] text-gray-400 mt-3">
-                        {period === 'current' ? '每週一 00:00 重新累積，週日 23:59 結算。' : '排行依答對題數計算；同分時依準確率與挑戰場次排序。'}
+                        {period === 'current' ? '每週一 00:00 重新累積，週日 23:59 結算。' : '排行依每場分數加總；同分時依準確率與挑戰場次排序。'}
                     </p>
                 </section>
 
@@ -772,16 +812,19 @@ const WeeklyReport = ({ onBack, currentUserId, userData }) => {
                     </div>
                     <div className="space-y-3">
                         {comparisonRows.map(row => {
-                            const scale = Math.max(row.mine, row.average, 1);
+                            const mineValue = row.mine ?? 0;
+                            const averageValue = row.average ?? 0;
+                            const scale = Math.max(mineValue, averageValue, 1);
+                            const formatValue = value => value === null ? '—' : `${Math.round(value)}${row.suffix}`;
                             return (
                                 <div key={row.label}>
                                     <div className="flex justify-between font-retro text-[11px] mb-1">
                                         <span>{row.label}</span>
-                                        <span className="text-cyan-300">我 {Math.round(row.mine)}{row.suffix} · 班平均 {Math.round(row.average)}{row.suffix}</span>
+                                        <span className="text-cyan-300">我 {formatValue(row.mine)} · 班平均 {formatValue(row.average)}</span>
                                     </div>
                                     <div className="space-y-1">
-                                        <div className="h-2 bg-black/70"><div className="h-full bg-cyan-400" style={{ width: `${(row.mine / scale) * 100}%` }}></div></div>
-                                        <div className="h-1 bg-black/70"><div className="h-full bg-purple-400" style={{ width: `${(row.average / scale) * 100}%` }}></div></div>
+                                        <div className="h-2 bg-black/70"><div className="h-full bg-cyan-400" style={{ width: `${(mineValue / scale) * 100}%` }}></div></div>
+                                        <div className="h-1 bg-black/70"><div className="h-full bg-purple-400" style={{ width: `${(averageValue / scale) * 100}%` }}></div></div>
                                     </div>
                                 </div>
                             );
@@ -807,16 +850,16 @@ const WeeklyReport = ({ onBack, currentUserId, userData }) => {
                                 return (
                                     <div key={student.id} className={`grid grid-cols-[2rem_1fr_auto] items-center gap-2 px-3 py-2 border-b border-white/10 ${isMe ? 'bg-cyan-900/40' : ''}`}>
                                         <span className={`font-pixel text-sm ${index < 3 ? 'text-yellow-300' : 'text-gray-400'}`}>#{index + 1}</span>
-                                        <div className="min-w-0"><div className="font-retro text-sm truncate">{isMe ? `${student.studentName || userData?.studentName || '我'}（我）` : maskStudentName(student.studentName)}</div><div className="font-retro text-[9px] text-gray-500">準確率 {Math.round(student.weekly.accuracy)}%</div></div>
-                                        <span className="font-pixel text-xs text-yellow-300">{student.weekly.correct} 題</span>
+                                        <div className="min-w-0"><div className="font-retro text-sm truncate">{isMe ? `${userData?.studentName || '我'}（我）` : student.maskedName}</div><div className="font-retro text-[9px] text-gray-500">{student.weekly.hasAccuracy ? `準確率 ${Math.round(student.weekly.accuracy)}%` : `${student.weekly.sessions} 場挑戰`}</div></div>
+                                        <span className="font-pixel text-xs text-yellow-300">{student.weekly.score} 分</span>
                                     </div>
                                 );
                             })}
                             {currentOutsideTopFive && (
                                 <div className="grid grid-cols-[2rem_1fr_auto] items-center gap-2 px-3 py-2 bg-cyan-900/40 border-t-2 border-dashed border-cyan-500/50">
                                     <span className="font-pixel text-sm text-cyan-300">#{currentRank}</span>
-                                    <span className="font-retro text-sm">{currentOutsideTopFive.studentName || userData?.studentName || '我'}（我）</span>
-                                    <span className="font-pixel text-xs text-yellow-300">{currentOutsideTopFive.weekly.correct} 題</span>
+                                    <span className="font-retro text-sm">{userData?.studentName || '我'}（我）</span>
+                                    <span className="font-pixel text-xs text-yellow-300">{currentOutsideTopFive.weekly.score} 分</span>
                                 </div>
                             )}
                         </div>
@@ -3620,6 +3663,17 @@ const App = () => {
             }
         } catch (e) {
             console.error("儲存失敗:", e);
+        }
+
+        try {
+            await syncWeeklyLeaderboard({
+                userId: auth.currentUser.uid,
+                studentName: updatedUserData.studentName || userName,
+                history: updatedUserData.trialHistory || []
+            });
+        } catch (e) {
+            // 公開排行榜只存匿名摘要；即使規則尚未開放，也不影響個人成績保存。
+            console.warn("每週排行榜摘要同步失敗:", e);
         }
     };
 
