@@ -968,10 +968,12 @@ const clampNumber = (value, min, max) => Math.min(Math.max(value, min), max);
 
 const getSimulatedSessionScore = ({ persona, referenceScore, dayWeight, random }) => {
     const [minScore, maxScore] = persona.scoreRange;
-    const referenceFactor = clampNumber((Number(referenceScore) || 3000) / 5000, 0.8, 1.2);
+    const scoreReference = Math.max(Number(referenceScore) || 3000, 3000);
+    // 3,000 分時為 0.8 倍，之後每翻倍增加 0.4 倍；不設上限，活躍玩家會遇到更強的對手。
+    const referenceFactor = 0.8 + (Math.log2(scoreReference / 3000) * 0.4);
     const dayFactor = clampNumber(0.85 + dayWeight, 0.85, 1.25);
     const rawScore = (minScore + random() * (maxScore - minScore)) * referenceFactor * dayFactor;
-    return Math.round(clampNumber(rawScore, 300, 2000) / 10) * 10;
+    return Math.round(Math.max(rawScore, 300) / 10) * 10;
 };
 
 const buildSimulatedRivals = ({ count, weekStart, referenceScore, seed }) => {
@@ -1005,23 +1007,43 @@ const buildSimulatedRivals = ({ count, weekStart, referenceScore, seed }) => {
             maskedName,
             persona: persona.id,
             accuracy: Math.round(68 + random() * 27),
+            activityResponseRate: 0.3 + random() * 0.4,
+            activityScoreRate: 0.8 + random() * 0.35,
             updates: updates.sort((a, b) => a.atMs - b.atMs)
         };
     });
 };
 
-const getSimulatedArenaEntry = (rival, asOfMs = Date.now()) => {
+const getSimulatedArenaEntry = (rival, asOfMs = Date.now(), playerStats = {}) => {
     const completedUpdates = (rival.updates || []).filter(update => Number(update.atMs) <= asOfMs);
+    const playerSessionScores = Array.isArray(playerStats.sessionScores)
+        ? playerStats.sessionScores.map(score => Math.max(Number(score) || 0, 0))
+        : [];
+    const activityResponseRate = Number(rival.activityResponseRate) || 0.5;
+    const activityScoreRate = Number(rival.activityScoreRate) || 0.95;
+    const responsiveSessionCount = Math.floor(playerSessionScores.length * activityResponseRate);
+    const responseRandom = createSeededRandom(`${rival.id}:activity-response-v1`);
+    const responsiveScore = Array.from({ length: responsiveSessionCount }).reduce((sum, _, index) => {
+        const sourceIndex = Math.min(
+            playerSessionScores.length - 1,
+            Math.max(0, Math.ceil((index + 1) / activityResponseRate) - 1)
+        );
+        const scoreVariation = 0.9 + responseRandom() * 0.2;
+        const sessionScore = Math.max(300, playerSessionScores[sourceIndex] * activityScoreRate * scoreVariation);
+        return sum + Math.round(sessionScore / 10) * 10;
+    }, 0);
+    const completedScore = completedUpdates.reduce((sum, update) => sum + (Number(update.score) || 0), 0);
+    const activeDays = new Set(completedUpdates.map(update => getTaipeiDateKey(update.atMs))).size;
     return {
         id: rival.id,
         maskedName: rival.maskedName,
         simulated: true,
         weekly: {
-            score: completedUpdates.reduce((sum, update) => sum + (Number(update.score) || 0), 0),
-            sessions: completedUpdates.length,
+            score: completedScore + responsiveScore,
+            sessions: completedUpdates.length + responsiveSessionCount,
             accuracy: Number(rival.accuracy) || 0,
-            hasAccuracy: completedUpdates.length > 0,
-            activeDays: new Set(completedUpdates.map(update => getTaipeiDateKey(update.atMs))).size,
+            hasAccuracy: completedUpdates.length + responsiveSessionCount > 0,
+            activeDays: Math.max(activeDays, Math.min(Number(playerStats.activeDays) || 0, responsiveSessionCount)),
             correct: 0,
             answered: 0
         }
@@ -1064,7 +1086,7 @@ const buildArenaRoster = (entries, currentUserId, currentScore, options = {}) =>
         seed: options.seed || currentUserId
     });
     return {
-        version: 4,
+        version: 5,
         rivalIds,
         simulatedRivals,
         targetScore: roundArenaTarget(currentScore),
@@ -1449,6 +1471,13 @@ const WeeklyReport = ({ onBack, onOpenAlbum, onOpenAchievements, currentUserId, 
 
     const currentStats = getWeeklyStats(userData?.trialHistory || [], range);
     const previousStats = getWeeklyStats(userData?.trialHistory || [], getTaipeiWeekRange(-1));
+    const currentSessionScores = (userData?.trialHistory || [])
+        .filter(record => {
+            const time = getHistoryTime(record);
+            return time !== null && time >= range.startMs && time < range.endMs;
+        })
+        .sort((a, b) => getHistoryTime(a) - getHistoryTime(b))
+        .map(record => Number(record.score) || 0);
     const publicEntries = students.map(student => ({
         id: student.userId || student.id,
         maskedName: student.maskedName || '神秘勇者',
@@ -1473,11 +1502,14 @@ const WeeklyReport = ({ onBack, onOpenAlbum, onOpenAchievements, currentUserId, 
         referenceScore: Math.max(currentStats.score, previousStats.score),
         seed: `${currentUserId}:${range.startMs}`
     });
-    const storedRosterIsCurrent = storedRoster?.version === 4 && Array.isArray(storedRoster.simulatedRivals);
+    const storedRosterIsCurrent = storedRoster?.version === 5 && Array.isArray(storedRoster.simulatedRivals);
     const activeRoster = storedRosterIsCurrent ? storedRoster : proposedRoster;
     const rivalIdSet = new Set(activeRoster.rivalIds || []);
     const simulatedEntries = (activeRoster.simulatedRivals || []).map(rival => (
-        getSimulatedArenaEntry(rival, Math.min(Date.now(), range.endMs - 1))
+        getSimulatedArenaEntry(rival, Math.min(Date.now(), range.endMs - 1), {
+            sessionScores: currentSessionScores,
+            activeDays: currentStats.activeDays
+        })
     ));
     const arenaEntries = [selfEntry, ...publicEntries.filter(student => rivalIdSet.has(student.id)), ...simulatedEntries];
     const leaderboard = [...arenaEntries].sort((a, b) => (
@@ -1609,9 +1641,9 @@ const WeeklyReport = ({ onBack, onOpenAlbum, onOpenAchievements, currentUserId, 
                         <div>
                             <h3 className="font-pixel text-xs text-yellow-300">英雄競技場</h3>
                             <p className="font-retro text-[9px] text-gray-400 mt-1">系統會依照近期冒險進度，安排實力接近的對手。</p>
-                            <p className="font-retro text-[8px] text-gray-600 mt-0.5">部分競技資料可能由系統產生</p>
+                            <p className="font-retro text-[8px] text-gray-600 mt-0.5">模擬對手會隨你的本週挑戰頻率持續成長</p>
                         </div>
-                        <span className="font-retro text-[10px] text-gray-400">本週名單固定</span>
+                        <span className="font-retro text-[10px] text-gray-400">本週對手固定</span>
                     </div>
                     {isLoading ? (
                         <div className="p-5 text-center font-retro text-sm text-gray-400 animate-pulse">載入班級戰績...</div>
@@ -1905,10 +1937,8 @@ const AchievementHall = ({ onBack, userData }) => {
 const WorldMap = ({ onSelectNode, onViewJourney, onViewWeeklyReport, onViewLoginCalendar, onOpenAlbum, rewardSummary = {}, userData, onUltimateChallenge, onViewMistakeNotebook, onLogout, records = {}, advMeta = null, activeTab = 'main', onChangeTab }) => {
     const [showGuide, setShowGuide] = useState(false);
     const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
-    const totalPendingCount = Number(rewardSummary.totalPendingCount) || 0;
     const deferredTriviaCount = rewardSummary.progressRewards?.length || 0;
-    const weeklyAdventureDays = Number(rewardSummary.weeklyAdventureDays) || 0;
-    const upcomingAchievements = getUpcomingAchievements(userData, 2);
+    const upcomingAchievement = getUpcomingAchievements(userData, 1)[0] || null;
 
     return (
         <div className="flex flex-col h-full bg-[#3d2963]">
@@ -1957,25 +1987,20 @@ const WorldMap = ({ onSelectNode, onViewJourney, onViewWeeklyReport, onViewLogin
             <div className="world-status-row bg-[#171229] border-b-2 border-yellow-500/35 px-2 py-2 flex items-center gap-2 z-10">
                 <button
                     onClick={onViewWeeklyReport}
-                    className={`relative flex-1 min-w-0 border-2 px-2 py-2 text-left transition-colors ${totalPendingCount > 0 ? 'reward-breathing border-yellow-400 bg-yellow-950/60' : 'border-purple-600/60 bg-purple-950/50 hover:bg-purple-900/60'}`}
-                    aria-label={`開啟每週冒險戰報，本週有效冒險 ${weeklyAdventureDays} / 3 天，${totalPendingCount > 0 ? `總共有 ${totalPendingCount} 張獎勵可領` : '目前沒有獎勵可領'}`}
+                    className="relative flex-1 min-w-0 border-2 border-purple-600/60 bg-purple-950/50 hover:bg-purple-900/60 px-2 py-2 text-left transition-colors"
+                    aria-label={upcomingAchievement ? `開啟每週戰報，近期成就：${upcomingAchievement.title} ${upcomingAchievement.current} / ${upcomingAchievement.next}` : '開啟每週戰報，所有徽章都已解鎖'}
                 >
-                    <div className="flex items-center gap-2 pr-3">
+                    <div className="flex items-center gap-2">
                         <Award size={22} className="shrink-0 text-yellow-300" aria-hidden="true" />
                         <div className="min-w-0 flex-1">
-                            <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
-                                <span className="font-pixel text-[9px] text-yellow-300">每週戰報</span>
-                                <span className="font-retro text-[10px] text-cyan-200">冒險 {Math.min(weeklyAdventureDays, 3)} / 3 天</span>
-                                <span className={`font-retro text-[10px] ${totalPendingCount > 0 ? 'text-green-300 font-bold' : 'text-gray-500'}`}>🎫 {totalPendingCount > 0 ? `可領 ${totalPendingCount} 張` : '暫無獎勵'}</span>
-                            </div>
-                            <div className="flex gap-x-2 overflow-hidden mt-1" aria-label="近期即將完成的成就">
-                                {upcomingAchievements.length > 0 ? upcomingAchievements.map(item => (
-                                    <span key={item.id} className="font-retro text-[9px] text-yellow-100 whitespace-nowrap">{item.icon} {item.title}還差 {item.remaining}</span>
-                                )) : <span className="font-retro text-[9px] text-yellow-100">所有徽章都已解鎖！</span>}
+                            <span className="font-pixel text-[9px] text-yellow-300">每週戰報</span>
+                            <div className="font-retro text-[11px] text-yellow-100 truncate mt-1" aria-label="近期即將完成的成就">
+                                {upcomingAchievement
+                                    ? `${upcomingAchievement.icon} ${upcomingAchievement.title}　${upcomingAchievement.current} / ${upcomingAchievement.next}`
+                                    : '所有徽章都已解鎖！'}
                             </div>
                         </div>
                     </div>
-                    {totalPendingCount > 0 && <span className="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-red-600 border border-white" aria-hidden="true"></span>}
                 </button>
                 <button
                     onClick={() => setShowLogoutConfirm(true)}
