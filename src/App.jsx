@@ -3,13 +3,14 @@ import {
     Sword, Shield, Scroll, Skull, Coins, Heart, Star, ChevronLeft, ChevronRight,
     Volume2, Map as MapIcon, RefreshCw, XCircle, CheckCircle,
     HelpCircle, Backpack, Gem, Flame, Skull as SkullIcon, Book, User,
-    List, Grid, ArrowLeft, Lightbulb, MessageCircle, Clock, Award, Home, Lock, LogOut, Headphones
+    List, Grid, ArrowLeft, Lightbulb, MessageCircle, Clock, Award, Home, Lock, LogOut, Headphones, CalendarDays, Search
 } from 'lucide-react';
 import { collection, query, where, getDocs, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import { signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut } from 'firebase/auth';
 import { db, auth, googleProvider } from './config/firebase';
 import { speakText, playSound, shuffleArray, playMusic, stopMusic, setMute, getMuteStatus, setVolume, unlockAudio } from './utils/audio';
 import TeacherDashboard from './components/TeacherDashboard.jsx';
+import { TRIVIA_CARDS, TRIVIA_CATEGORIES, TRIVIA_GROUPS, TRIVIA_LEGACY_ID_MAP, TRIVIA_SOURCES } from './constants/triviaData';
 
 // --- Pixel Art SVGs ---
 const PixelArt = {
@@ -228,9 +229,94 @@ const fetchLevelData = async (levelId) => {
                 categories.sentences.push(item);
             }
         });
+
+        // 單字寶箱拆成 A/B 兩箱：依字母序切半，確保切法固定、學生可對照課本複習
+        const sortedVocab = [...categories.vocab].sort((a, b) => a.word.localeCompare(b.word));
+        const half = Math.ceil(sortedVocab.length / 2);
+        categories.vocab_a = sortedVocab.slice(0, half);
+        categories.vocab_b = sortedVocab.slice(half);
+
         return categories;
     } catch (err) {
         console.error("Error fetching data:", err);
+        return null;
+    }
+};
+
+// --- 進階書（獨立地圖分頁）---
+const ADV_LESSONS_PER_SECTION = 10; // 進階地圖、旅程與終極試煉每 10 課一卷
+const ADV_CLEARS_TO_COMPLETE = 3;   // 通關 3 次才算完成
+const ADV_QUIZ_QUESTION_LIMIT = 10; // 進階課每次隨機抽最多 10 題
+const ADV_PASSING_GRADES = ['S', 'A', 'B'];
+const ADV_GRADE_ORDER = { B: 1, A: 2, S: 3 };
+const BOSS_CLEAR_GRADES = ['S', 'A', 'B'];
+const BOSS_CLEARS_REQUIRED = 5;
+
+const advLessonId = (lesson) => `adv_${lesson}`;
+const getAdvancedQualifiedClears = (record = {}) => Math.max(
+    0,
+    Number(record.bPlusClears ?? record.clears) || 0
+);
+const getAdvancedStarGrades = (record = {}) => {
+    const storedGrades = Array.isArray(record.starGrades)
+        ? record.starGrades.filter(grade => ADV_PASSING_GRADES.includes(grade))
+        : [];
+    if (storedGrades.length > 0) {
+        return [...storedGrades]
+            .sort((a, b) => ADV_GRADE_ORDER[a] - ADV_GRADE_ORDER[b])
+            .slice(-ADV_CLEARS_TO_COMPLETE);
+    }
+
+    const legacyCount = Math.min(getAdvancedQualifiedClears(record), ADV_CLEARS_TO_COMPLETE);
+    if (legacyCount <= 0) return [];
+    const legacyGrades = Array.from({ length: legacyCount }, () => 'B');
+    if (ADV_PASSING_GRADES.includes(record.bestGrade)) {
+        legacyGrades[legacyGrades.length - 1] = record.bestGrade;
+    }
+    return legacyGrades.sort((a, b) => ADV_GRADE_ORDER[a] - ADV_GRADE_ORDER[b]);
+};
+const addAdvancedStarGrade = (record = {}, grade) => {
+    const grades = getAdvancedStarGrades(record);
+    if (ADV_PASSING_GRADES.includes(grade)) grades.push(grade);
+    return grades
+        .sort((a, b) => ADV_GRADE_ORDER[b] - ADV_GRADE_ORDER[a])
+        .slice(0, ADV_CLEARS_TO_COMPLETE)
+        .sort((a, b) => ADV_GRADE_ORDER[a] - ADV_GRADE_ORDER[b]);
+};
+
+// 進階書目錄：meta/advanced 文件 { totalLessons, titles: { "1": "篇章名" } }，由匯入腳本維護
+const fetchAdvancedMeta = async () => {
+    try {
+        const snap = await getDoc(doc(db, 'meta', 'advanced'));
+        return snap.exists() ? snap.data() : null;
+    } catch (err) {
+        console.error("Error fetching advanced meta:", err);
+        return null;
+    }
+};
+
+const fetchAdvancedLesson = async (lesson) => {
+    try {
+        const q = query(collection(db, 'vocabulary'), where('series', '==', 'advanced'), where('lesson', '==', lesson));
+        const snapshot = await getDocs(q);
+        const vocab = [];
+        snapshot.forEach(docSnap => {
+            const data = docSnap.data();
+            vocab.push({
+                id: docSnap.id,
+                word: data.word || '',
+                chinese: data.chinese || '',
+                part: data.pos || data.part || '',
+                sentence: data.example || data.sentence || '',
+                sentence_ch: data.sentence_ch || '',
+                series: 'advanced',
+                lesson
+            });
+        });
+        vocab.sort((a, b) => a.word.localeCompare(b.word));
+        return { vocab, vocab_a: [], vocab_b: [], collocation: [], polysemy: [], sentences: [] };
+    } catch (err) {
+        console.error("Error fetching advanced lesson:", err);
         return null;
     }
 };
@@ -269,7 +355,7 @@ for (let i = 1; i <= 16; i++) {
     GAME_DATA[i] = {
         title: LEVEL_INFO[i] ? `Level ${i < 10 ? '0' + i : i}: ${LEVEL_INFO[i].title}` : `Unit ${i}`,
         // Content will be loaded asynchronously, but we initialize with empty arrays to prevent crashes in synchronous checks if any exist.
-        content: { vocab: [], collocation: [], polysemy: [], sentences: [] }
+        content: { vocab: [], vocab_a: [], vocab_b: [], collocation: [], polysemy: [], sentences: [] }
     };
 }
 
@@ -347,16 +433,22 @@ const getLevelIcon = (id) => {
 };
 
 // --- Achievement Logic Helper ---
+// 取得類別評級；vocabA/vocabB 在沒有新紀錄時回退到拆箱前的 vocab 舊成績
+const getGradeWithVocabFallback = (record, cat) => {
+    if (record[cat] && typeof record[cat] === 'object' && record[cat].grade) return record[cat].grade;
+    if (record[`${cat}Grade`]) return record[`${cat}Grade`];
+    if (cat === 'vocabA' || cat === 'vocabB') {
+        if (record.vocab && typeof record.vocab === 'object' && record.vocab.grade) return record.vocab.grade;
+        if (record.vocabGrade) return record.vocabGrade;
+    }
+    return null;
+};
+
+const ACHIEVEMENT_CATS = ['vocabA', 'vocabB', 'equip', 'alchemy', 'scroll'];
+
 const getUnitAchievementStatus = (record) => {
     if (!record) return null;
-    const cats = ['vocab', 'equip', 'alchemy', 'scroll'];
-    const grades = cats.map(c => {
-        // New structure: record[c] = { score, grade }
-        if (record[c] && typeof record[c] === 'object') return record[c].grade;
-        // Legacy: record[c + 'Grade']
-        if (record[`${c}Grade`]) return record[`${c}Grade`];
-        return null;
-    });
+    const grades = ACHIEVEMENT_CATS.map(c => getGradeWithVocabFallback(record, c));
 
     // If any category is missing (null or undefined), achievement not possible
     if (grades.some(g => !g)) return null;
@@ -386,7 +478,7 @@ const RPGBorder = ({ children, className = "", style = {} }) => (
     </div>
 );
 
-const RPGButton = ({ children, onClick, color = "primary", className = "", disabled = false, active = false, silent = false }) => {
+const RPGButton = ({ children, onClick, color = "primary", className = "", disabled = false, active = false, silent = false, type = "button", ...buttonProps }) => {
     const colors = {
         primary: "bg-rpg-primary text-white hover:bg-red-600 shadow-pixel active:shadow-pixel-pressed",
         secondary: "bg-rpg-secondary text-white hover:bg-cyan-600 shadow-pixel active:shadow-pixel-pressed",
@@ -397,7 +489,7 @@ const RPGButton = ({ children, onClick, color = "primary", className = "", disab
     };
     const activeStyle = active ? "ring-2 ring-white ring-offset-2 ring-offset-black" : "";
     return (
-        <button onClick={(e) => { e.stopPropagation(); if (!disabled) { if (!silent) playSound('click'); onClick(e); } }} disabled={disabled} className={`border-2 border-black relative px-3 py-2 font-pixel text-xs sm:text-sm uppercase tracking-wide ${colors[color] || colors.neutral} ${activeStyle} disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-transform active:translate-y-1 ${className}`}>
+        <button {...buttonProps} type={type} onClick={(e) => { e.stopPropagation(); if (!disabled) { if (!silent) playSound('click'); onClick?.(e); } }} disabled={disabled} className={`border-2 border-black relative px-3 py-2 font-pixel text-xs sm:text-sm uppercase tracking-wide ${colors[color] || colors.neutral} ${activeStyle} disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-transform active:translate-y-1 ${className}`}>
             {children}
         </button>
     );
@@ -465,14 +557,14 @@ const LoginScreen = ({ onLogin }) => {
 };
 
 const AchievementGuide = ({ onClose }) => (
-    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-[150] backdrop-blur-sm animate-in fade-in" onClick={onClose}>
-        <div className="bg-slate-900 border-4 border-yellow-500/50 p-6 rounded-xl shadow-2xl w-96 max-w-[90%] relative" onClick={e => e.stopPropagation()}>
+    <div className="absolute inset-0 bg-black/80 flex items-center justify-center z-[150] backdrop-blur-sm animate-in fade-in p-3 overflow-y-auto" onClick={onClose}>
+        <div className="bg-slate-900 border-4 border-yellow-500/50 p-4 sm:p-6 rounded-xl shadow-2xl w-96 max-w-full max-h-full overflow-y-auto relative my-auto" onClick={e => e.stopPropagation()}>
             <button onClick={onClose} className="absolute top-2 right-2 text-slate-500 hover:text-white transition-colors"><XCircle size={24} /></button>
             <h3 className="font-pixel text-xl text-yellow-400 mb-4 text-center flex items-center justify-center gap-2">
                 <Award size={24} /> 成就獲得指南
             </h3>
 
-            <div className="space-y-4 font-retro text-sm text-gray-300">
+            <div className="space-y-3 font-retro text-sm text-gray-300">
                 <div className="bg-slate-800 p-3 rounded-lg border border-slate-700">
                     <div className="flex items-center gap-2 mb-2 border-b border-slate-700 pb-2">
                         <div className="text-blue-400 font-pixel text-xl">✔</div>
@@ -498,7 +590,11 @@ const AchievementGuide = ({ onClose }) => (
                         </li>
                         <li className="flex gap-2">
                             <span className="text-red-400 font-bold min-w-[4rem]">BOSS 關:</span>
-                            <span>累計獲勝 <span className="text-white font-bold">5 次</span> (需 A 級以上)。</span>
+                            <span>累計獲勝 <span className="text-white font-bold">{BOSS_CLEARS_REQUIRED} 次</span> (需 B 級以上)。</span>
+                        </li>
+                        <li className="flex gap-2">
+                            <span className="text-purple-300 font-bold min-w-[4rem]">進階課程:</span>
+                            <span>取得 <span className="text-cyan-300 font-bold">B 級以上</span>才算通關，累積 3 次完成一課。</span>
                         </li>
                     </ul>
                 </div>
@@ -515,26 +611,1579 @@ const AchievementGuide = ({ onClose }) => (
                         </li>
                         <li className="flex gap-2">
                             <span className="text-red-400 font-bold min-w-[4rem]">BOSS 關:</span>
-                            <span>累計獲勝 <span className="text-white font-bold">5 次</span> (需 S 級)。</span>
+                            <span>累計獲勝 <span className="text-white font-bold">{BOSS_CLEARS_REQUIRED} 次</span> (需 S 級)。</span>
                         </li>
                     </ul>
                 </div>
             </div>
 
-            <div className="mt-6 text-center">
+            <div className="mt-4 text-center">
                 <RPGButton onClick={onClose} color="primary" className="w-full py-3">了解！</RPGButton>
             </div>
         </div>
     </div>
 );
 
-const WorldMap = ({ onSelectNode, onViewJourney, onUltimateChallenge, onViewMistakeNotebook, onLogout, records = {} }) => {
-    const [showGuide, setShowGuide] = useState(false);
-    const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+const TAIPEI_OFFSET_MS = 8 * 60 * 60 * 1000;
+const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+const DAY_MS = 24 * 60 * 60 * 1000;
+const ARENA_RIVAL_LIMIT = 7;
+const ARENA_RETAINED_REAL_LIMIT = 5;
+const ADVENTURE_MILESTONES = [3, 7, 14, 30, 60, 100, 150, 200, 365];
+const CORRECT_WORD_MILESTONES = [50, 150, 500, 1000, 2000, 3000];
+const LEGACY_WORD_MILESTONES = [50, 100, 250, 500, 1000];
+const CHECK_IN_GRADES = ['B', 'A', 'S'];
+const SIMULATED_ARENA_NAMES = [
+    '功課失蹤中', '暴走布丁', '鯊魚吃泡麵', '今天不想睡', '火箭小宇',
+    '冰龍隊長', '閃電皮蛋', '傳說小蝦米', '奶茶半糖', '作業等等我',
+    '隔壁小恐龍', '會飛的地瓜', '鉛筆不見了', '睡過頭勇者', '章魚燒隊長',
+    '泡麵加顆蛋', '月亮追著我', '小熊不冬眠', '企鵝跑超快', '香蕉魔法師',
+    'MangoBoss', 'SleepyKevin', 'DinoLeo', 'AmyGoGo', 'CocoCat',
+    'HappyJason', 'RocketMia', 'SuperAndy', 'TinyTiger', 'PandaEmma',
+    'Leo_777', 'Kevin哈哈', '小宇超強', '安安出發', '樂樂衝第一',
+    '阿哲等等我', '米米愛冒險', '小晴放大招', '宇宙小涵', '辰辰不認輸',
+    '草莓騎士', '巧克力忍者', '雞塊守門員', '飛天小饅頭', '雲朵收藏家',
+    '貓咪開坦克', '恐龍寫功課', '飯糰大魔王', '週末才上線', '猜猜我是誰'
+];
+const SIMULATED_PERSONAS = [
+    { id: 'steady', scoreRange: [450, 1200], sessions: [1, 2], weights: [0.12, 0.13, 0.14, 0.14, 0.15, 0.16, 0.16] },
+    { id: 'diligent', scoreRange: [800, 1800], sessions: [1, 2], weights: [0.14, 0.15, 0.16, 0.16, 0.16, 0.12, 0.11] },
+    { id: 'casual', scoreRange: [300, 900], sessions: [1, 1], weights: [0, 0.18, 0, 0.22, 0.16, 0, 0.44] },
+    { id: 'weekend', scoreRange: [600, 1500], sessions: [1, 3], weights: [0, 0, 0.08, 0.09, 0.15, 0.33, 0.35] },
+    { id: 'burst', scoreRange: [900, 2000], sessions: [2, 3], weights: [0, 0, 0.35, 0, 0.1, 0, 0.55] }
+];
+
+const getTaipeiDateKey = (value = Date.now()) => {
+    const date = new Date(value);
+    return new Intl.DateTimeFormat('en-CA', {
+        timeZone: 'Asia/Taipei', year: 'numeric', month: '2-digit', day: '2-digit'
+    }).format(date);
+};
+
+const getAdvancedMapVolumes = (totalLessons) => {
+    const safeTotal = Math.max(0, Number(totalLessons) || 0);
+    if (safeTotal === 0) return [];
+
+    return Array.from({ length: Math.ceil(safeTotal / ADV_LESSONS_PER_SECTION) }, (_, index) => {
+        const start = index * ADV_LESSONS_PER_SECTION + 1;
+        const end = Math.min((index + 1) * ADV_LESSONS_PER_SECTION, safeTotal);
+        return {
+            index,
+            start,
+            end,
+            lessons: Array.from({ length: end - start + 1 }, (__, offset) => start + offset)
+        };
+    });
+};
+
+const searchAdvancedWords = async (searchTerm) => {
+    const trimmed = searchTerm.trim();
+    if (!trimmed) return [];
+
+    const variants = Array.from(new Set([
+        trimmed,
+        trimmed.toLowerCase(),
+        trimmed.charAt(0).toUpperCase() + trimmed.slice(1).toLowerCase(),
+        trimmed.toUpperCase()
+    ]));
+    const snapshots = await Promise.all(variants.map(word =>
+        getDocs(query(collection(db, 'vocabulary'), where('word', '==', word)))
+    ));
+    const matches = new Map();
+
+    snapshots.forEach(snapshot => {
+        snapshot.forEach(docSnap => {
+            const data = docSnap.data();
+            const lesson = Number(data.lesson);
+            if (data.series !== 'advanced' || !Number.isFinite(lesson)) return;
+            matches.set(docSnap.id, {
+                id: docSnap.id,
+                lesson,
+                word: data.word || trimmed,
+                chinese: data.chinese || '',
+                part: data.pos || data.part || ''
+            });
+        });
+    });
+
+    return Array.from(matches.values()).sort((a, b) => a.lesson - b.lesson || a.word.localeCompare(b.word));
+};
+
+const AdvancedStars = ({ grades = [], count = 0, size = 'md', label }) => {
+    const normalizedGrades = grades
+        .filter(grade => ADV_PASSING_GRADES.includes(grade))
+        .slice(0, ADV_CLEARS_TO_COMPLETE);
+    const fallbackCount = Math.min(Math.max(Number(count) || 0, 0), ADV_CLEARS_TO_COMPLETE);
+    const visibleGrades = normalizedGrades.length > 0
+        ? normalizedGrades
+        : Array.from({ length: fallbackCount }, () => 'B');
+    const earned = visibleGrades.length;
+    const sizeClass = size === 'lg' ? 'w-10 h-10' : size === 'sm' ? 'w-4 h-4' : 'w-6 h-6';
+    const gradeClass = {
+        B: 'advanced-star-b',
+        A: 'advanced-star-a',
+        S: 'advanced-star-s'
+    };
 
     return (
-        <div className="flex flex-col h-full bg-[#3d2963]">
+        <span
+            className="advanced-stars inline-flex items-center justify-center gap-1"
+            role="img"
+            aria-label={label || `已取得 ${earned} 顆星，共 ${ADV_CLEARS_TO_COMPLETE} 顆`}
+        >
+            {Array.from({ length: ADV_CLEARS_TO_COMPLETE }, (_, index) => {
+                const grade = visibleGrades[index];
+                return (
+                    <Star
+                        key={index}
+                        aria-hidden="true"
+                        className={`${sizeClass} advanced-star ${grade ? gradeClass[grade] : 'advanced-star-empty'}`}
+                    />
+                );
+            })}
+        </span>
+    );
+};
+
+const dateKeyToTaipeiDayNumber = (dateKey) => {
+    const [year, month, day] = String(dateKey || '').split('-').map(Number);
+    if (![year, month, day].every(Number.isFinite)) return null;
+    return Math.floor(Date.UTC(year, month - 1, day) / DAY_MS);
+};
+
+const getDateKeyGap = (fromKey, toKey) => {
+    const from = dateKeyToTaipeiDayNumber(fromKey);
+    const to = dateKeyToTaipeiDayNumber(toKey);
+    return from === null || to === null ? null : to - from;
+};
+
+const buildTrackerFromDates = (dates = []) => {
+    const uniqueDates = [...new Set(dates.filter(Boolean))].sort();
+    let bestStreak = 0;
+    let runningStreak = 0;
+    let previous = null;
+    uniqueDates.forEach(dateKey => {
+        const gap = previous ? getDateKeyGap(previous, dateKey) : null;
+        runningStreak = gap === 1 ? runningStreak + 1 : 1;
+        bestStreak = Math.max(bestStreak, runningStreak);
+        previous = dateKey;
+    });
+    return {
+        totalDays: uniqueDates.length,
+        currentStreak: runningStreak,
+        bestStreak,
+        lastDate: uniqueDates[uniqueDates.length - 1] || null,
+        dates: uniqueDates
+    };
+};
+
+const addTrackerDay = (tracker = {}, dateKey = getTaipeiDateKey()) => {
+    const priorDates = tracker.dates || [];
+    const wasKnown = priorDates.includes(dateKey);
+    const dates = [...new Set([...priorDates, dateKey])].sort();
+    if (tracker.lastDate === dateKey) return { ...tracker, dates, changed: false };
+    const gap = getDateKeyGap(tracker.lastDate, dateKey);
+    const currentStreak = gap === 1 ? (tracker.currentStreak || 0) + 1 : 1;
+    return {
+        ...tracker,
+        totalDays: Math.max(Number(tracker.totalDays) || 0, priorDates.length) + (wasKnown ? 0 : 1),
+        currentStreak,
+        bestStreak: Math.max(Number(tracker.bestStreak) || 0, currentStreak),
+        lastDate: dateKey,
+        dates,
+        changed: true
+    };
+};
+
+const stripTrackerFlag = ({ changed, ...tracker }) => tracker;
+
+const countUniqueSLevels = (records = {}) => Object.values(records).filter(record => {
+    if (!record || typeof record !== 'object') return false;
+    if (record.bestGrade === 'S' || record.rank === 'S' || (Number(record.sCount) || 0) > 0) return true;
+    return Object.values(record).some(value => value && typeof value === 'object' && value.grade === 'S');
+}).length;
+
+const ACHIEVEMENT_SECTIONS = [
+    { id: 'adventure', title: '累積冒險', icon: '⚔️', unit: '天', milestones: ADVENTURE_MILESTONES, special: [30, 100, 200, 365] },
+    { id: 'sRanks', title: 'S 級關卡', icon: '🏆', unit: '關', milestones: [1, 5, 10, 25, 50, 100], special: [25, 50, 100] },
+    { id: 'words', title: '答對單字', icon: '🔤', unit: '個', milestones: CORRECT_WORD_MILESTONES, special: [500, 1000, 3000] },
+    { id: 'trivia', title: '冷知識收藏', icon: '📚', unit: '張', milestones: [10, 25, 50, 100, 150, 200], special: [50, 100, 200] }
+];
+
+const getAchievementStats = (userData = {}) => ({
+    adventure: Number(userData?.engagement?.adventure?.totalDays) || 0,
+    sRanks: countUniqueSLevels(userData?.levelRecords || {}),
+    words: new Set(userData?.correctWordIds || []).size,
+    trivia: Object.keys(userData?.triviaCollection || {}).length
+});
+
+const getCorrectWordKey = (log = {}) => {
+    if (!log.targetId) return null;
+    const lesson = Number(log.targetLesson);
+    return log.targetSeries === 'advanced' && Number.isFinite(lesson)
+        ? `advanced:${lesson}:${log.targetId}`
+        : `main:${log.targetId}`;
+};
+
+const getAchievementRewardKey = (sectionId, milestone) => (
+    sectionId === 'adventure' ? `milestone:${milestone}` : `achievement:${sectionId}:${milestone}`
+);
+
+const getAchievementTriviaRewards = (data = {}) => {
+    const claims = data.triviaRewardClaims || {};
+    const stats = getAchievementStats(data);
+    const rewards = [];
+
+    ACHIEVEMENT_SECTIONS.forEach(section => {
+        section.milestones.forEach(milestone => {
+            const key = getAchievementRewardKey(section.id, milestone);
+            if (stats[section.id] >= milestone && !claims[key]) {
+                rewards.push({
+                    key,
+                    label: `抽取「${section.title} ${milestone} ${section.unit}」獎勵`,
+                    sourceLabel: `達成成就：${section.title} ${milestone} ${section.unit}`,
+                    isSpecial: section.special.includes(milestone),
+                    rewardType: 'achievement'
+                });
+            }
+        });
+    });
+
+    const legacyWordCount = new Set(data.discoveredWordIds || []).size;
+    LEGACY_WORD_MILESTONES.forEach(milestone => {
+        const key = `achievement:legacyWords:${milestone}`;
+        if (legacyWordCount >= milestone && !claims[key]) {
+            rewards.push({
+                key,
+                label: `抽取「舊版探索單字 ${milestone} 個」獎勵`,
+                sourceLabel: `舊版已達成：探索單字 ${milestone} 個`,
+                isSpecial: [250, 500, 1000].includes(milestone),
+                rewardType: 'achievement'
+            });
+        }
+    });
+
+    return rewards;
+};
+
+const getUpcomingAchievements = (userData = {}, limit = ACHIEVEMENT_SECTIONS.length) => {
+    const stats = getAchievementStats(userData);
+    return ACHIEVEMENT_SECTIONS.map(section => {
+        const current = stats[section.id];
+        const next = section.milestones.find(milestone => milestone > current);
+        if (!next) return null;
+        const previous = [...section.milestones].reverse().find(milestone => milestone <= current) || 0;
+        const progress = next === previous ? 1 : (current - previous) / (next - previous);
+        return {
+            ...section,
+            current,
+            next,
+            remaining: next - current,
+            progress: Math.max(0, Math.min(progress, 1))
+        };
+    })
+        .filter(Boolean)
+        .sort((a, b) => b.progress - a.progress || a.remaining - b.remaining)
+        .slice(0, limit);
+};
+
+const MAIN_UNIT_CATEGORY_KEYS = ['vocabA', 'vocabB', 'equip', 'alchemy', 'scroll'];
+const MAIN_GRADE_MILESTONES = ['B', 'A', 'S'];
+const MAIN_GRADE_ORDER = { '?': 0, E: 0, D: 0, C: 0, B: 1, A: 2, S: 3 };
+
+const getStoredCategoryGrade = (record = {}, categoryKey) => {
+    const categoryRecord = record?.[categoryKey];
+    if (categoryRecord && typeof categoryRecord === 'object') return categoryRecord.grade || '?';
+    return record?.[`${categoryKey}Grade`] || '?';
+};
+
+const getProgressTriviaRewards = (levelRecords = {}) => {
+    const rewards = [];
+
+    for (let unitId = 1; unitId <= 16; unitId += 1) {
+        const record = levelRecords?.[unitId] || {};
+        MAIN_GRADE_MILESTONES.forEach(grade => {
+            const targetRank = MAIN_GRADE_ORDER[grade];
+            const allCategoriesReached = MAIN_UNIT_CATEGORY_KEYS.every(categoryKey => (
+                (MAIN_GRADE_ORDER[getStoredCategoryGrade(record, categoryKey)] || 0) >= targetRank
+            ));
+            if (allCategoriesReached) {
+                rewards.push({
+                    key: `progress:main:${unitId}:${grade}`,
+                    label: `第 ${unitId} 章全項目 ${grade} 級獎勵`,
+                    sourceLabel: `第 ${unitId} 章全項目首次達到 ${grade} 級`,
+                    isSpecial: grade === 'S'
+                });
+            }
+        });
+    }
+
+    for (let bossNumber = 1; bossNumber <= 6; bossNumber += 1) {
+        const bossId = `b${bossNumber}`;
+        const record = levelRecords?.[bossId] || {};
+        if ((Number(record.successCount) || 0) >= BOSS_CLEARS_REQUIRED || ['CLEAR', 'COMPLETE'].includes(record.bestStatus)) {
+            rewards.push({
+                key: `progress:boss:${bossId}`,
+                label: `${bossNumber === 6 ? '最終' : `第 ${bossNumber}`} Boss 通關獎勵`,
+                sourceLabel: `${bossNumber === 6 ? '最終' : `第 ${bossNumber}`} Boss 首次通關`,
+                isSpecial: true
+            });
+        }
+    }
+
+    Object.entries(levelRecords || {})
+        .filter(([levelId, record]) => /^adv_\d+$/.test(String(levelId)) && getAdvancedQualifiedClears(record) >= ADV_CLEARS_TO_COMPLETE)
+        .sort(([a], [b]) => Number(a.slice(4)) - Number(b.slice(4)))
+        .forEach(([levelId]) => {
+            const lesson = Number(levelId.slice(4));
+            rewards.push({
+                key: `progress:advanced:${lesson}:three-stars`,
+                label: `進階第 ${lesson} 課三星獎勵`,
+                sourceLabel: `進階第 ${lesson} 課首次取得三星`,
+                isSpecial: true
+            });
+        });
+
+    return rewards;
+};
+
+const getPendingProgressTriviaRewards = (data = {}) => {
+    const claims = data.triviaRewardClaims || {};
+    return getProgressTriviaRewards(data.levelRecords || {}).filter(reward => !claims[reward.key]);
+};
+
+const getTaipeiWeekRange = (weekOffset = 0) => {
+    const shiftedNow = new Date(Date.now() + TAIPEI_OFFSET_MS);
+    const daysSinceMonday = (shiftedNow.getUTCDay() + 6) % 7;
+    const mondayInTaipeiClock = Date.UTC(
+        shiftedNow.getUTCFullYear(),
+        shiftedNow.getUTCMonth(),
+        shiftedNow.getUTCDate() - daysSinceMonday
+    ) + (weekOffset * WEEK_MS);
+    const startMs = mondayInTaipeiClock - TAIPEI_OFFSET_MS;
+    return { startMs, endMs: startMs + WEEK_MS };
+};
+
+const getTaipeiWeekRangeForValue = (value) => {
+    const timestamp = value instanceof Date ? value.getTime() : Number(value);
+    const shiftedDate = new Date((Number.isFinite(timestamp) ? timestamp : Date.now()) + TAIPEI_OFFSET_MS);
+    const daysSinceMonday = (shiftedDate.getUTCDay() + 6) % 7;
+    const mondayInTaipeiClock = Date.UTC(
+        shiftedDate.getUTCFullYear(),
+        shiftedDate.getUTCMonth(),
+        shiftedDate.getUTCDate() - daysSinceMonday
+    );
+    const startMs = mondayInTaipeiClock - TAIPEI_OFFSET_MS;
+    return { startMs, endMs: startMs + WEEK_MS };
+};
+
+const taipeiDateKeyToTimestamp = (dateKey) => {
+    const [year, month, day] = String(dateKey || '').split('-').map(Number);
+    if (![year, month, day].every(Number.isFinite)) return null;
+    return Date.UTC(year, month - 1, day) - TAIPEI_OFFSET_MS;
+};
+
+const getHistoryTime = (record) => {
+    const value = record?.timestamp || record?.date;
+    if (!value) return null;
+    if (typeof value?.toDate === 'function') return value.toDate().getTime();
+    const parsed = new Date(value).getTime();
+    return Number.isFinite(parsed) ? parsed : null;
+};
+
+const getWeeklyStats = (history = [], range) => {
+    const records = history.filter(record => {
+        const time = getHistoryTime(record);
+        return time !== null && time >= range.startMs && time < range.endMs;
+    });
+    const answered = records.reduce((sum, record) => sum + (Number(record.totalQuestions) || 0), 0);
+    const correct = records.reduce((sum, record) => {
+        if (Number.isFinite(Number(record.correctCount))) return sum + Number(record.correctCount);
+        const total = Number(record.totalQuestions) || 0;
+        const accuracy = Number(record.accuracy) || 0;
+        return sum + Math.round(total * accuracy / 100);
+    }, 0);
+    const accuracyValues = records
+        .map(record => Number(record.accuracy))
+        .filter(Number.isFinite);
+    const accuracy = answered > 0
+        ? (correct / answered) * 100
+        : (accuracyValues.length > 0 ? accuracyValues.reduce((sum, value) => sum + value, 0) / accuracyValues.length : 0);
+    const activeDays = new Set(records.map(record => {
+        const time = getHistoryTime(record);
+        return new Intl.DateTimeFormat('en-CA', {
+            timeZone: 'Asia/Taipei', year: 'numeric', month: '2-digit', day: '2-digit'
+        }).format(new Date(time));
+    })).size;
+
+    return {
+        sessions: records.length,
+        answered,
+        correct,
+        accuracy,
+        hasAccuracy: answered > 0 || accuracyValues.length > 0,
+        activeDays,
+        score: records.reduce((sum, record) => sum + (Number(record.score) || 0), 0)
+    };
+};
+
+const getQualifiedHistoryDates = (history = []) => [...new Set(history
+    .filter(record => CHECK_IN_GRADES.includes(record?.rank))
+    .map(getHistoryTime)
+    .filter(time => time !== null)
+    .map(getTaipeiDateKey))].sort();
+
+const prepareEngagementOnLogin = (data = {}) => {
+    const existing = data.engagement || {};
+    if (Number(existing.version) >= 3 && existing.adventure) {
+        return {
+            engagement: existing,
+            changed: false
+        };
+    }
+
+    const qualifiedHistoryDates = getQualifiedHistoryDates(data.trialHistory || []);
+    const rebuiltAdventure = buildTrackerFromDates(qualifiedHistoryDates);
+    const legacyTotalDays = Math.max(
+        Number(existing.login?.totalDays) || 0,
+        Number(existing.adventure?.totalDays) || 0,
+        rebuiltAdventure.totalDays
+    );
+    const adventure = {
+        ...existing.adventure,
+        ...rebuiltAdventure,
+        totalDays: legacyTotalDays
+    };
+    return {
+        engagement: {
+            version: 3,
+            adventure,
+            migratedAt: new Date().toISOString()
+        },
+        changed: true
+    };
+};
+
+const addQualifiedAdventureDay = (data = {}) => {
+    const currentEngagement = data.engagement || prepareEngagementOnLogin(data).engagement;
+    const adventureWithFlag = addTrackerDay(currentEngagement.adventure || {}, getTaipeiDateKey());
+    return {
+        engagement: {
+            ...currentEngagement,
+            adventure: stripTrackerFlag(adventureWithFlag)
+        },
+        changed: adventureWithFlag.changed
+    };
+};
+
+const getWeeklyAdventureDays = (tracker = {}, range) => {
+    const startKey = getTaipeiDateKey(range.startMs);
+    const endKey = getTaipeiDateKey(range.endMs - 1);
+    return (tracker.dates || []).filter(dateKey => dateKey >= startKey && dateKey <= endKey).length;
+};
+
+const roundArenaTarget = (score) => Math.ceil(Math.max(score + 500, score * 1.2, 500) / 100) * 100;
+
+const getStableIndex = (seed, length) => {
+    if (length <= 0) return -1;
+    const hash = [...String(seed)].reduce((sum, char) => ((sum * 31) + char.charCodeAt(0)) | 0, 7);
+    return Math.abs(hash) % length;
+};
+
+const migrateTriviaProgress = (data = {}) => {
+    let changed = false;
+    const triviaCollection = Object.fromEntries(Object.entries(data.triviaCollection || {}).map(([cardId, unlock]) => {
+        const migratedId = TRIVIA_LEGACY_ID_MAP[cardId] || cardId;
+        if (migratedId !== cardId) changed = true;
+        return [migratedId, unlock];
+    }));
+    const triviaRewardClaims = Object.fromEntries(Object.entries(data.triviaRewardClaims || {}).map(([rewardKey, claim]) => {
+        const migratedCardId = TRIVIA_LEGACY_ID_MAP[claim?.cardId] || claim?.cardId;
+        if (migratedCardId !== claim?.cardId) changed = true;
+        return [rewardKey, { ...claim, cardId: migratedCardId }];
+    }));
+    return { triviaCollection, triviaRewardClaims, changed };
+};
+
+const getSeedNumber = (seed) => [...String(seed)].reduce(
+    (value, char) => Math.imul(value ^ char.charCodeAt(0), 16777619) >>> 0,
+    2166136261
+);
+
+const createSeededRandom = (seed) => {
+    let state = getSeedNumber(seed) || 1;
+    return () => {
+        state += 0x6D2B79F5;
+        let value = state;
+        value = Math.imul(value ^ (value >>> 15), value | 1);
+        value ^= value + Math.imul(value ^ (value >>> 7), value | 61);
+        return ((value ^ (value >>> 14)) >>> 0) / 4294967296;
+    };
+};
+
+const clampNumber = (value, min, max) => Math.min(Math.max(value, min), max);
+
+const getSimulatedSessionScore = ({ persona, referenceScore, dayWeight, random }) => {
+    const [minScore, maxScore] = persona.scoreRange;
+    const scoreReference = Math.max(Number(referenceScore) || 3000, 3000);
+    // 3,000 分時為 0.8 倍，之後每翻倍增加 0.4 倍；不設上限，活躍玩家會遇到更強的對手。
+    const referenceFactor = 0.8 + (Math.log2(scoreReference / 3000) * 0.4);
+    const dayFactor = clampNumber(0.85 + dayWeight, 0.85, 1.25);
+    const rawScore = (minScore + random() * (maxScore - minScore)) * referenceFactor * dayFactor;
+    return Math.round(Math.max(rawScore, 300) / 10) * 10;
+};
+
+const buildSimulatedRivals = ({ count, weekStart, referenceScore, seed }) => {
+    const random = createSeededRandom(`${seed}:${weekStart}:arena-v4`);
+    const usedNames = new Set();
+
+    return Array.from({ length: count }, (_, index) => {
+        const persona = SIMULATED_PERSONAS[(index + Math.floor(random() * SIMULATED_PERSONAS.length)) % SIMULATED_PERSONAS.length];
+        const availableNames = SIMULATED_ARENA_NAMES.filter(name => !usedNames.has(name));
+        const namePool = availableNames.length > 0 ? availableNames : SIMULATED_ARENA_NAMES;
+        const maskedName = namePool[Math.floor(random() * namePool.length)];
+        usedNames.add(maskedName);
+        const updates = [];
+
+        persona.weights.forEach((weight, dayIndex) => {
+            if (weight <= 0) return;
+            const [minSessions, maxSessions] = persona.sessions;
+            const sessionCount = minSessions + Math.floor(random() * (maxSessions - minSessions + 1));
+            Array.from({ length: sessionCount }).forEach((_, sessionIndex) => {
+                const hour = 7 + Math.floor(random() * 16);
+                const minute = Math.floor(random() * 60);
+                updates.push({
+                    atMs: weekStart + (dayIndex * DAY_MS) + (hour * 60 + minute) * 60 * 1000 + sessionIndex,
+                    score: getSimulatedSessionScore({ persona, referenceScore, dayWeight: weight, random })
+                });
+            });
+        });
+
+        return {
+            id: `arena-${weekStart}-${getSeedNumber(`${seed}:${index}`).toString(36)}`,
+            maskedName,
+            persona: persona.id,
+            accuracy: Math.round(68 + random() * 27),
+            activityResponseRate: 0.3 + random() * 0.4,
+            activityScoreRate: 0.8 + random() * 0.35,
+            updates: updates.sort((a, b) => a.atMs - b.atMs)
+        };
+    });
+};
+
+const getSimulatedArenaEntry = (rival, asOfMs = Date.now(), playerStats = {}) => {
+    const completedUpdates = (rival.updates || []).filter(update => Number(update.atMs) <= asOfMs);
+    const playerSessionScores = Array.isArray(playerStats.sessionScores)
+        ? playerStats.sessionScores.map(score => Math.max(Number(score) || 0, 0))
+        : [];
+    const activityResponseRate = Number(rival.activityResponseRate) || 0.5;
+    const activityScoreRate = Number(rival.activityScoreRate) || 0.95;
+    const responsiveSessionCount = Math.floor(playerSessionScores.length * activityResponseRate);
+    const responseRandom = createSeededRandom(`${rival.id}:activity-response-v1`);
+    const responsiveScore = Array.from({ length: responsiveSessionCount }).reduce((sum, _, index) => {
+        const sourceIndex = Math.min(
+            playerSessionScores.length - 1,
+            Math.max(0, Math.ceil((index + 1) / activityResponseRate) - 1)
+        );
+        const scoreVariation = 0.9 + responseRandom() * 0.2;
+        const sessionScore = Math.max(300, playerSessionScores[sourceIndex] * activityScoreRate * scoreVariation);
+        return sum + Math.round(sessionScore / 10) * 10;
+    }, 0);
+    const completedScore = completedUpdates.reduce((sum, update) => sum + (Number(update.score) || 0), 0);
+    const activeDays = new Set(completedUpdates.map(update => getTaipeiDateKey(update.atMs))).size;
+    return {
+        id: rival.id,
+        maskedName: rival.maskedName,
+        simulated: true,
+        weekly: {
+            score: completedScore + responsiveScore,
+            sessions: completedUpdates.length + responsiveSessionCount,
+            accuracy: Number(rival.accuracy) || 0,
+            hasAccuracy: completedUpdates.length + responsiveSessionCount > 0,
+            activeDays: Math.max(activeDays, Math.min(Number(playerStats.activeDays) || 0, responsiveSessionCount)),
+            correct: 0,
+            answered: 0
+        }
+    };
+};
+
+const buildArenaRoster = (entries, currentUserId, currentScore, options = {}) => {
+    const others = entries.filter(entry => entry.id !== currentUserId && entry.weekly.sessions > 0);
+    const matchScore = Math.max(Number(currentScore) || 0, Number(options.referenceScore) || 0);
+    const maximumReachableGap = Math.max(1000, matchScore * 0.35);
+    const reachableOthers = others.filter(entry => (
+        entry.weekly.score <= currentScore
+        || entry.weekly.score - currentScore <= maximumReachableGap
+    ));
+    const reachableIds = new Set(reachableOthers.map(entry => entry.id));
+    const retainedIds = (options.previousRoster?.rivalIds || [])
+        .filter(id => reachableIds.has(id))
+        .slice(0, ARENA_RETAINED_REAL_LIMIT);
+    const previousRivalIds = new Set(options.previousRoster?.rivalIds || []);
+    const selected = retainedIds
+        .map(id => reachableOthers.find(entry => entry.id === id))
+        .filter(Boolean);
+    if (selected.length < ARENA_RIVAL_LIMIT) {
+        const selectedIds = new Set(selected.map(entry => entry.id));
+        const sortByDistance = (a, b) => Math.abs(a.weekly.score - currentScore) - Math.abs(b.weekly.score - currentScore);
+        const freshOpponents = reachableOthers
+            .filter(entry => !selectedIds.has(entry.id) && !previousRivalIds.has(entry.id))
+            .sort(sortByDistance);
+        const returningOpponents = reachableOthers
+            .filter(entry => !selectedIds.has(entry.id) && previousRivalIds.has(entry.id))
+            .sort(sortByDistance);
+        const remaining = [...freshOpponents, ...returningOpponents];
+        selected.push(...remaining.slice(0, ARENA_RIVAL_LIMIT - selected.length));
+    }
+    const rivalIds = selected.slice(0, ARENA_RIVAL_LIMIT).map(entry => entry.id);
+    const simulatedRivals = buildSimulatedRivals({
+        count: Math.max(0, ARENA_RIVAL_LIMIT - rivalIds.length),
+        weekStart: options.weekStart,
+        referenceScore: options.referenceScore,
+        seed: options.seed || currentUserId
+    });
+    return {
+        version: 5,
+        rivalIds,
+        simulatedRivals,
+        targetScore: roundArenaTarget(currentScore),
+        createdAt: new Date().toISOString()
+    };
+};
+
+const getBonusGoal = (currentStats, previousStats) => {
+    if (previousStats.sessions > 0) {
+        return {
+            id: 'beat-last-week',
+            label: '超越上週戰力',
+            current: currentStats.score,
+            target: previousStats.score + 1,
+            complete: currentStats.score > previousStats.score
+        };
+    }
+    return {
+        id: 'seven-challenges',
+        label: '本週完成 7 場挑戰',
+        current: currentStats.sessions,
+        target: 7,
+        complete: currentStats.sessions >= 7
+    };
+};
+
+const getWeeklyPendingRewards = (data = {}, range = getTaipeiWeekRange(0)) => {
+    const history = data.trialHistory || [];
+    const currentStats = getWeeklyStats(history, range);
+    const previousStats = getWeeklyStats(history, {
+        startMs: range.startMs - WEEK_MS,
+        endMs: range.startMs
+    });
+    const weeklyAdventureDays = getWeeklyAdventureDays(data.engagement?.adventure || {}, range);
+    const bonusGoal = getBonusGoal(currentStats, previousStats);
+    const claims = data.triviaRewardClaims || {};
+    const rewards = [];
+    const basicRewardKey = `${range.startMs}:basic`;
+    const bonusRewardKey = `${range.startMs}:bonus`;
+
+    if (weeklyAdventureDays >= 3 && !claims[basicRewardKey]) {
+        rewards.push({
+            key: basicRewardKey,
+            label: '抽取本週冷知識',
+            sourceLabel: '本週完成 3 天冒險打卡',
+            isSpecial: false,
+            rewardType: 'weekly'
+        });
+    }
+    if (bonusGoal.complete && !claims[bonusRewardKey]) {
+        rewards.push({
+            key: bonusRewardKey,
+            label: '抽取加碼冷知識',
+            sourceLabel: bonusGoal.label,
+            isSpecial: false,
+            rewardType: 'weekly'
+        });
+    }
+    return { rewards, weeklyAdventureDays, bonusGoal };
+};
+
+const getAllWeeklyPendingRewards = (data = {}) => {
+    const weekStarts = new Set([getTaipeiWeekRange(0).startMs]);
+    (data.trialHistory || []).forEach(record => {
+        const timestamp = getHistoryTime(record);
+        if (timestamp !== null) weekStarts.add(getTaipeiWeekRangeForValue(timestamp).startMs);
+    });
+    (data.engagement?.adventure?.dates || []).forEach(dateKey => {
+        const timestamp = taipeiDateKeyToTimestamp(dateKey);
+        if (timestamp !== null) weekStarts.add(getTaipeiWeekRangeForValue(timestamp).startMs);
+    });
+
+    return [...weekStarts]
+        .sort((a, b) => a - b)
+        .flatMap(startMs => getWeeklyPendingRewards(data, { startMs, endMs: startMs + WEEK_MS }).rewards);
+};
+
+const getAllPendingTriviaRewards = (data = {}) => {
+    const rewards = [
+        ...getAllWeeklyPendingRewards(data),
+        ...getPendingProgressTriviaRewards(data),
+        ...getAchievementTriviaRewards(data)
+    ];
+    const seen = new Set();
+    return rewards.filter(reward => {
+        if (!reward?.key || seen.has(reward.key)) return false;
+        seen.add(reward.key);
+        return true;
+    });
+};
+
+const getPendingRewardSummary = (data = {}) => {
+    const range = getTaipeiWeekRange(0);
+    const weekly = getWeeklyPendingRewards(data, range);
+    const pendingRewards = getAllPendingTriviaRewards(data);
+    return {
+        range,
+        weeklyAdventureDays: weekly.weeklyAdventureDays,
+        weeklyRewards: weekly.rewards,
+        pendingRewards,
+        totalPendingCount: pendingRewards.length
+    };
+};
+
+const formatWeekRange = ({ startMs, endMs }) => {
+    const formatter = new Intl.DateTimeFormat('zh-TW', {
+        timeZone: 'Asia/Taipei', month: 'numeric', day: 'numeric'
+    });
+    return `${formatter.format(new Date(startMs))}－${formatter.format(new Date(endMs - 1))}`;
+};
+
+const maskStudentName = (name = '神秘勇者') => {
+    const trimmed = String(name).trim();
+    if (trimmed.length <= 1) return `${trimmed || '勇'}○`;
+    if (trimmed.length === 2) return `${trimmed[0]}○`;
+    return `${trimmed[0]}${'○'.repeat(Math.max(1, trimmed.length - 2))}${trimmed[trimmed.length - 1]}`;
+};
+
+const syncWeeklyLeaderboard = async ({ userId, studentName, history }) => {
+    if (!userId) return;
+    const range = getTaipeiWeekRange(0);
+    const weekly = getWeeklyStats(history || [], range);
+    if (weekly.sessions === 0) return;
+    await setDoc(doc(db, 'weeklyLeaderboard', `${range.startMs}_${userId}`), {
+        userId,
+        weekStart: range.startMs,
+        maskedName: maskStudentName(studentName),
+        score: weekly.score,
+        sessions: weekly.sessions,
+        accuracy: weekly.hasAccuracy ? weekly.accuracy : null,
+        hasAccuracy: weekly.hasAccuracy,
+        activeDays: weekly.activeDays,
+        updatedAt: new Date().toISOString()
+    }, { merge: true });
+};
+
+const TriviaAlbum = ({ onBack, userData, onClaimTrivia }) => {
+    const [activeGroup, setActiveGroup] = useState('english');
+    const [activeCategory, setActiveCategory] = useState('all');
+    const [selectedCard, setSelectedCard] = useState(null);
+    const [showTeacherPassword, setShowTeacherPassword] = useState(false);
+    const [teacherPassword, setTeacherPassword] = useState('');
+    const [teacherError, setTeacherError] = useState(false);
+    const [teacherPreview, setTeacherPreview] = useState(false);
+    const [isClaiming, setIsClaiming] = useState(false);
+    const [drawBlocked, setDrawBlocked] = useState(false);
+    const collection = userData?.triviaCollection || {};
+    const ownedCount = Object.keys(collection).length;
+    const pendingRewards = getAllPendingTriviaRewards(userData);
+    const reward = pendingRewards[0] || null;
+    const groupCategories = TRIVIA_CATEGORIES.filter(category => category.group === activeGroup);
+    const visibleCards = TRIVIA_CARDS.filter(card => (
+        card.group === activeGroup && (activeCategory === 'all' || card.category === activeCategory)
+    ));
+
+    const changeGroup = groupId => {
+        setActiveGroup(groupId);
+        setActiveCategory('all');
+        setSelectedCard(null);
+    };
+
+    const openTeacherPrompt = () => {
+        if (teacherPreview) {
+            setTeacherPreview(false);
+            setSelectedCard(null);
+            return;
+        }
+        setTeacherPassword('');
+        setTeacherError(false);
+        setShowTeacherPassword(true);
+    };
+
+    const confirmTeacherPassword = event => {
+        event.preventDefault();
+        if (teacherPassword !== '1999') {
+            setTeacherError(true);
+            return;
+        }
+        setTeacherPreview(true);
+        setShowTeacherPassword(false);
+        setTeacherPassword('');
+        setTeacherError(false);
+    };
+
+    const drawPendingReward = async () => {
+        if (!reward || isClaiming || drawBlocked || !onClaimTrivia) return;
+        setIsClaiming(true);
+        try {
+            const card = await onClaimTrivia(reward);
+            if (card) {
+                setSelectedCard(card);
+                setDrawBlocked(false);
+                playSound('success');
+            } else {
+                setDrawBlocked(true);
+            }
+        } finally {
+            setIsClaiming(false);
+        }
+    };
+
+    return (
+        <div className="flex flex-col h-full bg-[#171229] text-white">
+            <div className="flex items-center justify-between p-3 border-b-4 border-amber-500/70 bg-black/50">
+                <RPGButton onClick={onBack} color="dark" className="px-2"><ArrowLeft size={16} /></RPGButton>
+                <div className="text-center">
+                    <h2 className="font-pixel text-sm text-amber-300">冷知識收藏冊</h2>
+                    <p className="font-retro text-[10px] text-gray-400">KNOWLEDGE ALBUM · {ownedCount} / {TRIVIA_CARDS.length}</p>
+                </div>
+                <button onClick={openTeacherPrompt} className={`w-9 h-9 flex items-center justify-center border-2 ${teacherPreview ? 'bg-green-700 border-green-300' : 'bg-amber-950/60 border-amber-500/50'} text-xl hover:scale-105`} title={teacherPreview ? '退出教師預覽' : '教師預覽'}>📚</button>
+            </div>
+
+            {teacherPreview && (
+                <div className="bg-green-900/80 border-b-2 border-green-400 px-3 py-2 text-center font-pixel text-[9px] text-green-100">
+                    教師預覽 · 全部卡片已展開（不影響學生收藏）
+                </div>
+            )}
+
+            <section className={`mx-2 mt-2 border-4 p-3 ${reward ? 'border-yellow-400 bg-gradient-to-r from-purple-950 to-amber-950' : 'border-gray-700 bg-black/35'}`}>
+                <div className="flex items-center gap-3">
+                    <div className="relative shrink-0 text-3xl" aria-hidden="true">
+                        🎁
+                        {pendingRewards.length > 0 && (
+                            <span className="absolute -top-2 -right-2 min-w-5 h-5 px-1 rounded-full bg-red-600 border border-white text-white font-pixel text-[8px] flex items-center justify-center">
+                                {pendingRewards.length > 99 ? '99+' : pendingRewards.length}
+                            </span>
+                        )}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                        <h3 className={`font-pixel text-[10px] ${reward ? 'text-yellow-300' : 'text-gray-400'}`}>
+                            {reward ? `待抽取獎勵 ${pendingRewards.length} 次` : '目前沒有待抽卡'}
+                        </h3>
+                        <p className="font-retro text-[10px] text-gray-300 mt-1 truncate">
+                            {reward ? reward.sourceLabel : '完成每日任務與成就，就能獲得新的冷知識。'}
+                        </p>
+                        {pendingRewards.length > 1 && (
+                            <p className="font-retro text-[9px] text-amber-200 mt-1">另外還有 {pendingRewards.length - 1} 次獎勵等你抽取</p>
+                        )}
+                    </div>
+                    <RPGButton
+                        onClick={drawPendingReward}
+                        color={reward && !drawBlocked ? 'success' : 'dark'}
+                        disabled={!reward || isClaiming || drawBlocked}
+                        className="shrink-0 px-3 whitespace-nowrap"
+                    >
+                        {isClaiming ? '抽取中' : reward ? '抽一張' : '已領完'}
+                    </RPGButton>
+                </div>
+                {drawBlocked && (
+                    <p className="font-retro text-[10px] text-yellow-100 mt-3 border border-yellow-500/40 bg-black/30 p-2">
+                        現有冷知識已全部收藏；抽卡次數會保留，新增卡片後可以繼續抽。
+                    </p>
+                )}
+            </section>
+
+            <div className="grid grid-cols-2 gap-2 p-2 bg-[#251b3d] border-b border-white/10">
+                {TRIVIA_GROUPS.map(group => (
+                    <button key={group.id} onClick={() => changeGroup(group.id)} className={`p-2 border-2 text-left ${activeGroup === group.id ? 'bg-amber-500 text-black border-yellow-200' : 'bg-black/30 text-gray-300 border-gray-700'}`}>
+                        <div className="font-pixel text-[10px]">{group.icon} {group.label}</div>
+                        <div className="font-retro text-[9px] mt-1 opacity-70">{group.description}</div>
+                    </button>
+                ))}
+            </div>
+
+            <div className="flex gap-2 overflow-x-auto p-2 bg-black/40 border-b border-white/10 flex-shrink-0">
+                <button onClick={() => setActiveCategory('all')} className={`px-3 py-2 whitespace-nowrap border-2 font-retro text-xs ${activeCategory === 'all' ? 'bg-amber-500 text-black border-yellow-200' : 'bg-black/30 text-gray-400 border-gray-700'}`}>全部</button>
+                {groupCategories.map(category => (
+                    <button key={category.id} onClick={() => setActiveCategory(category.id)} className={`px-3 py-2 whitespace-nowrap border-2 font-retro text-xs ${activeCategory === category.id ? 'bg-purple-600 text-white border-purple-300' : 'bg-black/30 text-gray-400 border-gray-700'}`}>
+                        {category.icon} {category.label}
+                    </button>
+                ))}
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-3">
+                <div className="grid grid-cols-4 gap-2 pb-6">
+                    {visibleCards.map(card => {
+                        const unlock = collection[card.id];
+                        const category = TRIVIA_CATEGORIES.find(item => item.id === card.category);
+                        const canInspect = Boolean(unlock) || teacherPreview;
+                        const cardNumber = TRIVIA_CARDS.findIndex(item => item.id === card.id) + 1;
+                        return (
+                            <button
+                                key={card.id}
+                                onClick={() => canInspect && setSelectedCard(card)}
+                                disabled={!canInspect}
+                                className={`aspect-[3/4] border-2 p-1 flex flex-col items-center justify-center gap-1 transition-all ${unlock ? 'bg-gradient-to-b from-amber-100 to-amber-300 border-yellow-500 text-black hover:scale-105' : teacherPreview ? 'bg-gradient-to-b from-green-950 to-purple-950 border-green-500 text-white hover:scale-105' : 'bg-black/40 border-gray-700 text-gray-600'}`}
+                                title={canInspect ? card.title : `尚未解鎖 ${card.id}`}
+                            >
+                                <span className="font-pixel text-[8px]">#{String(cardNumber).padStart(3, '0')}</span>
+                                <span className={`text-xl ${canInspect ? '' : 'grayscale opacity-30'}`}>{canInspect ? category?.icon : '❔'}</span>
+                                <span className="font-retro text-[9px] leading-tight line-clamp-2">{canInspect ? card.title : '未解鎖'}</span>
+                                {unlock?.isSpecial && <span className="font-pixel text-[7px] text-purple-700">SPECIAL</span>}
+                                {!unlock && teacherPreview && <span className="font-pixel text-[6px] text-green-300">PREVIEW</span>}
+                            </button>
+                        );
+                    })}
+                </div>
+            </div>
+
+            {selectedCard && (() => {
+                const unlock = collection[selectedCard.id];
+                const category = TRIVIA_CATEGORIES.find(item => item.id === selectedCard.category);
+                const source = TRIVIA_SOURCES[selectedCard.category];
+                return (
+                    <div className="absolute inset-0 z-50 bg-black/85 flex items-center justify-center p-5" onClick={() => setSelectedCard(null)}>
+                        <div className={`w-full max-w-xs border-4 p-5 text-center ${unlock?.isSpecial ? 'bg-gradient-to-b from-purple-950 to-amber-950 border-yellow-400' : 'bg-[#2d2347] border-amber-500'}`} onClick={event => event.stopPropagation()}>
+                            <div className="text-5xl mb-3">{category?.icon}</div>
+                            <div className="font-pixel text-[9px] text-amber-300 mb-2">{category?.label} · {selectedCard.id}</div>
+                            <h3 className="font-pixel text-sm text-white mb-4 leading-relaxed">{selectedCard.title}</h3>
+                            <p className="font-retro text-base text-gray-200 leading-relaxed">{selectedCard.text}</p>
+                            <div className="mt-4 pt-3 border-t border-white/10 font-retro text-[10px] text-gray-400 space-y-1">
+                                <p>取得方式：{unlock?.sourceLabel || (teacherPreview ? '教師預覽（尚未解鎖）' : '冒險獎勵')}</p>
+                                <p>資料核對：{source?.label || '教學資料'}</p>
+                                {source?.url && <a href={source.url} target="_blank" rel="noreferrer" className="inline-block text-cyan-300 underline">查看核對來源</a>}
+                            </div>
+                            <RPGButton onClick={() => setSelectedCard(null)} color="accent" className="w-full mt-4">收回收藏冊</RPGButton>
+                        </div>
+                    </div>
+                );
+            })()}
+
+            {showTeacherPassword && (
+                <div className="absolute inset-0 z-[70] bg-black/85 flex items-center justify-center p-5" onClick={() => setShowTeacherPassword(false)}>
+                    <form onSubmit={confirmTeacherPassword} className="w-full max-w-xs bg-[#2d2347] border-4 border-amber-500 p-5 text-center" onClick={event => event.stopPropagation()}>
+                        <div className="text-4xl mb-3">📚</div>
+                        <h3 className="font-pixel text-xs text-amber-300">教師預覽</h3>
+                        <p className="font-retro text-xs text-gray-300 mt-2">輸入教師密碼即可查看全部 {TRIVIA_CARDS.length} 張卡片</p>
+                        <input autoFocus type="password" inputMode="numeric" maxLength={4} value={teacherPassword} onChange={event => { setTeacherPassword(event.target.value); setTeacherError(false); }} className="w-full mt-4 bg-black/50 border-2 border-gray-500 p-3 text-center font-pixel text-lg tracking-[0.4em] text-white" aria-label="教師預覽密碼" />
+                        {teacherError && <p className="font-retro text-xs text-red-300 mt-2">密碼不正確</p>}
+                        <div className="grid grid-cols-2 gap-2 mt-4">
+                            <RPGButton type="button" onClick={() => setShowTeacherPassword(false)} color="dark">取消</RPGButton>
+                            <RPGButton type="submit" color="success">確認</RPGButton>
+                        </div>
+                    </form>
+                </div>
+            )}
+        </div>
+    );
+};
+
+const WeeklyReport = ({ onBack, onOpenAlbum, onOpenAchievements, currentUserId, userData, onSaveArenaRoster }) => {
+    const [period, setPeriod] = useState('current');
+    const [students, setStudents] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [loadError, setLoadError] = useState(false);
+    const rosterSaveRequestedRef = useRef(false);
+    const range = getTaipeiWeekRange(period === 'current' ? 0 : -1);
+
+    useEffect(() => {
+        let active = true;
+        setIsLoading(true);
+        setLoadError(false);
+        const leaderboardQuery = query(collection(db, 'weeklyLeaderboard'), where('weekStart', '==', range.startMs));
+        getDocs(leaderboardQuery)
+            .then(snapshot => {
+                if (!active) return;
+                const loaded = snapshot.docs.map(studentDoc => ({ id: studentDoc.id, ...studentDoc.data() }));
+                setStudents(loaded);
+            })
+            .catch(error => {
+                console.error('讀取每週排行榜失敗', error);
+                if (active) setLoadError(true);
+            })
+            .finally(() => { if (active) setIsLoading(false); });
+        return () => { active = false; };
+    }, [range.startMs]);
+
+    const currentStats = getWeeklyStats(userData?.trialHistory || [], range);
+    const previousStats = getWeeklyStats(userData?.trialHistory || [], getTaipeiWeekRange(-1));
+    const currentSessionScores = (userData?.trialHistory || [])
+        .filter(record => {
+            const time = getHistoryTime(record);
+            return time !== null && time >= range.startMs && time < range.endMs;
+        })
+        .sort((a, b) => getHistoryTime(a) - getHistoryTime(b))
+        .map(record => Number(record.score) || 0);
+    const publicEntries = students.map(student => ({
+        id: student.userId || student.id,
+        maskedName: student.maskedName || '神秘勇者',
+        weekly: {
+            score: Number(student.score) || 0,
+            sessions: Number(student.sessions) || 0,
+            accuracy: Number(student.accuracy) || 0,
+            hasAccuracy: Boolean(student.hasAccuracy),
+            activeDays: Number(student.activeDays) || 0,
+            correct: 0,
+            answered: 0
+        }
+    }));
+    const selfEntry = { id: currentUserId, maskedName: maskStudentName(userData?.studentName), weekly: currentStats };
+    const entriesWithSelf = [selfEntry, ...publicEntries.filter(student => student.id !== currentUserId)];
+    const rosterKey = String(range.startMs);
+    const storedRoster = userData?.weeklyArenaRosters?.[rosterKey];
+    const priorRoster = userData?.weeklyArenaRosters?.[String(range.startMs - WEEK_MS)];
+    const proposedRoster = buildArenaRoster(entriesWithSelf, currentUserId, currentStats.score, {
+        previousRoster: storedRoster || priorRoster,
+        weekStart: range.startMs,
+        referenceScore: Math.max(currentStats.score, previousStats.score),
+        seed: `${currentUserId}:${range.startMs}`
+    });
+    const storedRosterIsCurrent = storedRoster?.version === 5 && Array.isArray(storedRoster.simulatedRivals);
+    const activeRoster = storedRosterIsCurrent ? storedRoster : proposedRoster;
+    const rivalIdSet = new Set(activeRoster.rivalIds || []);
+    const simulatedEntries = (activeRoster.simulatedRivals || []).map(rival => (
+        getSimulatedArenaEntry(rival, Math.min(Date.now(), range.endMs - 1), {
+            sessionScores: currentSessionScores,
+            activeDays: currentStats.activeDays
+        })
+    ));
+    const arenaEntries = [selfEntry, ...publicEntries.filter(student => rivalIdSet.has(student.id)), ...simulatedEntries];
+    const leaderboard = [...arenaEntries].sort((a, b) => (
+        b.weekly.score - a.weekly.score ||
+        b.weekly.accuracy - a.weekly.accuracy ||
+        b.weekly.sessions - a.weekly.sessions
+    ));
+    const currentRank = leaderboard.findIndex(student => student.id === currentUserId) + 1;
+    const studentsWithAccuracy = arenaEntries.filter(student => student.weekly.hasAccuracy);
+    const classAverage = arenaEntries.length > 0 ? {
+        score: arenaEntries.reduce((sum, student) => sum + student.weekly.score, 0) / arenaEntries.length,
+        correct: arenaEntries.reduce((sum, student) => sum + student.weekly.correct, 0) / arenaEntries.length,
+        sessions: arenaEntries.reduce((sum, student) => sum + student.weekly.sessions, 0) / arenaEntries.length,
+        accuracy: studentsWithAccuracy.length > 0
+            ? studentsWithAccuracy.reduce((sum, student) => sum + student.weekly.accuracy, 0) / studentsWithAccuracy.length
+            : null
+    } : { score: 0, correct: 0, sessions: 0, accuracy: null };
+    const comparisonRows = [
+        { label: '累積戰力', mine: currentStats.score, average: classAverage.score, suffix: ' 分' },
+        { label: '挑戰場次', mine: currentStats.sessions, average: classAverage.sessions, suffix: ' 場' },
+        { label: '答題準確率', mine: currentStats.hasAccuracy ? currentStats.accuracy : null, average: classAverage.accuracy, suffix: '%' }
+    ];
+    const currentIndex = Math.max(0, currentRank - 1);
+    const nextOpponent = currentIndex > 0 ? leaderboard[currentIndex - 1] : null;
+    const isChampion = currentRank === 1 && currentStats.sessions > 0;
+    const championTarget = Number(activeRoster.targetScore)
+        || roundArenaTarget(currentStats.score);
+    const pendingRewards = getAllPendingTriviaRewards(userData);
+    const todayCheckedIn = (userData?.engagement?.adventure?.dates || []).includes(getTaipeiDateKey());
+    const upcomingAchievement = getUpcomingAchievements(userData, 1)[0] || null;
+
+    useEffect(() => {
+        if (period !== 'current' || isLoading || loadError || storedRosterIsCurrent || !onSaveArenaRoster || rosterSaveRequestedRef.current) return;
+        rosterSaveRequestedRef.current = true;
+        onSaveArenaRoster(range.startMs, proposedRoster);
+    }, [period, isLoading, loadError, storedRosterIsCurrent, onSaveArenaRoster, range.startMs, proposedRoster]);
+
+    return (
+        <div className="flex flex-col h-full bg-[#24173a] text-white">
+            <div className="flex items-center justify-between p-3 border-b-4 border-yellow-500/70 bg-black/40">
+                <RPGButton onClick={onBack} color="dark" className="px-2"><ArrowLeft size={16} /></RPGButton>
+                <div className="text-center">
+                    <h2 className="font-pixel text-sm text-yellow-300">每週冒險戰報</h2>
+                    <p className="font-retro text-[10px] text-gray-400">WEEKLY QUEST REPORT</p>
+                </div>
+                <button onClick={onOpenAchievements} className="w-9 h-9 flex items-center justify-center border-2 border-cyan-400/60 bg-cyan-950/60 text-yellow-300 hover:bg-cyan-800" title="英雄徽章館" aria-label="打開英雄徽章館，查看尚未達成的成就">
+                    <Award size={20} />
+                </button>
+            </div>
+
+            <div className="grid grid-cols-2 bg-black/50 border-b-2 border-yellow-500/30">
+                <button onClick={() => setPeriod('current')} className={`py-2 font-pixel text-[10px] ${period === 'current' ? 'bg-yellow-500 text-black' : 'text-gray-400'}`}>本週累積</button>
+                <button onClick={() => setPeriod('previous')} className={`py-2 font-pixel text-[10px] ${period === 'previous' ? 'bg-purple-500 text-white' : 'text-gray-400'}`}>上週結算</button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-3 space-y-4">
+                <section className="border-4 border-cyan-400/60 bg-gradient-to-br from-cyan-950/80 to-purple-950/80 p-3 shadow-xl">
+                    <div className="flex justify-between items-center mb-3">
+                        <h3 className="font-pixel text-xs text-cyan-300">本日打卡</h3>
+                        <span className="font-retro text-[10px] text-gray-400">台北時間每日計算一次</span>
+                    </div>
+                    <div className={`border-2 p-3 text-center ${todayCheckedIn ? 'border-green-400 bg-green-950/50' : 'border-yellow-400 bg-yellow-950/35'}`}>
+                        <div className={`font-pixel text-2xl ${todayCheckedIn ? 'text-green-300' : 'text-yellow-300'}`}>{todayCheckedIn ? '1 / 1' : '0 / 1'}</div>
+                        <div className="font-retro text-[10px] text-gray-200 mt-2">{todayCheckedIn ? '今日打卡已完成' : '今日尚未完成打卡'}</div>
+                    </div>
+                    <p className={`font-retro text-[11px] mt-3 leading-relaxed ${todayCheckedIn ? 'text-green-200' : 'text-yellow-100'}`}>
+                        {todayCheckedIn ? '✓ 今日已完成一場遊戲並取得 B 級以上。' : '完成一場遊戲並取得 B 級以上，即可完成今日打卡。'}
+                    </p>
+                    {todayCheckedIn && upcomingAchievement && (
+                        <div className="mt-3 border-2 border-purple-400/50 bg-black/35 p-3">
+                            <div className="font-pixel text-[9px] text-purple-300">最接近完成的成就</div>
+                            <div className="font-retro text-xs text-white mt-2">
+                                {upcomingAchievement.icon} {upcomingAchievement.title}還差 {upcomingAchievement.remaining} {upcomingAchievement.unit}
+                            </div>
+                            <div className="font-pixel text-[10px] text-cyan-300 mt-2">{upcomingAchievement.current} / {upcomingAchievement.next}</div>
+                        </div>
+                    )}
+                </section>
+
+                <section className="border-4 border-yellow-500/60 bg-gradient-to-br from-[#513018] to-[#24173a] p-4 shadow-xl">
+                    <div className="flex justify-between items-start gap-3">
+                        <div>
+                            <p className="font-pixel text-[10px] text-yellow-300">{period === 'current' ? '本週累積戰力' : '上週最終戰績'}</p>
+                            <p className="font-retro text-[11px] text-gray-300 mt-1">{formatWeekRange(range)} · 週一至週日</p>
+                        </div>
+                        <div className="text-right">
+                            <div className="font-pixel text-3xl text-yellow-300">{currentStats.score}</div>
+                            <div className="font-retro text-[10px] text-yellow-100">累積戰力</div>
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-3 gap-2 mt-4 text-center">
+                        <div className="bg-black/35 border border-white/10 p-2"><div className="font-pixel text-lg text-cyan-300">{currentStats.sessions}</div><div className="font-retro text-[10px] text-gray-300">挑戰場次</div></div>
+                        <div className="bg-black/35 border border-white/10 p-2"><div className="font-pixel text-lg text-green-300">{currentStats.hasAccuracy ? `${Math.round(currentStats.accuracy)}%` : '—'}</div><div className="font-retro text-[10px] text-gray-300">準確率</div></div>
+                        <div className="bg-black/35 border border-white/10 p-2"><div className="font-pixel text-lg text-purple-300">{currentStats.activeDays}</div><div className="font-retro text-[10px] text-gray-300">活躍天數</div></div>
+                    </div>
+                    <p className="font-retro text-[10px] text-gray-400 mt-3">
+                        {period === 'current' ? '每週一 00:00 重新累積，週日 23:59 結算。' : '排行依每場分數加總；同分時依準確率與挑戰場次排序。'}
+                    </p>
+                </section>
+
+                <section className="border-2 border-purple-400/50 bg-black/30 p-3">
+                    <div className="flex items-center justify-between mb-3">
+                        <h3 className="font-pixel text-xs text-purple-200">我和同級冒險者</h3>
+                        <span className="font-retro text-[10px] text-gray-400">{arenaEntries.length} 人競技小隊</span>
+                    </div>
+                    <div className="space-y-3">
+                        {comparisonRows.map(row => {
+                            const mineValue = row.mine ?? 0;
+                            const averageValue = row.average ?? 0;
+                            const scale = Math.max(mineValue, averageValue, 1);
+                            const formatValue = value => value === null ? '—' : `${Math.round(value)}${row.suffix}`;
+                            return (
+                                <div key={row.label}>
+                                    <div className="flex justify-between font-retro text-[11px] mb-1">
+                                        <span>{row.label}</span>
+                                        <span className="text-cyan-300">我 {formatValue(row.mine)} · 小隊平均 {formatValue(row.average)}</span>
+                                    </div>
+                                    <div className="space-y-1">
+                                        <div className="h-2 bg-black/70"><div className="h-full bg-cyan-400" style={{ width: `${(mineValue / scale) * 100}%` }}></div></div>
+                                        <div className="h-1 bg-black/70"><div className="h-full bg-purple-400" style={{ width: `${(averageValue / scale) * 100}%` }}></div></div>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </section>
+
+                <section className="border-2 border-yellow-500/50 bg-black/30 overflow-hidden">
+                    <div className="flex items-center justify-between p-3 border-b border-yellow-500/30">
+                        <div>
+                            <h3 className="font-pixel text-xs text-yellow-300">英雄競技場</h3>
+                            <p className="font-retro text-[9px] text-gray-400 mt-1">為保護隱私，競技場名稱一律使用代稱顯示。</p>
+                            <p className="font-retro text-[8px] text-gray-600 mt-0.5">系統會依照近期冒險進度，安排實力接近的對手</p>
+                        </div>
+                        <span className="font-retro text-[10px] text-gray-400">本週對手固定</span>
+                    </div>
+                    {isLoading ? (
+                        <div className="p-5 text-center font-retro text-sm text-gray-400 animate-pulse">載入班級戰績...</div>
+                    ) : loadError ? (
+                        <div className="p-5 text-center font-retro text-sm text-gray-400">目前無法讀取競技場，個人戰報仍可正常使用。</div>
+                    ) : currentStats.sessions === 0 && leaderboard.length <= 1 ? (
+                        <div className="p-5 text-center font-retro text-sm text-gray-400">這一週還沒有人完成挑戰，搶下第一名吧！</div>
+                    ) : (
+                        <div>
+                            {leaderboard.map((student, index) => {
+                                const isMe = student.id === currentUserId;
+                                return (
+                                    <div key={student.id} className={`grid grid-cols-[2rem_1fr_auto] items-center gap-2 px-3 py-2 border-b border-white/10 ${isMe ? 'bg-cyan-900/40' : ''}`}>
+                                        <span className={`font-pixel text-sm ${index < 3 ? 'text-yellow-300' : 'text-gray-400'}`}>#{index + 1}</span>
+                                        <div className="min-w-0"><div className="font-retro text-sm truncate">{isMe ? '我' : student.maskedName}</div><div className="font-retro text-[9px] text-gray-500">{student.weekly.hasAccuracy ? `準確率 ${Math.round(student.weekly.accuracy)}%` : `${student.weekly.sessions} 場挑戰`}</div></div>
+                                        <span className="font-pixel text-xs text-yellow-300">{student.weekly.score} 分</span>
+                                    </div>
+                                );
+                            })}
+                            <div className={`p-3 border-t-2 ${isChampion ? 'bg-yellow-950/50 border-yellow-500/50' : 'bg-purple-950/40 border-purple-500/40'}`}>
+                                {isChampion ? (
+                                    <>
+                                        <div className="font-pixel text-[10px] text-yellow-300">👑 守擂中 · 第一名屬於你</div>
+                                        <p className="font-retro text-xs text-gray-300 mt-1">
+                                            {currentStats.score >= championTarget ? `本週越級目標 ${championTarget} 分已達成！本週門檻不會再提高。` : `本週越級目標：${championTarget} 分（還差 ${championTarget - currentStats.score} 分）`}
+                                        </p>
+                                    </>
+                                ) : nextOpponent ? (
+                                    <>
+                                        <div className="font-pixel text-[10px] text-purple-300">下一位對手：{nextOpponent.maskedName}</div>
+                                        <p className="font-retro text-xs text-gray-300 mt-1">再獲得 {Math.max(0, nextOpponent.weekly.score - currentStats.score + 1)} 分即可超越</p>
+                                    </>
+                                ) : null}
+                            </div>
+                        </div>
+                    )}
+                </section>
+
+                <section className={`border-4 p-4 text-center ${pendingRewards.length > 0 ? 'border-amber-400/60 bg-amber-950/35' : 'border-gray-600 bg-black/30'}`}>
+                    <div className="text-3xl mb-2">📚</div>
+                    <h3 className="font-pixel text-xs text-amber-300">冷知識收藏冊</h3>
+                    <p className="font-retro text-xs text-gray-300 mt-2">
+                        {pendingRewards.length > 0
+                            ? `有 ${pendingRewards.length} 次待抽獎勵，請到收藏冊抽取。`
+                            : '目前沒有待抽獎勵，可以到收藏冊看看已收集的冷知識。'}
+                    </p>
+                    <RPGButton onClick={onOpenAlbum} color={pendingRewards.length > 0 ? 'success' : 'accent'} className="w-full mt-3">
+                        <Book size={14} /> {pendingRewards.length > 0 ? '前往收藏冊抽卡' : '查看冷知識收藏冊'}
+                    </RPGButton>
+                </section>
+            </div>
+        </div>
+    );
+};
+
+const LoginStampModal = ({ data, onClose }) => {
+    if (!data) return null;
+    const totalDays = Number(data.totalDays) || 0;
+    const reachedMilestone = ADVENTURE_MILESTONES.includes(totalDays) ? totalDays : null;
+    const nextMilestone = ADVENTURE_MILESTONES.find(milestone => milestone > totalDays);
+    const dateLabel = new Intl.DateTimeFormat('zh-TW', {
+        timeZone: 'Asia/Taipei', month: 'long', day: 'numeric', weekday: 'short'
+    }).format(new Date());
+    return (
+        <div className="absolute inset-0 z-[80] bg-black/80 flex items-center justify-center p-5" onClick={onClose}>
+            <div className="login-stamp-card w-full max-w-xs border-4 border-cyan-300 bg-gradient-to-b from-[#fff8dc] to-[#ead7a4] text-[#2d2347] p-5 text-center shadow-2xl" onClick={event => event.stopPropagation()}>
+                <div className="mx-auto w-20 border-4 border-[#2d2347] bg-white shadow-lg">
+                    <div className="bg-red-600 text-white font-pixel text-[8px] py-1">TODAY</div>
+                    <div className="font-pixel text-2xl py-3">{new Intl.DateTimeFormat('zh-TW', { timeZone: 'Asia/Taipei', day: '2-digit' }).format(new Date())}</div>
+                </div>
+                <p className="font-retro text-sm mt-2">{dateLabel}</p>
+                <div className="login-stamp-mark mx-auto my-4 w-28 h-28 rounded-full border-[6px] border-red-600 text-red-600 flex flex-col items-center justify-center -rotate-12 bg-white/40">
+                    <span className="font-pixel text-[10px]">CHECK IN</span>
+                    <span className="font-retro text-xl font-bold mt-1">打卡成功</span>
+                </div>
+                <h3 className="font-pixel text-sm text-purple-800">今日冒險打卡成功！</h3>
+                <div className="border-2 border-amber-700 bg-white/60 p-3 mt-4">
+                    <div className="font-pixel text-2xl">{totalDays}</div>
+                    <div className="font-retro text-sm">已累積冒險 {totalDays} 天</div>
+                </div>
+                <p className="font-retro text-sm font-bold text-purple-800 mt-3">
+                    {reachedMilestone
+                        ? `達成「累積冒險 ${reachedMilestone} 天」！抽卡已放入每週戰報。`
+                        : nextMilestone
+                            ? `再冒險 ${nextMilestone - totalDays} 天即可取得下一枚徽章`
+                            : '所有累積冒險徽章都已解鎖！'}
+                </p>
+                <button
+                    onClick={onClose}
+                    className="mt-5 w-full min-h-12 border-4 border-[#2d2347] bg-gradient-to-b from-red-500 to-red-700 text-white shadow-[4px_4px_0_#2d2347] active:translate-x-1 active:translate-y-1 active:shadow-none transition-transform font-retro font-bold text-base flex items-center justify-center gap-2 focus:outline-none focus:ring-4 focus:ring-cyan-500/60"
+                >
+                    <Sword size={18} aria-hidden="true" />
+                    收下今日印章
+                    <ChevronRight size={18} aria-hidden="true" />
+                </button>
+            </div>
+        </div>
+    );
+};
+
+const LoginCalendar = ({ onBack, userData }) => {
+    const todayKey = getTaipeiDateKey();
+    const [todayYear, todayMonth] = todayKey.split('-').map(Number);
+    const [visibleMonth, setVisibleMonth] = useState({ year: todayYear, month: todayMonth - 1 });
+    const [selectedDateKey, setSelectedDateKey] = useState(todayKey);
+    const adventureDates = new Set(userData?.engagement?.adventure?.dates || []);
+    const firstWeekday = new Date(Date.UTC(visibleMonth.year, visibleMonth.month, 1)).getUTCDay();
+    const daysInMonth = new Date(Date.UTC(visibleMonth.year, visibleMonth.month + 1, 0)).getUTCDate();
+    const calendarCells = [
+        ...Array.from({ length: firstWeekday }, () => null),
+        ...Array.from({ length: daysInMonth }, (_, index) => index + 1)
+    ];
+    while (calendarCells.length % 7 !== 0) calendarCells.push(null);
+
+    const changeMonth = delta => {
+        const target = new Date(Date.UTC(visibleMonth.year, visibleMonth.month + delta, 1));
+        setVisibleMonth({ year: target.getUTCFullYear(), month: target.getUTCMonth() });
+        setSelectedDateKey(null);
+    };
+    const returnToToday = () => {
+        setVisibleMonth({ year: todayYear, month: todayMonth - 1 });
+        setSelectedDateKey(todayKey);
+    };
+    const formatCalendarDate = dateKey => {
+        if (!dateKey) return '';
+        const [year, month, day] = dateKey.split('-').map(Number);
+        return new Intl.DateTimeFormat('zh-TW', {
+            timeZone: 'Asia/Taipei', year: 'numeric', month: 'long', day: 'numeric', weekday: 'long'
+        }).format(new Date(Date.UTC(year, month - 1, day)));
+    };
+
+    return (
+        <div className="flex flex-col h-full bg-[#171229] text-white">
+            <div className="flex items-center justify-between p-3 border-b-4 border-cyan-500/60 bg-black/50">
+                <RPGButton onClick={onBack} color="dark" className="px-2"><ArrowLeft size={16} /></RPGButton>
+                <div className="text-center">
+                    <h2 className="font-pixel text-sm text-cyan-300">冒險打卡日曆</h2>
+                    <p className="font-retro text-[10px] text-gray-400">ADVENTURE CHECK-IN · 台北時間</p>
+                </div>
+                <CalendarDays size={23} className="text-cyan-300" />
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-3">
+                <section className="border-4 border-cyan-500/50 bg-[#24173a] shadow-xl">
+                    <div className="grid grid-cols-[2.5rem_1fr_2.5rem] items-center gap-2 p-3 border-b-2 border-cyan-500/30 bg-black/30">
+                        <button onClick={() => changeMonth(-1)} className="h-9 border-2 border-gray-600 bg-black/40 hover:bg-cyan-900 flex items-center justify-center" aria-label="上個月"><ChevronLeft size={18} /></button>
+                        <button onClick={returnToToday} className="font-pixel text-xs text-cyan-200 hover:text-white" title="回到今天">{visibleMonth.year} 年 {visibleMonth.month + 1} 月</button>
+                        <button onClick={() => changeMonth(1)} className="h-9 border-2 border-gray-600 bg-black/40 hover:bg-cyan-900 flex items-center justify-center" aria-label="下個月"><ChevronRight size={18} /></button>
+                    </div>
+
+                    <div className="grid grid-cols-7 border-b border-white/10 bg-black/20">
+                        {['日', '一', '二', '三', '四', '五', '六'].map(weekday => (
+                            <div key={weekday} className="py-2 text-center font-pixel text-[9px] text-gray-400">{weekday}</div>
+                        ))}
+                    </div>
+
+                    <div className="grid grid-cols-7 gap-px bg-white/10">
+                        {calendarCells.map((day, index) => {
+                            if (!day) return <div key={`empty-${index}`} className="min-h-14 bg-[#16121f]" aria-hidden="true"></div>;
+                            const dateKey = `${visibleMonth.year}-${String(visibleMonth.month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                            const adventured = adventureDates.has(dateKey);
+                            const selected = selectedDateKey === dateKey;
+                            const isToday = dateKey === todayKey;
+                            return (
+                                <button
+                                    key={dateKey}
+                                    onClick={() => setSelectedDateKey(dateKey)}
+                                    className={`relative min-h-14 p-1 flex flex-col items-center justify-start transition-colors ${adventured ? 'bg-[#efe0b6] text-[#2d2347] hover:bg-white' : 'bg-slate-800 text-slate-500 hover:bg-slate-700'} ${selected ? 'ring-2 ring-inset ring-cyan-300' : ''}`}
+                                    aria-label={`${formatCalendarDate(dateKey)}，${adventured ? '今日打卡已完成' : '今日尚未完成打卡'}`}
+                                >
+                                    <span className={`font-pixel text-[9px] ${isToday ? 'underline decoration-2 underline-offset-2' : ''}`}>{day}</span>
+                                    {adventured && <span className="calendar-stamp mt-1 text-red-700 font-pixel text-[6px] leading-none border-2 border-red-700 rounded-full px-1 py-1 -rotate-12">CHECK<br />IN</span>}
+                                </button>
+                            );
+                        })}
+                    </div>
+                </section>
+
+                <div className="mt-3 border-2 border-white/15 bg-black/35 p-3 min-h-24">
+                    {selectedDateKey ? (
+                        <>
+                            <div className="font-pixel text-[10px] text-cyan-300">{formatCalendarDate(selectedDateKey)}</div>
+                            <div className="mt-3 flex flex-wrap gap-2 font-retro text-xs">
+                                <span className={`border px-2 py-1 ${adventureDates.has(selectedDateKey) ? 'border-cyan-400 bg-cyan-950/50 text-cyan-200' : 'border-gray-600 bg-gray-900 text-gray-500'}`}>{adventureDates.has(selectedDateKey) ? '✓ 今日打卡已完成' : '今日尚未完成打卡'}</span>
+                            </div>
+                        </>
+                    ) : <p className="font-retro text-xs text-gray-500">點擊日期查看冒險打卡紀錄。</p>}
+                </div>
+                <p className="font-retro text-[10px] text-gray-500 mt-3 leading-relaxed">當天完成一場遊戲並取得 B 級以上，即可打卡；每天最多計算一次。</p>
+            </div>
+        </div>
+    );
+};
+
+const AchievementHall = ({ onBack, userData }) => {
+    const stats = getAchievementStats(userData);
+    const claims = userData?.triviaRewardClaims || {};
+    const legacyWordCount = new Set(userData?.discoveredWordIds || []).size;
+    const legacyUnlocked = LEGACY_WORD_MILESTONES.filter(milestone => legacyWordCount >= milestone);
+
+    return (
+        <div className="flex flex-col h-full bg-[#171229] text-white">
+            <div className="flex items-center justify-between p-3 border-b-4 border-cyan-500/60 bg-black/50">
+                <RPGButton onClick={onBack} color="dark" className="px-2"><ArrowLeft size={16} /></RPGButton>
+                <div className="text-center"><h2 className="font-pixel text-sm text-cyan-300">英雄徽章館</h2><p className="font-retro text-[10px] text-gray-400">HERO BADGE HALL</p></div>
+                <Award size={23} className="text-yellow-300" />
+            </div>
+            <div className="flex-1 overflow-y-auto p-3 space-y-3">
+                <p className="font-retro text-xs text-gray-300 border-2 border-cyan-500/30 bg-cyan-950/30 p-3">
+                    每達成一個成就，就會獲得 1 次冷知識抽卡；抽卡統一放在每週戰報最底下。
+                </p>
+                <div className="grid grid-cols-3 gap-2 font-retro text-[10px] text-center">
+                    <div className="border border-purple-300 bg-purple-800/70 py-2 text-white">✓ 已達成</div>
+                    <div className="border border-cyan-300 bg-cyan-950/70 py-2 text-cyan-100">● 進行中</div>
+                    <div className="border border-gray-700 bg-black/50 py-2 text-gray-500">🔒 未達成</div>
+                </div>
+                {ACHIEVEMENT_SECTIONS.map(section => {
+                    const current = stats[section.id];
+                    const next = section.milestones.find(value => value > current);
+                    const progress = next ? Math.min((current / next) * 100, 100) : 100;
+                    return (
+                        <section key={section.id} className="border-2 border-white/15 bg-black/30 p-3">
+                            <div className="flex justify-between items-start gap-3">
+                                <div className="min-w-0 flex-1">
+                                    <h3 className="font-pixel text-[11px] text-yellow-300">{section.icon} {section.title}</h3>
+                                    <p className="font-retro text-[10px] text-gray-400 mt-1">目前 {current} {section.unit}{next ? ` · 下一個 ${next}` : ' · 全部完成'}</p>
+                                </div>
+                                <span className="font-pixel text-xl text-cyan-300">{current}</span>
+                            </div>
+                            <div className="mt-3">
+                                <div className="flex justify-between font-retro text-[10px] text-gray-300 mb-1">
+                                    <span>{next ? `進行中 ${current} / ${next}` : '所有里程碑已完成'}</span>
+                                    <span>{Math.round(progress)}%</span>
+                                </div>
+                                <div className="h-3 bg-black/70 border border-white/15">
+                                    <div className="h-full bg-gradient-to-r from-cyan-500 via-purple-400 to-yellow-300 transition-all duration-500" style={{ width: `${progress}%` }}></div>
+                                </div>
+                            </div>
+                            <div className="grid grid-cols-4 gap-2">
+                                {section.milestones.map(milestone => {
+                                    const unlocked = current >= milestone;
+                                    const inProgress = !unlocked && milestone === next;
+                                    const isSpecial = section.special.includes(milestone);
+                                    const rewardKey = getAchievementRewardKey(section.id, milestone);
+                                    const rewardClaimed = Boolean(claims[rewardKey]);
+                                    return (
+                                        <div key={milestone} className={`aspect-square border-2 flex flex-col items-center justify-center text-center mt-3 ${unlocked ? isSpecial ? 'achievement-special border-yellow-300 text-yellow-100' : 'bg-purple-800/70 border-purple-300 text-white' : inProgress ? 'bg-cyan-950/70 border-cyan-300 text-cyan-100 shadow-[0_0_10px_rgba(34,211,238,0.35)]' : 'bg-black/50 border-gray-700 text-gray-600'}`} title={`${section.title} ${milestone} ${section.unit}`}>
+                                            <span className={`text-xl ${unlocked || inProgress ? '' : 'grayscale opacity-30'}`}>{unlocked || inProgress ? section.icon : '🔒'}</span>
+                                            <span className="font-pixel text-[8px] mt-1">{milestone}</span>
+                                            {unlocked && <span className="font-retro text-[7px] mt-1">{rewardClaimed ? '✓ 已抽卡' : '🎫 待抽卡'}</span>}
+                                            {inProgress && <span className="font-retro text-[7px] mt-1 text-cyan-200">進行中</span>}
+                                            {!inProgress && isSpecial && <span className="font-pixel text-[5px] mt-0.5">SPECIAL</span>}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </section>
+                    );
+                })}
+                {legacyUnlocked.length > 0 && (
+                    <section className="border-2 border-amber-500/40 bg-amber-950/15 p-3">
+                        <div className="flex justify-between items-start gap-3">
+                            <div>
+                                <h3 className="font-pixel text-[11px] text-amber-300">📜 舊版探索單字</h3>
+                                <p className="font-retro text-[10px] text-gray-400 mt-1">過去已取得的徽章永久保留；新版改由答對單字累積。</p>
+                            </div>
+                            <span className="font-pixel text-xl text-amber-300">{legacyWordCount}</span>
+                        </div>
+                        <div className="grid grid-cols-4 gap-2 mt-3">
+                            {legacyUnlocked.map(milestone => {
+                                const rewardClaimed = Boolean(claims[`achievement:legacyWords:${milestone}`]);
+                                return (
+                                    <div key={milestone} className="aspect-square border-2 border-purple-300 bg-purple-800/70 text-white flex flex-col items-center justify-center text-center">
+                                        <span className="text-xl">🔤</span>
+                                        <span className="font-pixel text-[8px] mt-1">{milestone}</span>
+                                        <span className="font-retro text-[7px] mt-1">{rewardClaimed ? '✓ 已抽卡' : '🎫 待抽卡'}</span>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </section>
+                )}
+            </div>
+        </div>
+    );
+};
+
+const WorldMap = ({ onSelectNode, onViewJourney, onViewWeeklyReport, onViewLoginCalendar, onOpenAlbum, rewardSummary = {}, userData, onUltimateChallenge, onViewMistakeNotebook, onLogout, records = {}, advMeta = null, activeTab = 'main', onChangeTab }) => {
+    const [showGuide, setShowGuide] = useState(false);
+    const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+    const [expandedAdvVolume, setExpandedAdvVolume] = useState(null);
+    const [showAdvSearch, setShowAdvSearch] = useState(false);
+    const [advSearchTerm, setAdvSearchTerm] = useState('');
+    const [advSearchResults, setAdvSearchResults] = useState(null);
+    const [isAdvSearching, setIsAdvSearching] = useState(false);
+    const [advSearchError, setAdvSearchError] = useState('');
+    const deferredTriviaCount = rewardSummary.totalPendingCount || 0;
+    const upcomingAchievement = getUpcomingAchievements(userData, 1)[0] || null;
+    const todayCheckedIn = (userData?.engagement?.adventure?.dates || []).includes(getTaipeiDateKey());
+    const reportSummary = !todayCheckedIn
+        ? '📅 本日打卡　0 / 1'
+        : upcomingAchievement
+            ? `${upcomingAchievement.icon} ${upcomingAchievement.title}還差 ${upcomingAchievement.remaining} ${upcomingAchievement.unit}　${upcomingAchievement.current} / ${upcomingAchievement.next}`
+            : '所有徽章都已解鎖！';
+
+    const closeAdvancedSearch = () => {
+        setShowAdvSearch(false);
+        setAdvSearchTerm('');
+        setAdvSearchResults(null);
+        setAdvSearchError('');
+    };
+
+    const handleAdvancedSearch = async (event) => {
+        event.preventDefault();
+        const term = advSearchTerm.trim();
+        if (!term || isAdvSearching) return;
+
+        setIsAdvSearching(true);
+        setAdvSearchError('');
+        setAdvSearchResults(null);
+        try {
+            setAdvSearchResults(await searchAdvancedWords(term));
+        } catch (error) {
+            console.error('Advanced word search failed:', error);
+            setAdvSearchError('搜尋失敗，請檢查網路後再試一次。');
+        } finally {
+            setIsAdvSearching(false);
+        }
+    };
+
+    return (
+        <div className="relative flex flex-col h-full bg-[#3d2963]">
             {showGuide && <AchievementGuide onClose={() => setShowGuide(false)} />}
+            {showAdvSearch && (
+                <div className="absolute inset-0 z-[140] bg-black/85 backdrop-blur-sm flex items-start justify-center p-4 pt-12" onClick={closeAdvancedSearch}>
+                    <div className="w-full max-w-sm bg-[#171229] border-4 border-purple-400 shadow-[6px_6px_0_#09050f] p-4" onClick={event => event.stopPropagation()}>
+                        <div className="flex items-center justify-between mb-4">
+                            <div>
+                                <h3 className="font-pixel text-sm text-purple-200">搜尋進階單字</h3>
+                                <p className="font-retro text-[11px] text-gray-400 mt-1">輸入完整英文單字，找到後直接前往該課</p>
+                            </div>
+                            <button onClick={closeAdvancedSearch} className="text-gray-500 hover:text-white p-1" aria-label="關閉搜尋">
+                                <XCircle size={22} />
+                            </button>
+                        </div>
+
+                        <form onSubmit={handleAdvancedSearch} className="flex gap-2">
+                            <input
+                                type="search"
+                                value={advSearchTerm}
+                                onChange={event => setAdvSearchTerm(event.target.value)}
+                                placeholder="例如：adventure"
+                                autoFocus
+                                className="min-w-0 flex-1 bg-black/60 border-2 border-purple-500 px-3 py-2 text-white font-retro text-base outline-none focus:border-yellow-300"
+                            />
+                            <RPGButton type="submit" color="secondary" className="px-3" disabled={!advSearchTerm.trim() || isAdvSearching} aria-label="搜尋">
+                                <Search size={18} />
+                            </RPGButton>
+                        </form>
+
+                        <div className="mt-4 max-h-72 overflow-y-auto">
+                            {isAdvSearching && (
+                                <div className="py-8 text-center font-pixel text-xs text-purple-200 animate-pulse">SEARCHING...</div>
+                            )}
+                            {advSearchError && (
+                                <div className="border-2 border-red-700 bg-red-950/50 p-3 font-retro text-sm text-red-200">{advSearchError}</div>
+                            )}
+                            {!isAdvSearching && advSearchResults?.length === 0 && (
+                                <div className="border-2 border-gray-700 bg-black/30 p-4 text-center">
+                                    <p className="font-pixel text-xs text-gray-300">找不到這個單字</p>
+                                    <p className="font-retro text-xs text-gray-500 mt-2">請確認拼字，搜尋目前需輸入完整單字。</p>
+                                </div>
+                            )}
+                            {!isAdvSearching && advSearchResults?.map(result => (
+                                <button
+                                    key={result.id}
+                                    onClick={() => {
+                                        playSound('click');
+                                        closeAdvancedSearch();
+                                        onSelectNode({ type: 'adv', id: advLessonId(result.lesson), lesson: result.lesson });
+                                    }}
+                                    className="w-full mb-2 border-2 border-purple-600 bg-purple-950/60 hover:bg-purple-900 p-3 flex items-center gap-3 text-left transition-colors"
+                                >
+                                    <div className="w-12 h-12 shrink-0 border-2 border-purple-300 bg-black/40 flex items-center justify-center font-pixel text-xs text-yellow-300">
+                                        L{String(result.lesson).padStart(3, '0')}
+                                    </div>
+                                    <div className="min-w-0 flex-1">
+                                        <div className="font-pixel text-xs text-white truncate">{result.word}</div>
+                                        <div className="font-retro text-sm text-purple-200 mt-1 truncate">{result.part} {result.chinese}</div>
+                                    </div>
+                                    <ChevronRight size={18} className="shrink-0 text-purple-300" />
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            )}
             <div className="bg-rpg-bg sticky top-0 z-10 p-2 border-b-4 border-rpg-border shadow-lg flex justify-between items-center">
                 <div className="flex items-center gap-1">
                     <button onClick={onUltimateChallenge} className="text-rpg-primary hover:text-white p-1" title="終極試煉">
@@ -546,6 +2195,13 @@ const WorldMap = ({ onSelectNode, onViewJourney, onUltimateChallenge, onViewMist
                 </div>
                 <h2 className="font-pixel text-white text-center flex items-center justify-center gap-2"><MapIcon size={16} /> WORLD MAP</h2>
                 <div className="flex items-center gap-1">
+                    <button onClick={onOpenAlbum} className="relative text-amber-300 hover:text-white p-1" title={deferredTriviaCount > 0 ? `有 ${deferredTriviaCount} 次待抽卡，請到每週戰報抽取` : '冷知識收藏冊'}>
+                        <Lightbulb size={21} />
+                        {deferredTriviaCount > 0 && <span className="absolute -top-1 -right-1 min-w-4 h-4 px-1 rounded-full bg-red-600 text-white font-pixel text-[7px] flex items-center justify-center border border-white">{deferredTriviaCount > 99 ? '99+' : deferredTriviaCount}</span>}
+                    </button>
+                    <button onClick={onViewLoginCalendar} className="text-cyan-300 hover:text-white p-1" title="冒險打卡日曆">
+                        <CalendarDays size={21} />
+                    </button>
                     <button onClick={onViewMistakeNotebook} className="text-red-400 hover:text-red-300 p-1" title="錯題筆記本">
                         <Book size={20} />
                     </button>
@@ -554,14 +2210,48 @@ const WorldMap = ({ onSelectNode, onViewJourney, onUltimateChallenge, onViewMist
                     </button>
                 </div>
             </div>
-            <div className="flex-1 overflow-y-auto relative p-4 space-y-6 bg-[url('https://www.transparenttextures.com/patterns/diagmonds-light.png')]">
+            {/* 主線 / 進階 地圖切換 */}
+            <div className="flex bg-black/60 border-b-4 border-rpg-border z-10">
+                <button
+                    onClick={() => { playSound('click'); onChangeTab && onChangeTab('main'); }}
+                    className={`flex-1 py-2 font-pixel text-xs transition-colors ${activeTab === 'main' ? 'bg-rpg-primary text-white' : 'text-gray-400 hover:text-white'}`}
+                >
+                    ⚔ 主線冒險
+                </button>
+                <button
+                    onClick={() => { playSound('click'); onChangeTab && onChangeTab('adv'); }}
+                    className={`flex-1 py-2 font-pixel text-xs transition-colors ${activeTab === 'adv' ? 'bg-purple-700 text-white' : 'text-gray-400 hover:text-white'}`}
+                >
+                    ✦ 進階篇章
+                </button>
+            </div>
+            <div className="world-status-row bg-[#171229] border-b-2 border-yellow-500/35 px-2 py-2 flex items-center gap-2 z-10">
+                <button
+                    onClick={onViewWeeklyReport}
+                    className="relative flex-1 min-w-0 border-2 border-purple-600/60 bg-purple-950/50 hover:bg-purple-900/60 px-2 py-2 text-left transition-colors"
+                    aria-label={`開啟每週戰報，${reportSummary}`}
+                >
+                    <div className="flex items-center gap-2">
+                        <Award size={22} className="shrink-0 text-yellow-300" aria-hidden="true" />
+                        <div className="min-w-0 flex-1">
+                            <span className="font-pixel text-[9px] text-yellow-300">每週戰報</span>
+                            <div className="font-retro text-[11px] text-yellow-100 truncate mt-1" aria-label="近期即將完成的成就">
+                                {reportSummary}
+                            </div>
+                        </div>
+                    </div>
+                </button>
                 <button
                     onClick={() => setShowLogoutConfirm(true)}
-                    className="absolute top-3 right-3 bg-[#1a1a1a] p-1.5 rounded-full border-2 border-[#333] hover:bg-red-900 transition-colors shadow-black shadow-sm z-10"
+                    className="shrink-0 h-full min-h-11 px-3 bg-[#1a1a1a] border-2 border-[#444] hover:bg-red-900 transition-colors flex flex-col items-center justify-center gap-1"
                     title="登出"
+                    aria-label="登出"
                 >
-                    <LogOut size={14} color="#aaa" />
+                    <LogOut size={16} color="#ddd" />
+                    <span className="font-retro text-[9px] text-gray-300">登出</span>
                 </button>
+            </div>
+            <div className="flex-1 overflow-y-auto relative p-4 space-y-6 bg-[url('https://www.transparenttextures.com/patterns/diagmonds-light.png')]">
                 {showLogoutConfirm && (
                     <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
                         <RPGBorder className="bg-rpg-panel p-6 w-full max-w-xs text-center shadow-2xl">
@@ -573,7 +2263,7 @@ const WorldMap = ({ onSelectNode, onViewJourney, onUltimateChallenge, onViewMist
                         </RPGBorder>
                     </div>
                 )}
-                {MAP_STRUCTURE.map((node, index) => {
+                {activeTab === 'main' && MAP_STRUCTURE.map((node, index) => {
                     const isBoss = node.type === 'boss';
                     const info = LEVEL_INFO[node.id];
                     const sectionHeader = !isBoss && SECTION_HEADERS[node.id];
@@ -659,6 +2349,105 @@ const WorldMap = ({ onSelectNode, onViewJourney, onUltimateChallenge, onViewMist
                         </div>
                     );
                 })}
+                {activeTab === 'adv' && (() => {
+                    const totalLessons = advMeta?.totalLessons || 0;
+                    if (totalLessons === 0) {
+                        return (
+                            <div className="flex flex-col items-center justify-center py-24 gap-4 text-center">
+                                <Lock size={48} className="text-gray-400" />
+                                <p className="font-pixel text-gray-300 text-sm">進階篇章準備中...</p>
+                                <p className="font-retro text-gray-400 text-xs">COMING SOON</p>
+                            </div>
+                        );
+                    }
+                    return (
+                        <div>
+                            <div className="w-full max-w-xs h-10 mx-auto mb-2 flex items-center justify-end">
+                                <button
+                                    onClick={() => {
+                                        playSound('click');
+                                        setShowAdvSearch(true);
+                                    }}
+                                    className="w-9 h-9 rounded-full border-2 border-slate-600 bg-black/85 text-purple-200 hover:bg-purple-950 hover:text-white shadow-[0_3px_8px_rgba(0,0,0,0.7)] flex items-center justify-center transition-transform active:scale-95"
+                                    title="搜尋進階單字"
+                                    aria-label="搜尋進階單字"
+                                >
+                                    <Search size={16} />
+                                </button>
+                            </div>
+
+                            <div className="space-y-4">
+                            {getAdvancedMapVolumes(totalLessons).map(volume => {
+                                const isExpanded = expandedAdvVolume === volume.index;
+                                const completedLessons = volume.lessons.filter(lesson =>
+                                    getAdvancedQualifiedClears(records[advLessonId(lesson)] || {}) >= ADV_CLEARS_TO_COMPLETE
+                                ).length;
+
+                                return (
+                                    <section key={volume.index} className="w-full flex flex-col items-center">
+                                        <div className="relative w-full max-w-xs">
+                                            <button
+                                                onClick={() => {
+                                                    playSound('click');
+                                                    setExpandedAdvVolume(isExpanded ? null : volume.index);
+                                                }}
+                                                className="relative w-full border-4 border-[#4a3c31] bg-gradient-to-b from-[#f6e7bd] via-[#e3ce9c] to-[#caa66f] text-[#291b3f] shadow-[4px_4px_0_#160d24] px-4 py-3 flex items-center gap-3 text-left transition-transform active:translate-y-1 active:shadow-[2px_2px_0_#160d24]"
+                                                aria-expanded={isExpanded}
+                                            >
+                                                <div className="absolute -left-2 top-1 bottom-1 w-3 rounded-full border-2 border-[#4a3c31] bg-[#b8894e]" aria-hidden="true"></div>
+                                                <div className="absolute -right-2 top-1 bottom-1 w-3 rounded-full border-2 border-[#4a3c31] bg-[#b8894e]" aria-hidden="true"></div>
+                                                <Scroll size={28} className="shrink-0 text-purple-900" />
+                                                <div className="min-w-0 flex-1">
+                                                    <h3 className="font-pixel text-sm">進階 第 {volume.index + 1} 卷</h3>
+                                                    <p className="font-retro text-[11px] mt-1">Lesson {volume.start} - {volume.end} · 完成 {completedLessons}/{volume.lessons.length}</p>
+                                                </div>
+                                                <ChevronRight size={20} className={`shrink-0 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
+                                            </button>
+                                        </div>
+
+                                        {isExpanded && (
+                                            <div className="w-full pt-5 space-y-6 flex flex-col items-center">
+                                                {volume.lessons.map((lesson, lessonIndex) => {
+                                                    const record = records[advLessonId(lesson)] || {};
+                                                    const clears = getAdvancedQualifiedClears(record);
+                                                    const starCount = Math.min(clears, ADV_CLEARS_TO_COMPLETE);
+                                                    const isDone = clears >= ADV_CLEARS_TO_COMPLETE;
+                                                    const title = advMeta?.titles?.[String(lesson)] || `進階單字 第 ${lesson} 課`;
+
+                                                    return (
+                                                        <div key={lesson} className="relative flex justify-center w-full">
+                                                            {lessonIndex > 0 && <div className="absolute -top-6 h-6 w-1 bg-purple-400/40"></div>}
+                                                            <button
+                                                                onClick={() => { playSound('click'); onSelectNode({ type: 'adv', id: advLessonId(lesson), lesson }); }}
+                                                                className={`relative w-full max-w-xs p-2 border-4 transition-all hover:scale-[1.02] active:scale-95 text-left group flex items-center gap-3 shadow-xl ${isDone ? 'bg-purple-950 border-yellow-400' : 'bg-gradient-to-b from-[#d8dce5] to-[#aeb8c9] border-[#596579]'}`}
+                                                            >
+                                                                <div className="w-14 h-14 flex-shrink-0 border-2 border-black overflow-hidden flex items-center justify-center bg-purple-900">
+                                                                    <PixelArt.Chest />
+                                                                </div>
+                                                                <div className="flex-1 overflow-hidden">
+                                                                    <div className="flex justify-between items-baseline">
+                                                                        <h3 className={`font-pixel text-lg leading-tight ${isDone ? 'text-yellow-300' : 'text-rpg-bg'}`}>L{String(lesson).padStart(3, '0')}</h3>
+                                                                        <AdvancedStars grades={getAdvancedStarGrades(record)} count={starCount} size="sm" label={`第 ${lesson} 課已取得 ${starCount} 顆星`} />
+                                                                    </div>
+                                                                    <p className={`font-retro text-[12px] mt-1 leading-snug truncate ${isDone ? 'text-purple-200' : 'text-[#342d3d]'}`}>{title}</p>
+                                                                </div>
+                                                                {isDone && (
+                                                                    <div className="text-yellow-400 font-pixel text-xl drop-shadow-[0_0_5px_rgba(250,204,21,0.8)]" title="通關 3 次達成！">✔</div>
+                                                                )}
+                                                                <ChevronRight className={isDone ? 'text-yellow-400' : 'text-rpg-bg'} size={16} />
+                                                            </button>
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        )}
+                                    </section>
+                                );
+                            })}
+                            </div>
+                        </div>
+                    );
+                })()}
                 <div className="h-10"></div>
             </div>
         </div>
@@ -670,27 +2459,16 @@ const calculateTotalRank = (record) => {
     if (!record) return { rank: '?', color: '#9ca3af' }; // Gray
 
     const weights = { 'S': 5, 'A': 4, 'B': 3, 'C': 2, 'D': 1 };
-    const categories = ['vocab', 'equip', 'alchemy', 'scroll'];
     let sum = 0;
 
-    categories.forEach(cat => {
-        let grade = null;
-        // New structure: record.vocab.grade
-        if (record[cat] && typeof record[cat] === 'object' && record[cat].grade) {
-            grade = record[cat].grade;
-        }
-        // Legacy structure: record.vocabGrade
-        else if (record[`${cat}Grade`]) {
-            grade = record[`${cat}Grade`];
-        }
-
+    ACHIEVEMENT_CATS.forEach(cat => {
+        const grade = getGradeWithVocabFallback(record, cat);
         if (grade && weights[grade]) {
             sum += weights[grade];
         }
     });
 
-    // Formula: ceil(sum / 4)
-    const avg = Math.ceil(sum / 4);
+    const avg = Math.ceil(sum / ACHIEVEMENT_CATS.length);
 
     const map = { 5: 'S', 4: 'A', 3: 'B', 2: 'C', 1: 'D', 0: '?' };
     const rank = map[avg] || '?';
@@ -762,10 +2540,259 @@ const PasswordEntryModal = ({ onClose, onSuccess }) => {
     );
 };
 
-const JourneyMode = ({ onBack, onViewTrialLog, records = {} }) => {
+const AdvancedJourneyView = ({ records = {}, advMeta = null, mistakeStats = {} }) => {
+    const [expandedVolume, setExpandedVolume] = useState(null);
+    const totalLessons = Number(advMeta?.totalLessons) || 0;
+    const gradePoints = { S: 100, A: 90, B: 80, C: 70, D: 60, E: 0, '?': 0 };
+    const gradeColors = { S: '#fbbf24', A: '#fb923c', B: '#60a5fa', C: '#34d399', D: '#9ca3af', E: '#6b7280', '?': '#6b7280' };
+
+    const lessonRecords = Array.from({ length: totalLessons }, (_, index) => {
+        const lesson = index + 1;
+        return { lesson, record: records[advLessonId(lesson)] || {} };
+    });
+    const attemptedLessons = lessonRecords.filter(({ record }) =>
+        (record.attempts || 0) > 0 || getAdvancedQualifiedClears(record) > 0 || Boolean(record.bestGrade)
+    );
+    const completedLessons = lessonRecords.filter(({ record }) => getAdvancedQualifiedClears(record) >= ADV_CLEARS_TO_COMPLETE).length;
+    const earnedStars = lessonRecords.reduce((sum, { record }) => sum + Math.min(getAdvancedQualifiedClears(record), ADV_CLEARS_TO_COMPLETE), 0);
+    const maxStars = totalLessons * ADV_CLEARS_TO_COMPLETE;
+    const starProgress = maxStars > 0 ? earnedStars / maxStars : 0;
+    const gradeCoverage = totalLessons > 0
+        ? lessonRecords.reduce((sum, { record }) => sum + (gradePoints[record.bestGrade] || 0), 0) / (totalLessons * 100)
+        : 0;
+    const mastery = Math.round((starProgress * 0.6 + gradeCoverage * 0.4) * 100);
+    const title = mastery >= 95 ? '單字大師'
+        : mastery >= 80 ? '進階達人'
+            : mastery >= 60 ? '菁英勇者'
+                : mastery >= 40 ? '穩定挑戰者'
+                    : mastery >= 20 ? '進階學徒'
+                        : '初探者';
+    const gradeDistribution = ['S', 'A', 'B', 'C', 'D', 'E'].reduce((counts, grade) => {
+        counts[grade] = attemptedLessons.filter(({ record }) => record.bestGrade === grade).length;
+        return counts;
+    }, {});
+
+    const accuracyHistory = lessonRecords
+        .flatMap(({ lesson, record }) => (record.accuracyHistory || []).map(entry => ({ ...entry, lesson })))
+        .filter(entry => Number.isFinite(Number(entry.accuracy)))
+        .sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
+    const recentTen = accuracyHistory.slice(0, 10);
+    const recentAccuracy = recentTen.length > 0
+        ? recentTen.reduce((sum, entry) => sum + Number(entry.accuracy), 0) / recentTen.length
+        : null;
+    const newestFive = accuracyHistory.slice(0, 5);
+    const previousFive = accuracyHistory.slice(5, 10);
+    const average = (entries) => entries.reduce((sum, entry) => sum + Number(entry.accuracy), 0) / entries.length;
+    const trendDelta = newestFive.length === 5 && previousFive.length === 5
+        ? average(newestFive) - average(previousFive)
+        : null;
+    const trend = trendDelta === null
+        ? { label: '資料累積中', color: 'text-gray-400', symbol: '…' }
+        : trendDelta >= 5
+            ? { label: '進步中', color: 'text-green-300', symbol: '↑' }
+            : trendDelta <= -5
+                ? { label: '建議複習', color: 'text-red-300', symbol: '↓' }
+                : { label: '表現穩定', color: 'text-blue-300', symbol: '→' };
+
+    const advancedMistakes = Object.values(mistakeStats).filter(data =>
+        data?.source === 'advanced' && Number.isFinite(Number(data?.lesson)) && (data.count || 0) > 0
+    );
+    const mistakeByLesson = advancedMistakes.reduce((groups, data) => {
+        const lesson = Number(data.lesson);
+        if (!groups[lesson]) groups[lesson] = { lesson, wordCount: 0, errorCount: 0 };
+        groups[lesson].wordCount += 1;
+        groups[lesson].errorCount += data.count || 0;
+        return groups;
+    }, {});
+    const weakestLessons = Object.values(mistakeByLesson)
+        .sort((a, b) => b.wordCount - a.wordCount || b.errorCount - a.errorCount || a.lesson - b.lesson)
+        .slice(0, 3);
+    const totalErrorCount = advancedMistakes.reduce((sum, data) => sum + (data.count || 0), 0);
+
+    let recommendation = null;
+    if (weakestLessons.length > 0) {
+        recommendation = { lesson: weakestLessons[0].lesson, reason: '目前錯字最多，建議優先複習' };
+    } else {
+        const lowestAccuracy = attemptedLessons
+            .filter(({ record }) => Number.isFinite(Number(record.lastAccuracy)))
+            .sort((a, b) => Number(a.record.lastAccuracy) - Number(b.record.lastAccuracy))[0];
+        if (lowestAccuracy) recommendation = { lesson: lowestAccuracy.lesson, reason: '近期正確率較低，適合再次挑戰' };
+        else {
+            const nextLesson = lessonRecords.find(({ record }) => getAdvancedQualifiedClears(record) < ADV_CLEARS_TO_COMPLETE);
+            if (nextLesson) recommendation = { lesson: nextLesson.lesson, reason: '繼續完成下一個尚未通關的篇章' };
+        }
+    }
+
+    const formatDate = (timestamp) => {
+        if (!timestamp) return '資料累積中';
+        const date = new Date(timestamp);
+        if (Number.isNaN(date.getTime())) return '資料累積中';
+        return `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`;
+    };
+
+    const averageGrade = (volumeLessons) => {
+        const played = volumeLessons.map(({ record }) => gradePoints[record.bestGrade] || 0).filter(score => score > 0);
+        if (played.length === 0) return '?';
+        const score = played.reduce((sum, value) => sum + value, 0) / played.length;
+        if (score >= 95) return 'S';
+        if (score >= 85) return 'A';
+        if (score >= 75) return 'B';
+        if (score >= 65) return 'C';
+        return 'D';
+    };
+
+    if (totalLessons === 0) {
+        return (
+            <div className="flex-1 flex flex-col items-center justify-center text-center p-6 bg-[#160d2b]">
+                <Book size={54} className="text-purple-400/50 mb-4" />
+                <p className="font-pixel text-purple-200 text-sm">進階旅程準備中</p>
+                <p className="font-retro text-gray-500 text-xs mt-2">進階目錄載入後會顯示能力報告</p>
+            </div>
+        );
+    }
+
+    return (
+        <div className="flex-1 overflow-y-auto p-4 bg-[#160d2b] bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]">
+            <section className="mb-5 border-4 border-purple-500 bg-gradient-to-b from-purple-950 to-black p-4 shadow-[0_0_24px_rgba(168,85,247,0.25)]">
+                <div className="flex items-center justify-between mb-3">
+                    <div>
+                        <p className="font-pixel text-[9px] text-purple-300">ADVENTURER REPORT</p>
+                        <h3 className="font-pixel text-sm text-white mt-1">冒險者能力報告</h3>
+                    </div>
+                    <div className="text-right">
+                        <div className="font-pixel text-yellow-300 text-sm">{title}</div>
+                        <div className="font-retro text-[10px] text-gray-400">進階掌握度 {mastery}%</div>
+                    </div>
+                </div>
+
+                <div className="h-3 bg-black border border-purple-700 mb-4 overflow-hidden">
+                    <div className="h-full bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-400 transition-all" style={{ width: `${mastery}%` }}></div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2 mb-3">
+                    <div className="bg-white/5 border border-purple-700/70 p-2">
+                        <div className="font-retro text-[10px] text-gray-400">完成進度</div>
+                        <div className="font-pixel text-sm text-white mt-1">{completedLessons}/{totalLessons} 課</div>
+                        <div className="font-retro text-[10px] text-yellow-300 mt-1">★ {earnedStars}/{maxStars}</div>
+                    </div>
+                    <div className="bg-white/5 border border-purple-700/70 p-2">
+                        <div className="font-retro text-[10px] text-gray-400">最近 10 次正確率</div>
+                        <div className="font-pixel text-sm text-white mt-1">{recentAccuracy === null ? '累積中' : `${Math.round(recentAccuracy)}%`}</div>
+                        <div className={`font-retro text-[10px] mt-1 ${trend.color}`}>{trend.symbol} {trend.label}</div>
+                    </div>
+                    <div className="bg-white/5 border border-purple-700/70 p-2">
+                        <div className="font-retro text-[10px] text-gray-400">目前進階錯題</div>
+                        <div className="font-pixel text-sm text-red-300 mt-1">{advancedMistakes.length} 字</div>
+                        <div className="font-retro text-[10px] text-gray-400 mt-1">累積 {totalErrorCount} 次錯誤</div>
+                    </div>
+                    <div className="bg-white/5 border border-purple-700/70 p-2">
+                        <div className="font-retro text-[10px] text-gray-400">已挑戰範圍</div>
+                        <div className="font-pixel text-sm text-cyan-300 mt-1">{attemptedLessons.length} 課</div>
+                        <div className="font-retro text-[10px] text-gray-400 mt-1">共 {accuracyHistory.length} 筆分析</div>
+                    </div>
+                </div>
+
+                {weakestLessons.length > 0 && (
+                    <div className="mb-3">
+                        <div className="font-retro text-[10px] text-gray-400 mb-1">錯題較多的課次</div>
+                        <div className="flex flex-wrap gap-2">
+                            {weakestLessons.map(item => (
+                                <span key={item.lesson} className="font-pixel text-[9px] text-red-200 bg-red-950 border border-red-700 px-2 py-1">
+                                    L{item.lesson} · {item.wordCount} 字
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                <div className="mb-3">
+                    <div className="font-retro text-[10px] text-gray-400 mb-1">各課最佳評級分布</div>
+                    <div className="grid grid-cols-6 gap-1">
+                        {['S', 'A', 'B', 'C', 'D', 'E'].map(grade => (
+                            <div key={grade} className="bg-black/50 border border-gray-700 py-1 text-center">
+                                <div className="font-pixel text-[9px]" style={{ color: gradeColors[grade] }}>{grade}</div>
+                                <div className="font-retro text-[10px] text-white mt-1">{gradeDistribution[grade]}</div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {recommendation && (
+                    <div className="bg-yellow-950/50 border-2 border-yellow-600 p-2 flex gap-2 items-start">
+                        <Lightbulb size={18} className="text-yellow-300 flex-shrink-0" />
+                        <div>
+                            <div className="font-pixel text-[10px] text-yellow-300">下一步：第 {recommendation.lesson} 課</div>
+                            <div className="font-retro text-xs text-gray-300 mt-1">{recommendation.reason}</div>
+                        </div>
+                    </div>
+                )}
+
+                <p className="font-retro text-[9px] text-gray-600 mt-3 text-center">此稱號代表 App 內的進階學習進度，不是正式英文檢定等級。</p>
+            </section>
+
+            <div className="space-y-3 pb-10">
+                {Array.from({ length: Math.ceil(totalLessons / ADV_LESSONS_PER_SECTION) }, (_, volumeIndex) => {
+                    const start = volumeIndex * ADV_LESSONS_PER_SECTION;
+                    const volumeLessons = lessonRecords.slice(start, Math.min(start + ADV_LESSONS_PER_SECTION, totalLessons));
+                    const volumeStars = volumeLessons.reduce((sum, { record }) => sum + Math.min(getAdvancedQualifiedClears(record), ADV_CLEARS_TO_COMPLETE), 0);
+                    const volumeCompleted = volumeLessons.filter(({ record }) => getAdvancedQualifiedClears(record) >= ADV_CLEARS_TO_COMPLETE).length;
+                    const grade = averageGrade(volumeLessons);
+                    const isExpanded = expandedVolume === volumeIndex;
+                    return (
+                        <section key={volumeIndex} className="border-2 border-purple-700 bg-black/50">
+                            <button
+                                onClick={() => { playSound('click'); setExpandedVolume(isExpanded ? null : volumeIndex); }}
+                                className="w-full p-3 flex items-center justify-between text-left hover:bg-purple-900/40 transition-colors"
+                            >
+                                <div>
+                                    <div className="font-pixel text-xs text-purple-200">進階 第 {volumeIndex + 1} 卷</div>
+                                    <div className="font-retro text-[10px] text-gray-400 mt-1">第 {volumeLessons[0].lesson}～{volumeLessons[volumeLessons.length - 1].lesson} 課 · 完成 {volumeCompleted}/{volumeLessons.length}</div>
+                                </div>
+                                <div className="flex items-center gap-3">
+                                    <div className="text-right">
+                                        <div className="font-pixel text-[10px] text-yellow-300">★ {volumeStars}/{volumeLessons.length * ADV_CLEARS_TO_COMPLETE}</div>
+                                        <div className="font-pixel text-[10px] mt-1" style={{ color: gradeColors[grade] }}>AVG {grade}</div>
+                                    </div>
+                                    <ChevronRight size={18} className={`text-purple-300 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
+                                </div>
+                            </button>
+
+                            {isExpanded && (
+                                <div className="border-t border-purple-800 p-2 space-y-2">
+                                    {volumeLessons.map(({ lesson, record }) => {
+                                        const clears = Math.min(getAdvancedQualifiedClears(record), ADV_CLEARS_TO_COMPLETE);
+                                        const hasPlayed = Object.keys(record).length > 0;
+                                        const attempts = record.attempts ?? Math.max(record.clears || 0, clears, 0);
+                                        return (
+                                            <div key={lesson} className={`p-2 border flex items-center justify-between ${hasPlayed ? 'bg-purple-950/50 border-purple-700' : 'bg-gray-900/50 border-gray-800 opacity-60'}`}>
+                                                <div className="min-w-0 pr-2">
+                                                    <div className="font-pixel text-[10px] text-white">L{String(lesson).padStart(3, '0')} · {advMeta?.titles?.[String(lesson)] || `進階單字 第 ${lesson} 課`}</div>
+                                                    <div className="font-retro text-[10px] text-gray-400 mt-1">{hasPlayed ? `${attempts} 次挑戰 · ${formatDate(record.lastPlayed)}` : '尚未挑戰'}</div>
+                                                </div>
+                                                <div className="text-right flex-shrink-0">
+                                                    <AdvancedStars grades={getAdvancedStarGrades(record)} count={clears} size="sm" label={`第 ${lesson} 課已取得 ${clears} 顆星`} />
+                                                    <div className="font-pixel text-[9px] mt-1" style={{ color: gradeColors[record.bestGrade || '?'] }}>
+                                                        {hasPlayed ? `${record.bestGrade || '?'} · ${record.bestScore ?? 0}` : '—'}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            )}
+                        </section>
+                    );
+                })}
+            </div>
+        </div>
+    );
+};
+
+const JourneyMode = ({ onBack, onViewTrialLog, records = {}, advMeta = null, mistakeStats = {} }) => {
     const [flippedCards, setFlippedCards] = useState({});
     const [showDashboard, setShowDashboard] = useState(false);
     const [showPasswordModal, setShowPasswordModal] = useState(false);
+    const [activeTab, setActiveTab] = useState('main');
 
     const toggleFlip = (id) => {
         playSound('click');
@@ -774,7 +2801,9 @@ const JourneyMode = ({ onBack, onViewTrialLog, records = {} }) => {
 
     const getMiniIcon = (type) => {
         switch (type) {
-            case 'vocab': return <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5"><path d="M2 12H22M2 12V6C2 4.89543 2.89543 4 4 4H20C21.1046 4 22 4.89543 22 6V12M2 12V18C2 19.1046 2.89543 20 4 20H20C21.1046 20 22 19.1046 22 18V12" stroke="currentColor" strokeWidth="2" fill="none" /></svg>;
+            case 'vocab':
+            case 'vocabA':
+            case 'vocabB': return <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5"><path d="M2 12H22M2 12V6C2 4.89543 2.89543 4 4 4H20C21.1046 4 22 4.89543 22 6V12M2 12V18C2 19.1046 2.89543 20 4 20H20C21.1046 20 22 19.1046 22 18V12" stroke="currentColor" strokeWidth="2" fill="none" /></svg>;
             case 'equip': return <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5"><path d="M6 4L14 12L12 14L4 6L6 4Z" stroke="currentColor" strokeWidth="2" fill="none" /></svg>;
             case 'alchemy': return <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5"><path d="M10 2H14V6L19 12V20C19 21.1 18.1 22 17 22H7C5.9 22 5 21.1 5 20V12L10 6V2Z" stroke="currentColor" strokeWidth="2" fill="none" /></svg>;
             case 'scroll': return <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5"><path d="M4 4H20V20H4V4Z" stroke="currentColor" strokeWidth="2" fill="none" /></svg>;
@@ -785,6 +2814,8 @@ const JourneyMode = ({ onBack, onViewTrialLog, records = {} }) => {
     const getCategoryLabel = (type) => {
         switch (type) {
             case 'vocab': return '寶箱';
+            case 'vocabA': return '寶箱A';
+            case 'vocabB': return '寶箱B';
             case 'equip': return '裝備';
             case 'alchemy': return '藥水';
             case 'scroll': return '捲軸';
@@ -807,6 +2838,10 @@ const JourneyMode = ({ onBack, onViewTrialLog, records = {} }) => {
         const legacyScore = record[`${cat}Score`];
         if (legacyGrade || legacyScore) {
             return { score: legacyScore ?? null, grade: legacyGrade || '?' };
+        }
+        // 拆箱前的舊紀錄：寶箱 A/B 沿用原本的 vocab 成績
+        if ((cat === 'vocabA' || cat === 'vocabB') && cat !== 'vocab') {
+            return getCategoryData(record, 'vocab');
         }
         return { score: null, grade: '?' };
     };
@@ -836,7 +2871,25 @@ const JourneyMode = ({ onBack, onViewTrialLog, records = {} }) => {
             )}
             {showDashboard && <TeacherDashboard onClose={() => setShowDashboard(false)} />}
 
+            <div className="flex bg-black/70 border-b-4 border-rpg-border">
+                <button
+                    onClick={() => { playSound('click'); setActiveTab('main'); }}
+                    className={`flex-1 py-2 font-pixel text-xs transition-colors ${activeTab === 'main' ? 'bg-rpg-primary text-white' : 'text-gray-400 hover:text-white'}`}
+                >
+                    ⚔ 一般旅程
+                </button>
+                <button
+                    onClick={() => { playSound('click'); setActiveTab('adv'); }}
+                    className={`flex-1 py-2 font-pixel text-xs transition-colors ${activeTab === 'adv' ? 'bg-purple-700 text-white' : 'text-gray-400 hover:text-white'}`}
+                >
+                    ✦ 進階旅程
+                </button>
+            </div>
 
+            {activeTab === 'adv' ? (
+                <AdvancedJourneyView records={records} advMeta={advMeta} mistakeStats={mistakeStats} />
+            ) : (
+                <>
             {/* 試煉日誌入口按鈕 */}
             <div className="px-4 pt-4 pb-2">
                 <button
@@ -869,7 +2922,7 @@ const JourneyMode = ({ onBack, onViewTrialLog, records = {} }) => {
                         const totalRank = isBoss ? { rank: record.rank || '?', color: '#ccc' } : calculateTotalRank(record);
                         const lastPlayed = formatLastPlayed(record.lastPlayed || record.timestamp);
 
-                        const categories = ['vocab', 'equip', 'alchemy', 'scroll'];
+                        const categories = ['vocabA', 'vocabB', 'equip', 'alchemy', 'scroll'];
 
                         return (
                             <div key={id} className={`relative transition-all duration-300 ${isUnlocked ? 'opacity-100' : 'opacity-60 grayscale'}`}>
@@ -941,7 +2994,7 @@ const JourneyMode = ({ onBack, onViewTrialLog, records = {} }) => {
                                                     isBoss ? (
                                                         <div className="flex flex-col items-end">
                                                             <span className="font-pixel text-[10px] text-gray-400">Attempts</span>
-                                                            <span className="font-pixel text-lg text-white">{record.successCount || 0}/5</span>
+                                                            <span className="font-pixel text-lg text-white">{record.successCount || 0}/{BOSS_CLEARS_REQUIRED}</span>
                                                         </div>
                                                     ) : (
                                                         <div className="grid grid-cols-2 gap-x-2 gap-y-1">
@@ -1040,6 +3093,8 @@ const JourneyMode = ({ onBack, onViewTrialLog, records = {} }) => {
                 </div>
                 <div className="h-10"></div>
             </div>
+                </>
+            )}
         </div>
     );
 };
@@ -1248,16 +3303,30 @@ const MistakeNotebook = ({ onBack, mistakeStats = {}, onClearMistakes, onRemoveM
     const [showSlashConfirm, setShowSlashConfirm] = useState(false); // 斬除個別確認
     const [pendingRemoveId, setPendingRemoveId] = useState(null); // 待刪除的單字 ID
     const [selectedUnit, setSelectedUnit] = useState('all'); // 新增：單元選擇狀態
+    const [activeTab, setActiveTab] = useState('main'); // 'main' | 'adv'
+
+    useEffect(() => {
+        setSelectedUnit('all');
+    }, [activeTab]);
+
+    const isAdvancedMistake = (data = {}) => data.source === 'advanced' && Number.isFinite(Number(data.lesson));
 
     // 將 mistakeStats 轉換為陣列並排序（按錯誤次數由多到少）
     const sortedMistakes = Object.entries(mistakeStats)
-        .filter(([id, data]) => data.count > 0)
+        .filter(([, data]) => data.count > 0)
+        .filter(([, data]) => activeTab === 'adv' ? isAdvancedMistake(data) : !isAdvancedMistake(data))
         .sort((a, b) => b[1].count - a[1].count);
+
+    const availableUnits = activeTab === 'adv'
+        ? [...new Set(sortedMistakes.map(([, data]) => Number(data.lesson)))].sort((a, b) => a - b)
+        : Array.from({ length: 16 }, (_, i) => i + 1);
 
     // 根據選擇的單元過濾錯題
     const filteredMistakes = selectedUnit === 'all'
         ? sortedMistakes
-        : sortedMistakes.filter(([id, data]) => data.gameUnitId === parseInt(selectedUnit));
+        : sortedMistakes.filter(([, data]) => activeTab === 'adv'
+            ? Number(data.lesson) === parseInt(selectedUnit, 10)
+            : data.gameUnitId === parseInt(selectedUnit, 10));
 
     const totalMistakes = sortedMistakes.reduce((sum, [id, data]) => sum + data.count, 0);
 
@@ -1313,11 +3382,27 @@ const MistakeNotebook = ({ onBack, mistakeStats = {}, onClearMistakes, onRemoveM
                 <div className="flex justify-center mt-2">
                     <div className="bg-black/60 px-4 py-1 rounded border border-red-800 flex items-center gap-2">
                         <span className="font-pixel text-xs text-gray-400">殘留魔物:</span>
-                        <span className="font-pixel text-lg text-red-400" style={{ textShadow: '0 0 5px rgba(255,0,0,0.5)' }}>
-                            {totalMistakes}
+                        <span className="font-pixel text-sm text-red-400" style={{ textShadow: '0 0 5px rgba(255,0,0,0.5)' }}>
+                            {sortedMistakes.length} 字 / {totalMistakes} 次
                         </span>
                     </div>
                 </div>
+            </div>
+
+            {/* 一般／進階錯題切換 */}
+            <div className="flex bg-black/80 border-b-2 border-red-800">
+                <button
+                    onClick={() => { playSound('click'); setActiveTab('main'); }}
+                    className={`flex-1 py-2 font-pixel text-xs transition-colors ${activeTab === 'main' ? 'bg-red-900 text-white' : 'text-gray-500 hover:text-gray-200'}`}
+                >
+                    ⚔ 一般錯題
+                </button>
+                <button
+                    onClick={() => { playSound('click'); setActiveTab('adv'); }}
+                    className={`flex-1 py-2 font-pixel text-xs transition-colors ${activeTab === 'adv' ? 'bg-purple-800 text-white' : 'text-gray-500 hover:text-gray-200'}`}
+                >
+                    ✦ 進階錯題
+                </button>
             </div>
 
             {/* 單元切換標籤列 - 橫向可捲動 */}
@@ -1333,8 +3418,8 @@ const MistakeNotebook = ({ onBack, mistakeStats = {}, onClearMistakes, onRemoveM
                     全部
                 </button>
 
-                {/* Unit 1 - 16 */}
-                {Array.from({ length: 16 }, (_, i) => i + 1).map(unitNum => (
+                {/* 一般顯示 16 單元，進階只顯示目前有錯題的課次 */}
+                {availableUnits.map(unitNum => (
                     <button
                         key={unitNum}
                         onClick={() => setSelectedUnit(unitNum.toString())}
@@ -1343,7 +3428,7 @@ const MistakeNotebook = ({ onBack, mistakeStats = {}, onClearMistakes, onRemoveM
                             : 'text-gray-400 hover:text-gray-200'
                             }`}
                     >
-                        Unit {unitNum}
+                        {activeTab === 'adv' ? `第 ${unitNum} 課` : `Unit ${unitNum}`}
                     </button>
                 ))}
             </div>
@@ -1353,14 +3438,14 @@ const MistakeNotebook = ({ onBack, mistakeStats = {}, onClearMistakes, onRemoveM
                 {sortedMistakes.length === 0 ? (
                     <div className="flex flex-col items-center justify-center h-full text-center">
                         <CheckCircle size={64} className="text-green-500 opacity-50 mb-4" />
-                        <p className="font-pixel text-gray-400 text-sm">尚無錯題記錄</p>
+                        <p className="font-pixel text-gray-400 text-sm">{activeTab === 'adv' ? '尚無進階錯題' : '尚無一般錯題'}</p>
                         <p className="font-retro text-gray-600 text-xs mt-2">太棒了！繼續保持！</p>
                     </div>
                 ) : filteredMistakes.length === 0 ? (
                     // 選擇了特定單元但該單元無錯題
                     <div className="flex flex-col items-center justify-center h-full text-center">
                         <CheckCircle size={64} className="text-green-500 opacity-50 mb-4" />
-                        <p className="font-pixel text-gray-400 text-sm">本單元無戰敗紀錄</p>
+                        <p className="font-pixel text-gray-400 text-sm">本{activeTab === 'adv' ? '課' : '單元'}無戰敗紀錄</p>
                         <p className="font-retro text-gray-600 text-xs mt-2">勇者繼續保持！</p>
                     </div>
                 ) : (
@@ -1420,7 +3505,7 @@ const MistakeNotebook = ({ onBack, mistakeStats = {}, onClearMistakes, onRemoveM
                         className="w-full bg-gradient-to-r from-gray-800 to-gray-700 border-4 border-gray-600 p-3 font-pixel text-gray-400 text-sm hover:from-red-900 hover:to-red-800 hover:border-red-600 hover:text-red-300 transition-all active:translate-y-1 flex items-center justify-center gap-2"
                     >
                         <XCircle size={16} />
-                        清空紀錄
+                        清空{activeTab === 'adv' ? '進階' : '一般'}錯題
                     </button>
                 </div>
             )}
@@ -1458,8 +3543,8 @@ const MistakeNotebook = ({ onBack, mistakeStats = {}, onClearMistakes, onRemoveM
                 <div className="absolute inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4">
                     <div className="bg-gray-900 border-4 border-red-700 p-6 w-full max-w-xs text-center" style={{ boxShadow: '0 0 30px rgba(255,0,0,0.3)' }}>
                         <Skull size={48} className="text-red-500 mx-auto mb-4" />
-                        <h3 className="font-pixel text-lg text-white mb-2">確定要清空嗎?</h3>
-                        <p className="font-retro text-sm text-gray-400 mb-6">此操作無法復原</p>
+                        <h3 className="font-pixel text-lg text-white mb-2">確定要清空{activeTab === 'adv' ? '進階' : '一般'}錯題嗎?</h3>
+                        <p className="font-retro text-sm text-gray-400 mb-6">另一個頁籤的錯題會保留，此操作無法復原</p>
                         <div className="flex gap-4 justify-center">
                             <button
                                 onClick={() => setShowConfirm(false)}
@@ -1468,7 +3553,7 @@ const MistakeNotebook = ({ onBack, mistakeStats = {}, onClearMistakes, onRemoveM
                                 取消
                             </button>
                             <button
-                                onClick={() => { setShowConfirm(false); onClearMistakes(); }}
+                                onClick={() => { setShowConfirm(false); onClearMistakes(activeTab); }}
                                 className="bg-red-800 border-2 border-red-500 px-4 py-2 font-pixel text-sm text-white hover:bg-red-700"
                             >
                                 確定清空
@@ -1481,8 +3566,13 @@ const MistakeNotebook = ({ onBack, mistakeStats = {}, onClearMistakes, onRemoveM
     );
 };
 
-const ChallengeSetup = ({ onBack, onStart }) => {
+const ChallengeSetup = ({ onBack, onStart, advMeta = null }) => {
     const [selectedUnits, setSelectedUnits] = useState([]);
+    const [tab, setTab] = useState('main'); // 'main' | 'adv'
+
+    const totalLessons = advMeta?.totalLessons || 0;
+    const mainIds = Array.from({ length: 16 }, (_, i) => (i + 1).toString());
+    const advIds = Array.from({ length: totalLessons }, (_, i) => advLessonId(i + 1));
 
     const toggleUnit = (id) => {
         if (selectedUnits.includes(id)) {
@@ -1492,11 +3582,15 @@ const ChallengeSetup = ({ onBack, onStart }) => {
         }
     };
 
+    // 全選只切換「當前分頁」的項目
+    const currentTabIds = tab === 'main' ? mainIds : advIds;
+    const currentAllSelected = currentTabIds.length > 0 && currentTabIds.every(id => selectedUnits.includes(id));
     const toggleAll = () => {
-        if (selectedUnits.length === 16) {
-            setSelectedUnits([]);
+        if (currentAllSelected) {
+            setSelectedUnits(selectedUnits.filter(id => !currentTabIds.includes(id)));
         } else {
-            setSelectedUnits(Array.from({ length: 16 }, (_, i) => (i + 1).toString()));
+            const merged = new Set([...selectedUnits, ...currentTabIds]);
+            setSelectedUnits(Array.from(merged));
         }
     };
 
@@ -1508,14 +3602,100 @@ const ChallengeSetup = ({ onBack, onStart }) => {
                 <div className="w-8"></div>
             </div>
 
+            {/* 主線／進階頁籤 */}
+            <div className="flex bg-black/60 border-b-4 border-rpg-border z-10">
+                <button
+                    onClick={() => { playSound('click'); setTab('main'); }}
+                    className={`flex-1 py-2 font-pixel text-xs transition-colors ${tab === 'main' ? 'bg-rpg-primary text-white' : 'text-gray-400 hover:text-white'}`}
+                >
+                    ⚔ 主線冒險
+                </button>
+                <button
+                    onClick={() => { playSound('click'); setTab('adv'); }}
+                    className={`flex-1 py-2 font-pixel text-xs transition-colors ${tab === 'adv' ? 'bg-purple-700 text-white' : 'text-gray-400 hover:text-white'}`}
+                >
+                    ✦ 進階篇章
+                </button>
+            </div>
+
             <div className="flex-1 overflow-y-auto p-4 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]">
                 <div className="flex justify-between items-center mb-4 bg-black/40 p-2 rounded border border-gray-600 backdrop-blur-sm sticky top-0 z-10">
-                    <p className="font-retro text-gray-300 text-sm">選擇試煉範圍：<span className="text-rpg-secondary">{selectedUnits.length}</span> 章</p>
+                    <p className="font-retro text-gray-300 text-sm">選擇試煉範圍：<span className="text-rpg-secondary">{selectedUnits.length}</span> {tab === 'adv' ? '課' : '章'}</p>
                     <button onClick={() => { playSound('click'); toggleAll(); }} className="text-xs font-pixel text-white bg-rpg-primary px-2 py-1 border-2 border-white hover:bg-red-400">
-                        {selectedUnits.length === 16 ? "取消全選" : "全選"}
+                        {currentAllSelected ? "取消全選" : "全選"}
                     </button>
                 </div>
 
+                {tab === 'adv' ? (
+                    totalLessons === 0 ? (
+                        <div className="flex flex-col items-center justify-center py-16 text-center">
+                            <div className="font-pixel text-purple-300 text-sm mb-2">✦ 進階篇章準備中</div>
+                            <p className="font-retro text-gray-400 text-xs">老師尚未匯入進階單字書</p>
+                        </div>
+                    ) : (
+                        <div className="space-y-7">
+                            {Array.from({ length: Math.ceil(totalLessons / ADV_LESSONS_PER_SECTION) }, (_, sectionIndex) => {
+                                const sectionIds = advIds.slice(sectionIndex * ADV_LESSONS_PER_SECTION, (sectionIndex + 1) * ADV_LESSONS_PER_SECTION);
+                                return (
+                                    <section key={sectionIndex}>
+                                        <div className="flex items-center gap-2 mb-3">
+                                            <div className="h-px flex-1 bg-gradient-to-r from-transparent via-pink-300/70 to-purple-300/70"></div>
+                                            <div className="px-3 py-1 rounded-full bg-pink-100 text-purple-800 border-2 border-white shadow font-pixel text-[9px]">
+                                                PHOTO STRIP {String(sectionIndex + 1).padStart(2, '0')}
+                                            </div>
+                                            <div className="h-px flex-1 bg-gradient-to-l from-transparent via-pink-300/70 to-purple-300/70"></div>
+                                        </div>
+
+                                        <div className="grid grid-cols-2 gap-4 px-1">
+                                            {sectionIds.map((id, index) => {
+                                                const lesson = parseInt(id.slice(4), 10);
+                                                const isSelected = selectedUnits.includes(id);
+                                                const title = advMeta?.titles?.[String(lesson)] || `進階單字 第 ${lesson} 課`;
+                                                const rotation = index % 3 === 0 ? '-rotate-1' : index % 3 === 1 ? 'rotate-1' : 'rotate-0';
+                                                return (
+                                                    <button
+                                                        key={id}
+                                                        onClick={() => { playSound('click'); toggleUnit(id); }}
+                                                        title={title}
+                                                        className={`relative text-left transition-all duration-300 transform ${isSelected ? 'scale-105 z-10' : `${rotation} opacity-90 hover:opacity-100 hover:scale-105`}`}
+                                                    >
+                                                        <div className={`relative bg-[#fffafd] p-2 pb-3 shadow-[0_8px_18px_rgba(23,8,45,0.45)] border transition-all ${isSelected ? 'border-pink-300 ring-4 ring-purple-400 ring-offset-2 ring-offset-[#1a0f2e]' : 'border-white'}`}>
+                                                            <div className="relative aspect-[4/3] overflow-hidden border border-pink-100 bg-gradient-to-br from-fuchsia-400 via-purple-500 to-indigo-600">
+                                                                <div className="absolute -top-5 -left-4 w-14 h-14 rounded-full bg-pink-200/40"></div>
+                                                                <div className="absolute -bottom-6 -right-5 w-20 h-20 rounded-full bg-cyan-200/25"></div>
+                                                                <span className="absolute top-2 left-2 text-white/80 font-pixel text-[7px]">ADV PHOTO</span>
+                                                                <span className="absolute top-1 right-2 text-yellow-200 text-lg rotate-12">✦</span>
+                                                                <div className="absolute inset-0 flex flex-col items-center justify-center text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.55)]">
+                                                                    <span className="font-pixel text-[9px] opacity-80">LESSON</span>
+                                                                    <span className="font-pixel text-2xl mt-1">{String(lesson).padStart(3, '0')}</span>
+                                                                </div>
+                                                                {isSelected && (
+                                                                    <div className="absolute inset-0 flex items-center justify-center bg-pink-500/25 backdrop-blur-[1px]">
+                                                                        <div className="w-10 h-10 rounded-full bg-white text-purple-600 border-4 border-pink-200 flex items-center justify-center font-pixel text-xl shadow-lg">✔</div>
+                                                                    </div>
+                                                                )}
+                                                            </div>
+
+                                                            <div className="pt-2 px-1">
+                                                                <div className="flex items-center justify-between mb-1">
+                                                                    <span className="font-pixel text-[8px] text-purple-500">SHOT #{String(lesson).padStart(3, '0')}</span>
+                                                                    <span className="text-[11px]">♡ ✦</span>
+                                                                </div>
+                                                                <div className="font-retro text-xs font-bold text-gray-800 leading-tight line-clamp-1" title={title}>{title}</div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-12 h-4 bg-pink-200/80 border border-white/60 shadow-sm rotate-2"></div>
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
+                                    </section>
+                                );
+                            })}
+                        </div>
+                    )
+                ) : (
                 <div className="grid grid-cols-2 gap-4">
                     {Object.entries(LEVEL_INFO).map(([id, info], index) => {
                         const isSelected = selectedUnits.includes(id);
@@ -1559,6 +3739,7 @@ const ChallengeSetup = ({ onBack, onStart }) => {
                         );
                     })}
                 </div>
+                )}
 
                 <div className="h-24"></div>
             </div>
@@ -1579,7 +3760,8 @@ const ChallengeSetup = ({ onBack, onStart }) => {
 
 const UnitHub = ({ unitId, onBack, onSelectCategory, difficulty, onChangeDifficulty }) => {
     const categories = [
-        { id: 'vocab', label: '單字寶箱', icon: <PixelArt.Chest />, color: 'primary', desc: 'LOOT WORDS' },
+        { id: 'vocab_a', label: '單字寶箱 A', icon: <PixelArt.Chest />, color: 'primary', desc: 'LOOT WORDS I' },
+        { id: 'vocab_b', label: '單字寶箱 B', icon: <PixelArt.Chest />, color: 'primary', desc: 'LOOT WORDS II' },
         { id: 'collocation', label: '搭配裝備', icon: <PixelArt.SwordShield />, color: 'secondary', desc: 'EQUIPMENT' },
         { id: 'polysemy', label: '多義藥水', icon: <PixelArt.Potion />, color: 'accent', desc: 'ALCHEMY' },
         { id: 'sentences', label: '片語捲軸', icon: <PixelArt.Scroll />, color: 'success', desc: 'ANCIENT SCROLL' },
@@ -1587,7 +3769,7 @@ const UnitHub = ({ unitId, onBack, onSelectCategory, difficulty, onChangeDifficu
 
     // 簡單模式只開放「單字」與「片語」兩類（中間兩類題數太少）
     const visibleCategories = difficulty === 'easy'
-        ? categories.filter(cat => cat.id === 'vocab' || cat.id === 'sentences')
+        ? categories.filter(cat => cat.id === 'vocab_a' || cat.id === 'vocab_b' || cat.id === 'sentences')
         : categories;
 
     const info = LEVEL_INFO[unitId];
@@ -1650,24 +3832,82 @@ const UnitHub = ({ unitId, onBack, onSelectCategory, difficulty, onChangeDifficu
     );
 };
 
-const StudyMode = ({ unitId, categoryId, data, onBack, onStartQuiz }) => {
+// 進階課程大廳：顯示通關進度（★x/3），提供學習與挑戰入口
+const AdvLessonHub = ({ node, advMeta, record, onBack, onStudy, onStartQuiz }) => {
+    const clears = getAdvancedQualifiedClears(record);
+    const starCount = Math.min(clears, ADV_CLEARS_TO_COMPLETE);
+    const isDone = clears >= ADV_CLEARS_TO_COMPLETE;
+    const title = advMeta?.titles?.[String(node?.lesson)] || `進階單字 第 ${node?.lesson} 課`;
+
+    return (
+        <div className="flex flex-col h-full bg-rpg-bg">
+            <div className="flex items-center justify-between p-4 border-b-4 border-purple-400 bg-black/30">
+                <RPGButton onClick={onBack} color="dark" className="px-2"><ArrowLeft size={16} /></RPGButton>
+                <div className="flex-1 text-center mx-2">
+                    <h2 className="font-pixel text-white text-sm text-shadow leading-tight">{title}</h2>
+                    <p className="font-retro text-[10px] text-purple-300">ADVANCED LESSON {node?.lesson}</p>
+                </div>
+                <div className="w-8"></div>
+            </div>
+            <div className="flex-1 p-4 flex flex-col gap-4 content-start overflow-y-auto">
+                {/* 通關進度 */}
+                <div className="flex flex-col items-center gap-2 bg-black/40 border-4 border-purple-500/60 p-4">
+                    <div className="font-pixel text-purple-300 text-xs">- 通關進度 -</div>
+                    <AdvancedStars grades={getAdvancedStarGrades(record)} count={starCount} size="lg" label={`目前已取得 ${starCount} 顆星`} />
+                    <p className="font-retro text-xs text-gray-300">
+                        {isDone ? '此課已完成！可繼續挑戰刷新紀錄' : `取得 B 級以上才算通關；累積 ${ADV_CLEARS_TO_COMPLETE} 次完成此課（目前 ${clears} / ${ADV_CLEARS_TO_COMPLETE}）`}
+                    </p>
+                    {record?.bestGrade && (
+                        <p className="font-pixel text-[10px] text-gray-400">BEST: {record.bestScore ?? 0} 分 · RANK {record.bestGrade}</p>
+                    )}
+                </div>
+
+                <button onClick={() => { playSound('click'); onStudy(); }} className="group relative h-24 nes-border flex items-center px-4 gap-4 transition-all hover:brightness-110 active:translate-y-1 bg-[#2e3c5c]">
+                    <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
+                    <div className="relative z-10 filter drop-shadow-lg group-hover:scale-110 transition-transform"><PixelArt.Scroll /></div>
+                    <div className="relative z-10 flex-1 text-left">
+                        <h3 className="font-pixel text-lg text-white text-shadow">學習模式</h3>
+                        <p className="font-retro text-xs text-yellow-200 tracking-widest opacity-80">STUDY FIRST</p>
+                    </div>
+                    <ChevronRight className="text-white/50 group-hover:text-white" />
+                </button>
+
+                <button onClick={() => { playSound('click'); onStartQuiz(); }} className="group relative h-24 nes-border flex items-center px-4 gap-4 transition-all hover:brightness-110 active:translate-y-1 bg-[#5c2e4c]">
+                    <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
+                    <div className="relative z-10 filter drop-shadow-lg group-hover:scale-110 transition-transform"><PixelArt.Chest /></div>
+                    <div className="relative z-10 flex-1 text-left">
+                        <h3 className="font-pixel text-lg text-white text-shadow">開始挑戰</h3>
+                        <p className="font-retro text-xs text-yellow-200 tracking-widest opacity-80">3 LIVES · FULL LESSON</p>
+                    </div>
+                    <ChevronRight className="text-white/50 group-hover:text-white" />
+                </button>
+            </div>
+        </div>
+    );
+};
+
+const StudyMode = ({ unitId, categoryId, data, lessonTitle, onBack, onStartQuiz }) => {
     const [viewMode, setViewMode] = useState('card');
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isFlipped, setIsFlipped] = useState(false);
     const studyData = data[categoryId] || [];
+    const isAdvanced = String(unitId).startsWith('adv_');
 
-    const catTitles = { vocab: 'TREASURE', collocation: 'ARMORY', polysemy: 'ALCHEMY', sentences: 'SCROLLS' };
+    const catTitles = { vocab: 'TREASURE', vocab_a: 'TREASURE A', vocab_b: 'TREASURE B', collocation: 'ARMORY', polysemy: 'ALCHEMY', sentences: 'SCROLLS' };
     const currentItem = studyData[currentIndex];
-    const handleNext = () => { setIsFlipped(false); setCurrentIndex((p) => (p + 1) % studyData.length); };
-    const handlePrev = () => { setIsFlipped(false); setCurrentIndex((p) => (p - 1 + studyData.length) % studyData.length); };
+    const handleNext = () => { if (studyData.length === 0) return; setIsFlipped(false); setCurrentIndex((p) => (p + 1) % studyData.length); };
+    const handlePrev = () => { if (studyData.length === 0) return; setIsFlipped(false); setCurrentIndex((p) => (p - 1 + studyData.length) % studyData.length); };
     const handleSpeak = (e, text) => { e.stopPropagation(); speakText(text); };
 
     return (
         <div className="flex flex-col h-full bg-rpg-bg overflow-hidden">
             {/* Header Bar */}
-            <div className="flex items-center justify-between p-2 bg-black/50 border-b-2 border-rpg-border flex-shrink-0">
-                <RPGButton onClick={onStartQuiz} color="primary" className="gap-1 animate-pulse"><Sword size={14} /> FIGHT</RPGButton>
-                <div className="text-white font-pixel text-xs">{catTitles[categoryId]}</div>
+            <div className="grid grid-cols-[2.5rem_1fr_auto] items-center gap-2 p-2 bg-black/50 border-b-2 border-rpg-border flex-shrink-0">
+                <button onClick={() => { playSound('click'); onBack(); }} className="bg-black/40 border border-white/20 p-2 text-white hover:bg-red-500" title="返回上一頁"><ArrowLeft size={16} /></button>
+                <div className="min-w-0 text-center">
+                    <div className="text-white font-pixel text-[10px] truncate">{lessonTitle || catTitles[categoryId]}</div>
+                    <div className="font-retro text-[9px] text-gray-400">{isAdvanced ? '先複習，再挑戰' : 'STUDY MODE'}</div>
+                </div>
                 <button
                     onClick={() => { playSound('click'); setViewMode(m => m === 'card' ? 'list' : 'card'); }}
                     className="text-rpg-panel hover:text-white flex items-center gap-1"
@@ -1676,10 +3916,6 @@ const StudyMode = ({ unitId, categoryId, data, onBack, onStartQuiz }) => {
                     <span className="font-pixel text-[8px] opacity-70">{viewMode === 'card' ? 'LIST' : 'CARD'}</span>
                     {viewMode === 'card' ? <List size={20} /> : <Grid size={20} />}
                 </button>
-            </div>
-            {/* Back Button */}
-            <div className="absolute top-20 left-2 z-20">
-                <button onClick={() => { playSound('click'); onBack(); }} className="bg-black/50 p-2 rounded-full text-white hover:bg-red-500"><ArrowLeft size={16} /></button>
             </div>
             {/* Main Content Area */}
             {viewMode === 'list' ? (
@@ -1760,16 +3996,21 @@ const StudyMode = ({ unitId, categoryId, data, onBack, onStartQuiz }) => {
                     </div>
                     {/* Navigation Buttons */}
                     <div className="flex gap-6 mt-4 flex-shrink-0">
-                        <RPGButton onClick={handlePrev} color="neutral" className="w-12"><ChevronLeft /></RPGButton>
-                        <RPGButton onClick={handleNext} color="neutral" className="w-12"><ChevronRight /></RPGButton>
+                        <RPGButton onClick={handlePrev} color="neutral" className="w-12"><ChevronLeft /><span className="sr-only">上一張</span></RPGButton>
+                        <RPGButton onClick={handleNext} color="neutral" className="w-12"><ChevronRight /><span className="sr-only">下一張</span></RPGButton>
                     </div>
                 </div>
             )}
+            <div className="flex-shrink-0 bg-black/70 border-t-4 border-rpg-border p-3">
+                <RPGButton onClick={onStartQuiz} color="primary" disabled={studyData.length === 0} className="w-full py-3">
+                    <Sword size={16} /> {isAdvanced ? '學完了，開始 10 題挑戰' : '開始挑戰'}
+                </RPGButton>
+            </div>
         </div>
     );
 };
 
-const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard', onComplete, onFlee, currentRecord = null }) => {
+const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard', questionLimit = 20, onComplete, onFlee, currentRecord = null }) => {
     // 所有模式都先顯示 menu 選擇作答模式
     const isEasy = difficulty === 'easy';
     const maxHp = isEasy ? 5 : 3; // 簡單模式 5 條命，困難模式維持 3 條
@@ -1798,10 +4039,9 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard'
             const mode = Math.random() > 0.5 ? 'en-ch' : 'ch-en';
             return { target: item, options, mode };
         });
-        // If more than 20, take 20. If <= 20, take all of them.
-        const limit = generatedQuestions.length > 20 ? 20 : generatedQuestions.length;
+        const limit = Math.min(generatedQuestions.length, questionLimit);
         setQuestions(shuffleArray(generatedQuestions).slice(0, limit));
-    }, [quizData, isBoss]);
+    }, [quizData, isBoss, questionLimit]);
 
     // 簡易 / 聽力模式：每題出現時自動播放正確單字的發音
     useEffect(() => {
@@ -1844,7 +4084,9 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard'
             targetWord: currentQ.target.word,
             targetChinese: currentQ.target.chinese,
             targetBook: currentQ.target.book,
-            targetUnit: currentQ.target.unit
+            targetUnit: currentQ.target.unit,
+            targetSeries: currentQ.target.series,
+            targetLesson: currentQ.target.lesson
         }]);
         setHp(h => h - 1);
         setFeedback('miss');
@@ -1895,7 +4137,9 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard'
             targetWord: currentQ.target.word,
             targetChinese: currentQ.target.chinese,
             targetBook: currentQ.target.book,
-            targetUnit: currentQ.target.unit
+            targetUnit: currentQ.target.unit,
+            targetSeries: currentQ.target.series,
+            targetLesson: currentQ.target.lesson
         }]);
 
         nextQuestion(isDead);
@@ -1925,7 +4169,7 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard'
         const isCleared = currentRecord?.bestStatus === 'CLEAR';
         const isCompleted = currentRecord?.bestStatus === 'COMPLETE';
         const successCount = currentRecord?.successCount || 0;
-        const filledCount = Math.min(successCount, 5);
+        const filledCount = Math.min(successCount, BOSS_CLEARS_REQUIRED);
 
         return (
             <div className="flex flex-col items-center justify-center h-full gap-4 text-center p-4 bg-black/90">
@@ -1940,13 +4184,13 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard'
                 {isBoss && (
                     <div className="flex flex-col items-center gap-2 mb-1">
                         <div className="flex gap-2">
-                            {[...Array(5)].map((_, i) => (
+                            {Array.from({ length: BOSS_CLEARS_REQUIRED }).map((_, i) => (
                                 <div key={i} className={`w-8 h-8 border-4 ${i < filledCount ? 'bg-green-500 border-green-700' : 'bg-gray-800 border-gray-600'} flex items-center justify-center`}>
                                     {i < filledCount && <span className="text-white font-pixel">✔</span>}
                                 </div>
                             ))}
                         </div>
-                        <span className="font-pixel text-[10px] text-gray-400">CLEAR 5 TIMES (RANK B+) TO UNLOCK</span>
+                        <span className="font-pixel text-[10px] text-gray-400">CLEAR {BOSS_CLEARS_REQUIRED} TIMES (RANK B+) TO UNLOCK</span>
                     </div>
                 )}
 
@@ -2140,7 +4384,7 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard'
                             onClick={() => {
                                 if (isSubmitting) return;
                                 setIsSubmitting(true);
-                                onComplete({ score, rank: rankData.rank, battleLog });
+                                onComplete({ score, rank: rankData.rank, battleLog, victory: status === 'victory' });
                             }}
                             disabled={isSubmitting}
                             color="neutral"
@@ -2153,7 +4397,7 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard'
                                 if (isSubmitting) return;
                                 setIsSubmitting(true);
                                 // 先存檔，存完後重置戰鬥狀態
-                                onComplete({ score, rank: rankData.rank, battleLog, retry: true });
+                                onComplete({ score, rank: rankData.rank, battleLog, victory: status === 'victory', retry: true });
                             }}
                             disabled={isSubmitting}
                             color="primary"
@@ -2168,14 +4412,14 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard'
                 {(() => {
                     if (!isBoss || !currentRecord) return null;
                     const prevCount = currentRecord.successCount || 0;
-                    const isSuccess = ['S', 'A', 'B'].includes(rankData.rank);
-                    const newCount = isSuccess ? Math.min(prevCount + 1, 5) : prevCount;
-                    const justFinished = isSuccess && prevCount === 4;
+                    const isSuccess = BOSS_CLEAR_GRADES.includes(rankData.rank);
+                    const newCount = isSuccess ? Math.min(prevCount + 1, BOSS_CLEARS_REQUIRED) : prevCount;
+                    const justFinished = isSuccess && prevCount === BOSS_CLEARS_REQUIRED - 1;
 
                     return (
                         <div className="absolute top-2 left-0 w-full flex flex-col items-center pointer-events-none z-20">
                             <div className="flex gap-2 mb-2">
-                                {[...Array(5)].map((_, i) => (
+                                {Array.from({ length: BOSS_CLEARS_REQUIRED }).map((_, i) => (
                                     <div key={i} className={`w-5 h-5 border-2 transition-all duration-1000 ${i < newCount ? 'bg-green-500 border-green-300' : 'bg-gray-800 border-gray-600'} flex items-center justify-center`}>
                                         {i < newCount && <span className="text-white font-pixel text-[8px]">✔</span>}
                                     </div>
@@ -2204,9 +4448,9 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard'
             {/* Top HUD */}
             <div className="flex justify-between items-center p-2 bg-black border-b-2 border-gray-700 z-10">
                 <div className="flex items-center gap-3">
-                    <button onClick={() => { playSound('click'); setShowQuitConfirm(true); }} className="text-gray-400 hover:text-white transition-colors p-1" title="逃跑 (Flee)">
+                    <RPGButton onClick={() => setShowQuitConfirm(true)} color="dark" className="px-2 py-2" title="返回">
                         <ArrowLeft size={20} />
-                    </button>
+                    </RPGButton>
                     <div className="flex gap-1 text-rpg-primary">
                         {[...Array(maxHp)].map((_, i) => <Heart key={i} size={20} fill={i < hp ? "currentColor" : "none"} className={i < hp ? "animate-pulse" : "opacity-30"} />)}
                     </div>
@@ -2303,6 +4547,10 @@ const App = () => {
     const [challengeUnits, setChallengeUnits] = useState([]);
     const [battleKey, setBattleKey] = useState(0); // 用來強制 BattleMode 重新掛載 (retry)
 
+    // 進階書相關狀態
+    const [advMeta, setAdvMeta] = useState(null);     // meta/advanced 目錄
+    const [worldTab, setWorldTab] = useState('main'); // 'main' | 'adv'
+
     // New State for Async Loading
     const [loading, setLoading] = useState(false);
     const [authChecking, setAuthChecking] = useState(true); // Added to prevent double clicking during redirect login
@@ -2318,6 +4566,8 @@ const App = () => {
     const [currentUser, setCurrentUser] = useState(null);
     const [isMuted, setIsMuted] = useState(false); // UI state for mute button
     const [volume, setVolumeState] = useState(50); // Volume state (0-100)
+    const [loginStampData, setLoginStampData] = useState(null);
+    const [triviaAlbumBackView, setTriviaAlbumBackView] = useState('map');
 
     useEffect(() => { document.body.classList.add('loaded'); }, []);
 
@@ -2381,6 +4631,7 @@ const App = () => {
             setUserName('');
             setUserData(null);
             setCurrentUser(null);
+            setLoginStampData(null);
             setView('login');
         }).catch(err => {
             console.error("Logout error", err);
@@ -2394,27 +4645,44 @@ const App = () => {
         const userRef = doc(db, 'users', user.uid);
         try {
             const userSnap = await getDoc(userRef);
+            const baseData = userSnap.exists() ? userSnap.data() : {
+                avgAccuracy: 0,
+                totalSessions: 0,
+                grades: { S: 0, A: 0, B: 0, C: 0, D: 0 },
+                levelRecords: {},
+                trialHistory: [],
+                triviaCollection: {},
+                triviaRewardClaims: {},
+                weeklyArenaRosters: {},
+                discoveredWordIds: [],
+                correctWordIds: []
+            };
+            const triviaMigration = migrateTriviaProgress(baseData);
+            const migratedBaseData = {
+                ...baseData,
+                triviaCollection: triviaMigration.triviaCollection,
+                triviaRewardClaims: triviaMigration.triviaRewardClaims
+            };
+            const engagementResult = prepareEngagementOnLogin(migratedBaseData);
+            const hydratedData = {
+                ...migratedBaseData,
+                engagement: engagementResult.engagement,
+                photoURL: user.photoURL || null,
+                email: user.email
+            };
 
-            // 👇👇👇 新增這段：無論新舊帳號，都更新大頭貼 (因為使用者可能換過 Google 頭貼)
             await setDoc(userRef, {
-                photoURL: user.photoURL || null, // 存入大頭貼
-                email: user.email // 順便確保 Email 也是最新的
-            }, { merge: true }); // merge: true 代表「只更新這些欄位，不要覆蓋其他成績」
+                photoURL: hydratedData.photoURL,
+                email: hydratedData.email,
+                engagement: hydratedData.engagement,
+                ...(triviaMigration.changed ? {
+                    triviaCollection: triviaMigration.triviaCollection,
+                    triviaRewardClaims: triviaMigration.triviaRewardClaims
+                } : {}),
+                ...(!userSnap.exists() ? migratedBaseData : {})
+            }, { merge: true });
 
-            if (userSnap.exists()) {
-                setUserData({ ...userSnap.data(), photoURL: user.photoURL }); // 更新本地狀態
-            } else {
-                const initialData = {
-                    avgAccuracy: 0,
-                    totalSessions: 0,
-                    grades: { S: 0, A: 0, B: 0, C: 0, D: 0 },
-                    levelRecords: {},
-                    trialHistory: [],
-                    photoURL: user.photoURL // 新帳號也要存
-                };
-                // setDoc with merge 上面已經做過了，這裡其實只要設定初始狀態給前端
-                setUserData(initialData);
-            }
+            setUserData(hydratedData);
             setView('map');
         } catch (e) {
             console.error("Error loading user data:", e);
@@ -2423,6 +4691,12 @@ const App = () => {
             setLoading(false);
         }
     };
+
+    // 載入進階書目錄（登入後）
+    useEffect(() => {
+        if (!userName) return;
+        fetchAdvancedMeta().then(setAdvMeta);
+    }, [userName]);
 
     // 學生姓名補登檢查 - 監聽 user 和 userData
     useEffect(() => {
@@ -2453,22 +4727,95 @@ const App = () => {
         }
     };
 
+    const handleSaveArenaRoster = async (weekStart, roster) => {
+        if (!auth.currentUser || !userData) return;
+        const rosterKey = String(weekStart);
+        const existingRoster = userData.weeklyArenaRosters?.[rosterKey];
+        if (existingRoster?.version >= roster?.version) return;
+        const nextRosters = {
+            ...(userData.weeklyArenaRosters || {}),
+            [rosterKey]: roster
+        };
+        const trimmedRosters = Object.fromEntries(
+            Object.entries(nextRosters)
+                .sort(([a], [b]) => Number(b) - Number(a))
+                .slice(0, 8)
+        );
+        setUserData({ ...userData, weeklyArenaRosters: trimmedRosters });
+        try {
+            await updateDoc(doc(db, 'users', auth.currentUser.uid), {
+                weeklyArenaRosters: trimmedRosters
+            });
+        } catch (error) {
+            console.error('英雄競技場名單保存失敗:', error);
+        }
+    };
+
+    const handleClaimTrivia = async ({ key, sourceLabel, isSpecial = false }) => {
+        if (!auth.currentUser || !userData || !key) return null;
+        const existingClaim = userData.triviaRewardClaims?.[key];
+        if (existingClaim?.cardId) {
+            return TRIVIA_CARDS.find(card => card.id === existingClaim.cardId) || null;
+        }
+        const collection = { ...(userData.triviaCollection || {}) };
+        const availableCards = TRIVIA_CARDS.filter(card => !collection[card.id]);
+        if (availableCards.length === 0) return null;
+        const selectedCard = availableCards[getStableIndex(`${auth.currentUser.uid}:${key}`, availableCards.length)];
+        const unlockedAt = new Date().toISOString();
+        collection[selectedCard.id] = {
+            unlockedAt,
+            sourceLabel,
+            rewardKey: key,
+            isSpecial
+        };
+        const rewardClaims = {
+            ...(userData.triviaRewardClaims || {}),
+            [key]: { cardId: selectedCard.id, claimedAt: unlockedAt }
+        };
+        const updatedUserData = {
+            ...userData,
+            triviaCollection: collection,
+            triviaRewardClaims: rewardClaims
+        };
+        try {
+            await updateDoc(doc(db, 'users', auth.currentUser.uid), {
+                triviaCollection: collection,
+                triviaRewardClaims: rewardClaims
+            });
+            setUserData(updatedUserData);
+            return selectedCard;
+        } catch (error) {
+            console.error('冷知識收藏保存失敗:', error);
+            return null;
+        }
+    };
+
     const handleBattleComplete = async (result) => {
         // result: { score, rank, battleLog }
         if (!auth.currentUser || !userData) return;
 
-        // 準備一個變數來累積所有的變更
         let updatedUserData = { ...userData };
         const updatesForFirestore = {};
+        const sessionLogs = result.battleLog || [];
+        const sessionCorrectCount = sessionLogs.filter(log => log.isCorrect).length;
+        const currentSessionAccuracy = sessionLogs.length > 0
+            ? (sessionCorrectCount / sessionLogs.length) * 100
+            : null;
+        const correctWordIds = new Set(updatedUserData.correctWordIds || []);
+        const previousCorrectWordCount = correctWordIds.size;
+        sessionLogs.filter(log => log.isCorrect).forEach(log => {
+            const wordKey = getCorrectWordKey(log);
+            if (wordKey) correctWordIds.add(wordKey);
+        });
+        if (correctWordIds.size !== previousCorrectWordCount) {
+            updatedUserData.correctWordIds = [...correctWordIds];
+            updatesForFirestore.correctWordIds = updatedUserData.correctWordIds;
+        }
 
         // ==========================================
         // 1. 【新增】計算平均準確率與練習次數 (修復 0% 問題)
         // ==========================================
-        if (result.battleLog && result.battleLog.length > 0) {
-            // 計算「這一場」的準確率
-            const correctCount = result.battleLog.filter(log => log.isCorrect).length;
-            const currentSessionAccuracy = (correctCount / result.battleLog.length) * 100;
-
+        if (currentSessionAccuracy !== null) {
             // 取得舊的數據
             const oldTotal = updatedUserData.totalSessions || 0;
             const oldAvg = updatedUserData.avgAccuracy || 0;
@@ -2489,8 +4836,8 @@ const App = () => {
         // ==========================================
         // 2. 處理錯誤單字 (Mistake Stats)
         // ==========================================
-        if (result.battleLog) {
-            const wrongAnswers = result.battleLog.filter(log => !log.isCorrect);
+        if (sessionLogs.length > 0) {
+            const wrongAnswers = sessionLogs.filter(log => !log.isCorrect);
             if (wrongAnswers.length > 0) {
                 const currentMistakeStats = { ...(updatedUserData.mistakeStats || {}) };
 
@@ -2504,7 +4851,9 @@ const App = () => {
 
                 wrongAnswers.forEach(log => {
                     if (log.targetId) {
-                        const key = log.targetId;
+                        const lesson = Number(log.targetLesson);
+                        const isAdvanced = log.targetSeries === 'advanced' && Number.isFinite(lesson);
+                        const key = isAdvanced ? `advanced:${lesson}:${log.targetId}` : log.targetId;
                         const gameUnitId = (log.targetBook && log.targetUnit)
                             ? getGameUnitId(log.targetBook, log.targetUnit)
                             : null;
@@ -2512,12 +4861,15 @@ const App = () => {
                         if (currentMistakeStats[key]) {
                             currentMistakeStats[key].count += 1;
                             if (gameUnitId !== null) currentMistakeStats[key].gameUnitId = gameUnitId;
+                            currentMistakeStats[key].lastWrongAt = new Date().toISOString();
                         } else {
                             currentMistakeStats[key] = {
                                 count: 1,
                                 word: log.targetWord || '',
                                 chinese: log.targetChinese || '',
-                                gameUnitId: gameUnitId
+                                gameUnitId,
+                                ...(isAdvanced ? { source: 'advanced', lesson } : { source: 'main' }),
+                                lastWrongAt: new Date().toISOString()
                             };
                         }
                     }
@@ -2530,12 +4882,44 @@ const App = () => {
         // ==========================================
         // 3. 處理單元/BOSS 通關紀錄 (Level Records)
         // ==========================================
-        if (selectedNode) {
+        const advancedSessionGroups = sessionLogs.reduce((groups, log) => {
+            const lesson = Number(log.targetLesson);
+            if (log.targetSeries !== 'advanced' || !Number.isFinite(lesson)) return groups;
+            if (!groups[lesson]) groups[lesson] = [];
+            groups[lesson].push(log);
+            return groups;
+        }, {});
+
+        const withAdvancedAttempt = (prevRecord, logs) => {
+            if (!logs || logs.length === 0) return prevRecord;
+            const correct = logs.filter(log => log.isCorrect).length;
+            const accuracy = (correct / logs.length) * 100;
+            const timestamp = new Date().toISOString();
+            const attemptEntry = {
+                timestamp,
+                correct,
+                total: logs.length,
+                accuracy
+            };
+            return {
+                ...prevRecord,
+                attempts: (prevRecord.attempts || 0) + 1,
+                totalCorrect: (prevRecord.totalCorrect || 0) + correct,
+                totalAnswered: (prevRecord.totalAnswered || 0) + logs.length,
+                lastAccuracy: accuracy,
+                bestAccuracy: Math.max(prevRecord.bestAccuracy || 0, accuracy),
+                accuracyHistory: [attemptEntry, ...(prevRecord.accuracyHistory || [])].slice(0, 20),
+                lastPlayed: timestamp,
+                unlocked: true
+            };
+        };
+
+        if (selectedNode && view !== 'challenge-quiz') {
             if (selectedNode.type === 'unit') {
                 const levelId = selectedNode.id;
                 const prevRecord = updatedUserData.levelRecords?.[levelId] || {};
-                const categoryMap = { 'vocab': 'vocab', 'collocation': 'equip', 'polysemy': 'alchemy', 'sentences': 'scroll' };
-                const catKey = categoryMap[selectedCategory || 'vocab'];
+                const categoryMap = { 'vocab': 'vocab', 'vocab_a': 'vocabA', 'vocab_b': 'vocabB', 'collocation': 'equip', 'polysemy': 'alchemy', 'sentences': 'scroll' };
+                const catKey = categoryMap[selectedCategory || 'vocab_a'];
 
                 let prevScore = 0;
                 let prevGrade = '?';
@@ -2576,11 +4960,11 @@ const App = () => {
                 let sCount = prevRecord.sCount || 0;
                 let bestStatus = prevRecord.bestStatus || 'NONE';
 
-                if (['S', 'A', 'B'].includes(result.rank)) successCount += 1;
+                if (BOSS_CLEAR_GRADES.includes(result.rank)) successCount += 1;
                 if (result.rank === 'S') sCount += 1;
 
-                if (sCount >= 5) bestStatus = 'COMPLETE';
-                else if (successCount >= 5 && bestStatus !== 'COMPLETE') bestStatus = 'CLEAR';
+                if (sCount >= BOSS_CLEARS_REQUIRED) bestStatus = 'COMPLETE';
+                else if (successCount >= BOSS_CLEARS_REQUIRED && bestStatus !== 'COMPLETE') bestStatus = 'CLEAR';
 
                 const newRecord = {
                     ...prevRecord,
@@ -2596,7 +4980,48 @@ const App = () => {
                 const newLevelRecords = { ...updatedUserData.levelRecords, [bossId]: newRecord };
                 updatedUserData.levelRecords = newLevelRecords;
                 updatesForFirestore[`levelRecords.${bossId}`] = newRecord;
+            } else if (selectedNode.type === 'adv') {
+                const levelId = selectedNode.id;
+                const prevRecord = updatedUserData.levelRecords?.[levelId] || {};
+                const performanceRecord = withAdvancedAttempt(
+                    prevRecord,
+                    advancedSessionGroups[selectedNode.lesson] || sessionLogs
+                );
+                const rankOrder = { 'S': 6, 'A': 5, 'B': 4, 'C': 3, 'D': 2, 'E': 1, '?': 0 };
+                const clears = (prevRecord.clears || 0) + (result.victory ? 1 : 0);
+                const previousQualifiedClears = getAdvancedQualifiedClears(prevRecord);
+                const bPlusClears = previousQualifiedClears + (
+                    result.victory && ADV_PASSING_GRADES.includes(result.rank) ? 1 : 0
+                );
+                const starGrades = result.victory && ADV_PASSING_GRADES.includes(result.rank)
+                    ? addAdvancedStarGrade(prevRecord, result.rank)
+                    : getAdvancedStarGrades(prevRecord);
+                const bestGrade = (rankOrder[result.rank] || 0) > (rankOrder[prevRecord.bestGrade] || 0)
+                    ? result.rank : (prevRecord.bestGrade || result.rank);
+                const newRecord = {
+                    ...performanceRecord,
+                    clears,
+                    bPlusClears,
+                    starGrades,
+                    bestScore: Math.max(prevRecord.bestScore || 0, result.score),
+                    bestGrade,
+                    lastPlayed: new Date().toISOString(),
+                    unlocked: true
+                };
+                updatedUserData.levelRecords = { ...updatedUserData.levelRecords, [levelId]: newRecord };
+                updatesForFirestore[`levelRecords.${levelId}`] = newRecord;
             }
+        }
+
+        // 終極試煉可混合一般／進階題目；只補進階課次的分析資料，不改變原試煉通關規則
+        if (view === 'challenge-quiz') {
+            Object.entries(advancedSessionGroups).forEach(([lesson, logs]) => {
+                const levelId = advLessonId(lesson);
+                const prevRecord = updatedUserData.levelRecords?.[levelId] || {};
+                const newRecord = withAdvancedAttempt(prevRecord, logs);
+                updatedUserData.levelRecords = { ...updatedUserData.levelRecords, [levelId]: newRecord };
+                updatesForFirestore[`levelRecords.${levelId}`] = newRecord;
+            });
         }
 
         // ==========================================
@@ -2608,6 +5033,8 @@ const App = () => {
         let historyCategoryLabel = null;
         const historyCategoryLabels = {
             vocab: '單字',
+            vocab_a: '單字A',
+            vocab_b: '單字B',
             collocation: '搭配詞',
             polysemy: '多義字',
             sentences: '句子'
@@ -2616,6 +5043,7 @@ const App = () => {
         if (view === 'challenge-quiz') {
             historyType = "quiz";
             historyUnitTitle = challengeUnits.map(unitId => {
+                if (String(unitId).startsWith('adv_')) return `進階 L${String(unitId).slice(4)}`;
                 const info = LEVEL_INFO[unitId];
                 return info ? `Level ${unitId < 10 ? '0' + unitId : unitId}: ${info.title}` : `Unit ${unitId}`;
             }).join(', ');
@@ -2623,12 +5051,17 @@ const App = () => {
             if (selectedNode.type === 'boss') {
                 historyType = "quiz";
                 historyUnitTitle = selectedNode.label || `BOSS ${selectedNode.id}`;
+            } else if (selectedNode.type === 'adv') {
+                historyType = "practice";
+                historyUnitTitle = `進階 L${selectedNode.lesson}`;
+                historyCategoryKey = 'vocab';
+                historyCategoryLabel = '進階單字';
             } else {
                 historyType = "practice";
                 const unitId = selectedNode.id;
                 const info = LEVEL_INFO[unitId];
                 historyUnitTitle = info ? `Level ${unitId < 10 ? '0' + unitId : unitId}: ${info.title}` : `Unit ${unitId}`;
-                historyCategoryKey = selectedCategory || 'vocab';
+                historyCategoryKey = selectedCategory || 'vocab_a';
                 historyCategoryLabel = historyCategoryLabels[historyCategoryKey] || null;
             }
         }
@@ -2642,6 +5075,9 @@ const App = () => {
                 type: historyType,
                 unit: historyUnitTitle,
                 units: view === 'challenge-quiz' ? challengeUnits : [selectedNode?.id],
+                correctCount: sessionCorrectCount,
+                totalQuestions: sessionLogs.length,
+                accuracy: currentSessionAccuracy,
                 ...(historyCategoryKey ? { categoryKey: historyCategoryKey } : {}),
                 ...(historyCategoryLabel ? { categoryLabel: historyCategoryLabel } : {})
             };
@@ -2651,6 +5087,18 @@ const App = () => {
 
             updatedUserData.trialHistory = updatedHistory;
             updatesForFirestore.trialHistory = updatedHistory;
+        }
+
+        // 冒險打卡只有一種：當天完成一場 B 級以上戰鬥才計入，並同步增加累積冒險天數。
+        if (CHECK_IN_GRADES.includes(result.rank)) {
+            const adventureResult = addQualifiedAdventureDay(updatedUserData);
+            if (adventureResult.changed) {
+                updatedUserData.engagement = adventureResult.engagement;
+                updatesForFirestore.engagement = adventureResult.engagement;
+                setLoginStampData({
+                    totalDays: adventureResult.engagement.adventure.totalDays || 1
+                });
+            }
         }
 
         // ==========================================
@@ -2672,6 +5120,17 @@ const App = () => {
             }
         } catch (e) {
             console.error("儲存失敗:", e);
+        }
+
+        try {
+            await syncWeeklyLeaderboard({
+                userId: auth.currentUser.uid,
+                studentName: updatedUserData.studentName || userName,
+                history: updatedUserData.trialHistory || []
+            });
+        } catch (e) {
+            // 公開排行榜只存匿名摘要；即使規則尚未開放，也不影響個人成績保存。
+            console.warn("每週排行榜摘要同步失敗:", e);
         }
     };
 
@@ -2713,10 +5172,23 @@ const App = () => {
                 if (hasNew) setLevelDataCache(newCache);
             } catch (e) { console.error("Boss Fetch failed", e); }
             finally { setLoading(false); }
+        } else if (node.type === 'adv') {
+            if (!levelDataCache[node.id]) {
+                setLoading(true);
+                try {
+                    const data = await fetchAdvancedLesson(node.lesson);
+                    if (data) setLevelDataCache(prev => ({ ...prev, [node.id]: data }));
+                } catch (e) { console.error("Fetch failed", e); }
+                finally { setLoading(false); }
+            }
         }
 
         if (node.type === 'boss') setView('quiz');
-        else setView('unit-hub');
+        else if (node.type === 'adv') {
+            // 進階課直接進學習頁，挑戰成為學習完成後的單一下一步。
+            setSelectedCategory('vocab');
+            setView('study');
+        } else setView('unit-hub');
     };
 
     const handleForceQuiz = () => setView('quiz');
@@ -2730,7 +5202,10 @@ const App = () => {
         try {
             const promises = selectedIds.map(async uid => {
                 if (!levelDataCache[uid]) {
-                    return { id: uid, data: await fetchLevelData(uid) };
+                    const data = String(uid).startsWith('adv_')
+                        ? await fetchAdvancedLesson(parseInt(String(uid).slice(4), 10))
+                        : await fetchLevelData(uid);
+                    return { id: uid, data };
                 }
                 return null;
             });
@@ -2819,18 +5294,24 @@ const App = () => {
         return shuffleArray(finalPool);
     };
 
-    // 清空錯題紀錄
-    const handleClearMistakes = async () => {
+    // 只清空目前頁籤的錯題，避免一般／進階互相誤刪
+    const handleClearMistakes = async (scope = 'main') => {
         if (!auth.currentUser || !userData) return;
         try {
-            // 更新本地狀態
-            const updatedUserData = { ...userData, mistakeStats: {} };
+            const currentMistakeStats = { ...(userData.mistakeStats || {}) };
+            const remainingMistakes = Object.fromEntries(
+                Object.entries(currentMistakeStats).filter(([, data]) => {
+                    const isAdvanced = data?.source === 'advanced' && Number.isFinite(Number(data?.lesson));
+                    return scope === 'adv' ? !isAdvanced : isAdvanced;
+                })
+            );
+
+            const updatedUserData = { ...userData, mistakeStats: remainingMistakes };
             setUserData(updatedUserData);
 
-            // 更新 Firestore
             const userRef = doc(db, 'users', auth.currentUser.uid);
             await updateDoc(userRef, {
-                mistakeStats: {}
+                mistakeStats: remainingMistakes
             });
         } catch (e) {
             console.error("Failed to clear mistakes:", e);
@@ -2866,10 +5347,15 @@ const App = () => {
 
         if (!selectedNode) return [];
 
+        // 進階課模式 - 交給 BattleMode 每次隨機抽最多 10 題
+        if (selectedNode.type === 'adv') {
+            return levelDataCache[selectedNode.id]?.vocab || [];
+        }
+
         // 一般單元模式 - 依據選擇的類別
         if (selectedNode.type === 'unit') {
             const content = levelDataCache[selectedNode.id] || GAME_DATA[selectedNode.id].content;
-            const cat = selectedCategory || 'vocab';
+            const cat = selectedCategory || 'vocab_a';
             return content[cat];
         } else {
             // BOSS 模式 - 使用混合出題
@@ -2883,16 +5369,42 @@ const App = () => {
 
         switch (view) {
             case 'login': return <LoginScreen onLogin={handleLogin} />;
-            case 'map': return <WorldMap onLogout={handleLogout} onSelectNode={handleNodeSelect} onViewJourney={() => { playSound('click'); setView('journey'); }} onUltimateChallenge={() => { playSound('click'); setView('challenge-setup'); }} onViewMistakeNotebook={() => { playSound('click'); setView('mistake-notebook'); }} records={userData?.levelRecords} />;
+            case 'map': return <WorldMap onLogout={handleLogout} onSelectNode={handleNodeSelect} onViewJourney={() => { playSound('click'); setView('journey'); }} onViewWeeklyReport={() => { playSound('click'); setView('weekly-report'); }} onViewLoginCalendar={() => { playSound('click'); setView('login-calendar'); }} onOpenAlbum={() => { playSound('click'); setTriviaAlbumBackView('map'); setView('trivia-album'); }} rewardSummary={getPendingRewardSummary(userData)} userData={userData} onUltimateChallenge={() => { playSound('click'); setView('challenge-setup'); }} onViewMistakeNotebook={() => { playSound('click'); setView('mistake-notebook'); }} records={userData?.levelRecords} advMeta={advMeta} activeTab={worldTab} onChangeTab={setWorldTab} />;
+            case 'weekly-report': return <WeeklyReport
+                onBack={() => { playSound('click'); setView('map'); }}
+                onOpenAlbum={() => { playSound('click'); setTriviaAlbumBackView('weekly-report'); setView('trivia-album'); }}
+                onOpenAchievements={() => { playSound('click'); setView('achievement-hall'); }}
+                currentUserId={currentUser?.uid}
+                userData={userData}
+                onSaveArenaRoster={handleSaveArenaRoster}
+            />;
+            case 'trivia-album': return <TriviaAlbum onBack={() => { playSound('click'); setView(triviaAlbumBackView); }} userData={userData} onClaimTrivia={handleClaimTrivia} />;
+            case 'login-calendar': return <LoginCalendar onBack={() => { playSound('click'); setView('map'); }} userData={userData} />;
+            case 'achievement-hall': return <AchievementHall onBack={() => { playSound('click'); setView('weekly-report'); }} userData={userData} />;
             case 'mistake-notebook': return <MistakeNotebook onBack={() => { playSound('click'); setView('map'); }} mistakeStats={userData?.mistakeStats} onClearMistakes={handleClearMistakes} onRemoveMistake={handleRemoveMistake} />;
-            case 'journey': return <JourneyMode onBack={() => { playSound('click'); setView('map'); }} onViewTrialLog={() => { playSound('click'); setView('trial-log'); }} records={userData?.levelRecords} />;
+            case 'journey': return <JourneyMode onBack={() => { playSound('click'); setView('map'); }} onViewTrialLog={() => { playSound('click'); setView('trial-log'); }} records={userData?.levelRecords} advMeta={advMeta} mistakeStats={userData?.mistakeStats} />;
             case 'trial-log': return <TrialLogView onBack={() => { playSound('click'); setView('journey'); }} onRetry={() => { playSound('click'); setView('challenge-setup'); }} trialHistory={userData?.trialHistory} />;
-            case 'challenge-setup': return <ChallengeSetup onBack={() => { playSound('click'); setView('map'); }} onStart={handleStartChallenge} />;
+            case 'challenge-setup': return <ChallengeSetup onBack={() => { playSound('click'); setView('map'); }} onStart={handleStartChallenge} advMeta={advMeta} />;
             case 'unit-hub': return <UnitHub unitId={selectedNode?.id} onBack={() => setView('map')} onSelectCategory={(cat) => { setSelectedCategory(cat); setView('study'); }} difficulty={selectedDifficulty} onChangeDifficulty={setSelectedDifficulty} />;
-            case 'study': return <StudyMode unitId={selectedNode?.id} categoryId={selectedCategory} data={levelDataCache[selectedNode?.id] || GAME_DATA[selectedNode?.id].content} onBack={() => setView('unit-hub')} onStartQuiz={handleForceQuiz} />;
+            case 'adv-hub': return <AdvLessonHub
+                node={selectedNode}
+                advMeta={advMeta}
+                record={userData?.levelRecords?.[selectedNode?.id]}
+                onBack={() => { playSound('click'); setView('map'); }}
+                onStudy={() => { playSound('click'); setSelectedCategory('vocab'); setView('study'); }}
+                onStartQuiz={() => { playSound('click'); setView('quiz'); }}
+            />;
+            case 'study': return <StudyMode
+                unitId={selectedNode?.id}
+                categoryId={selectedCategory}
+                lessonTitle={selectedNode?.type === 'adv' ? (advMeta?.titles?.[String(selectedNode?.lesson)] || `進階單字 第 ${selectedNode?.lesson} 課`) : null}
+                data={levelDataCache[selectedNode?.id] || GAME_DATA[selectedNode?.id]?.content || { vocab: [], vocab_a: [], vocab_b: [], collocation: [], polysemy: [], sentences: [] }}
+                onBack={() => setView(selectedNode?.type === 'adv' ? 'map' : 'unit-hub')}
+                onStartQuiz={handleForceQuiz}
+            />;
             case 'quiz':
             case 'challenge-quiz':
-                return <BattleMode key={battleKey} quizData={getQuizData()} isBoss={selectedNode?.type === 'boss'} isChallenge={view === 'challenge-quiz'} difficulty={(view === 'quiz' && selectedNode?.type !== 'boss') ? selectedDifficulty : 'hard'} onComplete={handleBattleComplete} onFlee={() => setView('map')} currentRecord={userData?.levelRecords?.[selectedNode?.id]} />;
+                return <BattleMode key={battleKey} quizData={getQuizData()} isBoss={selectedNode?.type === 'boss'} isChallenge={view === 'challenge-quiz'} difficulty={(view === 'quiz' && selectedNode?.type === 'unit') ? selectedDifficulty : 'hard'} questionLimit={(view === 'quiz' && selectedNode?.type === 'adv') ? ADV_QUIZ_QUESTION_LIMIT : 20} onComplete={handleBattleComplete} onFlee={() => setView('map')} currentRecord={userData?.levelRecords?.[selectedNode?.id]} />;
             default: return <div>Error</div>;
         }
     };
@@ -2906,6 +5418,8 @@ const App = () => {
                 <div className="bg-rpg-bg w-full aspect-[9/16] sm:aspect-[3/4] rounded-lg border-4 border-black overflow-hidden relative shadow-inner">
                     <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] z-10 pointer-events-none bg-[length:100%_2px,3px_100%]"></div>
                     <div className="relative z-0 h-full overflow-hidden">{renderContent()}</div>
+
+                    <LoginStampModal data={loginStampData} onClose={() => setLoginStampData(null)} />
 
                     {/* 老師後台面板 - 嵌入手機螢幕 */}
                     {showTeacherDashboard && (

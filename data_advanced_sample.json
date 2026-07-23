@@ -1,0 +1,43 @@
+[
+  {
+    "lesson": 1,
+    "words": [
+      { "word": "baby", "chinese": "嬰兒", "pos": "n." },
+      { "word": "born", "chinese": "出生的", "pos": "adj." },
+      { "word": "child", "chinese": "小孩；兒童", "pos": "n." },
+      { "word": "kid", "chinese": "小孩", "pos": "n." },
+      { "word": "childhood", "chinese": "童年", "pos": "n." },
+      { "word": "boy", "chinese": "男孩", "pos": "n." },
+      { "word": "girl", "chinese": "女孩", "pos": "n." },
+      { "word": "teenager", "chinese": "青少年", "pos": "n." },
+      { "word": "youth", "chinese": "青年；青春", "pos": "n." },
+      { "word": "adult", "chinese": "成年人；成年的", "pos": "n./adj." },
+      { "word": "man", "chinese": "男人", "pos": "n." },
+      { "word": "guy", "chinese": "男子；傢伙", "pos": "n." },
+      { "word": "woman", "chinese": "女人", "pos": "n." },
+      { "word": "male", "chinese": "男性；男性的", "pos": "n./adj." },
+      { "word": "female", "chinese": "女性；女性的", "pos": "n./adj." }
+    ]
+  },
+  {
+    "lesson": 2,
+    "words": [
+      { "word": "kingdom", "chinese": "王國", "pos": "n." },
+      { "word": "castle", "chinese": "城堡", "pos": "n." },
+      { "word": "king", "chinese": "國王", "pos": "n." },
+      { "word": "queen", "chinese": "女王；王后", "pos": "n." },
+      { "word": "beauty", "chinese": "美；美人", "pos": "n." },
+      { "word": "prince", "chinese": "王子", "pos": "n." },
+      { "word": "princess", "chinese": "公主", "pos": "n." },
+      { "word": "master", "chinese": "主人；大師", "pos": "n." },
+      { "word": "angel", "chinese": "天使", "pos": "n." },
+      { "word": "god", "chinese": "神", "pos": "n." },
+      { "word": "human", "chinese": "人；人類的", "pos": "n./adj." },
+      { "word": "person", "chinese": "人", "pos": "n." },
+      { "word": "people", "chinese": "人們", "pos": "n." },
+      { "word": "common", "chinese": "常見的；共同的", "pos": "adj." },
+      { "word": "servant", "chinese": "僕人", "pos": "n." },
+      { "word": "farmer", "chinese": "農夫", "pos": "n." }
+    ]
+  }
+]

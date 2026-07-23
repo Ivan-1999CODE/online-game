@@ -32,7 +32,7 @@ export const GAME_DATA = {};
 for (let i = 1; i <= 16; i++) {
     GAME_DATA[i] = {
         title: LEVEL_INFO[i] ? `Level ${i < 10 ? '0' + i : i}: ${LEVEL_INFO[i].title}` : `Unit ${i}`,
-        content: { vocab: [], collocation: [], polysemy: [], sentences: [] }
+        content: { vocab: [], vocab_a: [], vocab_b: [], collocation: [], polysemy: [], sentences: [] }
     };
 }
 
