@@ -1331,7 +1331,7 @@ const syncWeeklyLeaderboard = async ({ userId, studentName, history }) => {
     }, { merge: true });
 };
 
-const TriviaAlbum = ({ onBack, userData }) => {
+const TriviaAlbum = ({ onBack, userData, onClaimTrivia }) => {
     const [activeGroup, setActiveGroup] = useState('english');
     const [activeCategory, setActiveCategory] = useState('all');
     const [selectedCard, setSelectedCard] = useState(null);
@@ -1339,8 +1339,12 @@ const TriviaAlbum = ({ onBack, userData }) => {
     const [teacherPassword, setTeacherPassword] = useState('');
     const [teacherError, setTeacherError] = useState(false);
     const [teacherPreview, setTeacherPreview] = useState(false);
+    const [isClaiming, setIsClaiming] = useState(false);
+    const [drawBlocked, setDrawBlocked] = useState(false);
     const collection = userData?.triviaCollection || {};
     const ownedCount = Object.keys(collection).length;
+    const pendingRewards = getAllPendingTriviaRewards(userData);
+    const reward = pendingRewards[0] || null;
     const groupCategories = TRIVIA_CATEGORIES.filter(category => category.group === activeGroup);
     const visibleCards = TRIVIA_CARDS.filter(card => (
         card.group === activeGroup && (activeCategory === 'all' || card.category === activeCategory)
@@ -1375,6 +1379,23 @@ const TriviaAlbum = ({ onBack, userData }) => {
         setTeacherError(false);
     };
 
+    const drawPendingReward = async () => {
+        if (!reward || isClaiming || drawBlocked || !onClaimTrivia) return;
+        setIsClaiming(true);
+        try {
+            const card = await onClaimTrivia(reward);
+            if (card) {
+                setSelectedCard(card);
+                setDrawBlocked(false);
+                playSound('success');
+            } else {
+                setDrawBlocked(true);
+            }
+        } finally {
+            setIsClaiming(false);
+        }
+    };
+
     return (
         <div className="flex flex-col h-full bg-[#171229] text-white">
             <div className="flex items-center justify-between p-3 border-b-4 border-amber-500/70 bg-black/50">
@@ -1391,6 +1412,43 @@ const TriviaAlbum = ({ onBack, userData }) => {
                     教師預覽 · 全部卡片已展開（不影響學生收藏）
                 </div>
             )}
+
+            <section className={`mx-2 mt-2 border-4 p-3 ${reward ? 'border-yellow-400 bg-gradient-to-r from-purple-950 to-amber-950' : 'border-gray-700 bg-black/35'}`}>
+                <div className="flex items-center gap-3">
+                    <div className="relative shrink-0 text-3xl" aria-hidden="true">
+                        🎁
+                        {pendingRewards.length > 0 && (
+                            <span className="absolute -top-2 -right-2 min-w-5 h-5 px-1 rounded-full bg-red-600 border border-white text-white font-pixel text-[8px] flex items-center justify-center">
+                                {pendingRewards.length > 99 ? '99+' : pendingRewards.length}
+                            </span>
+                        )}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                        <h3 className={`font-pixel text-[10px] ${reward ? 'text-yellow-300' : 'text-gray-400'}`}>
+                            {reward ? `待抽取獎勵 ${pendingRewards.length} 次` : '目前沒有待抽卡'}
+                        </h3>
+                        <p className="font-retro text-[10px] text-gray-300 mt-1 truncate">
+                            {reward ? reward.sourceLabel : '完成每日任務與成就，就能獲得新的冷知識。'}
+                        </p>
+                        {pendingRewards.length > 1 && (
+                            <p className="font-retro text-[9px] text-amber-200 mt-1">另外還有 {pendingRewards.length - 1} 次獎勵等你抽取</p>
+                        )}
+                    </div>
+                    <RPGButton
+                        onClick={drawPendingReward}
+                        color={reward && !drawBlocked ? 'success' : 'dark'}
+                        disabled={!reward || isClaiming || drawBlocked}
+                        className="shrink-0 px-3 whitespace-nowrap"
+                    >
+                        {isClaiming ? '抽取中' : reward ? '抽一張' : '已領完'}
+                    </RPGButton>
+                </div>
+                {drawBlocked && (
+                    <p className="font-retro text-[10px] text-yellow-100 mt-3 border border-yellow-500/40 bg-black/30 p-2">
+                        現有冷知識已全部收藏；抽卡次數會保留，新增卡片後可以繼續抽。
+                    </p>
+                )}
+            </section>
 
             <div className="grid grid-cols-2 gap-2 p-2 bg-[#251b3d] border-b border-white/10">
                 {TRIVIA_GROUPS.map(group => (
@@ -1477,14 +1535,11 @@ const TriviaAlbum = ({ onBack, userData }) => {
     );
 };
 
-const WeeklyReport = ({ onBack, onOpenAlbum, onOpenAchievements, currentUserId, userData, onSaveArenaRoster, onClaimTrivia }) => {
+const WeeklyReport = ({ onBack, onOpenAlbum, onOpenAchievements, currentUserId, userData, onSaveArenaRoster }) => {
     const [period, setPeriod] = useState('current');
     const [students, setStudents] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [loadError, setLoadError] = useState(false);
-    const [revealedFact, setRevealedFact] = useState(null);
-    const [isClaiming, setIsClaiming] = useState(false);
-    const [drawBlocked, setDrawBlocked] = useState(false);
     const rosterSaveRequestedRef = useRef(false);
     const range = getTaipeiWeekRange(period === 'current' ? 0 : -1);
 
@@ -1506,8 +1561,6 @@ const WeeklyReport = ({ onBack, onOpenAlbum, onOpenAchievements, currentUserId, 
             .finally(() => { if (active) setIsLoading(false); });
         return () => { active = false; };
     }, [range.startMs]);
-
-    useEffect(() => { setRevealedFact(null); }, [period]);
 
     const currentStats = getWeeklyStats(userData?.trialHistory || [], range);
     const previousStats = getWeeklyStats(userData?.trialHistory || [], getTaipeiWeekRange(-1));
@@ -1577,9 +1630,7 @@ const WeeklyReport = ({ onBack, onOpenAlbum, onOpenAchievements, currentUserId, 
     const isChampion = currentRank === 1 && currentStats.sessions > 0;
     const championTarget = Number(activeRoster.targetScore)
         || roundArenaTarget(currentStats.score);
-    const collectionCount = Object.keys(userData?.triviaCollection || {}).length;
     const pendingRewards = getAllPendingTriviaRewards(userData);
-    const reward = pendingRewards[0] || null;
     const todayCheckedIn = (userData?.engagement?.adventure?.dates || []).includes(getTaipeiDateKey());
     const upcomingAchievement = getUpcomingAchievements(userData, 1)[0] || null;
 
@@ -1588,23 +1639,6 @@ const WeeklyReport = ({ onBack, onOpenAlbum, onOpenAchievements, currentUserId, 
         rosterSaveRequestedRef.current = true;
         onSaveArenaRoster(range.startMs, proposedRoster);
     }, [period, isLoading, loadError, storedRosterIsCurrent, onSaveArenaRoster, range.startMs, proposedRoster]);
-
-    const drawTrivia = async () => {
-        if (!reward || isClaiming) return;
-        setIsClaiming(true);
-        try {
-            const card = await onClaimTrivia(reward);
-            if (card) {
-                setRevealedFact(card);
-                setDrawBlocked(false);
-                playSound('success');
-            } else {
-                setDrawBlocked(true);
-            }
-        } finally {
-            setIsClaiming(false);
-        }
-    };
 
     return (
         <div className="flex flex-col h-full bg-[#24173a] text-white">
@@ -1742,44 +1776,17 @@ const WeeklyReport = ({ onBack, onOpenAlbum, onOpenAchievements, currentUserId, 
                     )}
                 </section>
 
-                <section className={`border-4 p-4 text-center ${reward ? 'border-green-400/60 bg-green-950/40' : 'border-gray-600 bg-black/30'}`}>
-                    {revealedFact ? (
-                        <div className="animate-in fade-in">
-                            <div className="text-4xl mb-2">{TRIVIA_CATEGORIES.find(category => category.id === revealedFact.category)?.icon || '✨'}</div>
-                            <h3 className="font-pixel text-xs text-green-300 mb-2">{revealedFact.title}</h3>
-                            <p className="font-retro text-sm text-gray-200 leading-relaxed">{revealedFact.text}</p>
-                            <p className="font-retro text-[10px] text-gray-500 mt-3">已永久收藏 · 目前 {collectionCount} / {TRIVIA_CARDS.length}</p>
-                            {reward && <RPGButton onClick={() => setRevealedFact(null)} color="success" className="w-full mt-3">🎫 還有 {pendingRewards.length} 次，繼續抽</RPGButton>}
-                            <RPGButton onClick={onOpenAlbum} color="accent" className="w-full mt-3"><Book size={14} /> 查看收藏冊</RPGButton>
-                        </div>
-                    ) : (
-                        <>
-                            <div className="text-3xl mb-2">🎁</div>
-                            <h3 className="font-pixel text-xs text-green-300">統一抽卡區</h3>
-                            <p className="font-retro text-xs text-gray-300 mt-2">
-                                待抽卡：<span className="text-yellow-300 font-bold">{pendingRewards.length}</span> 次
-                            </p>
-                            {pendingRewards.length > 0 && (
-                                <div className="mt-3 max-h-28 overflow-y-auto border border-white/10 bg-black/30 text-left">
-                                    {pendingRewards.slice(0, 8).map((pendingReward, index) => (
-                                        <div key={pendingReward.key} className="px-2 py-2 border-b border-white/10 font-retro text-[10px] text-gray-300">
-                                            {index + 1}. {pendingReward.sourceLabel}
-                                        </div>
-                                    ))}
-                                    {pendingRewards.length > 8 && <div className="px-2 py-2 font-retro text-[10px] text-gray-500">另外還有 {pendingRewards.length - 8} 次待抽卡</div>}
-                                </div>
-                            )}
-                            {drawBlocked && (
-                                <p className="font-retro text-[11px] text-yellow-200 mt-3 border border-yellow-500/40 bg-yellow-950/30 p-2">
-                                    現有冷知識已收集完畢；這次抽卡會保留，新增卡片後可繼續抽。
-                                </p>
-                            )}
-                            <RPGButton onClick={drawTrivia} color={reward && !drawBlocked ? 'success' : 'dark'} disabled={!reward || isClaiming || drawBlocked} className="w-full mt-3">
-                                {isClaiming ? '保存收藏中...' : reward ? reward.label : '目前沒有待抽卡'}
-                            </RPGButton>
-                            <button onClick={onOpenAlbum} className="font-retro text-[11px] text-amber-300 mt-3 hover:text-white">打開收藏冊（{collectionCount} / {TRIVIA_CARDS.length}）</button>
-                        </>
-                    )}
+                <section className={`border-4 p-4 text-center ${pendingRewards.length > 0 ? 'border-amber-400/60 bg-amber-950/35' : 'border-gray-600 bg-black/30'}`}>
+                    <div className="text-3xl mb-2">📚</div>
+                    <h3 className="font-pixel text-xs text-amber-300">冷知識收藏冊</h3>
+                    <p className="font-retro text-xs text-gray-300 mt-2">
+                        {pendingRewards.length > 0
+                            ? `有 ${pendingRewards.length} 次待抽獎勵，請到收藏冊抽取。`
+                            : '目前沒有待抽獎勵，可以到收藏冊看看已收集的冷知識。'}
+                    </p>
+                    <RPGButton onClick={onOpenAlbum} color={pendingRewards.length > 0 ? 'success' : 'accent'} className="w-full mt-3">
+                        <Book size={14} /> {pendingRewards.length > 0 ? '前往收藏冊抽卡' : '查看冷知識收藏冊'}
+                    </RPGButton>
                 </section>
             </div>
         </div>
@@ -5184,9 +5191,8 @@ const App = () => {
                 currentUserId={currentUser?.uid}
                 userData={userData}
                 onSaveArenaRoster={handleSaveArenaRoster}
-                onClaimTrivia={handleClaimTrivia}
             />;
-            case 'trivia-album': return <TriviaAlbum onBack={() => { playSound('click'); setView(triviaAlbumBackView); }} userData={userData} />;
+            case 'trivia-album': return <TriviaAlbum onBack={() => { playSound('click'); setView(triviaAlbumBackView); }} userData={userData} onClaimTrivia={handleClaimTrivia} />;
             case 'login-calendar': return <LoginCalendar onBack={() => { playSound('click'); setView('map'); }} userData={userData} />;
             case 'achievement-hall': return <AchievementHall onBack={() => { playSound('click'); setView('weekly-report'); }} userData={userData} />;
             case 'mistake-notebook': return <MistakeNotebook onBack={() => { playSound('click'); setView('map'); }} mistakeStats={userData?.mistakeStats} onClearMistakes={handleClearMistakes} onRemoveMistake={handleRemoveMistake} />;
