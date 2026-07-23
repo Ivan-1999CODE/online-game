@@ -5,7 +5,7 @@ import {
     HelpCircle, Backpack, Gem, Flame, Skull as SkullIcon, Book, User,
     List, Grid, ArrowLeft, Lightbulb, MessageCircle, Clock, Award, Home, Lock, LogOut, Headphones, CalendarDays
 } from 'lucide-react';
-import { collection, query, where, getDocs, doc, getDoc, setDoc, updateDoc, arrayUnion } from 'firebase/firestore';
+import { collection, query, where, getDocs, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import { signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut } from 'firebase/auth';
 import { db, auth, googleProvider } from './config/firebase';
 import { speakText, playSound, shuffleArray, playMusic, stopMusic, setMute, getMuteStatus, setVolume, unlockAudio } from './utils/audio';
@@ -248,6 +248,7 @@ const ADV_LESSONS_PER_SECTION = 10; // 進階地圖每 10 課一卷
 const ADV_CLEARS_TO_COMPLETE = 3;   // 通關 3 次才算完成
 const ADV_QUIZ_QUESTION_LIMIT = 10; // 進階課每次隨機抽最多 10 題
 const ADV_PASSING_GRADES = ['S', 'A', 'B'];
+const ADV_GRADE_ORDER = { B: 1, A: 2, S: 3 };
 const BOSS_CLEAR_GRADES = ['S', 'A', 'B'];
 const BOSS_CLEARS_REQUIRED = 5;
 
@@ -256,6 +257,32 @@ const getAdvancedQualifiedClears = (record = {}) => Math.max(
     0,
     Number(record.bPlusClears ?? record.clears) || 0
 );
+const getAdvancedStarGrades = (record = {}) => {
+    const storedGrades = Array.isArray(record.starGrades)
+        ? record.starGrades.filter(grade => ADV_PASSING_GRADES.includes(grade))
+        : [];
+    if (storedGrades.length > 0) {
+        return [...storedGrades]
+            .sort((a, b) => ADV_GRADE_ORDER[a] - ADV_GRADE_ORDER[b])
+            .slice(-ADV_CLEARS_TO_COMPLETE);
+    }
+
+    const legacyCount = Math.min(getAdvancedQualifiedClears(record), ADV_CLEARS_TO_COMPLETE);
+    if (legacyCount <= 0) return [];
+    const legacyGrades = Array.from({ length: legacyCount }, () => 'B');
+    if (ADV_PASSING_GRADES.includes(record.bestGrade)) {
+        legacyGrades[legacyGrades.length - 1] = record.bestGrade;
+    }
+    return legacyGrades.sort((a, b) => ADV_GRADE_ORDER[a] - ADV_GRADE_ORDER[b]);
+};
+const addAdvancedStarGrade = (record = {}, grade) => {
+    const grades = getAdvancedStarGrades(record);
+    if (ADV_PASSING_GRADES.includes(grade)) grades.push(grade);
+    return grades
+        .sort((a, b) => ADV_GRADE_ORDER[b] - ADV_GRADE_ORDER[a])
+        .slice(0, ADV_CLEARS_TO_COMPLETE)
+        .sort((a, b) => ADV_GRADE_ORDER[a] - ADV_GRADE_ORDER[b]);
+};
 
 // 進階書目錄：meta/advanced 文件 { totalLessons, titles: { "1": "篇章名" } }，由匯入腳本維護
 const fetchAdvancedMeta = async () => {
@@ -602,9 +629,10 @@ const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 const DAY_MS = 24 * 60 * 60 * 1000;
 const ARENA_RIVAL_LIMIT = 7;
 const ARENA_RETAINED_REAL_LIMIT = 5;
-const ACTIVITY_STUDY_CARD_TARGET = 5;
-const ADVENTURE_MILESTONES = [7, 14, 30, 60, 100, 150, 200];
-const LOGIN_MILESTONES = [3, 7, 14, 30, 60, 100, 365];
+const ADVENTURE_MILESTONES = [3, 7, 14, 30, 60, 100, 150, 200, 365];
+const CORRECT_WORD_MILESTONES = [50, 150, 500, 1000, 2000, 3000];
+const LEGACY_WORD_MILESTONES = [50, 100, 250, 500, 1000];
+const CHECK_IN_GRADES = ['B', 'A', 'S'];
 const SIMULATED_ARENA_NAMES = [
     '功課失蹤中', '暴走布丁', '鯊魚吃泡麵', '今天不想睡', '火箭小宇',
     '冰龍隊長', '閃電皮蛋', '傳說小蝦米', '奶茶半糖', '作業等等我',
@@ -632,24 +660,35 @@ const getTaipeiDateKey = (value = Date.now()) => {
     }).format(date);
 };
 
-const AdvancedStars = ({ count = 0, size = 'md', label }) => {
-    const earned = Math.min(Math.max(Number(count) || 0, 0), ADV_CLEARS_TO_COMPLETE);
-    const completed = earned >= ADV_CLEARS_TO_COMPLETE;
+const AdvancedStars = ({ grades = [], count = 0, size = 'md', label }) => {
+    const normalizedGrades = grades
+        .filter(grade => ADV_PASSING_GRADES.includes(grade))
+        .slice(0, ADV_CLEARS_TO_COMPLETE);
+    const fallbackCount = Math.min(Math.max(Number(count) || 0, 0), ADV_CLEARS_TO_COMPLETE);
+    const visibleGrades = normalizedGrades.length > 0
+        ? normalizedGrades
+        : Array.from({ length: fallbackCount }, () => 'B');
+    const earned = visibleGrades.length;
     const sizeClass = size === 'lg' ? 'w-10 h-10' : size === 'sm' ? 'w-4 h-4' : 'w-6 h-6';
+    const gradeClass = {
+        B: 'advanced-star-b',
+        A: 'advanced-star-a',
+        S: 'advanced-star-s'
+    };
 
     return (
         <span
-            className={`advanced-stars inline-flex items-center justify-center gap-1 ${completed ? 'advanced-stars-complete' : ''}`}
+            className="advanced-stars inline-flex items-center justify-center gap-1"
             role="img"
             aria-label={label || `已取得 ${earned} 顆星，共 ${ADV_CLEARS_TO_COMPLETE} 顆`}
         >
             {Array.from({ length: ADV_CLEARS_TO_COMPLETE }, (_, index) => {
-                const isEarned = index < earned;
+                const grade = visibleGrades[index];
                 return (
                     <Star
                         key={index}
                         aria-hidden="true"
-                        className={`${sizeClass} advanced-star ${completed ? 'advanced-star-gold' : isEarned ? 'advanced-star-earned' : 'advanced-star-empty'}`}
+                        className={`${sizeClass} advanced-star ${grade ? gradeClass[grade] : 'advanced-star-empty'}`}
                     />
                 );
             })}
@@ -709,11 +748,6 @@ const addTrackerDay = (tracker = {}, dateKey = getTaipeiDateKey()) => {
 
 const stripTrackerFlag = ({ changed, ...tracker }) => tracker;
 
-const getVisibleStreak = (tracker = {}) => {
-    const gap = getDateKeyGap(tracker.lastDate, getTaipeiDateKey());
-    return gap !== null && gap <= 1 ? (Number(tracker.currentStreak) || 0) : 0;
-};
-
 const countUniqueSLevels = (records = {}) => Object.values(records).filter(record => {
     if (!record || typeof record !== 'object') return false;
     if (record.bestGrade === 'S' || record.rank === 'S' || (Number(record.sCount) || 0) > 0) return true;
@@ -721,20 +755,67 @@ const countUniqueSLevels = (records = {}) => Object.values(records).filter(recor
 }).length;
 
 const ACHIEVEMENT_SECTIONS = [
-    { id: 'login', title: '累積登入', icon: '📅', unit: '天', milestones: LOGIN_MILESTONES, special: [7, 30, 100, 365] },
-    { id: 'adventure', title: '累積冒險', icon: '⚔️', unit: '天', milestones: ADVENTURE_MILESTONES, special: [30, 100, 200] },
+    { id: 'adventure', title: '累積冒險', icon: '⚔️', unit: '天', milestones: ADVENTURE_MILESTONES, special: [30, 100, 200, 365] },
     { id: 'sRanks', title: 'S 級關卡', icon: '🏆', unit: '關', milestones: [1, 5, 10, 25, 50, 100], special: [25, 50, 100] },
-    { id: 'words', title: '解鎖單字', icon: '🔤', unit: '個', milestones: [50, 100, 250, 500, 1000], special: [250, 500, 1000] },
+    { id: 'words', title: '答對單字', icon: '🔤', unit: '個', milestones: CORRECT_WORD_MILESTONES, special: [500, 1000, 3000] },
     { id: 'trivia', title: '冷知識收藏', icon: '📚', unit: '張', milestones: [10, 25, 50, 100, 150, 200], special: [50, 100, 200] }
 ];
 
 const getAchievementStats = (userData = {}) => ({
-    login: Number(userData?.engagement?.login?.totalDays) || 0,
     adventure: Number(userData?.engagement?.adventure?.totalDays) || 0,
     sRanks: countUniqueSLevels(userData?.levelRecords || {}),
-    words: new Set(userData?.discoveredWordIds || []).size,
+    words: new Set(userData?.correctWordIds || []).size,
     trivia: Object.keys(userData?.triviaCollection || {}).length
 });
+
+const getCorrectWordKey = (log = {}) => {
+    if (!log.targetId) return null;
+    const lesson = Number(log.targetLesson);
+    return log.targetSeries === 'advanced' && Number.isFinite(lesson)
+        ? `advanced:${lesson}:${log.targetId}`
+        : `main:${log.targetId}`;
+};
+
+const getAchievementRewardKey = (sectionId, milestone) => (
+    sectionId === 'adventure' ? `milestone:${milestone}` : `achievement:${sectionId}:${milestone}`
+);
+
+const getAchievementTriviaRewards = (data = {}) => {
+    const claims = data.triviaRewardClaims || {};
+    const stats = getAchievementStats(data);
+    const rewards = [];
+
+    ACHIEVEMENT_SECTIONS.forEach(section => {
+        section.milestones.forEach(milestone => {
+            const key = getAchievementRewardKey(section.id, milestone);
+            if (stats[section.id] >= milestone && !claims[key]) {
+                rewards.push({
+                    key,
+                    label: `抽取「${section.title} ${milestone} ${section.unit}」獎勵`,
+                    sourceLabel: `達成成就：${section.title} ${milestone} ${section.unit}`,
+                    isSpecial: section.special.includes(milestone),
+                    rewardType: 'achievement'
+                });
+            }
+        });
+    });
+
+    const legacyWordCount = new Set(data.discoveredWordIds || []).size;
+    LEGACY_WORD_MILESTONES.forEach(milestone => {
+        const key = `achievement:legacyWords:${milestone}`;
+        if (legacyWordCount >= milestone && !claims[key]) {
+            rewards.push({
+                key,
+                label: `抽取「舊版探索單字 ${milestone} 個」獎勵`,
+                sourceLabel: `舊版已達成：探索單字 ${milestone} 個`,
+                isSpecial: [250, 500, 1000].includes(milestone),
+                rewardType: 'achievement'
+            });
+        }
+    });
+
+    return rewards;
+};
 
 const getUpcomingAchievements = (userData = {}, limit = ACHIEVEMENT_SECTIONS.length) => {
     const stats = getAchievementStats(userData);
@@ -834,6 +915,25 @@ const getTaipeiWeekRange = (weekOffset = 0) => {
     return { startMs, endMs: startMs + WEEK_MS };
 };
 
+const getTaipeiWeekRangeForValue = (value) => {
+    const timestamp = value instanceof Date ? value.getTime() : Number(value);
+    const shiftedDate = new Date((Number.isFinite(timestamp) ? timestamp : Date.now()) + TAIPEI_OFFSET_MS);
+    const daysSinceMonday = (shiftedDate.getUTCDay() + 6) % 7;
+    const mondayInTaipeiClock = Date.UTC(
+        shiftedDate.getUTCFullYear(),
+        shiftedDate.getUTCMonth(),
+        shiftedDate.getUTCDate() - daysSinceMonday
+    );
+    const startMs = mondayInTaipeiClock - TAIPEI_OFFSET_MS;
+    return { startMs, endMs: startMs + WEEK_MS };
+};
+
+const taipeiDateKeyToTimestamp = (dateKey) => {
+    const [year, month, day] = String(dateKey || '').split('-').map(Number);
+    if (![year, month, day].every(Number.isFinite)) return null;
+    return Date.UTC(year, month - 1, day) - TAIPEI_OFFSET_MS;
+};
+
 const getHistoryTime = (record) => {
     const value = record?.timestamp || record?.date;
     if (!value) return null;
@@ -878,36 +978,44 @@ const getWeeklyStats = (history = [], range) => {
     };
 };
 
-const getHistoryActivityDates = (history = []) => [...new Set(history
+const getQualifiedHistoryDates = (history = []) => [...new Set(history
+    .filter(record => CHECK_IN_GRADES.includes(record?.rank))
     .map(getHistoryTime)
     .filter(time => time !== null)
     .map(getTaipeiDateKey))].sort();
 
 const prepareEngagementOnLogin = (data = {}) => {
     const existing = data.engagement || {};
-    const knownAdventureDates = [...new Set([
-        ...(existing.adventure?.dates || []),
-        ...getHistoryActivityDates(data.trialHistory || [])
-    ])].sort();
-    const rebuiltAdventure = buildTrackerFromDates(knownAdventureDates);
+    if (Number(existing.version) >= 3 && existing.adventure) {
+        return {
+            engagement: existing,
+            changed: false
+        };
+    }
+
+    const qualifiedHistoryDates = getQualifiedHistoryDates(data.trialHistory || []);
+    const rebuiltAdventure = buildTrackerFromDates(qualifiedHistoryDates);
+    const legacyTotalDays = Math.max(
+        Number(existing.login?.totalDays) || 0,
+        Number(existing.adventure?.totalDays) || 0,
+        rebuiltAdventure.totalDays
+    );
     const adventure = {
         ...existing.adventure,
         ...rebuiltAdventure,
-        totalDays: Math.max(Number(existing.adventure?.totalDays) || 0, rebuiltAdventure.totalDays),
-        bestStreak: Math.max(Number(existing.adventure?.bestStreak) || 0, rebuiltAdventure.bestStreak)
+        totalDays: legacyTotalDays
     };
-    const loginWithFlag = addTrackerDay(existing.login || {}, getTaipeiDateKey());
     return {
         engagement: {
-            login: stripTrackerFlag(loginWithFlag),
-            adventure
+            version: 3,
+            adventure,
+            migratedAt: new Date().toISOString()
         },
-        changed: loginWithFlag.changed || !data.engagement,
-        firstLoginToday: loginWithFlag.changed
+        changed: true
     };
 };
 
-const addAdventureDay = (data = {}) => {
+const addQualifiedAdventureDay = (data = {}) => {
     const currentEngagement = data.engagement || prepareEngagementOnLogin(data).engagement;
     const adventureWithFlag = addTrackerDay(currentEngagement.adventure || {}, getTaipeiDateKey());
     return {
@@ -1131,7 +1239,7 @@ const getWeeklyPendingRewards = (data = {}, range = getTaipeiWeekRange(0)) => {
         rewards.push({
             key: basicRewardKey,
             label: '抽取本週冷知識',
-            sourceLabel: '本週 3 個有效冒險日',
+            sourceLabel: '本週完成 3 天冒險打卡',
             isSpecial: false,
             rewardType: 'weekly'
         });
@@ -1145,32 +1253,49 @@ const getWeeklyPendingRewards = (data = {}, range = getTaipeiWeekRange(0)) => {
             rewardType: 'weekly'
         });
     }
-    ADVENTURE_MILESTONES.forEach(milestone => {
-        const key = `milestone:${milestone}`;
-        if ((data.engagement?.adventure?.totalDays || 0) >= milestone && !claims[key]) {
-            rewards.push({
-                key,
-                label: `領取 ${milestone} 日特別卡`,
-                sourceLabel: `累積冒險 ${milestone} 天`,
-                isSpecial: true,
-                rewardType: 'weekly'
-            });
-        }
+    return { rewards, weeklyAdventureDays, bonusGoal };
+};
+
+const getAllWeeklyPendingRewards = (data = {}) => {
+    const weekStarts = new Set([getTaipeiWeekRange(0).startMs]);
+    (data.trialHistory || []).forEach(record => {
+        const timestamp = getHistoryTime(record);
+        if (timestamp !== null) weekStarts.add(getTaipeiWeekRangeForValue(timestamp).startMs);
+    });
+    (data.engagement?.adventure?.dates || []).forEach(dateKey => {
+        const timestamp = taipeiDateKeyToTimestamp(dateKey);
+        if (timestamp !== null) weekStarts.add(getTaipeiWeekRangeForValue(timestamp).startMs);
     });
 
-    return { rewards, weeklyAdventureDays, bonusGoal };
+    return [...weekStarts]
+        .sort((a, b) => a - b)
+        .flatMap(startMs => getWeeklyPendingRewards(data, { startMs, endMs: startMs + WEEK_MS }).rewards);
+};
+
+const getAllPendingTriviaRewards = (data = {}) => {
+    const rewards = [
+        ...getAllWeeklyPendingRewards(data),
+        ...getPendingProgressTriviaRewards(data),
+        ...getAchievementTriviaRewards(data)
+    ];
+    const seen = new Set();
+    return rewards.filter(reward => {
+        if (!reward?.key || seen.has(reward.key)) return false;
+        seen.add(reward.key);
+        return true;
+    });
 };
 
 const getPendingRewardSummary = (data = {}) => {
     const range = getTaipeiWeekRange(0);
     const weekly = getWeeklyPendingRewards(data, range);
-    const progressRewards = getPendingProgressTriviaRewards(data);
+    const pendingRewards = getAllPendingTriviaRewards(data);
     return {
         range,
         weeklyAdventureDays: weekly.weeklyAdventureDays,
         weeklyRewards: weekly.rewards,
-        progressRewards,
-        totalPendingCount: weekly.rewards.length + progressRewards.length
+        pendingRewards,
+        totalPendingCount: pendingRewards.length
     };
 };
 
@@ -1206,70 +1331,7 @@ const syncWeeklyLeaderboard = async ({ userId, studentName, history }) => {
     }, { merge: true });
 };
 
-const TriviaTicketModal = ({ reward, onClaim, onLater }) => {
-    const [isClaiming, setIsClaiming] = useState(false);
-    const [revealedCard, setRevealedCard] = useState(null);
-    const [collectionComplete, setCollectionComplete] = useState(false);
-
-    useEffect(() => {
-        setIsClaiming(false);
-        setRevealedCard(null);
-        setCollectionComplete(false);
-    }, [reward?.key]);
-
-    if (!reward) return null;
-    const category = revealedCard
-        ? TRIVIA_CATEGORIES.find(item => item.id === revealedCard.category)
-        : null;
-
-    const drawNow = async () => {
-        if (isClaiming) return;
-        setIsClaiming(true);
-        const card = await onClaim(reward);
-        if (card) {
-            setRevealedCard(card);
-            playSound('success');
-        } else {
-            setCollectionComplete(true);
-        }
-        setIsClaiming(false);
-    };
-
-    return (
-        <div className="absolute inset-0 z-[85] bg-black/85 flex items-center justify-center p-5">
-            <div className="w-full max-w-xs border-4 border-yellow-300 bg-gradient-to-b from-purple-950 to-[#2d2347] p-5 text-center text-white shadow-2xl">
-                {revealedCard ? (
-                    <>
-                        <div className="text-5xl mb-3">{category?.icon || '✨'}</div>
-                        <div className="font-pixel text-[9px] text-amber-300 mb-2">抽卡成功</div>
-                        <h3 className="font-pixel text-sm leading-relaxed">{revealedCard.title}</h3>
-                        <p className="font-retro text-sm text-gray-200 mt-3 leading-relaxed">{revealedCard.text}</p>
-                        <RPGButton onClick={onLater} color="accent" className="w-full mt-5">收進收藏冊</RPGButton>
-                    </>
-                ) : collectionComplete ? (
-                    <>
-                        <div className="text-5xl mb-3">🏆</div>
-                        <h3 className="font-pixel text-sm text-yellow-200">冷知識已全部收集！</h3>
-                        <p className="font-retro text-sm text-gray-300 mt-3">這次抽卡機會會保留，不會被消耗。</p>
-                        <RPGButton onClick={onLater} color="accent" className="w-full mt-5">返回冒險</RPGButton>
-                    </>
-                ) : (
-                    <>
-                        <div className="text-6xl mb-3">🎫</div>
-                        <h3 className="font-pixel text-sm text-yellow-200">獲得冷知識抽卡券！</h3>
-                        <p className="font-retro text-sm text-gray-200 mt-3 leading-relaxed">{reward.sourceLabel}</p>
-                        <div className="grid grid-cols-2 gap-2 mt-5">
-                            <RPGButton onClick={onLater} color="dark">稍後再抽</RPGButton>
-                            <RPGButton onClick={drawNow} color="success" disabled={isClaiming}>{isClaiming ? '抽取中...' : '立即抽卡'}</RPGButton>
-                        </div>
-                    </>
-                )}
-            </div>
-        </div>
-    );
-};
-
-const TriviaAlbum = ({ onBack, userData, onClaimTrivia }) => {
+const TriviaAlbum = ({ onBack, userData }) => {
     const [activeGroup, setActiveGroup] = useState('english');
     const [activeCategory, setActiveCategory] = useState('all');
     const [selectedCard, setSelectedCard] = useState(null);
@@ -1277,10 +1339,8 @@ const TriviaAlbum = ({ onBack, userData, onClaimTrivia }) => {
     const [teacherPassword, setTeacherPassword] = useState('');
     const [teacherError, setTeacherError] = useState(false);
     const [teacherPreview, setTeacherPreview] = useState(false);
-    const [isClaiming, setIsClaiming] = useState(false);
     const collection = userData?.triviaCollection || {};
     const ownedCount = Object.keys(collection).length;
-    const pendingRewards = getPendingProgressTriviaRewards(userData);
     const groupCategories = TRIVIA_CATEGORIES.filter(category => category.group === activeGroup);
     const visibleCards = TRIVIA_CARDS.filter(card => (
         card.group === activeGroup && (activeCategory === 'all' || card.category === activeCategory)
@@ -1315,17 +1375,6 @@ const TriviaAlbum = ({ onBack, userData, onClaimTrivia }) => {
         setTeacherError(false);
     };
 
-    const drawPendingReward = async () => {
-        if (isClaiming || pendingRewards.length === 0 || !onClaimTrivia) return;
-        setIsClaiming(true);
-        const card = await onClaimTrivia(pendingRewards[0]);
-        if (card) {
-            setSelectedCard(card);
-            playSound('success');
-        }
-        setIsClaiming(false);
-    };
-
     return (
         <div className="flex flex-col h-full bg-[#171229] text-white">
             <div className="flex items-center justify-between p-3 border-b-4 border-amber-500/70 bg-black/50">
@@ -1340,16 +1389,6 @@ const TriviaAlbum = ({ onBack, userData, onClaimTrivia }) => {
             {teacherPreview && (
                 <div className="bg-green-900/80 border-b-2 border-green-400 px-3 py-2 text-center font-pixel text-[9px] text-green-100">
                     教師預覽 · 全部卡片已展開（不影響學生收藏）
-                </div>
-            )}
-
-            {pendingRewards.length > 0 && (
-                <div className="bg-gradient-to-r from-purple-950 to-amber-950 border-b-2 border-yellow-400 px-3 py-3 flex items-center justify-between gap-3">
-                    <div>
-                        <div className="font-pixel text-[10px] text-yellow-200">🎫 尚有 {pendingRewards.length} 次抽卡</div>
-                        <div className="font-retro text-[10px] text-gray-300 mt-1 truncate max-w-[210px]">{pendingRewards[0].sourceLabel}</div>
-                    </div>
-                    <RPGButton onClick={drawPendingReward} color="success" disabled={isClaiming} className="px-3 whitespace-nowrap">{isClaiming ? '抽取中' : '抽一張'}</RPGButton>
                 </div>
             )}
 
@@ -1445,6 +1484,7 @@ const WeeklyReport = ({ onBack, onOpenAlbum, onOpenAchievements, currentUserId, 
     const [loadError, setLoadError] = useState(false);
     const [revealedFact, setRevealedFact] = useState(null);
     const [isClaiming, setIsClaiming] = useState(false);
+    const [drawBlocked, setDrawBlocked] = useState(false);
     const rosterSaveRequestedRef = useRef(false);
     const range = getTaipeiWeekRange(period === 'current' ? 0 : -1);
 
@@ -1537,17 +1577,11 @@ const WeeklyReport = ({ onBack, onOpenAlbum, onOpenAchievements, currentUserId, 
     const isChampion = currentRank === 1 && currentStats.sessions > 0;
     const championTarget = Number(activeRoster.targetScore)
         || roundArenaTarget(currentStats.score);
-    const weeklyAdventureDays = getWeeklyAdventureDays(userData?.engagement?.adventure || {}, range);
-    const bonusGoal = getBonusGoal(currentStats, previousStats);
-    const claims = userData?.triviaRewardClaims || {};
-    const basicRewardKey = `${range.startMs}:basic`;
-    const bonusRewardKey = `${range.startMs}:bonus`;
-    const basicClaimed = Boolean(claims[basicRewardKey]);
-    const bonusClaimed = Boolean(claims[bonusRewardKey]);
     const collectionCount = Object.keys(userData?.triviaCollection || {}).length;
-    const isCurrentWeek = period === 'current';
-    const weeklyPendingRewards = isCurrentWeek ? getWeeklyPendingRewards(userData, range).rewards : [];
-    const reward = weeklyPendingRewards[0] || null;
+    const pendingRewards = getAllPendingTriviaRewards(userData);
+    const reward = pendingRewards[0] || null;
+    const todayCheckedIn = (userData?.engagement?.adventure?.dates || []).includes(getTaipeiDateKey());
+    const upcomingAchievement = getUpcomingAchievements(userData, 1)[0] || null;
 
     useEffect(() => {
         if (period !== 'current' || isLoading || loadError || storedRosterIsCurrent || !onSaveArenaRoster || rosterSaveRequestedRef.current) return;
@@ -1562,7 +1596,10 @@ const WeeklyReport = ({ onBack, onOpenAlbum, onOpenAchievements, currentUserId, 
             const card = await onClaimTrivia(reward);
             if (card) {
                 setRevealedFact(card);
+                setDrawBlocked(false);
                 playSound('success');
+            } else {
+                setDrawBlocked(true);
             }
         } finally {
             setIsClaiming(false);
@@ -1588,6 +1625,29 @@ const WeeklyReport = ({ onBack, onOpenAlbum, onOpenAchievements, currentUserId, 
             </div>
 
             <div className="flex-1 overflow-y-auto p-3 space-y-4">
+                <section className="border-4 border-cyan-400/60 bg-gradient-to-br from-cyan-950/80 to-purple-950/80 p-3 shadow-xl">
+                    <div className="flex justify-between items-center mb-3">
+                        <h3 className="font-pixel text-xs text-cyan-300">本日打卡</h3>
+                        <span className="font-retro text-[10px] text-gray-400">台北時間每日計算一次</span>
+                    </div>
+                    <div className={`border-2 p-3 text-center ${todayCheckedIn ? 'border-green-400 bg-green-950/50' : 'border-yellow-400 bg-yellow-950/35'}`}>
+                        <div className={`font-pixel text-2xl ${todayCheckedIn ? 'text-green-300' : 'text-yellow-300'}`}>{todayCheckedIn ? '1 / 1' : '0 / 1'}</div>
+                        <div className="font-retro text-[10px] text-gray-200 mt-2">{todayCheckedIn ? '今日打卡已完成' : '今日尚未完成打卡'}</div>
+                    </div>
+                    <p className={`font-retro text-[11px] mt-3 leading-relaxed ${todayCheckedIn ? 'text-green-200' : 'text-yellow-100'}`}>
+                        {todayCheckedIn ? '✓ 今日已完成一場遊戲並取得 B 級以上。' : '完成一場遊戲並取得 B 級以上，即可完成今日打卡。'}
+                    </p>
+                    {todayCheckedIn && upcomingAchievement && (
+                        <div className="mt-3 border-2 border-purple-400/50 bg-black/35 p-3">
+                            <div className="font-pixel text-[9px] text-purple-300">最接近完成的成就</div>
+                            <div className="font-retro text-xs text-white mt-2">
+                                {upcomingAchievement.icon} {upcomingAchievement.title}還差 {upcomingAchievement.remaining} {upcomingAchievement.unit}
+                            </div>
+                            <div className="font-pixel text-[10px] text-cyan-300 mt-2">{upcomingAchievement.current} / {upcomingAchievement.next}</div>
+                        </div>
+                    )}
+                </section>
+
                 <section className="border-4 border-yellow-500/60 bg-gradient-to-br from-[#513018] to-[#24173a] p-4 shadow-xl">
                     <div className="flex justify-between items-start gap-3">
                         <div>
@@ -1640,8 +1700,8 @@ const WeeklyReport = ({ onBack, onOpenAlbum, onOpenAchievements, currentUserId, 
                     <div className="flex items-center justify-between p-3 border-b border-yellow-500/30">
                         <div>
                             <h3 className="font-pixel text-xs text-yellow-300">英雄競技場</h3>
-                            <p className="font-retro text-[9px] text-gray-400 mt-1">系統會依照近期冒險進度，安排實力接近的對手。</p>
-                            <p className="font-retro text-[8px] text-gray-600 mt-0.5">模擬對手會隨你的本週挑戰頻率持續成長</p>
+                            <p className="font-retro text-[9px] text-gray-400 mt-1">為保護隱私，競技場名稱一律使用代稱顯示。</p>
+                            <p className="font-retro text-[8px] text-gray-600 mt-0.5">系統會依照近期冒險進度，安排實力接近的對手</p>
                         </div>
                         <span className="font-retro text-[10px] text-gray-400">本週對手固定</span>
                     </div>
@@ -1658,7 +1718,7 @@ const WeeklyReport = ({ onBack, onOpenAlbum, onOpenAchievements, currentUserId, 
                                 return (
                                     <div key={student.id} className={`grid grid-cols-[2rem_1fr_auto] items-center gap-2 px-3 py-2 border-b border-white/10 ${isMe ? 'bg-cyan-900/40' : ''}`}>
                                         <span className={`font-pixel text-sm ${index < 3 ? 'text-yellow-300' : 'text-gray-400'}`}>#{index + 1}</span>
-                                        <div className="min-w-0"><div className="font-retro text-sm truncate">{isMe ? `${userData?.studentName || '我'}（我）` : student.maskedName}</div><div className="font-retro text-[9px] text-gray-500">{student.weekly.hasAccuracy ? `準確率 ${Math.round(student.weekly.accuracy)}%` : `${student.weekly.sessions} 場挑戰`}</div></div>
+                                        <div className="min-w-0"><div className="font-retro text-sm truncate">{isMe ? '我' : student.maskedName}</div><div className="font-retro text-[9px] text-gray-500">{student.weekly.hasAccuracy ? `準確率 ${Math.round(student.weekly.accuracy)}%` : `${student.weekly.sessions} 場挑戰`}</div></div>
                                         <span className="font-pixel text-xs text-yellow-300">{student.weekly.score} 分</span>
                                     </div>
                                 );
@@ -1668,7 +1728,7 @@ const WeeklyReport = ({ onBack, onOpenAlbum, onOpenAchievements, currentUserId, 
                                     <>
                                         <div className="font-pixel text-[10px] text-yellow-300">👑 守擂中 · 第一名屬於你</div>
                                         <p className="font-retro text-xs text-gray-300 mt-1">
-                                            {currentStats.score >= championTarget ? `越級目標 ${championTarget} 分已達成！本週門檻不會再提高。` : `固定越級目標：${championTarget} 分（還差 ${championTarget - currentStats.score} 分）`}
+                                            {currentStats.score >= championTarget ? `本週越級目標 ${championTarget} 分已達成！本週門檻不會再提高。` : `本週越級目標：${championTarget} 分（還差 ${championTarget - currentStats.score} 分）`}
                                         </p>
                                     </>
                                 ) : nextOpponent ? (
@@ -1682,18 +1742,6 @@ const WeeklyReport = ({ onBack, onOpenAlbum, onOpenAchievements, currentUserId, 
                     )}
                 </section>
 
-                <section className="border-2 border-cyan-500/40 bg-black/30 p-3">
-                    <div className="flex justify-between items-center mb-3">
-                        <h3 className="font-pixel text-xs text-cyan-300">冒險足跡</h3>
-                        <span className="font-retro text-[10px] text-gray-500">台北時間每日計算一次</span>
-                    </div>
-                    <div className="grid grid-cols-2 gap-2 text-center">
-                        <div className="bg-black/40 border border-white/10 p-2"><div className="font-pixel text-lg text-cyan-300">{userData?.engagement?.login?.totalDays || 0}</div><div className="font-retro text-[10px] text-gray-300">累積登入天數</div><div className="font-retro text-[9px] text-gray-500">每天首次登入計算 1 天</div></div>
-                        <div className="bg-black/40 border border-white/10 p-2"><div className="font-pixel text-lg text-green-300">{userData?.engagement?.adventure?.totalDays || 0}</div><div className="font-retro text-[10px] text-gray-300">累積冒險天數</div><div className="font-retro text-[9px] text-gray-500">完成挑戰或有效學習 · 連續 {getVisibleStreak(userData?.engagement?.adventure)} 天</div></div>
-                    </div>
-                    <p className="font-retro text-[10px] text-gray-500 mt-2 leading-relaxed">登入是每天開啟 App；冒險則要完成一場挑戰，或在學習模式看完至少 5 張不同卡片。</p>
-                </section>
-
                 <section className={`border-4 p-4 text-center ${reward ? 'border-green-400/60 bg-green-950/40' : 'border-gray-600 bg-black/30'}`}>
                     {revealedFact ? (
                         <div className="animate-in fade-in">
@@ -1701,18 +1749,33 @@ const WeeklyReport = ({ onBack, onOpenAlbum, onOpenAchievements, currentUserId, 
                             <h3 className="font-pixel text-xs text-green-300 mb-2">{revealedFact.title}</h3>
                             <p className="font-retro text-sm text-gray-200 leading-relaxed">{revealedFact.text}</p>
                             <p className="font-retro text-[10px] text-gray-500 mt-3">已永久收藏 · 目前 {collectionCount} / {TRIVIA_CARDS.length}</p>
-                            {reward && <RPGButton onClick={() => setRevealedFact(null)} color="success" className="w-full mt-3">🎫 還有 {weeklyPendingRewards.length} 張，繼續抽</RPGButton>}
+                            {reward && <RPGButton onClick={() => setRevealedFact(null)} color="success" className="w-full mt-3">🎫 還有 {pendingRewards.length} 次，繼續抽</RPGButton>}
                             <RPGButton onClick={onOpenAlbum} color="accent" className="w-full mt-3"><Book size={14} /> 查看收藏冊</RPGButton>
                         </div>
                     ) : (
                         <>
                             <div className="text-3xl mb-2">🎁</div>
-                            <h3 className="font-pixel text-xs text-green-300">冷知識抽卡</h3>
-                            <p className="font-retro text-xs text-gray-300 my-2">
-                                {!isCurrentWeek ? '上週獎勵已結算，回到本週繼續累積。' : reward ? `已解鎖：${reward.sourceLabel}` : !basicClaimed ? `本週有效冒險 ${weeklyAdventureDays} / 3 天` : !bonusClaimed ? `${bonusGoal.label}：${Math.min(bonusGoal.current, bonusGoal.target)} / ${bonusGoal.target}` : '本週獎勵已全部領取，繼續守住競技排名！'}
+                            <h3 className="font-pixel text-xs text-green-300">統一抽卡區</h3>
+                            <p className="font-retro text-xs text-gray-300 mt-2">
+                                待抽卡：<span className="text-yellow-300 font-bold">{pendingRewards.length}</span> 次
                             </p>
-                            <RPGButton onClick={drawTrivia} color={reward ? 'success' : 'dark'} disabled={!reward || isClaiming} className="w-full mt-3">
-                                {isClaiming ? '保存收藏中...' : reward ? reward.label : '目前沒有可領取卡片'}
+                            {pendingRewards.length > 0 && (
+                                <div className="mt-3 max-h-28 overflow-y-auto border border-white/10 bg-black/30 text-left">
+                                    {pendingRewards.slice(0, 8).map((pendingReward, index) => (
+                                        <div key={pendingReward.key} className="px-2 py-2 border-b border-white/10 font-retro text-[10px] text-gray-300">
+                                            {index + 1}. {pendingReward.sourceLabel}
+                                        </div>
+                                    ))}
+                                    {pendingRewards.length > 8 && <div className="px-2 py-2 font-retro text-[10px] text-gray-500">另外還有 {pendingRewards.length - 8} 次待抽卡</div>}
+                                </div>
+                            )}
+                            {drawBlocked && (
+                                <p className="font-retro text-[11px] text-yellow-200 mt-3 border border-yellow-500/40 bg-yellow-950/30 p-2">
+                                    現有冷知識已收集完畢；這次抽卡會保留，新增卡片後可繼續抽。
+                                </p>
+                            )}
+                            <RPGButton onClick={drawTrivia} color={reward && !drawBlocked ? 'success' : 'dark'} disabled={!reward || isClaiming || drawBlocked} className="w-full mt-3">
+                                {isClaiming ? '保存收藏中...' : reward ? reward.label : '目前沒有待抽卡'}
                             </RPGButton>
                             <button onClick={onOpenAlbum} className="font-retro text-[11px] text-amber-300 mt-3 hover:text-white">打開收藏冊（{collectionCount} / {TRIVIA_CARDS.length}）</button>
                         </>
@@ -1726,8 +1789,8 @@ const WeeklyReport = ({ onBack, onOpenAlbum, onOpenAchievements, currentUserId, 
 const LoginStampModal = ({ data, onClose }) => {
     if (!data) return null;
     const totalDays = Number(data.totalDays) || 0;
-    const reachedMilestone = LOGIN_MILESTONES.includes(totalDays) ? totalDays : null;
-    const nextMilestone = LOGIN_MILESTONES.find(milestone => milestone > totalDays);
+    const reachedMilestone = ADVENTURE_MILESTONES.includes(totalDays) ? totalDays : null;
+    const nextMilestone = ADVENTURE_MILESTONES.find(milestone => milestone > totalDays);
     const dateLabel = new Intl.DateTimeFormat('zh-TW', {
         timeZone: 'Asia/Taipei', month: 'long', day: 'numeric', weekday: 'short'
     }).format(new Date());
@@ -1743,24 +1806,24 @@ const LoginStampModal = ({ data, onClose }) => {
                     <span className="font-pixel text-[10px]">CHECK IN</span>
                     <span className="font-retro text-xl font-bold mt-1">打卡成功</span>
                 </div>
-                <h3 className="font-pixel text-sm text-purple-800">今日打卡成功！</h3>
+                <h3 className="font-pixel text-sm text-purple-800">今日冒險打卡成功！</h3>
                 <div className="border-2 border-amber-700 bg-white/60 p-3 mt-4">
                     <div className="font-pixel text-2xl">{totalDays}</div>
-                    <div className="font-retro text-sm">已累積登入 {totalDays} 天</div>
+                    <div className="font-retro text-sm">已累積冒險 {totalDays} 天</div>
                 </div>
                 <p className="font-retro text-sm font-bold text-purple-800 mt-3">
                     {reachedMilestone
-                        ? `已獲得「${reachedMilestone} 日冒險家」徽章！`
+                        ? `達成「累積冒險 ${reachedMilestone} 天」！抽卡已放入每週戰報。`
                         : nextMilestone
-                            ? `再登入 ${nextMilestone - totalDays} 天即可獲得「${nextMilestone} 日冒險家」徽章`
-                            : '所有累積登入徽章都已解鎖！'}
+                            ? `再冒險 ${nextMilestone - totalDays} 天即可取得下一枚徽章`
+                            : '所有累積冒險徽章都已解鎖！'}
                 </p>
                 <button
                     onClick={onClose}
                     className="mt-5 w-full min-h-12 border-4 border-[#2d2347] bg-gradient-to-b from-red-500 to-red-700 text-white shadow-[4px_4px_0_#2d2347] active:translate-x-1 active:translate-y-1 active:shadow-none transition-transform font-retro font-bold text-base flex items-center justify-center gap-2 focus:outline-none focus:ring-4 focus:ring-cyan-500/60"
                 >
                     <Sword size={18} aria-hidden="true" />
-                    收下印章，開始冒險
+                    收下今日印章
                     <ChevronRight size={18} aria-hidden="true" />
                 </button>
             </div>
@@ -1773,7 +1836,6 @@ const LoginCalendar = ({ onBack, userData }) => {
     const [todayYear, todayMonth] = todayKey.split('-').map(Number);
     const [visibleMonth, setVisibleMonth] = useState({ year: todayYear, month: todayMonth - 1 });
     const [selectedDateKey, setSelectedDateKey] = useState(todayKey);
-    const loginDates = new Set(userData?.engagement?.login?.dates || []);
     const adventureDates = new Set(userData?.engagement?.adventure?.dates || []);
     const firstWeekday = new Date(Date.UTC(visibleMonth.year, visibleMonth.month, 1)).getUTCDay();
     const daysInMonth = new Date(Date.UTC(visibleMonth.year, visibleMonth.month + 1, 0)).getUTCDate();
@@ -1805,8 +1867,8 @@ const LoginCalendar = ({ onBack, userData }) => {
             <div className="flex items-center justify-between p-3 border-b-4 border-cyan-500/60 bg-black/50">
                 <RPGButton onClick={onBack} color="dark" className="px-2"><ArrowLeft size={16} /></RPGButton>
                 <div className="text-center">
-                    <h2 className="font-pixel text-sm text-cyan-300">登入日曆</h2>
-                    <p className="font-retro text-[10px] text-gray-400">LOGIN CALENDAR · 台北時間</p>
+                    <h2 className="font-pixel text-sm text-cyan-300">冒險打卡日曆</h2>
+                    <p className="font-retro text-[10px] text-gray-400">ADVENTURE CHECK-IN · 台北時間</p>
                 </div>
                 <CalendarDays size={23} className="text-cyan-300" />
             </div>
@@ -1829,7 +1891,6 @@ const LoginCalendar = ({ onBack, userData }) => {
                         {calendarCells.map((day, index) => {
                             if (!day) return <div key={`empty-${index}`} className="min-h-14 bg-[#16121f]" aria-hidden="true"></div>;
                             const dateKey = `${visibleMonth.year}-${String(visibleMonth.month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                            const loggedIn = loginDates.has(dateKey);
                             const adventured = adventureDates.has(dateKey);
                             const selected = selectedDateKey === dateKey;
                             const isToday = dateKey === todayKey;
@@ -1837,12 +1898,11 @@ const LoginCalendar = ({ onBack, userData }) => {
                                 <button
                                     key={dateKey}
                                     onClick={() => setSelectedDateKey(dateKey)}
-                                    className={`relative min-h-14 p-1 flex flex-col items-center justify-start transition-colors ${loggedIn ? 'bg-[#efe0b6] text-[#2d2347] hover:bg-white' : 'bg-slate-800 text-slate-500 hover:bg-slate-700'} ${selected ? 'ring-2 ring-inset ring-cyan-300' : ''}`}
-                                    aria-label={`${formatCalendarDate(dateKey)}，${loggedIn ? '有登入' : '未登入'}${adventured ? '，有有效冒險' : ''}`}
+                                    className={`relative min-h-14 p-1 flex flex-col items-center justify-start transition-colors ${adventured ? 'bg-[#efe0b6] text-[#2d2347] hover:bg-white' : 'bg-slate-800 text-slate-500 hover:bg-slate-700'} ${selected ? 'ring-2 ring-inset ring-cyan-300' : ''}`}
+                                    aria-label={`${formatCalendarDate(dateKey)}，${adventured ? '今日打卡已完成' : '今日尚未完成打卡'}`}
                                 >
                                     <span className={`font-pixel text-[9px] ${isToday ? 'underline decoration-2 underline-offset-2' : ''}`}>{day}</span>
-                                    {loggedIn && <span className="calendar-stamp mt-1 text-red-700 font-pixel text-[6px] leading-none border-2 border-red-700 rounded-full px-1 py-1 -rotate-12">CHECK<br />IN</span>}
-                                    {adventured && <Sword size={9} className={`absolute bottom-1 right-1 ${loggedIn ? 'text-purple-700' : 'text-cyan-400'}`} aria-hidden="true" />}
+                                    {adventured && <span className="calendar-stamp mt-1 text-red-700 font-pixel text-[6px] leading-none border-2 border-red-700 rounded-full px-1 py-1 -rotate-12">CHECK<br />IN</span>}
                                 </button>
                             );
                         })}
@@ -1854,22 +1914,22 @@ const LoginCalendar = ({ onBack, userData }) => {
                         <>
                             <div className="font-pixel text-[10px] text-cyan-300">{formatCalendarDate(selectedDateKey)}</div>
                             <div className="mt-3 flex flex-wrap gap-2 font-retro text-xs">
-                                <span className={`border px-2 py-1 ${loginDates.has(selectedDateKey) ? 'border-red-400 bg-red-950/50 text-red-200' : 'border-gray-600 bg-gray-900 text-gray-500'}`}>{loginDates.has(selectedDateKey) ? '✓ 當日有登入' : '當日未登入'}</span>
-                                <span className={`border px-2 py-1 ${adventureDates.has(selectedDateKey) ? 'border-cyan-400 bg-cyan-950/50 text-cyan-200' : 'border-gray-600 bg-gray-900 text-gray-500'}`}>{adventureDates.has(selectedDateKey) ? '⚔ 當日有有效冒險' : '當日沒有有效冒險'}</span>
+                                <span className={`border px-2 py-1 ${adventureDates.has(selectedDateKey) ? 'border-cyan-400 bg-cyan-950/50 text-cyan-200' : 'border-gray-600 bg-gray-900 text-gray-500'}`}>{adventureDates.has(selectedDateKey) ? '✓ 今日打卡已完成' : '今日尚未完成打卡'}</span>
                             </div>
                         </>
-                    ) : <p className="font-retro text-xs text-gray-500">點擊日期查看登入與冒險紀錄。</p>}
+                    ) : <p className="font-retro text-xs text-gray-500">點擊日期查看冒險打卡紀錄。</p>}
                 </div>
-                <p className="font-retro text-[10px] text-gray-500 mt-3 leading-relaxed">蓋章代表當天曾登入；小劍代表當天完成挑戰，或完成一次有效學習。系統開始保存紀錄以前的登入日期無法補回。</p>
+                <p className="font-retro text-[10px] text-gray-500 mt-3 leading-relaxed">當天完成一場遊戲並取得 B 級以上，即可打卡；每天最多計算一次。</p>
             </div>
         </div>
     );
 };
 
 const AchievementHall = ({ onBack, userData }) => {
-    const [mode, setMode] = useState('pending');
     const stats = getAchievementStats(userData);
-    const upcoming = getUpcomingAchievements(userData, 3);
+    const claims = userData?.triviaRewardClaims || {};
+    const legacyWordCount = new Set(userData?.discoveredWordIds || []).size;
+    const legacyUnlocked = LEGACY_WORD_MILESTONES.filter(milestone => legacyWordCount >= milestone);
 
     return (
         <div className="flex flex-col h-full bg-[#171229] text-white">
@@ -1878,50 +1938,51 @@ const AchievementHall = ({ onBack, userData }) => {
                 <div className="text-center"><h2 className="font-pixel text-sm text-cyan-300">英雄徽章館</h2><p className="font-retro text-[10px] text-gray-400">HERO BADGE HALL</p></div>
                 <Award size={23} className="text-yellow-300" />
             </div>
-            <div className="grid grid-cols-2 bg-black/50 border-b-2 border-cyan-500/30">
-                <button onClick={() => setMode('pending')} className={`py-2 font-pixel text-[10px] ${mode === 'pending' ? 'bg-cyan-600 text-white' : 'text-gray-400'}`}>待解鎖成就</button>
-                <button onClick={() => setMode('earned')} className={`py-2 font-pixel text-[10px] ${mode === 'earned' ? 'bg-yellow-500 text-black' : 'text-gray-400'}`}>已獲得徽章</button>
-            </div>
             <div className="flex-1 overflow-y-auto p-3 space-y-3">
-                {mode === 'pending' && upcoming.length > 0 && (
-                    <section className="border-2 border-yellow-400/50 bg-yellow-950/25 p-3">
-                        <h3 className="font-pixel text-[11px] text-yellow-300">即將完成</h3>
-                        <div className="space-y-3 mt-3">
-                            {upcoming.map(item => (
-                                <div key={item.id}>
-                                    <div className="flex justify-between gap-2 font-retro text-xs">
-                                        <span>{item.icon} {item.title} {item.next} {item.unit}</span>
-                                        <span className="text-cyan-200">還差 {item.remaining} {item.unit}</span>
-                                    </div>
-                                    <div className="h-2 bg-black/70 border border-white/10 mt-1"><div className="h-full bg-gradient-to-r from-cyan-400 to-yellow-300" style={{ width: `${Math.max(item.progress * 100, 4)}%` }}></div></div>
-                                </div>
-                            ))}
-                        </div>
-                    </section>
-                )}
                 <p className="font-retro text-xs text-gray-300 border-2 border-cyan-500/30 bg-cyan-950/30 p-3">
-                    {mode === 'pending' ? '下方列出尚未達成的成就；越接近目標，進度條就越完整。' : '這些徽章已收入你的英雄收藏，繼續冒險可以解鎖更多。'}
+                    每達成一個成就，就會獲得 1 次冷知識抽卡；抽卡統一放在每週戰報最底下。
                 </p>
+                <div className="grid grid-cols-3 gap-2 font-retro text-[10px] text-center">
+                    <div className="border border-purple-300 bg-purple-800/70 py-2 text-white">✓ 已達成</div>
+                    <div className="border border-cyan-300 bg-cyan-950/70 py-2 text-cyan-100">● 進行中</div>
+                    <div className="border border-gray-700 bg-black/50 py-2 text-gray-500">🔒 未達成</div>
+                </div>
                 {ACHIEVEMENT_SECTIONS.map(section => {
                     const current = stats[section.id];
                     const next = section.milestones.find(value => value > current);
-                    const visibleMilestones = section.milestones.filter(milestone => mode === 'pending' ? current < milestone : current >= milestone);
-                    if (visibleMilestones.length === 0) return null;
+                    const progress = next ? Math.min((current / next) * 100, 100) : 100;
                     return (
                         <section key={section.id} className="border-2 border-white/15 bg-black/30 p-3">
-                            <div className="flex justify-between items-center mb-3">
-                                <div><h3 className="font-pixel text-[11px] text-yellow-300">{section.icon} {section.title}</h3><p className="font-retro text-[10px] text-gray-500 mt-1">目前 {current} {section.unit}{next ? ` · 下一個 ${next}` : ' · 全部完成'}</p></div>
+                            <div className="flex justify-between items-start gap-3">
+                                <div className="min-w-0 flex-1">
+                                    <h3 className="font-pixel text-[11px] text-yellow-300">{section.icon} {section.title}</h3>
+                                    <p className="font-retro text-[10px] text-gray-400 mt-1">目前 {current} {section.unit}{next ? ` · 下一個 ${next}` : ' · 全部完成'}</p>
+                                </div>
                                 <span className="font-pixel text-xl text-cyan-300">{current}</span>
                             </div>
+                            <div className="mt-3">
+                                <div className="flex justify-between font-retro text-[10px] text-gray-300 mb-1">
+                                    <span>{next ? `進行中 ${current} / ${next}` : '所有里程碑已完成'}</span>
+                                    <span>{Math.round(progress)}%</span>
+                                </div>
+                                <div className="h-3 bg-black/70 border border-white/15">
+                                    <div className="h-full bg-gradient-to-r from-cyan-500 via-purple-400 to-yellow-300 transition-all duration-500" style={{ width: `${progress}%` }}></div>
+                                </div>
+                            </div>
                             <div className="grid grid-cols-4 gap-2">
-                                {visibleMilestones.map(milestone => {
+                                {section.milestones.map(milestone => {
                                     const unlocked = current >= milestone;
+                                    const inProgress = !unlocked && milestone === next;
                                     const isSpecial = section.special.includes(milestone);
+                                    const rewardKey = getAchievementRewardKey(section.id, milestone);
+                                    const rewardClaimed = Boolean(claims[rewardKey]);
                                     return (
-                                        <div key={milestone} className={`aspect-square border-2 flex flex-col items-center justify-center text-center ${unlocked ? isSpecial ? 'achievement-special border-yellow-300 text-yellow-100' : 'bg-purple-800/70 border-purple-300 text-white' : 'bg-black/50 border-gray-700 text-gray-600'}`} title={`${section.title} ${milestone} ${section.unit}`}>
-                                            <span className={`text-xl ${unlocked ? '' : 'grayscale opacity-30'}`}>{unlocked ? section.icon : '🔒'}</span>
+                                        <div key={milestone} className={`aspect-square border-2 flex flex-col items-center justify-center text-center mt-3 ${unlocked ? isSpecial ? 'achievement-special border-yellow-300 text-yellow-100' : 'bg-purple-800/70 border-purple-300 text-white' : inProgress ? 'bg-cyan-950/70 border-cyan-300 text-cyan-100 shadow-[0_0_10px_rgba(34,211,238,0.35)]' : 'bg-black/50 border-gray-700 text-gray-600'}`} title={`${section.title} ${milestone} ${section.unit}`}>
+                                            <span className={`text-xl ${unlocked || inProgress ? '' : 'grayscale opacity-30'}`}>{unlocked || inProgress ? section.icon : '🔒'}</span>
                                             <span className="font-pixel text-[8px] mt-1">{milestone}</span>
-                                            {isSpecial && <span className="font-pixel text-[5px] mt-0.5">SPECIAL</span>}
+                                            {unlocked && <span className="font-retro text-[7px] mt-1">{rewardClaimed ? '✓ 已抽卡' : '🎫 待抽卡'}</span>}
+                                            {inProgress && <span className="font-retro text-[7px] mt-1 text-cyan-200">進行中</span>}
+                                            {!inProgress && isSpecial && <span className="font-pixel text-[5px] mt-0.5">SPECIAL</span>}
                                         </div>
                                     );
                                 })}
@@ -1929,6 +1990,29 @@ const AchievementHall = ({ onBack, userData }) => {
                         </section>
                     );
                 })}
+                {legacyUnlocked.length > 0 && (
+                    <section className="border-2 border-amber-500/40 bg-amber-950/15 p-3">
+                        <div className="flex justify-between items-start gap-3">
+                            <div>
+                                <h3 className="font-pixel text-[11px] text-amber-300">📜 舊版探索單字</h3>
+                                <p className="font-retro text-[10px] text-gray-400 mt-1">過去已取得的徽章永久保留；新版改由答對單字累積。</p>
+                            </div>
+                            <span className="font-pixel text-xl text-amber-300">{legacyWordCount}</span>
+                        </div>
+                        <div className="grid grid-cols-4 gap-2 mt-3">
+                            {legacyUnlocked.map(milestone => {
+                                const rewardClaimed = Boolean(claims[`achievement:legacyWords:${milestone}`]);
+                                return (
+                                    <div key={milestone} className="aspect-square border-2 border-purple-300 bg-purple-800/70 text-white flex flex-col items-center justify-center text-center">
+                                        <span className="text-xl">🔤</span>
+                                        <span className="font-pixel text-[8px] mt-1">{milestone}</span>
+                                        <span className="font-retro text-[7px] mt-1">{rewardClaimed ? '✓ 已抽卡' : '🎫 待抽卡'}</span>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </section>
+                )}
             </div>
         </div>
     );
@@ -1937,8 +2021,14 @@ const AchievementHall = ({ onBack, userData }) => {
 const WorldMap = ({ onSelectNode, onViewJourney, onViewWeeklyReport, onViewLoginCalendar, onOpenAlbum, rewardSummary = {}, userData, onUltimateChallenge, onViewMistakeNotebook, onLogout, records = {}, advMeta = null, activeTab = 'main', onChangeTab }) => {
     const [showGuide, setShowGuide] = useState(false);
     const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
-    const deferredTriviaCount = rewardSummary.progressRewards?.length || 0;
+    const deferredTriviaCount = rewardSummary.totalPendingCount || 0;
     const upcomingAchievement = getUpcomingAchievements(userData, 1)[0] || null;
+    const todayCheckedIn = (userData?.engagement?.adventure?.dates || []).includes(getTaipeiDateKey());
+    const reportSummary = !todayCheckedIn
+        ? '📅 本日打卡　0 / 1'
+        : upcomingAchievement
+            ? `${upcomingAchievement.icon} ${upcomingAchievement.title}還差 ${upcomingAchievement.remaining} ${upcomingAchievement.unit}　${upcomingAchievement.current} / ${upcomingAchievement.next}`
+            : '所有徽章都已解鎖！';
 
     return (
         <div className="flex flex-col h-full bg-[#3d2963]">
@@ -1954,11 +2044,11 @@ const WorldMap = ({ onSelectNode, onViewJourney, onViewWeeklyReport, onViewLogin
                 </div>
                 <h2 className="font-pixel text-white text-center flex items-center justify-center gap-2"><MapIcon size={16} /> WORLD MAP</h2>
                 <div className="flex items-center gap-1">
-                    <button onClick={onOpenAlbum} className="relative text-amber-300 hover:text-white p-1" title={deferredTriviaCount > 0 ? `冷知識收藏冊：有 ${deferredTriviaCount} 張關卡券可抽` : '冷知識收藏冊'}>
+                    <button onClick={onOpenAlbum} className="relative text-amber-300 hover:text-white p-1" title={deferredTriviaCount > 0 ? `有 ${deferredTriviaCount} 次待抽卡，請到每週戰報抽取` : '冷知識收藏冊'}>
                         <Lightbulb size={21} />
                         {deferredTriviaCount > 0 && <span className="absolute -top-1 -right-1 min-w-4 h-4 px-1 rounded-full bg-red-600 text-white font-pixel text-[7px] flex items-center justify-center border border-white">{deferredTriviaCount > 99 ? '99+' : deferredTriviaCount}</span>}
                     </button>
-                    <button onClick={onViewLoginCalendar} className="text-cyan-300 hover:text-white p-1" title="登入日曆">
+                    <button onClick={onViewLoginCalendar} className="text-cyan-300 hover:text-white p-1" title="冒險打卡日曆">
                         <CalendarDays size={21} />
                     </button>
                     <button onClick={onViewMistakeNotebook} className="text-red-400 hover:text-red-300 p-1" title="錯題筆記本">
@@ -1988,16 +2078,14 @@ const WorldMap = ({ onSelectNode, onViewJourney, onViewWeeklyReport, onViewLogin
                 <button
                     onClick={onViewWeeklyReport}
                     className="relative flex-1 min-w-0 border-2 border-purple-600/60 bg-purple-950/50 hover:bg-purple-900/60 px-2 py-2 text-left transition-colors"
-                    aria-label={upcomingAchievement ? `開啟每週戰報，近期成就：${upcomingAchievement.title} ${upcomingAchievement.current} / ${upcomingAchievement.next}` : '開啟每週戰報，所有徽章都已解鎖'}
+                    aria-label={`開啟每週戰報，${reportSummary}`}
                 >
                     <div className="flex items-center gap-2">
                         <Award size={22} className="shrink-0 text-yellow-300" aria-hidden="true" />
                         <div className="min-w-0 flex-1">
                             <span className="font-pixel text-[9px] text-yellow-300">每週戰報</span>
                             <div className="font-retro text-[11px] text-yellow-100 truncate mt-1" aria-label="近期即將完成的成就">
-                                {upcomingAchievement
-                                    ? `${upcomingAchievement.icon} ${upcomingAchievement.title}　${upcomingAchievement.current} / ${upcomingAchievement.next}`
-                                    : '所有徽章都已解鎖！'}
+                                {reportSummary}
                             </div>
                         </div>
                     </div>
@@ -2153,7 +2241,7 @@ const WorldMap = ({ onSelectNode, onViewJourney, onViewWeeklyReport, onViewLogin
                                         <div className="flex-1 overflow-hidden">
                                             <div className="flex justify-between items-baseline">
                                                 <h3 className={`font-pixel text-lg leading-tight ${isDone ? 'text-yellow-300' : 'text-rpg-bg'}`}>L{n < 10 ? '0' + n : n}</h3>
-                                                <AdvancedStars count={starCount} size="sm" label={`第 ${n} 課已取得 ${starCount} 顆星`} />
+                                                <AdvancedStars grades={getAdvancedStarGrades(record)} count={starCount} size="sm" label={`第 ${n} 課已取得 ${starCount} 顆星`} />
                                             </div>
                                             <p className={`font-retro text-[12px] mt-1 leading-snug truncate ${isDone ? 'text-purple-200' : 'text-gray-700'}`}>{title}</p>
                                         </div>
@@ -2489,7 +2577,7 @@ const AdvancedJourneyView = ({ records = {}, advMeta = null, mistakeStats = {} }
                                                     <div className="font-retro text-[10px] text-gray-400 mt-1">{hasPlayed ? `${attempts} 次挑戰 · ${formatDate(record.lastPlayed)}` : '尚未挑戰'}</div>
                                                 </div>
                                                 <div className="text-right flex-shrink-0">
-                                                    <AdvancedStars count={clears} size="sm" label={`第 ${lesson} 課已取得 ${clears} 顆星`} />
+                                                    <AdvancedStars grades={getAdvancedStarGrades(record)} count={clears} size="sm" label={`第 ${lesson} 課已取得 ${clears} 顆星`} />
                                                     <div className="font-pixel text-[9px] mt-1" style={{ color: gradeColors[record.bestGrade || '?'] }}>
                                                         {hasPlayed ? `${record.bestGrade || '?'} · ${record.bestScore ?? 0}` : '—'}
                                                     </div>
@@ -3572,7 +3660,7 @@ const AdvLessonHub = ({ node, advMeta, record, onBack, onStudy, onStartQuiz }) =
                 {/* 通關進度 */}
                 <div className="flex flex-col items-center gap-2 bg-black/40 border-4 border-purple-500/60 p-4">
                     <div className="font-pixel text-purple-300 text-xs">- 通關進度 -</div>
-                    <AdvancedStars count={starCount} size="lg" label={`目前已取得 ${starCount} 顆星`} />
+                    <AdvancedStars grades={getAdvancedStarGrades(record)} count={starCount} size="lg" label={`目前已取得 ${starCount} 顆星`} />
                     <p className="font-retro text-xs text-gray-300">
                         {isDone ? '此課已完成！可繼續挑戰刷新紀錄' : `取得 B 級以上才算通關；累積 ${ADV_CLEARS_TO_COMPLETE} 次完成此課（目前 ${clears} / ${ADV_CLEARS_TO_COMPLETE}）`}
                     </p>
@@ -3605,42 +3693,12 @@ const AdvLessonHub = ({ node, advMeta, record, onBack, onStudy, onStartQuiz }) =
     );
 };
 
-const StudyMode = ({ unitId, categoryId, data, lessonTitle, onBack, onStartQuiz, onStudyActivity, onDiscoverWord }) => {
+const StudyMode = ({ unitId, categoryId, data, lessonTitle, onBack, onStartQuiz }) => {
     const [viewMode, setViewMode] = useState('card');
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isFlipped, setIsFlipped] = useState(false);
     const studyData = data[categoryId] || [];
     const isAdvanced = String(unitId).startsWith('adv_');
-    const [visitedCards, setVisitedCards] = useState(() => new Set(studyData.length > 0 ? [0] : []));
-    const activityReportedRef = useRef(false);
-    const discoveredReportedRef = useRef(new Set());
-    const activityTarget = Math.min(ACTIVITY_STUDY_CARD_TARGET, studyData.length);
-
-    useEffect(() => {
-        if (viewMode !== 'card' || studyData.length === 0) return;
-        setVisitedCards(previous => {
-            if (previous.has(currentIndex)) return previous;
-            const next = new Set(previous);
-            next.add(currentIndex);
-            return next;
-        });
-    }, [currentIndex, viewMode, studyData.length]);
-
-    useEffect(() => {
-        if (activityTarget === 0 || visitedCards.size < activityTarget || activityReportedRef.current) return;
-        activityReportedRef.current = true;
-        onStudyActivity?.();
-    }, [activityTarget, visitedCards, onStudyActivity]);
-
-    useEffect(() => {
-        if (viewMode !== 'card') return;
-        const item = studyData[currentIndex];
-        if (!item?.word) return;
-        const wordKey = `${unitId}:${categoryId}:${item.id || item.word}`;
-        if (discoveredReportedRef.current.has(wordKey)) return;
-        discoveredReportedRef.current.add(wordKey);
-        onDiscoverWord?.(wordKey);
-    }, [currentIndex, viewMode, studyData, unitId, categoryId, onDiscoverWord]);
 
     const catTitles = { vocab: 'TREASURE', vocab_a: 'TREASURE A', vocab_b: 'TREASURE B', collocation: 'ARMORY', polysemy: 'ALCHEMY', sentences: 'SCROLLS' };
     const currentItem = studyData[currentIndex];
@@ -3751,13 +3809,6 @@ const StudyMode = ({ unitId, categoryId, data, lessonTitle, onBack, onStartQuiz,
                 </div>
             )}
             <div className="flex-shrink-0 bg-black/70 border-t-4 border-rpg-border p-3">
-                <div className="flex items-center justify-between mb-2 font-retro text-[10px] text-gray-400">
-                    <span>{studyData.length > 0 ? `共 ${studyData.length} 個單字` : '本課尚無可用單字'}</span>
-                    <span className={visitedCards.size >= activityTarget && activityTarget > 0 ? 'text-green-300' : 'text-purple-300'}>
-                        {visitedCards.size >= activityTarget && activityTarget > 0 ? '✓ 今日有效學習' : `有效學習 ${Math.min(visitedCards.size, activityTarget)} / ${activityTarget}`}
-                    </span>
-                </div>
-                {isAdvanced && <p className="font-retro text-[10px] text-cyan-200 mb-2 text-center">進階規則：挑戰取得 B 級以上才會增加 1 顆星，累積 3 顆完成本課。</p>}
                 <RPGButton onClick={onStartQuiz} color="primary" disabled={studyData.length === 0} className="w-full py-3">
                     <Sword size={16} /> {isAdvanced ? '學完了，開始 10 題挑戰' : '開始挑戰'}
                 </RPGButton>
@@ -4323,9 +4374,7 @@ const App = () => {
     const [isMuted, setIsMuted] = useState(false); // UI state for mute button
     const [volume, setVolumeState] = useState(50); // Volume state (0-100)
     const [loginStampData, setLoginStampData] = useState(null);
-    const [triviaTicketQueue, setTriviaTicketQueue] = useState([]);
     const [triviaAlbumBackView, setTriviaAlbumBackView] = useState('map');
-    const discoveredWordSaveRef = useRef(new Set());
 
     useEffect(() => { document.body.classList.add('loaded'); }, []);
 
@@ -4390,8 +4439,6 @@ const App = () => {
             setUserData(null);
             setCurrentUser(null);
             setLoginStampData(null);
-            setTriviaTicketQueue([]);
-            discoveredWordSaveRef.current = new Set();
             setView('login');
         }).catch(err => {
             console.error("Logout error", err);
@@ -4414,7 +4461,8 @@ const App = () => {
                 triviaCollection: {},
                 triviaRewardClaims: {},
                 weeklyArenaRosters: {},
-                discoveredWordIds: []
+                discoveredWordIds: [],
+                correctWordIds: []
             };
             const triviaMigration = migrateTriviaProgress(baseData);
             const migratedBaseData = {
@@ -4442,12 +4490,6 @@ const App = () => {
             }, { merge: true });
 
             setUserData(hydratedData);
-            discoveredWordSaveRef.current = new Set(hydratedData.discoveredWordIds || []);
-            if (engagementResult.firstLoginToday) {
-                setLoginStampData({
-                    totalDays: hydratedData.engagement.login.totalDays || 1
-                });
-            }
             setView('map');
         } catch (e) {
             console.error("Error loading user data:", e);
@@ -4489,38 +4531,6 @@ const App = () => {
         } catch (e) {
             console.error("Failed to save student name:", e);
             alert('保存失敗,請重試');
-        }
-    };
-
-    const handleStudyActivity = async () => {
-        if (!auth.currentUser || !userData) return;
-        const adventureResult = addAdventureDay(userData);
-        if (!adventureResult.changed) return;
-        const updatedUserData = { ...userData, engagement: adventureResult.engagement };
-        setUserData(updatedUserData);
-        try {
-            await updateDoc(doc(db, 'users', auth.currentUser.uid), {
-                engagement: adventureResult.engagement
-            });
-        } catch (error) {
-            console.error('有效冒險日保存失敗:', error);
-        }
-    };
-
-    const handleDiscoverWord = async wordKey => {
-        if (!auth.currentUser || !wordKey || discoveredWordSaveRef.current.has(wordKey)) return;
-        discoveredWordSaveRef.current.add(wordKey);
-        setUserData(previous => previous ? {
-            ...previous,
-            discoveredWordIds: [...new Set([...(previous.discoveredWordIds || []), wordKey])]
-        } : previous);
-        try {
-            await updateDoc(doc(db, 'users', auth.currentUser.uid), {
-                discoveredWordIds: arrayUnion(wordKey)
-            });
-        } catch (error) {
-            discoveredWordSaveRef.current.delete(wordKey);
-            console.error('單字解鎖紀錄保存失敗:', error);
         }
     };
 
@@ -4591,10 +4601,6 @@ const App = () => {
         // result: { score, rank, battleLog }
         if (!auth.currentUser || !userData) return;
 
-        // 準備一個變數來累積所有的變更
-        const progressRewardKeysBefore = new Set(
-            getProgressTriviaRewards(userData.levelRecords || {}).map(reward => reward.key)
-        );
         let updatedUserData = { ...userData };
         const updatesForFirestore = {};
         const sessionLogs = result.battleLog || [];
@@ -4602,6 +4608,16 @@ const App = () => {
         const currentSessionAccuracy = sessionLogs.length > 0
             ? (sessionCorrectCount / sessionLogs.length) * 100
             : null;
+        const correctWordIds = new Set(updatedUserData.correctWordIds || []);
+        const previousCorrectWordCount = correctWordIds.size;
+        sessionLogs.filter(log => log.isCorrect).forEach(log => {
+            const wordKey = getCorrectWordKey(log);
+            if (wordKey) correctWordIds.add(wordKey);
+        });
+        if (correctWordIds.size !== previousCorrectWordCount) {
+            updatedUserData.correctWordIds = [...correctWordIds];
+            updatesForFirestore.correctWordIds = updatedUserData.correctWordIds;
+        }
 
         // ==========================================
         // 1. 【新增】計算平均準確率與練習次數 (修復 0% 問題)
@@ -4784,12 +4800,16 @@ const App = () => {
                 const bPlusClears = previousQualifiedClears + (
                     result.victory && ADV_PASSING_GRADES.includes(result.rank) ? 1 : 0
                 );
+                const starGrades = result.victory && ADV_PASSING_GRADES.includes(result.rank)
+                    ? addAdvancedStarGrade(prevRecord, result.rank)
+                    : getAdvancedStarGrades(prevRecord);
                 const bestGrade = (rankOrder[result.rank] || 0) > (rankOrder[prevRecord.bestGrade] || 0)
                     ? result.rank : (prevRecord.bestGrade || result.rank);
                 const newRecord = {
                     ...performanceRecord,
                     clears,
                     bPlusClears,
+                    starGrades,
                     bestScore: Math.max(prevRecord.bestScore || 0, result.score),
                     bestGrade,
                     lastPlayed: new Date().toISOString(),
@@ -4876,22 +4896,16 @@ const App = () => {
             updatesForFirestore.trialHistory = updatedHistory;
         }
 
-        // 完成任何一場挑戰都算當日有效冒險；同一天只記一次。
-        const adventureResult = addAdventureDay(updatedUserData);
-        if (adventureResult.changed) {
-            updatedUserData.engagement = adventureResult.engagement;
-            updatesForFirestore.engagement = adventureResult.engagement;
-        }
-
-        const existingClaims = updatedUserData.triviaRewardClaims || {};
-        const newlyEarnedTriviaRewards = getProgressTriviaRewards(updatedUserData.levelRecords || {}).filter(reward => (
-            !progressRewardKeysBefore.has(reward.key) && !existingClaims[reward.key]
-        ));
-        if (newlyEarnedTriviaRewards.length > 0) {
-            setTriviaTicketQueue(currentQueue => {
-                const queuedKeys = new Set(currentQueue.map(reward => reward.key));
-                return [...currentQueue, ...newlyEarnedTriviaRewards.filter(reward => !queuedKeys.has(reward.key))];
-            });
+        // 冒險打卡只有一種：當天完成一場 B 級以上戰鬥才計入，並同步增加累積冒險天數。
+        if (CHECK_IN_GRADES.includes(result.rank)) {
+            const adventureResult = addQualifiedAdventureDay(updatedUserData);
+            if (adventureResult.changed) {
+                updatedUserData.engagement = adventureResult.engagement;
+                updatesForFirestore.engagement = adventureResult.engagement;
+                setLoginStampData({
+                    totalDays: adventureResult.engagement.adventure.totalDays || 1
+                });
+            }
         }
 
         // ==========================================
@@ -5172,7 +5186,7 @@ const App = () => {
                 onSaveArenaRoster={handleSaveArenaRoster}
                 onClaimTrivia={handleClaimTrivia}
             />;
-            case 'trivia-album': return <TriviaAlbum onBack={() => { playSound('click'); setView(triviaAlbumBackView); }} userData={userData} onClaimTrivia={handleClaimTrivia} />;
+            case 'trivia-album': return <TriviaAlbum onBack={() => { playSound('click'); setView(triviaAlbumBackView); }} userData={userData} />;
             case 'login-calendar': return <LoginCalendar onBack={() => { playSound('click'); setView('map'); }} userData={userData} />;
             case 'achievement-hall': return <AchievementHall onBack={() => { playSound('click'); setView('weekly-report'); }} userData={userData} />;
             case 'mistake-notebook': return <MistakeNotebook onBack={() => { playSound('click'); setView('map'); }} mistakeStats={userData?.mistakeStats} onClearMistakes={handleClearMistakes} onRemoveMistake={handleRemoveMistake} />;
@@ -5195,8 +5209,6 @@ const App = () => {
                 data={levelDataCache[selectedNode?.id] || GAME_DATA[selectedNode?.id]?.content || { vocab: [], vocab_a: [], vocab_b: [], collocation: [], polysemy: [], sentences: [] }}
                 onBack={() => setView(selectedNode?.type === 'adv' ? 'map' : 'unit-hub')}
                 onStartQuiz={handleForceQuiz}
-                onStudyActivity={handleStudyActivity}
-                onDiscoverWord={handleDiscoverWord}
             />;
             case 'quiz':
             case 'challenge-quiz':
@@ -5216,11 +5228,6 @@ const App = () => {
                     <div className="relative z-0 h-full overflow-hidden">{renderContent()}</div>
 
                     <LoginStampModal data={loginStampData} onClose={() => setLoginStampData(null)} />
-                    <TriviaTicketModal
-                        reward={triviaTicketQueue[0] || null}
-                        onClaim={handleClaimTrivia}
-                        onLater={() => setTriviaTicketQueue(queue => queue.slice(1))}
-                    />
 
                     {/* 老師後台面板 - 嵌入手機螢幕 */}
                     {showTeacherDashboard && (
