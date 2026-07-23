@@ -182,6 +182,28 @@ body.loaded {
   }
 }
 
+@keyframes reward-breathe {
+  0%,
+  100% {
+    box-shadow: 0 0 5px rgba(250, 204, 21, 0.3), inset 0 0 0 rgba(34, 197, 94, 0);
+  }
+
+  50% {
+    box-shadow: 0 0 15px rgba(250, 204, 21, 0.72), inset 0 0 10px rgba(34, 197, 94, 0.2);
+  }
+}
+
+@keyframes advanced-star-glow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 2px rgba(250, 204, 21, 0.55));
+  }
+
+  50% {
+    filter: drop-shadow(0 0 7px rgba(250, 204, 21, 0.9));
+  }
+}
+
 .login-stamp-card {
   animation: login-card-arrive 0.35s ease-out both;
 }
@@ -195,10 +217,44 @@ body.loaded {
   animation: special-glow 1.8s ease-in-out infinite;
 }
 
+.reward-breathing {
+  animation: reward-breathe 2.8s ease-in-out infinite;
+}
+
+.advanced-star {
+  stroke-width: 2;
+}
+
+.advanced-star-earned {
+  color: #22d3ee;
+  fill: #22d3ee;
+  filter: drop-shadow(0 0 3px rgba(34, 211, 238, 0.55));
+}
+
+.advanced-star-empty {
+  color: #64748b;
+  fill: transparent;
+}
+
+.advanced-star-gold {
+  color: #facc15;
+  fill: #facc15;
+}
+
+.advanced-stars-complete .advanced-star {
+  animation: advanced-star-glow 2.6s ease-in-out infinite;
+}
+
+.calendar-stamp {
+  box-shadow: 0 0 0 1px rgba(185, 28, 28, 0.15);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .login-stamp-card,
   .login-stamp-mark,
-  .achievement-special {
+  .achievement-special,
+  .reward-breathing,
+  .advanced-stars-complete .advanced-star {
     animation: none;
   }
 }
