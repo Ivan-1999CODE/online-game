@@ -2419,7 +2419,7 @@ const WorldMap = ({ onSelectNode, onViewJourney, onViewWeeklyReport, onViewLogin
                                                             {lessonIndex > 0 && <div className="absolute -top-6 h-6 w-1 bg-purple-400/40"></div>}
                                                             <button
                                                                 onClick={() => { playSound('click'); onSelectNode({ type: 'adv', id: advLessonId(lesson), lesson }); }}
-                                                                className={`relative w-full max-w-xs p-2 border-4 transition-all hover:scale-[1.02] active:scale-95 text-left group flex items-center gap-3 shadow-xl ${isDone ? 'bg-purple-950 border-yellow-400' : 'bg-rpg-panel border-purple-400'}`}
+                                                                className={`relative w-full max-w-xs p-2 border-4 transition-all hover:scale-[1.02] active:scale-95 text-left group flex items-center gap-3 shadow-xl ${isDone ? 'bg-purple-950 border-yellow-400' : 'bg-gradient-to-b from-[#d8dce5] to-[#aeb8c9] border-[#596579]'}`}
                                                             >
                                                                 <div className="w-14 h-14 flex-shrink-0 border-2 border-black overflow-hidden flex items-center justify-center bg-purple-900">
                                                                     <PixelArt.Chest />
@@ -2429,7 +2429,7 @@ const WorldMap = ({ onSelectNode, onViewJourney, onViewWeeklyReport, onViewLogin
                                                                         <h3 className={`font-pixel text-lg leading-tight ${isDone ? 'text-yellow-300' : 'text-rpg-bg'}`}>L{String(lesson).padStart(3, '0')}</h3>
                                                                         <AdvancedStars grades={getAdvancedStarGrades(record)} count={starCount} size="sm" label={`第 ${lesson} 課已取得 ${starCount} 顆星`} />
                                                                     </div>
-                                                                    <p className={`font-retro text-[12px] mt-1 leading-snug truncate ${isDone ? 'text-purple-200' : 'text-gray-700'}`}>{title}</p>
+                                                                    <p className={`font-retro text-[12px] mt-1 leading-snug truncate ${isDone ? 'text-purple-200' : 'text-[#342d3d]'}`}>{title}</p>
                                                                 </div>
                                                                 {isDone && (
                                                                     <div className="text-yellow-400 font-pixel text-xl drop-shadow-[0_0_5px_rgba(250,204,21,0.8)]" title="通關 3 次達成！">✔</div>
