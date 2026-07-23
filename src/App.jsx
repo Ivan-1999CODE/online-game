@@ -3,7 +3,7 @@ import {
     Sword, Shield, Scroll, Skull, Coins, Heart, Star, ChevronLeft, ChevronRight,
     Volume2, Map as MapIcon, RefreshCw, XCircle, CheckCircle,
     HelpCircle, Backpack, Gem, Flame, Skull as SkullIcon, Book, User,
-    List, Grid, ArrowLeft, Lightbulb, MessageCircle, Clock, Award, Home, Lock, LogOut, Headphones, CalendarDays
+    List, Grid, ArrowLeft, Lightbulb, MessageCircle, Clock, Award, Home, Lock, LogOut, Headphones, CalendarDays, Search
 } from 'lucide-react';
 import { collection, query, where, getDocs, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import { signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut } from 'firebase/auth';
@@ -244,7 +244,9 @@ const fetchLevelData = async (levelId) => {
 };
 
 // --- 進階書（獨立地圖分頁）---
-const ADV_LESSONS_PER_SECTION = 10; // 進階地圖每 10 課一卷
+const ADV_LESSONS_PER_SECTION = 10; // 進階旅程與終極試煉每 10 課一組
+const ADV_MAP_VOLUME_COUNT = 3;      // 世界地圖固定分成三卷，平時以折疊卷軸顯示
+const ADV_MAP_VOLUME_LABELS = ['一', '二', '三'];
 const ADV_CLEARS_TO_COMPLETE = 3;   // 通關 3 次才算完成
 const ADV_QUIZ_QUESTION_LIMIT = 10; // 進階課每次隨機抽最多 10 題
 const ADV_PASSING_GRADES = ['S', 'A', 'B'];
@@ -478,7 +480,7 @@ const RPGBorder = ({ children, className = "", style = {} }) => (
     </div>
 );
 
-const RPGButton = ({ children, onClick, color = "primary", className = "", disabled = false, active = false, silent = false, type = "button" }) => {
+const RPGButton = ({ children, onClick, color = "primary", className = "", disabled = false, active = false, silent = false, type = "button", ...buttonProps }) => {
     const colors = {
         primary: "bg-rpg-primary text-white hover:bg-red-600 shadow-pixel active:shadow-pixel-pressed",
         secondary: "bg-rpg-secondary text-white hover:bg-cyan-600 shadow-pixel active:shadow-pixel-pressed",
@@ -489,7 +491,7 @@ const RPGButton = ({ children, onClick, color = "primary", className = "", disab
     };
     const activeStyle = active ? "ring-2 ring-white ring-offset-2 ring-offset-black" : "";
     return (
-        <button type={type} onClick={(e) => { e.stopPropagation(); if (!disabled) { if (!silent) playSound('click'); onClick?.(e); } }} disabled={disabled} className={`border-2 border-black relative px-3 py-2 font-pixel text-xs sm:text-sm uppercase tracking-wide ${colors[color] || colors.neutral} ${activeStyle} disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-transform active:translate-y-1 ${className}`}>
+        <button {...buttonProps} type={type} onClick={(e) => { e.stopPropagation(); if (!disabled) { if (!silent) playSound('click'); onClick?.(e); } }} disabled={disabled} className={`border-2 border-black relative px-3 py-2 font-pixel text-xs sm:text-sm uppercase tracking-wide ${colors[color] || colors.neutral} ${activeStyle} disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-transform active:translate-y-1 ${className}`}>
             {children}
         </button>
     );
@@ -557,14 +559,14 @@ const LoginScreen = ({ onLogin }) => {
 };
 
 const AchievementGuide = ({ onClose }) => (
-    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-[150] backdrop-blur-sm animate-in fade-in" onClick={onClose}>
-        <div className="bg-slate-900 border-4 border-yellow-500/50 p-6 rounded-xl shadow-2xl w-96 max-w-[90%] relative" onClick={e => e.stopPropagation()}>
+    <div className="absolute inset-0 bg-black/80 flex items-center justify-center z-[150] backdrop-blur-sm animate-in fade-in p-3 overflow-y-auto" onClick={onClose}>
+        <div className="bg-slate-900 border-4 border-yellow-500/50 p-4 sm:p-6 rounded-xl shadow-2xl w-96 max-w-full max-h-full overflow-y-auto relative my-auto" onClick={e => e.stopPropagation()}>
             <button onClick={onClose} className="absolute top-2 right-2 text-slate-500 hover:text-white transition-colors"><XCircle size={24} /></button>
             <h3 className="font-pixel text-xl text-yellow-400 mb-4 text-center flex items-center justify-center gap-2">
                 <Award size={24} /> 成就獲得指南
             </h3>
 
-            <div className="space-y-4 font-retro text-sm text-gray-300">
+            <div className="space-y-3 font-retro text-sm text-gray-300">
                 <div className="bg-slate-800 p-3 rounded-lg border border-slate-700">
                     <div className="flex items-center gap-2 mb-2 border-b border-slate-700 pb-2">
                         <div className="text-blue-400 font-pixel text-xl">✔</div>
@@ -617,7 +619,7 @@ const AchievementGuide = ({ onClose }) => (
                 </div>
             </div>
 
-            <div className="mt-6 text-center">
+            <div className="mt-4 text-center">
                 <RPGButton onClick={onClose} color="primary" className="w-full py-3">了解！</RPGButton>
             </div>
         </div>
@@ -658,6 +660,53 @@ const getTaipeiDateKey = (value = Date.now()) => {
     return new Intl.DateTimeFormat('en-CA', {
         timeZone: 'Asia/Taipei', year: 'numeric', month: '2-digit', day: '2-digit'
     }).format(date);
+};
+
+const getAdvancedMapVolumes = (totalLessons) => {
+    const safeTotal = Math.max(0, Number(totalLessons) || 0);
+    if (safeTotal === 0) return [];
+
+    const lessonsPerVolume = Math.ceil(safeTotal / ADV_MAP_VOLUME_COUNT);
+    return Array.from({ length: ADV_MAP_VOLUME_COUNT }, (_, index) => {
+        const start = index * lessonsPerVolume + 1;
+        const end = Math.min((index + 1) * lessonsPerVolume, safeTotal);
+        return start <= safeTotal
+            ? { index, start, end, lessons: Array.from({ length: end - start + 1 }, (__, offset) => start + offset) }
+            : null;
+    }).filter(Boolean);
+};
+
+const searchAdvancedWords = async (searchTerm) => {
+    const trimmed = searchTerm.trim();
+    if (!trimmed) return [];
+
+    const variants = Array.from(new Set([
+        trimmed,
+        trimmed.toLowerCase(),
+        trimmed.charAt(0).toUpperCase() + trimmed.slice(1).toLowerCase(),
+        trimmed.toUpperCase()
+    ]));
+    const snapshots = await Promise.all(variants.map(word =>
+        getDocs(query(collection(db, 'vocabulary'), where('word', '==', word)))
+    ));
+    const matches = new Map();
+
+    snapshots.forEach(snapshot => {
+        snapshot.forEach(docSnap => {
+            const data = docSnap.data();
+            const lesson = Number(data.lesson);
+            if (data.series !== 'advanced' || !Number.isFinite(lesson)) return;
+            matches.set(docSnap.id, {
+                id: docSnap.id,
+                lesson,
+                word: data.word || trimmed,
+                chinese: data.chinese || '',
+                part: data.pos || data.part || ''
+            });
+        });
+    });
+
+    return Array.from(matches.values()).sort((a, b) => a.lesson - b.lesson || a.word.localeCompare(b.word));
 };
 
 const AdvancedStars = ({ grades = [], count = 0, size = 'md', label }) => {
@@ -2028,6 +2077,12 @@ const AchievementHall = ({ onBack, userData }) => {
 const WorldMap = ({ onSelectNode, onViewJourney, onViewWeeklyReport, onViewLoginCalendar, onOpenAlbum, rewardSummary = {}, userData, onUltimateChallenge, onViewMistakeNotebook, onLogout, records = {}, advMeta = null, activeTab = 'main', onChangeTab }) => {
     const [showGuide, setShowGuide] = useState(false);
     const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+    const [expandedAdvVolume, setExpandedAdvVolume] = useState(null);
+    const [showAdvSearch, setShowAdvSearch] = useState(false);
+    const [advSearchTerm, setAdvSearchTerm] = useState('');
+    const [advSearchResults, setAdvSearchResults] = useState(null);
+    const [isAdvSearching, setIsAdvSearching] = useState(false);
+    const [advSearchError, setAdvSearchError] = useState('');
     const deferredTriviaCount = rewardSummary.totalPendingCount || 0;
     const upcomingAchievement = getUpcomingAchievements(userData, 1)[0] || null;
     const todayCheckedIn = (userData?.engagement?.adventure?.dates || []).includes(getTaipeiDateKey());
@@ -2037,9 +2092,98 @@ const WorldMap = ({ onSelectNode, onViewJourney, onViewWeeklyReport, onViewLogin
             ? `${upcomingAchievement.icon} ${upcomingAchievement.title}還差 ${upcomingAchievement.remaining} ${upcomingAchievement.unit}　${upcomingAchievement.current} / ${upcomingAchievement.next}`
             : '所有徽章都已解鎖！';
 
+    const closeAdvancedSearch = () => {
+        setShowAdvSearch(false);
+        setAdvSearchTerm('');
+        setAdvSearchResults(null);
+        setAdvSearchError('');
+    };
+
+    const handleAdvancedSearch = async (event) => {
+        event.preventDefault();
+        const term = advSearchTerm.trim();
+        if (!term || isAdvSearching) return;
+
+        setIsAdvSearching(true);
+        setAdvSearchError('');
+        setAdvSearchResults(null);
+        try {
+            setAdvSearchResults(await searchAdvancedWords(term));
+        } catch (error) {
+            console.error('Advanced word search failed:', error);
+            setAdvSearchError('搜尋失敗，請檢查網路後再試一次。');
+        } finally {
+            setIsAdvSearching(false);
+        }
+    };
+
     return (
-        <div className="flex flex-col h-full bg-[#3d2963]">
+        <div className="relative flex flex-col h-full bg-[#3d2963]">
             {showGuide && <AchievementGuide onClose={() => setShowGuide(false)} />}
+            {showAdvSearch && (
+                <div className="absolute inset-0 z-[140] bg-black/85 backdrop-blur-sm flex items-start justify-center p-4 pt-12" onClick={closeAdvancedSearch}>
+                    <div className="w-full max-w-sm bg-[#171229] border-4 border-purple-400 shadow-[6px_6px_0_#09050f] p-4" onClick={event => event.stopPropagation()}>
+                        <div className="flex items-center justify-between mb-4">
+                            <div>
+                                <h3 className="font-pixel text-sm text-purple-200">搜尋進階單字</h3>
+                                <p className="font-retro text-[11px] text-gray-400 mt-1">輸入完整英文單字，找到後直接前往該課</p>
+                            </div>
+                            <button onClick={closeAdvancedSearch} className="text-gray-500 hover:text-white p-1" aria-label="關閉搜尋">
+                                <XCircle size={22} />
+                            </button>
+                        </div>
+
+                        <form onSubmit={handleAdvancedSearch} className="flex gap-2">
+                            <input
+                                type="search"
+                                value={advSearchTerm}
+                                onChange={event => setAdvSearchTerm(event.target.value)}
+                                placeholder="例如：adventure"
+                                autoFocus
+                                className="min-w-0 flex-1 bg-black/60 border-2 border-purple-500 px-3 py-2 text-white font-retro text-base outline-none focus:border-yellow-300"
+                            />
+                            <RPGButton type="submit" color="secondary" className="px-3" disabled={!advSearchTerm.trim() || isAdvSearching} aria-label="搜尋">
+                                <Search size={18} />
+                            </RPGButton>
+                        </form>
+
+                        <div className="mt-4 max-h-72 overflow-y-auto">
+                            {isAdvSearching && (
+                                <div className="py-8 text-center font-pixel text-xs text-purple-200 animate-pulse">SEARCHING...</div>
+                            )}
+                            {advSearchError && (
+                                <div className="border-2 border-red-700 bg-red-950/50 p-3 font-retro text-sm text-red-200">{advSearchError}</div>
+                            )}
+                            {!isAdvSearching && advSearchResults?.length === 0 && (
+                                <div className="border-2 border-gray-700 bg-black/30 p-4 text-center">
+                                    <p className="font-pixel text-xs text-gray-300">找不到這個單字</p>
+                                    <p className="font-retro text-xs text-gray-500 mt-2">請確認拼字，搜尋目前需輸入完整單字。</p>
+                                </div>
+                            )}
+                            {!isAdvSearching && advSearchResults?.map(result => (
+                                <button
+                                    key={result.id}
+                                    onClick={() => {
+                                        playSound('click');
+                                        closeAdvancedSearch();
+                                        onSelectNode({ type: 'adv', id: advLessonId(result.lesson), lesson: result.lesson });
+                                    }}
+                                    className="w-full mb-2 border-2 border-purple-600 bg-purple-950/60 hover:bg-purple-900 p-3 flex items-center gap-3 text-left transition-colors"
+                                >
+                                    <div className="w-12 h-12 shrink-0 border-2 border-purple-300 bg-black/40 flex items-center justify-center font-pixel text-xs text-yellow-300">
+                                        L{String(result.lesson).padStart(3, '0')}
+                                    </div>
+                                    <div className="min-w-0 flex-1">
+                                        <div className="font-pixel text-xs text-white truncate">{result.word}</div>
+                                        <div className="font-retro text-sm text-purple-200 mt-1 truncate">{result.part} {result.chinese}</div>
+                                    </div>
+                                    <ChevronRight size={18} className="shrink-0 text-purple-300" />
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            )}
             <div className="bg-rpg-bg sticky top-0 z-10 p-2 border-b-4 border-rpg-border shadow-lg flex justify-between items-center">
                 <div className="flex items-center gap-1">
                     <button onClick={onUltimateChallenge} className="text-rpg-primary hover:text-white p-1" title="終極試煉">
@@ -2216,51 +2360,92 @@ const WorldMap = ({ onSelectNode, onViewJourney, onViewWeeklyReport, onViewLogin
                             </div>
                         );
                     }
-                    return Array.from({ length: totalLessons }, (_, i) => i + 1).map(n => {
-                        const isSectionStart = (n - 1) % ADV_LESSONS_PER_SECTION === 0;
-                        const sectionIdx = Math.floor((n - 1) / ADV_LESSONS_PER_SECTION) + 1;
-                        const sectionEnd = Math.min(sectionIdx * ADV_LESSONS_PER_SECTION, totalLessons);
-                        const record = records[advLessonId(n)] || {};
-                        const clears = getAdvancedQualifiedClears(record);
-                        const starCount = Math.min(clears, ADV_CLEARS_TO_COMPLETE);
-                        const isDone = clears >= ADV_CLEARS_TO_COMPLETE;
-                        const title = advMeta?.titles?.[String(n)] || `進階單字 第 ${n} 課`;
+                    return (
+                        <div className="space-y-5">
+                            {getAdvancedMapVolumes(totalLessons).map(volume => {
+                                const isExpanded = expandedAdvVolume === volume.index;
+                                const completedLessons = volume.lessons.filter(lesson =>
+                                    getAdvancedQualifiedClears(records[advLessonId(lesson)] || {}) >= ADV_CLEARS_TO_COMPLETE
+                                ).length;
 
-                        return (
-                            <div key={n} className="flex flex-col items-center">
-                                {isSectionStart && (
-                                    <div className="w-full max-w-xs mb-4 mt-2">
-                                        <div className="bg-gradient-to-r from-transparent via-purple-400 to-transparent h-[2px] w-full mb-1"></div>
-                                        <h3 className="text-center font-pixel text-purple-300 text-sm tracking-widest text-shadow">進階 第 {sectionIdx} 卷</h3>
-                                        <p className="text-center font-retro text-gray-300 text-xs">Lesson {(sectionIdx - 1) * ADV_LESSONS_PER_SECTION + 1} - {sectionEnd}</p>
-                                        <div className="bg-gradient-to-r from-transparent via-purple-400 to-transparent h-[2px] w-full mt-1"></div>
-                                    </div>
-                                )}
-                                <div className="relative flex justify-center w-full">
-                                    {!isSectionStart && <div className="absolute -top-6 h-6 w-1 bg-purple-400/40"></div>}
-                                    <button
-                                        onClick={() => { playSound('click'); onSelectNode({ type: 'adv', id: advLessonId(n), lesson: n }); }}
-                                        className={`relative w-full max-w-xs p-2 border-4 transition-all hover:scale-105 active:scale-95 text-left group flex items-center gap-3 shadow-xl ${isDone ? 'bg-purple-950 border-yellow-400' : 'bg-rpg-panel border-purple-400'}`}
-                                    >
-                                        <div className="w-14 h-14 flex-shrink-0 border-2 border-black overflow-hidden flex items-center justify-center bg-purple-900">
-                                            <PixelArt.Chest />
+                                return (
+                                    <section key={volume.index} className="w-full flex flex-col items-center">
+                                        <div className="w-full max-w-xs flex items-stretch gap-2">
+                                            <button
+                                                onClick={() => {
+                                                    playSound('click');
+                                                    setExpandedAdvVolume(isExpanded ? null : volume.index);
+                                                }}
+                                                className="relative flex-1 min-w-0 border-4 border-[#4a3c31] bg-gradient-to-b from-[#f6e7bd] via-[#e3ce9c] to-[#caa66f] text-[#291b3f] shadow-[4px_4px_0_#160d24] px-4 py-3 flex items-center gap-3 text-left transition-transform active:translate-y-1 active:shadow-[2px_2px_0_#160d24]"
+                                                aria-expanded={isExpanded}
+                                            >
+                                                <div className="absolute -left-2 top-1 bottom-1 w-3 rounded-full border-2 border-[#4a3c31] bg-[#b8894e]" aria-hidden="true"></div>
+                                                <div className="absolute -right-2 top-1 bottom-1 w-3 rounded-full border-2 border-[#4a3c31] bg-[#b8894e]" aria-hidden="true"></div>
+                                                <Scroll size={28} className="shrink-0 text-purple-900" />
+                                                <div className="min-w-0 flex-1">
+                                                    <h3 className="font-pixel text-xs">進階第{ADV_MAP_VOLUME_LABELS[volume.index]}卷</h3>
+                                                    <p className="font-retro text-[11px] mt-1">第 {volume.start}～{volume.end} 課 · 完成 {completedLessons}/{volume.lessons.length}</p>
+                                                </div>
+                                                <ChevronRight size={20} className={`shrink-0 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
+                                            </button>
+
+                                            {volume.index === 0 && (
+                                                <button
+                                                    onClick={() => {
+                                                        playSound('click');
+                                                        setShowAdvSearch(true);
+                                                    }}
+                                                    className="w-12 shrink-0 border-4 border-purple-400 bg-purple-950 text-purple-200 hover:bg-purple-900 hover:text-white shadow-[4px_4px_0_#160d24] flex flex-col items-center justify-center gap-1 transition-transform active:translate-y-1 active:shadow-[2px_2px_0_#160d24]"
+                                                    title="搜尋進階單字"
+                                                    aria-label="搜尋進階單字"
+                                                >
+                                                    <Search size={20} />
+                                                    <span className="font-pixel text-[7px]">找字</span>
+                                                </button>
+                                            )}
                                         </div>
-                                        <div className="flex-1 overflow-hidden">
-                                            <div className="flex justify-between items-baseline">
-                                                <h3 className={`font-pixel text-lg leading-tight ${isDone ? 'text-yellow-300' : 'text-rpg-bg'}`}>L{n < 10 ? '0' + n : n}</h3>
-                                                <AdvancedStars grades={getAdvancedStarGrades(record)} count={starCount} size="sm" label={`第 ${n} 課已取得 ${starCount} 顆星`} />
+
+                                        {isExpanded && (
+                                            <div className="w-full pt-5 space-y-6 flex flex-col items-center">
+                                                {volume.lessons.map((lesson, lessonIndex) => {
+                                                    const record = records[advLessonId(lesson)] || {};
+                                                    const clears = getAdvancedQualifiedClears(record);
+                                                    const starCount = Math.min(clears, ADV_CLEARS_TO_COMPLETE);
+                                                    const isDone = clears >= ADV_CLEARS_TO_COMPLETE;
+                                                    const title = advMeta?.titles?.[String(lesson)] || `進階單字 第 ${lesson} 課`;
+
+                                                    return (
+                                                        <div key={lesson} className="relative flex justify-center w-full">
+                                                            {lessonIndex > 0 && <div className="absolute -top-6 h-6 w-1 bg-purple-400/40"></div>}
+                                                            <button
+                                                                onClick={() => { playSound('click'); onSelectNode({ type: 'adv', id: advLessonId(lesson), lesson }); }}
+                                                                className={`relative w-full max-w-xs p-2 border-4 transition-all hover:scale-[1.02] active:scale-95 text-left group flex items-center gap-3 shadow-xl ${isDone ? 'bg-purple-950 border-yellow-400' : 'bg-rpg-panel border-purple-400'}`}
+                                                            >
+                                                                <div className="w-14 h-14 flex-shrink-0 border-2 border-black overflow-hidden flex items-center justify-center bg-purple-900">
+                                                                    <PixelArt.Chest />
+                                                                </div>
+                                                                <div className="flex-1 overflow-hidden">
+                                                                    <div className="flex justify-between items-baseline">
+                                                                        <h3 className={`font-pixel text-lg leading-tight ${isDone ? 'text-yellow-300' : 'text-rpg-bg'}`}>L{String(lesson).padStart(3, '0')}</h3>
+                                                                        <AdvancedStars grades={getAdvancedStarGrades(record)} count={starCount} size="sm" label={`第 ${lesson} 課已取得 ${starCount} 顆星`} />
+                                                                    </div>
+                                                                    <p className={`font-retro text-[12px] mt-1 leading-snug truncate ${isDone ? 'text-purple-200' : 'text-gray-700'}`}>{title}</p>
+                                                                </div>
+                                                                {isDone && (
+                                                                    <div className="text-yellow-400 font-pixel text-xl drop-shadow-[0_0_5px_rgba(250,204,21,0.8)]" title="通關 3 次達成！">✔</div>
+                                                                )}
+                                                                <ChevronRight className={isDone ? 'text-yellow-400' : 'text-rpg-bg'} size={16} />
+                                                            </button>
+                                                        </div>
+                                                    );
+                                                })}
                                             </div>
-                                            <p className={`font-retro text-[12px] mt-1 leading-snug truncate ${isDone ? 'text-purple-200' : 'text-gray-700'}`}>{title}</p>
-                                        </div>
-                                        {isDone && (
-                                            <div className="text-yellow-400 font-pixel text-xl drop-shadow-[0_0_5px_rgba(250,204,21,0.8)]" title="通關 3 次達成！">✔</div>
                                         )}
-                                        <ChevronRight className={isDone ? 'text-yellow-400' : 'text-rpg-bg'} size={16} />
-                                    </button>
-                                </div>
-                            </div>
-                        );
-                    });
+                                    </section>
+                                );
+                            })}
+                        </div>
+                    );
                 })()}
                 <div className="h-10"></div>
             </div>
@@ -4262,9 +4447,9 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard'
             {/* Top HUD */}
             <div className="flex justify-between items-center p-2 bg-black border-b-2 border-gray-700 z-10">
                 <div className="flex items-center gap-3">
-                    <button onClick={() => { playSound('click'); setShowQuitConfirm(true); }} className="text-gray-400 hover:text-white transition-colors p-1" title="逃跑 (Flee)">
+                    <RPGButton onClick={() => setShowQuitConfirm(true)} color="dark" className="px-2 py-2" title="返回">
                         <ArrowLeft size={20} />
-                    </button>
+                    </RPGButton>
                     <div className="flex gap-1 text-rpg-primary">
                         {[...Array(maxHp)].map((_, i) => <Heart key={i} size={20} fill={i < hp ? "currentColor" : "none"} className={i < hp ? "animate-pulse" : "opacity-30"} />)}
                     </div>
