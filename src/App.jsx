@@ -244,9 +244,7 @@ const fetchLevelData = async (levelId) => {
 };
 
 // --- 進階書（獨立地圖分頁）---
-const ADV_LESSONS_PER_SECTION = 10; // 進階旅程與終極試煉每 10 課一組
-const ADV_MAP_VOLUME_COUNT = 3;      // 世界地圖固定分成三卷，平時以折疊卷軸顯示
-const ADV_MAP_VOLUME_LABELS = ['一', '二', '三'];
+const ADV_LESSONS_PER_SECTION = 10; // 進階地圖、旅程與終極試煉每 10 課一卷
 const ADV_CLEARS_TO_COMPLETE = 3;   // 通關 3 次才算完成
 const ADV_QUIZ_QUESTION_LIMIT = 10; // 進階課每次隨機抽最多 10 題
 const ADV_PASSING_GRADES = ['S', 'A', 'B'];
@@ -666,14 +664,16 @@ const getAdvancedMapVolumes = (totalLessons) => {
     const safeTotal = Math.max(0, Number(totalLessons) || 0);
     if (safeTotal === 0) return [];
 
-    const lessonsPerVolume = Math.ceil(safeTotal / ADV_MAP_VOLUME_COUNT);
-    return Array.from({ length: ADV_MAP_VOLUME_COUNT }, (_, index) => {
-        const start = index * lessonsPerVolume + 1;
-        const end = Math.min((index + 1) * lessonsPerVolume, safeTotal);
-        return start <= safeTotal
-            ? { index, start, end, lessons: Array.from({ length: end - start + 1 }, (__, offset) => start + offset) }
-            : null;
-    }).filter(Boolean);
+    return Array.from({ length: Math.ceil(safeTotal / ADV_LESSONS_PER_SECTION) }, (_, index) => {
+        const start = index * ADV_LESSONS_PER_SECTION + 1;
+        const end = Math.min((index + 1) * ADV_LESSONS_PER_SECTION, safeTotal);
+        return {
+            index,
+            start,
+            end,
+            lessons: Array.from({ length: end - start + 1 }, (__, offset) => start + offset)
+        };
+    });
 };
 
 const searchAdvancedWords = async (searchTerm) => {
@@ -2361,7 +2361,7 @@ const WorldMap = ({ onSelectNode, onViewJourney, onViewWeeklyReport, onViewLogin
                         );
                     }
                     return (
-                        <div className="space-y-5">
+                        <div className="space-y-3">
                             {getAdvancedMapVolumes(totalLessons).map(volume => {
                                 const isExpanded = expandedAdvVolume === volume.index;
                                 const completedLessons = volume.lessons.filter(lesson =>
@@ -2370,23 +2370,20 @@ const WorldMap = ({ onSelectNode, onViewJourney, onViewWeeklyReport, onViewLogin
 
                                 return (
                                     <section key={volume.index} className="w-full flex flex-col items-center">
-                                        <div className="w-full max-w-xs flex items-stretch gap-2">
+                                        <div className="relative w-full max-w-xs">
                                             <button
                                                 onClick={() => {
                                                     playSound('click');
                                                     setExpandedAdvVolume(isExpanded ? null : volume.index);
                                                 }}
-                                                className="relative flex-1 min-w-0 border-4 border-[#4a3c31] bg-gradient-to-b from-[#f6e7bd] via-[#e3ce9c] to-[#caa66f] text-[#291b3f] shadow-[4px_4px_0_#160d24] px-4 py-3 flex items-center gap-3 text-left transition-transform active:translate-y-1 active:shadow-[2px_2px_0_#160d24]"
+                                                className="relative w-full px-12 py-3 text-center hover:bg-purple-950/20 transition-colors"
                                                 aria-expanded={isExpanded}
                                             >
-                                                <div className="absolute -left-2 top-1 bottom-1 w-3 rounded-full border-2 border-[#4a3c31] bg-[#b8894e]" aria-hidden="true"></div>
-                                                <div className="absolute -right-2 top-1 bottom-1 w-3 rounded-full border-2 border-[#4a3c31] bg-[#b8894e]" aria-hidden="true"></div>
-                                                <Scroll size={28} className="shrink-0 text-purple-900" />
-                                                <div className="min-w-0 flex-1">
-                                                    <h3 className="font-pixel text-xs">進階第{ADV_MAP_VOLUME_LABELS[volume.index]}卷</h3>
-                                                    <p className="font-retro text-[11px] mt-1">第 {volume.start}～{volume.end} 課 · 完成 {completedLessons}/{volume.lessons.length}</p>
-                                                </div>
-                                                <ChevronRight size={20} className={`shrink-0 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
+                                                <div className="bg-gradient-to-r from-transparent via-purple-400 to-transparent h-[2px] w-full mb-2"></div>
+                                                <h3 className="font-pixel text-purple-300 text-sm tracking-widest text-shadow">進階 第 {volume.index + 1} 卷</h3>
+                                                <p className="font-retro text-gray-300 text-xs mt-1">Lesson {volume.start} - {volume.end} · 完成 {completedLessons}/{volume.lessons.length}</p>
+                                                <div className="bg-gradient-to-r from-transparent via-purple-400 to-transparent h-[2px] w-full mt-2"></div>
+                                                <ChevronRight size={18} className={`absolute left-3 top-1/2 -translate-y-1/2 text-purple-300 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
                                             </button>
 
                                             {volume.index === 0 && (
@@ -2395,12 +2392,11 @@ const WorldMap = ({ onSelectNode, onViewJourney, onViewWeeklyReport, onViewLogin
                                                         playSound('click');
                                                         setShowAdvSearch(true);
                                                     }}
-                                                    className="w-12 shrink-0 border-4 border-purple-400 bg-purple-950 text-purple-200 hover:bg-purple-900 hover:text-white shadow-[4px_4px_0_#160d24] flex flex-col items-center justify-center gap-1 transition-transform active:translate-y-1 active:shadow-[2px_2px_0_#160d24]"
+                                                    className="absolute right-1 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full border-2 border-slate-600 bg-black/85 text-purple-200 hover:bg-purple-950 hover:text-white shadow-[0_3px_8px_rgba(0,0,0,0.7)] flex items-center justify-center transition-transform active:scale-95"
                                                     title="搜尋進階單字"
                                                     aria-label="搜尋進階單字"
                                                 >
-                                                    <Search size={20} />
-                                                    <span className="font-pixel text-[7px]">找字</span>
+                                                    <Search size={16} />
                                                 </button>
                                             )}
                                         </div>
