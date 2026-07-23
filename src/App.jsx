@@ -2361,7 +2361,22 @@ const WorldMap = ({ onSelectNode, onViewJourney, onViewWeeklyReport, onViewLogin
                         );
                     }
                     return (
-                        <div className="space-y-3">
+                        <div>
+                            <div className="w-full max-w-xs h-10 mx-auto mb-2 flex items-center justify-end">
+                                <button
+                                    onClick={() => {
+                                        playSound('click');
+                                        setShowAdvSearch(true);
+                                    }}
+                                    className="w-9 h-9 rounded-full border-2 border-slate-600 bg-black/85 text-purple-200 hover:bg-purple-950 hover:text-white shadow-[0_3px_8px_rgba(0,0,0,0.7)] flex items-center justify-center transition-transform active:scale-95"
+                                    title="搜尋進階單字"
+                                    aria-label="搜尋進階單字"
+                                >
+                                    <Search size={16} />
+                                </button>
+                            </div>
+
+                            <div className="space-y-4">
                             {getAdvancedMapVolumes(totalLessons).map(volume => {
                                 const isExpanded = expandedAdvVolume === volume.index;
                                 const completedLessons = volume.lessons.filter(lesson =>
@@ -2376,29 +2391,18 @@ const WorldMap = ({ onSelectNode, onViewJourney, onViewWeeklyReport, onViewLogin
                                                     playSound('click');
                                                     setExpandedAdvVolume(isExpanded ? null : volume.index);
                                                 }}
-                                                className="relative w-full px-12 py-3 text-center hover:bg-purple-950/20 transition-colors"
+                                                className="relative w-full border-4 border-[#4a3c31] bg-gradient-to-b from-[#f6e7bd] via-[#e3ce9c] to-[#caa66f] text-[#291b3f] shadow-[4px_4px_0_#160d24] px-4 py-3 flex items-center gap-3 text-left transition-transform active:translate-y-1 active:shadow-[2px_2px_0_#160d24]"
                                                 aria-expanded={isExpanded}
                                             >
-                                                <div className="bg-gradient-to-r from-transparent via-purple-400 to-transparent h-[2px] w-full mb-2"></div>
-                                                <h3 className="font-pixel text-purple-300 text-sm tracking-widest text-shadow">進階 第 {volume.index + 1} 卷</h3>
-                                                <p className="font-retro text-gray-300 text-xs mt-1">Lesson {volume.start} - {volume.end} · 完成 {completedLessons}/{volume.lessons.length}</p>
-                                                <div className="bg-gradient-to-r from-transparent via-purple-400 to-transparent h-[2px] w-full mt-2"></div>
-                                                <ChevronRight size={18} className={`absolute left-3 top-1/2 -translate-y-1/2 text-purple-300 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
+                                                <div className="absolute -left-2 top-1 bottom-1 w-3 rounded-full border-2 border-[#4a3c31] bg-[#b8894e]" aria-hidden="true"></div>
+                                                <div className="absolute -right-2 top-1 bottom-1 w-3 rounded-full border-2 border-[#4a3c31] bg-[#b8894e]" aria-hidden="true"></div>
+                                                <Scroll size={28} className="shrink-0 text-purple-900" />
+                                                <div className="min-w-0 flex-1">
+                                                    <h3 className="font-pixel text-sm">進階 第 {volume.index + 1} 卷</h3>
+                                                    <p className="font-retro text-[11px] mt-1">Lesson {volume.start} - {volume.end} · 完成 {completedLessons}/{volume.lessons.length}</p>
+                                                </div>
+                                                <ChevronRight size={20} className={`shrink-0 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
                                             </button>
-
-                                            {volume.index === 0 && (
-                                                <button
-                                                    onClick={() => {
-                                                        playSound('click');
-                                                        setShowAdvSearch(true);
-                                                    }}
-                                                    className="absolute right-1 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full border-2 border-slate-600 bg-black/85 text-purple-200 hover:bg-purple-950 hover:text-white shadow-[0_3px_8px_rgba(0,0,0,0.7)] flex items-center justify-center transition-transform active:scale-95"
-                                                    title="搜尋進階單字"
-                                                    aria-label="搜尋進階單字"
-                                                >
-                                                    <Search size={16} />
-                                                </button>
-                                            )}
                                         </div>
 
                                         {isExpanded && (
@@ -2440,6 +2444,7 @@ const WorldMap = ({ onSelectNode, onViewJourney, onViewWeeklyReport, onViewLogin
                                     </section>
                                 );
                             })}
+                            </div>
                         </div>
                     );
                 })()}
