@@ -11,6 +11,7 @@ import { db, auth, googleProvider } from './config/firebase';
 import { speakText, playSound, shuffleArray, playMusic, stopMusic, setMute, getMuteStatus, setVolume, unlockAudio } from './utils/audio';
 import TeacherDashboard from './components/TeacherDashboard.jsx';
 import { TRIVIA_CARDS, TRIVIA_CATEGORIES, TRIVIA_GROUPS, TRIVIA_LEGACY_ID_MAP, TRIVIA_SOURCES } from './constants/triviaData';
+import { hasAmbiguousTranslation, needsEnglishPrompt } from './constants/quizOptionRules';
 
 // --- Pixel Art SVGs ---
 const PixelArt = {
@@ -4031,13 +4032,21 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard'
 
     useEffect(() => {
         if (!quizData) return;
-        const generatedQuestions = quizData.map(item => {
+        const generatedQuestions = quizData.flatMap(item => {
             const otherItems = quizData.filter(i => i.id !== item.id);
-            const distractors = shuffleArray(otherItems).slice(0, 3);
+            // A direct translation question is unfair when two choices have the
+            // same (or near-identical) Chinese meaning. Prefer unambiguous
+            // distractors, regardless of the chapter the words came from.
+            const eligibleDistractors = otherItems.filter(option => !hasAmbiguousTranslation(item, option));
+            if (eligibleDistractors.length < 3) return [];
+            const distractors = shuffleArray(eligibleDistractors).slice(0, 3);
             const options = shuffleArray([item, ...distractors]);
             // Randomly decide mode: 'en-ch' (English Q, Chinese A) or 'ch-en' (Chinese Q, English A)
-            const mode = Math.random() > 0.5 ? 'en-ch' : 'ch-en';
-            return { target: item, options, mode };
+            const hasAmbiguousChinesePrompt = otherItems.some(option => hasAmbiguousTranslation(item, option));
+            const mode = needsEnglishPrompt(item) || hasAmbiguousChinesePrompt || Math.random() > 0.5
+                ? 'en-ch'
+                : 'ch-en';
+            return [{ target: item, options, mode }];
         });
         const limit = Math.min(generatedQuestions.length, questionLimit);
         setQuestions(shuffleArray(generatedQuestions).slice(0, limit));
