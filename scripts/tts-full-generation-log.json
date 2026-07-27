@@ -994,10 +994,10 @@
       "displayText": "add",
       "spokenText": "add",
       "status": "completed",
-      "bytes": 8832,
-      "sha256": "a2973784f99a81c35084d1bf586505c8f76213d5e222a0211bcf52ed3a9756e7",
-      "completedAt": "2026-07-27T03:37:36.294Z",
-      "source": "openai"
+      "bytes": 13824,
+      "sha256": "2e8c6a1d40f7109784b7ff95a04910f0fcd83adf7555a1120c272ca92726c784",
+      "completedAt": "2026-07-27T15:57:16.999Z",
+      "source": "openai-repair"
     },
     "cedar:87623ceab830648b": {
       "voice": "cedar",
@@ -6478,10 +6478,10 @@
       "displayText": "blind",
       "spokenText": "blind",
       "status": "completed",
-      "bytes": 4992,
-      "sha256": "a3a22cd233916224476df85adab5c7ff83dd6a992e348b51404230ed2b9e1994",
-      "completedAt": "2026-07-27T03:39:01.640Z",
-      "source": "openai"
+      "bytes": 31488,
+      "sha256": "54cdf510af589796c5699238c00e0ae75685a8c12ef2c926682a48b82b9085d3",
+      "completedAt": "2026-07-27T15:57:16.866Z",
+      "source": "openai-repair"
     },
     "marin:c75cccb658556e9e": {
       "voice": "marin",
@@ -7066,10 +7066,10 @@
       "displayText": "boss",
       "spokenText": "boss",
       "status": "completed",
-      "bytes": 19200,
-      "sha256": "aca9713d8308432e6d3a4af6f8c68639058fb5111e27ea6573ddce028ff6b18f",
-      "completedAt": "2026-07-27T03:39:09.934Z",
-      "source": "openai"
+      "bytes": 21120,
+      "sha256": "edbbde00fa047d83aa401ee00d9268492c99fa45547de3c7a06c53fefef41a4d",
+      "completedAt": "2026-07-27T15:57:17.030Z",
+      "source": "openai-repair"
     },
     "cedar:fb86566019eb2e97": {
       "voice": "cedar",
@@ -11098,10 +11098,10 @@
       "displayText": "climb",
       "spokenText": "climb",
       "status": "completed",
-      "bytes": 14592,
-      "sha256": "2e1156ed9cc649df1a58af42dac9641586813538a6f42046c748e9ff6dbcc9a3",
-      "completedAt": "2026-07-27T03:40:07.735Z",
-      "source": "openai"
+      "bytes": 22656,
+      "sha256": "416c4f0d82d853bac27e640113e26a83aa4ff3973efc19a5bd1da349a29cbb7a",
+      "completedAt": "2026-07-27T15:57:16.887Z",
+      "source": "openai-repair"
     },
     "marin:f7d790894e9dd39f": {
       "voice": "marin",
@@ -12178,10 +12178,10 @@
       "displayText": "complete",
       "spokenText": "complete",
       "status": "completed",
-      "bytes": 7296,
-      "sha256": "988d8006f26e505959268693abd415b1e2d420e01b2317674ad8436c8f84d0b9",
-      "completedAt": "2026-07-27T03:40:22.851Z",
-      "source": "openai"
+      "bytes": 17664,
+      "sha256": "4d20a4d4d77a55dc50d34a801ed3f2a2b924fa9e7e9d1ef67acffd470f198c00",
+      "completedAt": "2026-07-27T15:57:16.846Z",
+      "source": "openai-repair"
     },
     "cedar:94886e855df39128": {
       "voice": "cedar",
@@ -12706,10 +12706,10 @@
       "displayText": "copy",
       "spokenText": "copy",
       "status": "completed",
-      "bytes": 5760,
-      "sha256": "9af906818be0d1bbe2e3d29f7f99a0c172112d9eb86dc37068282470b0681335",
-      "completedAt": "2026-07-27T03:40:30.317Z",
-      "source": "openai"
+      "bytes": 17664,
+      "sha256": "9392fe4159a24ebac196f6731456a3b8d62207b1364e4e7827310d4f0f6e15d5",
+      "completedAt": "2026-07-27T15:57:17.025Z",
+      "source": "openai-repair"
     },
     "marin:844cd17a64dffb0b": {
       "voice": "marin",
@@ -13714,10 +13714,10 @@
       "displayText": "cute",
       "spokenText": "cute",
       "status": "completed",
-      "bytes": 5760,
-      "sha256": "844a3cdddd76a37d63add5343e4d85e37979d1a99e754c301534b68ab81b82f7",
-      "completedAt": "2026-07-27T03:40:44.448Z",
-      "source": "openai"
+      "bytes": 15360,
+      "sha256": "f6b2696a5e6e011f7271b935370783aa61ba558737fdb3fd10b7f9adc82bdb54",
+      "completedAt": "2026-07-27T15:57:18.325Z",
+      "source": "openai-repair"
     },
     "marin:113faf59ebe684f4": {
       "voice": "marin",
@@ -14854,10 +14854,10 @@
       "displayText": "die",
       "spokenText": "die",
       "status": "completed",
-      "bytes": 9600,
-      "sha256": "8789a9bd97d1368d98cb126fa48afa6831766f8b4cd417f8f9a4f310ac3d1617",
-      "completedAt": "2026-07-27T03:41:00.569Z",
-      "source": "openai"
+      "bytes": 14592,
+      "sha256": "ac01b85ef88a1b76f42e26449cca3f8338129d719ff6da28bee1ddeaf7152e80",
+      "completedAt": "2026-07-27T15:57:18.050Z",
+      "source": "openai-repair"
     },
     "marin:bd73e5c35e798c8d": {
       "voice": "marin",
@@ -15766,10 +15766,10 @@
       "displayText": "dog",
       "spokenText": "dog",
       "status": "completed",
-      "bytes": 10368,
-      "sha256": "7a798df529df3c74200fb6b8e4c610a8e05210f198a9f6691dae7082d7212c0c",
-      "completedAt": "2026-07-27T03:41:13.629Z",
-      "source": "openai"
+      "bytes": 29568,
+      "sha256": "5c80df394245c467e1c73a7c4d28a9d5d619ab1b3085bf50ca7567c3b6d2956e",
+      "completedAt": "2026-07-27T15:57:18.173Z",
+      "source": "openai-repair"
     },
     "cedar:a9a01100c8564e44": {
       "voice": "cedar",
@@ -16606,10 +16606,10 @@
       "displayText": "dryer",
       "spokenText": "dryer",
       "status": "completed",
-      "bytes": 9600,
-      "sha256": "34dc734814ee53d78a2b5fd380060a9443e53e4a989afb534616a9d23f24421f",
-      "completedAt": "2026-07-27T03:41:25.596Z",
-      "source": "openai"
+      "bytes": 16896,
+      "sha256": "06a8e6092c8f704ed2d870cea094fb6c7a566f25a82037f458aa0ca832a1e285",
+      "completedAt": "2026-07-27T15:57:18.345Z",
+      "source": "openai-repair"
     },
     "cedar:2840e0eafda1d076": {
       "voice": "cedar",
@@ -18910,10 +18910,10 @@
       "displayText": "face",
       "spokenText": "face",
       "status": "completed",
-      "bytes": 18432,
-      "sha256": "510b57d4a299a47047dfac00641af5c2116b2529bd35fe238294328eff7838fd",
-      "completedAt": "2026-07-27T03:41:57.956Z",
-      "source": "openai"
+      "bytes": 22656,
+      "sha256": "7052595e6d42e3e08d0fa4a20d9d571ced22ada6af75ed08ce0c5be8cf7c1c67",
+      "completedAt": "2026-07-27T15:57:18.136Z",
+      "source": "openai-repair"
     },
     "marin:98d57c25a2bed283": {
       "voice": "marin",
@@ -21646,10 +21646,10 @@
       "displayText": "friendly",
       "spokenText": "friendly",
       "status": "completed",
-      "bytes": 5760,
-      "sha256": "b140c424df3bee4d14f0381742d816e72596a3e4e64dc03c73d6442ba6822bf4",
-      "completedAt": "2026-07-27T03:42:37.387Z",
-      "source": "openai"
+      "bytes": 24960,
+      "sha256": "c6daa71e87cd4ebe53c78b0959daad27c350d2b0973bdadf2f82f8cf6d46b08e",
+      "completedAt": "2026-07-27T15:57:18.354Z",
+      "source": "openai-repair"
     },
     "cedar:8e8b4d64f704c7a6": {
       "voice": "cedar",
@@ -22174,10 +22174,10 @@
       "displayText": "garbage",
       "spokenText": "garbage",
       "status": "completed",
-      "bytes": 8832,
-      "sha256": "aab0dcb54835fe654c64f231def67f371dd8064d85650ef87e71d4815b00f8c3",
-      "completedAt": "2026-07-27T03:42:44.861Z",
-      "source": "openai"
+      "bytes": 17664,
+      "sha256": "5aeb61b548e74ec412c113f474c241ba77eb3b58b0b86156213d4055c14a8599",
+      "completedAt": "2026-07-27T15:57:19.136Z",
+      "source": "openai-repair"
     },
     "marin:b53de24efca88587": {
       "voice": "marin",
@@ -23554,10 +23554,10 @@
       "displayText": "go off",
       "spokenText": "go off",
       "status": "completed",
-      "bytes": 5760,
-      "sha256": "53f7e4d687f5484009db610f6a663e3a5827ca39639351c7d64ebcd9e83f3408",
-      "completedAt": "2026-07-27T03:43:05.493Z",
-      "source": "openai"
+      "bytes": 33024,
+      "sha256": "408c4d4f186b66a02b32fc5f30598b33eded24455d02e6c705938da9362acacc",
+      "completedAt": "2026-07-27T15:57:19.259Z",
+      "source": "openai-repair"
     },
     "cedar:8c0a534087c52900": {
       "voice": "cedar",
@@ -23938,10 +23938,10 @@
       "displayText": "God",
       "spokenText": "God",
       "status": "completed",
-      "bytes": 11520,
-      "sha256": "59c718fb19e254fa2d5d052c48a4a332baa6f0b11b9b3ee9fe3bcc31d4fad531",
-      "completedAt": "2026-07-27T03:43:11.776Z",
-      "source": "openai"
+      "bytes": 17664,
+      "sha256": "0ff5811970f717d8b4da2f95f2b9958c35955043a0e0ea98b01f7be267295fb4",
+      "completedAt": "2026-07-27T15:57:20.015Z",
+      "source": "openai-repair"
     },
     "cedar:3bb0ac0514ee5ab7": {
       "voice": "cedar",
@@ -24010,10 +24010,10 @@
       "displayText": "golf",
       "spokenText": "golf",
       "status": "completed",
-      "bytes": 18432,
-      "sha256": "18020480cedaef84332f5d0121f013192a20c6ab326385e145a2b6d5e57f5ce8",
-      "completedAt": "2026-07-27T03:43:12.638Z",
-      "source": "openai"
+      "bytes": 19968,
+      "sha256": "365127fc4b1b25571d4286022907091b04e184537fbd0671b3ab39f613357a1e",
+      "completedAt": "2026-07-27T15:57:19.537Z",
+      "source": "openai-repair"
     },
     "cedar:106675dc1490d5cd": {
       "voice": "cedar",
@@ -24970,10 +24970,10 @@
       "displayText": "half",
       "spokenText": "half",
       "status": "completed",
-      "bytes": 17664,
-      "sha256": "616717f8c474a29ccbc30f35c6a389df79414be19c203eae190859564d409879",
-      "completedAt": "2026-07-27T03:43:26.347Z",
-      "source": "openai"
+      "bytes": 28032,
+      "sha256": "26279fea97317846da184fdbb0cdf5d40bffe034cc9ccc08900a5bd465438ce1",
+      "completedAt": "2026-07-27T15:57:19.187Z",
+      "source": "openai-repair"
     },
     "marin:4311ddc1adfe037d": {
       "voice": "marin",
@@ -25918,10 +25918,10 @@
       "displayText": "he",
       "spokenText": "he",
       "status": "completed",
-      "bytes": 5760,
-      "sha256": "65fbd9c20fe2b315c48fc154e2eee8668824bd9ed91c68c4bc3b730ff09df881",
-      "completedAt": "2026-07-27T03:43:40.718Z",
-      "source": "openai"
+      "bytes": 14592,
+      "sha256": "8d38dce5bd0229e9b7485975f59bd9c1552b871bfdd688e7be87e0765a16a3f7",
+      "completedAt": "2026-07-27T15:57:19.901Z",
+      "source": "openai-repair"
     },
     "cedar:cac29d00a8721e48": {
       "voice": "cedar",
@@ -26002,10 +26002,10 @@
       "displayText": "health",
       "spokenText": "health",
       "status": "completed",
-      "bytes": 7296,
-      "sha256": "16a687f090efb3e9646f571b7986e6538c8752b0a5f45f07a693f671aed202ed",
-      "completedAt": "2026-07-27T03:43:41.858Z",
-      "source": "openai"
+      "bytes": 17664,
+      "sha256": "453ae9d634ed65a9fb16524bae274cb1c6a5e2c6f7b7a7f51755d842c4fa66d8",
+      "completedAt": "2026-07-27T15:57:20.012Z",
+      "source": "openai-repair"
     },
     "marin:63745aef95742025": {
       "voice": "marin",
@@ -26098,10 +26098,10 @@
       "displayText": "heat",
       "spokenText": "heat",
       "status": "completed",
-      "bytes": 31488,
-      "sha256": "e3e6ea49622a21f6745fd8d2e33f86d5a386a522c3c1e57c0750d507b9f54c2e",
-      "completedAt": "2026-07-27T03:43:43.163Z",
-      "source": "openai"
+      "bytes": 36864,
+      "sha256": "6a1aaebdd33e2de3b58d258a234e2007ccc8698ebaa5f75c11ce27526a6e7961",
+      "completedAt": "2026-07-27T15:57:20.295Z",
+      "source": "openai-repair"
     },
     "cedar:e212087881cd0bbc": {
       "voice": "cedar",
@@ -26626,10 +26626,10 @@
       "displayText": "him",
       "spokenText": "him",
       "status": "completed",
-      "bytes": 5760,
-      "sha256": "b140c424df3bee4d14f0381742d816e72596a3e4e64dc03c73d6442ba6822bf4",
-      "completedAt": "2026-07-27T03:43:50.650Z",
-      "source": "openai"
+      "bytes": 18432,
+      "sha256": "37d6bae9f51f60b14a196856d075113e0eb0461e9c1d32f61670ac6d78799822",
+      "completedAt": "2026-07-27T15:57:20.574Z",
+      "source": "openai-repair"
     },
     "cedar:c4f38cac191cf72a": {
       "voice": "cedar",
@@ -27370,10 +27370,10 @@
       "displayText": "how",
       "spokenText": "how",
       "status": "completed",
-      "bytes": 9600,
-      "sha256": "58ccb41cb868e77b212572f34ae9c5ee0e61dcb68f69f7d5ffe7876c89c559b0",
-      "completedAt": "2026-07-27T03:44:00.484Z",
-      "source": "openai"
+      "bytes": 21120,
+      "sha256": "3f4628728416261ff3e906057589afbda3fb9110701d681de2daefef4c89d9df",
+      "completedAt": "2026-07-27T15:57:20.275Z",
+      "source": "openai-repair"
     },
     "marin:ff17c1d67eb69b6c": {
       "voice": "marin",
@@ -27454,10 +27454,10 @@
       "displayText": "hug",
       "spokenText": "hug",
       "status": "completed",
-      "bytes": 24192,
-      "sha256": "2ffdd4a76a64369fb8873d876a891a5b3a676d77ecd85e111bea8672cd4f0fe5",
-      "completedAt": "2026-07-27T03:44:02.324Z",
-      "source": "openai"
+      "bytes": 16896,
+      "sha256": "5beea748baebb95334cff92df8d8460f99661229074c6adb43ede9ffed458d8d",
+      "completedAt": "2026-07-27T15:57:20.934Z",
+      "source": "openai-repair"
     },
     "cedar:2e26dfdad71ee74a": {
       "voice": "cedar",
@@ -29530,10 +29530,10 @@
       "displayText": "it",
       "spokenText": "it",
       "status": "completed",
-      "bytes": 5760,
-      "sha256": "4fdece3c3f74561421a482f30a9d63a388076acfd88863c0ca55171553be0970",
-      "completedAt": "2026-07-27T03:44:33.088Z",
-      "source": "openai"
+      "bytes": 24192,
+      "sha256": "0e4fdb5f5a0068704e255977be82f95f711bfe824d04bd3b7a04c2e631a564ac",
+      "completedAt": "2026-07-27T15:57:21.271Z",
+      "source": "openai-repair"
     },
     "marin:879425ea8568550f": {
       "voice": "marin",
@@ -30322,10 +30322,10 @@
       "displayText": "keep",
       "spokenText": "keep",
       "status": "completed",
-      "bytes": 5760,
-      "sha256": "65fbd9c20fe2b315c48fc154e2eee8668824bd9ed91c68c4bc3b730ff09df881",
-      "completedAt": "2026-07-27T03:44:45.295Z",
-      "source": "openai"
+      "bytes": 13824,
+      "sha256": "aa250dc190e9e7245582df4528a0b2c0a764fe9f755c930c091dba6cf664da3d",
+      "completedAt": "2026-07-27T15:57:21.161Z",
+      "source": "openai-repair"
     },
     "cedar:f660a7996deacfbc": {
       "voice": "cedar",
@@ -30550,10 +30550,10 @@
       "displayText": "kick",
       "spokenText": "kick",
       "status": "completed",
-      "bytes": 5760,
-      "sha256": "53f7e4d687f5484009db610f6a663e3a5827ca39639351c7d64ebcd9e83f3408",
-      "completedAt": "2026-07-27T03:44:48.690Z",
-      "source": "openai"
+      "bytes": 17664,
+      "sha256": "1e16bb501be885a03293f5994985fcdfb94116669926fd9ecd30b7c5731a6699",
+      "completedAt": "2026-07-27T15:57:21.344Z",
+      "source": "openai-repair"
     },
     "cedar:ac46152a7a3c578b": {
       "voice": "cedar",
@@ -30586,10 +30586,10 @@
       "displayText": "kid",
       "spokenText": "kid",
       "status": "completed",
-      "bytes": 10368,
-      "sha256": "ed4bf64ae6d5c600578bcb35ea2b3d584f29c8546516cc0b9acd41d79eb397bf",
-      "completedAt": "2026-07-27T03:44:48.968Z",
-      "source": "openai"
+      "bytes": 14592,
+      "sha256": "b186f8947cdb04eac5d61f3fd7e34a0df4f2191bf69b7a26dd3fa460228d9429",
+      "completedAt": "2026-07-27T15:57:21.262Z",
+      "source": "openai-repair"
     },
     "marin:910610a58f355e10": {
       "voice": "marin",
@@ -30694,10 +30694,10 @@
       "displayText": "kind",
       "spokenText": "kind",
       "status": "completed",
-      "bytes": 26496,
-      "sha256": "f0d1ccd4217131850923b37ab2b7a4123a52e8116b80ae316fba7463d8c6925e",
-      "completedAt": "2026-07-27T03:44:50.801Z",
-      "source": "openai"
+      "bytes": 18432,
+      "sha256": "85997db8b8d2bf6c37d828f342de7da5905761c6fb4b13835560b3960732ebf6",
+      "completedAt": "2026-07-27T15:57:21.458Z",
+      "source": "openai-repair"
     },
     "marin:e1ae364ec24dc399": {
       "voice": "marin",
@@ -30802,10 +30802,10 @@
       "displayText": "kitchen",
       "spokenText": "kitchen",
       "status": "completed",
-      "bytes": 28800,
-      "sha256": "9b2cd24fec7c99cc0f637307fda2716230f2349e846ef9f6491f4ddf5f4df251",
-      "completedAt": "2026-07-27T03:44:52.144Z",
-      "source": "openai"
+      "bytes": 13824,
+      "sha256": "465a5b3c146965e6c91b7a4547cc79d279b18ef2416072c6d634e7fb9008d3d5",
+      "completedAt": "2026-07-27T15:57:21.598Z",
+      "source": "openai-repair"
     },
     "marin:71488f41aef223f5": {
       "voice": "marin",
@@ -31834,10 +31834,10 @@
       "displayText": "leg",
       "spokenText": "leg",
       "status": "completed",
-      "bytes": 5760,
-      "sha256": "da10af630ed5dc5c88fed984ff69f6cd213ee64b082a8775e9ea6d1c9d2afdd6",
-      "completedAt": "2026-07-27T03:45:07.029Z",
-      "source": "openai"
+      "bytes": 21888,
+      "sha256": "61b8eea80f3dae4287287c0aee00cff8b5645cf59d7eadfb8d57381fa2b5dfb6",
+      "completedAt": "2026-07-27T15:57:22.272Z",
+      "source": "openai-repair"
     },
     "marin:1ebc4dca8f0d8680": {
       "voice": "marin",
@@ -33994,10 +33994,10 @@
       "displayText": "mall",
       "spokenText": "mall",
       "status": "completed",
-      "bytes": 1920,
-      "sha256": "3a2ab6ce06e14257124c1ec6416ba55eff4b3005872134a00e1fe166f55d34d6",
-      "completedAt": "2026-07-27T03:45:38.101Z",
-      "source": "openai"
+      "bytes": 17664,
+      "sha256": "dcac6fcbdebc77048344d3b05ea37ec777c6903df0a29b8fc8d1d64cf43eca64",
+      "completedAt": "2026-07-27T15:57:22.318Z",
+      "source": "openai-repair"
     },
     "marin:b991b407bb602393": {
       "voice": "marin",
@@ -35242,10 +35242,10 @@
       "displayText": "milk",
       "spokenText": "milk",
       "status": "completed",
-      "bytes": 8064,
-      "sha256": "20fb46ef097acc337c979813552a44cf804e5b33a3149c6667ec56788bdc2828",
-      "completedAt": "2026-07-27T03:45:56.616Z",
-      "source": "openai"
+      "bytes": 16896,
+      "sha256": "d32034a6b51674e81172eee4284a28f2e6cbea3f17581365b9207c1af02e5918",
+      "completedAt": "2026-07-27T15:57:22.369Z",
+      "source": "openai-repair"
     },
     "marin:5b89cca82773e637": {
       "voice": "marin",
@@ -37594,10 +37594,10 @@
       "displayText": "nobody",
       "spokenText": "nobody",
       "status": "completed",
-      "bytes": 5760,
-      "sha256": "53f7e4d687f5484009db610f6a663e3a5827ca39639351c7d64ebcd9e83f3408",
-      "completedAt": "2026-07-27T03:46:30.714Z",
-      "source": "openai"
+      "bytes": 19968,
+      "sha256": "777b26e7b2227f1c200da0ee494657fada1b56623a71f6736294a157e34f06fc",
+      "completedAt": "2026-07-27T15:57:22.480Z",
+      "source": "openai-repair"
     },
     "cedar:2e3835b99103cf33": {
       "voice": "cedar",
@@ -38038,10 +38038,10 @@
       "displayText": "number",
       "spokenText": "number",
       "status": "completed",
-      "bytes": 15360,
-      "sha256": "0629e233565f42b5a7f14e589b03c749fb84f7f8c9891943ef3f03f861b260d4",
-      "completedAt": "2026-07-27T03:46:37.175Z",
-      "source": "openai"
+      "bytes": 16128,
+      "sha256": "fcb360cec382f4bd5c6361ec13c9cbb3ad6e9e164fe7b30ce518a90eabb403b7",
+      "completedAt": "2026-07-27T15:57:22.367Z",
+      "source": "openai-repair"
     },
     "marin:6d6f1adcd1e1ef89": {
       "voice": "marin",
@@ -38578,10 +38578,10 @@
       "displayText": "on",
       "spokenText": "on",
       "status": "completed",
-      "bytes": 5760,
-      "sha256": "53f7e4d687f5484009db610f6a663e3a5827ca39639351c7d64ebcd9e83f3408",
-      "completedAt": "2026-07-27T03:46:44.619Z",
-      "source": "openai"
+      "bytes": 19968,
+      "sha256": "3ad16cf5b7a149a82b9bc0dd90f15f7c916b205d236b25a2029b8e54e1d41037",
+      "completedAt": "2026-07-27T15:57:22.650Z",
+      "source": "openai-repair"
     },
     "marin:e54360102724074c": {
       "voice": "marin",
@@ -39490,10 +39490,10 @@
       "displayText": "own",
       "spokenText": "own",
       "status": "completed",
-      "bytes": 5760,
-      "sha256": "53f7e4d687f5484009db610f6a663e3a5827ca39639351c7d64ebcd9e83f3408",
-      "completedAt": "2026-07-27T03:46:57.695Z",
-      "source": "openai"
+      "bytes": 21120,
+      "sha256": "e4ef99d72e271cbe287d44952dea0f61e0a5e391664173cc187636f48df4375f",
+      "completedAt": "2026-07-27T15:57:23.121Z",
+      "source": "openai-repair"
     },
     "cedar:f371121a2eaf1530": {
       "voice": "cedar",
@@ -40342,10 +40342,10 @@
       "displayText": "paste",
       "spokenText": "paste",
       "status": "completed",
-      "bytes": 5760,
-      "sha256": "54f066bf14e885327bec095ada0baeb48d81d3c70e5330547216386910cc2f8d",
-      "completedAt": "2026-07-27T03:47:10.230Z",
-      "source": "openai"
+      "bytes": 43392,
+      "sha256": "30060147471c9cc58d7b63281a9967a2eef25f99e481d84da645494560bef354",
+      "completedAt": "2026-07-27T15:57:23.619Z",
+      "source": "openai-repair"
     },
     "cedar:d8a68357f4070585": {
       "voice": "cedar",
@@ -40618,10 +40618,10 @@
       "displayText": "pear",
       "spokenText": "pear",
       "status": "completed",
-      "bytes": 8064,
-      "sha256": "b4646fa80b4def56eb7ca128339729fd3e0bace06bf8a3be13e82519586ea4b8",
-      "completedAt": "2026-07-27T03:47:14.398Z",
-      "source": "openai"
+      "bytes": 13824,
+      "sha256": "d13597777ef3fc4b9f512e7de4bdfac6c1b0764531d3f3d1f46411ecf305bf5c",
+      "completedAt": "2026-07-27T15:57:23.278Z",
+      "source": "openai-repair"
     },
     "cedar:fb3bac563bfd5d28": {
       "voice": "cedar",
@@ -40750,10 +40750,10 @@
       "displayText": "pepper",
       "spokenText": "pepper",
       "status": "completed",
-      "bytes": 5760,
-      "sha256": "63eaf6bc65f7f25f3d259d99ee3562de498a0edbb64004925d5e307111cb0b3e",
-      "completedAt": "2026-07-27T03:47:16.282Z",
-      "source": "openai"
+      "bytes": 21120,
+      "sha256": "46049ef54897970223fb23ace219612959825398b5fbed89fd04563afaa7d961",
+      "completedAt": "2026-07-27T15:57:23.466Z",
+      "source": "openai-repair"
     },
     "cedar:77a62ad6e72fd55e": {
       "voice": "cedar",
@@ -40762,10 +40762,10 @@
       "displayText": "perfect",
       "spokenText": "perfect",
       "status": "completed",
-      "bytes": 5760,
-      "sha256": "b2077b9dbb7682eccf37d75bb92b9f066bf2b5134f43a70ef1cfacd47d1e6035",
-      "completedAt": "2026-07-27T03:47:16.583Z",
-      "source": "openai"
+      "bytes": 25728,
+      "sha256": "883708823a875438cd9127bbcaa26761a6e8f62e51fb15a0b6a2353422d1df81",
+      "completedAt": "2026-07-27T15:57:23.464Z",
+      "source": "openai-repair"
     },
     "marin:3291d9b3bfaadbe9": {
       "voice": "marin",
@@ -41350,10 +41350,10 @@
       "displayText": "place",
       "spokenText": "place",
       "status": "completed",
-      "bytes": 28800,
-      "sha256": "17f9b06ae3adfe0747174e31eeefd430608f9f5d5ca19865f24583cc172c52b6",
-      "completedAt": "2026-07-27T03:47:25.196Z",
-      "source": "openai"
+      "bytes": 27264,
+      "sha256": "3c3f7b87707243105c45e8ccc8c593ccfebc35a016121479c6495653dcee7de2",
+      "completedAt": "2026-07-27T15:57:23.597Z",
+      "source": "openai-repair"
     },
     "marin:dacf36547c7774a0": {
       "voice": "marin",
@@ -44674,10 +44674,10 @@
       "displayText": "Really?",
       "spokenText": "Really?",
       "status": "completed",
-      "bytes": 18432,
-      "sha256": "97e461e7398c45f8b586974c8ccab8c2dbfb5f4aa0f8af83fceb6da550c57bd5",
-      "completedAt": "2026-07-27T03:48:12.673Z",
-      "source": "openai"
+      "bytes": 16128,
+      "sha256": "069e5a9d39635944e9cb7b1ddd7af78f5483718c0dd423f52933ffa715b66a13",
+      "completedAt": "2026-07-27T15:57:24.226Z",
+      "source": "openai-repair"
     },
     "cedar:be125973b76bb5aa": {
       "voice": "cedar",
@@ -46738,10 +46738,10 @@
       "displayText": "saucer",
       "spokenText": "saucer",
       "status": "completed",
-      "bytes": 22656,
-      "sha256": "dfec10c952ac6d8f7b46156f0b93b9fc817fb5fa7bfff68e7bbf013a6205791e",
-      "completedAt": "2026-07-27T03:48:42.636Z",
-      "source": "openai"
+      "bytes": 23424,
+      "sha256": "e804e0ff4c4e4a004d407560a0a50171a9d027620c442168e73a37dc620f4bce",
+      "completedAt": "2026-07-27T15:57:24.224Z",
+      "source": "openai-repair"
     },
     "cedar:365a3418da1720fb": {
       "voice": "cedar",
@@ -47962,10 +47962,10 @@
       "displayText": "shake",
       "spokenText": "shake",
       "status": "completed",
-      "bytes": 29568,
-      "sha256": "3fbe44b55ac81f675bf7744650467f4e7a47169bb14ccdba93c4d24f0013bacb",
-      "completedAt": "2026-07-27T03:49:00.773Z",
-      "source": "openai"
+      "bytes": 27264,
+      "sha256": "792b32eb8d2a166c7e95b6c926bf7e4cda2b192a8e30d3dc31f38fdca3c89530",
+      "completedAt": "2026-07-27T15:57:24.474Z",
+      "source": "openai-repair"
     },
     "marin:14cbe9e497e2de70": {
       "voice": "marin",
@@ -48034,10 +48034,10 @@
       "displayText": "share",
       "spokenText": "share",
       "status": "completed",
-      "bytes": 5760,
-      "sha256": "c6e982a3f0c1714e71ee4ba226c13007cac2ac96808833bf31011478c6394a79",
-      "completedAt": "2026-07-27T03:49:01.823Z",
-      "source": "openai"
+      "bytes": 33024,
+      "sha256": "57dcc34adf63245361eeeea2104302b0d8b005c1a122e3b91260c1288d884c0b",
+      "completedAt": "2026-07-27T15:57:24.657Z",
+      "source": "openai-repair"
     },
     "marin:c699a7f57aa8014d": {
       "voice": "marin",
@@ -48226,10 +48226,10 @@
       "displayText": "sheep",
       "spokenText": "sheep",
       "status": "completed",
-      "bytes": 17664,
-      "sha256": "e111311a1aba3c94ca61c756305c631b0f434d201b5b636ed7295cb962710f04",
-      "completedAt": "2026-07-27T03:49:04.718Z",
-      "source": "openai"
+      "bytes": 23424,
+      "sha256": "fc582b2a16053c1d0fc1701790228c5b4ad6ba9c2cc09b49dadec3b0bd951438",
+      "completedAt": "2026-07-27T15:57:24.670Z",
+      "source": "openai-repair"
     },
     "cedar:c7b6d89101c2db91": {
       "voice": "cedar",
@@ -48466,10 +48466,10 @@
       "displayText": "should",
       "spokenText": "should",
       "status": "completed",
-      "bytes": 7296,
-      "sha256": "2124e099e5a5c256c7a893bcb61beafcdb532fc7ab1cf5df9c583afa597c4d31",
-      "completedAt": "2026-07-27T03:49:08.110Z",
-      "source": "openai"
+      "bytes": 27264,
+      "sha256": "35718389376a006be35893123282e2f7ee10d6472be31e050d81fb94d3b42132",
+      "completedAt": "2026-07-27T15:57:24.390Z",
+      "source": "openai-repair"
     },
     "cedar:fbd2cf71ab0bf714": {
       "voice": "cedar",
@@ -49186,10 +49186,10 @@
       "displayText": "sister",
       "spokenText": "sister",
       "status": "completed",
-      "bytes": 4224,
-      "sha256": "e0052025680fd2dc357b259eddc33131ea41dad2406c07cbd05c55de7c4a54a3",
-      "completedAt": "2026-07-27T03:49:17.959Z",
-      "source": "openai"
+      "bytes": 23424,
+      "sha256": "cd2bb21e35565e2bd935b7e2b3b7b957bd262a2f52b9f3ab538e131b65012009",
+      "completedAt": "2026-07-27T15:57:25.036Z",
+      "source": "openai-repair"
     },
     "cedar:ec3e19afeb1ecfaf": {
       "voice": "cedar",
@@ -49390,10 +49390,10 @@
       "displayText": "ski",
       "spokenText": "ski",
       "status": "completed",
-      "bytes": 21888,
-      "sha256": "7dce8372a65cfac2ca25e11803a80f8166f93950e99c2a69bb297bf3588e7c18",
-      "completedAt": "2026-07-27T03:49:20.390Z",
-      "source": "openai"
+      "bytes": 21120,
+      "sha256": "e29667ecbf1c94c30e907b709a85419a807b25e2fc106a468e3e3fc9d8b0c994",
+      "completedAt": "2026-07-27T15:57:25.371Z",
+      "source": "openai-repair"
     },
     "marin:06ab21c4de209c13": {
       "voice": "marin",
@@ -49486,10 +49486,10 @@
       "displayText": "skinny",
       "spokenText": "skinny",
       "status": "completed",
-      "bytes": 5760,
-      "sha256": "1317a6ec6722221596c1eb9df28c047a73daadc40cf8554aa4e62e5aa4163478",
-      "completedAt": "2026-07-27T03:49:21.975Z",
-      "source": "openai"
+      "bytes": 25728,
+      "sha256": "c155f13d145989ef103f30ef346135d9d06ad73917dd673a48b6b5f731fa1d75",
+      "completedAt": "2026-07-27T15:57:25.394Z",
+      "source": "openai-repair"
     },
     "marin:76e020166b9360ef": {
       "voice": "marin",
@@ -49726,10 +49726,10 @@
       "displayText": "slow",
       "spokenText": "slow",
       "status": "completed",
-      "bytes": 5760,
-      "sha256": "1317a6ec6722221596c1eb9df28c047a73daadc40cf8554aa4e62e5aa4163478",
-      "completedAt": "2026-07-27T03:49:25.327Z",
-      "source": "openai"
+      "bytes": 21120,
+      "sha256": "697db9e6ae475ccb59b78162544ae61a4673d0e643317edfa4fbee82532d403c",
+      "completedAt": "2026-07-27T15:57:26.458Z",
+      "source": "openai-repair"
     },
     "cedar:7a4353310c785277": {
       "voice": "cedar",
@@ -50398,10 +50398,10 @@
       "displayText": "some",
       "spokenText": "some",
       "status": "completed",
-      "bytes": 15360,
-      "sha256": "113f3c88d149ca7f019847ecede4d53c7ebc457cf450b2262b22371fa33c0fbd",
-      "completedAt": "2026-07-27T03:49:34.649Z",
-      "source": "openai"
+      "bytes": 25728,
+      "sha256": "bc737b54838a5189f1e83425fcaf4f680e9a3ce762d1fd4b8886e588096a1e19",
+      "completedAt": "2026-07-27T15:59:11.981Z",
+      "source": "openai-repair"
     },
     "marin:999471d9cd22d310": {
       "voice": "marin",
@@ -50710,10 +50710,10 @@
       "displayText": "sorry",
       "spokenText": "sorry",
       "status": "completed",
-      "bytes": 4224,
-      "sha256": "0d34d81dd7b656c8982e91040a50053c75ddad01b4686daf5a060f4e3085b96b",
-      "completedAt": "2026-07-27T03:49:39.446Z",
-      "source": "openai"
+      "bytes": 19968,
+      "sha256": "326012c3bc5dfce0fcb5dc0a63274444d1a924ecbca500d8fe6b024ed83860a4",
+      "completedAt": "2026-07-27T15:57:25.373Z",
+      "source": "openai-repair"
     },
     "marin:4f99d0f74248c30d": {
       "voice": "marin",
@@ -51058,10 +51058,10 @@
       "displayText": "speech",
       "spokenText": "speech",
       "status": "completed",
-      "bytes": 5760,
-      "sha256": "829bc5da0c428a868cbc281a1f63d1182218e11d0b7dad803c394fe6bf619f41",
-      "completedAt": "2026-07-27T03:49:44.658Z",
-      "source": "openai"
+      "bytes": 27264,
+      "sha256": "b5aefabb0cba0d97aa909a1fd3218ec073b135ec3fbd44625f083770fa6d478e",
+      "completedAt": "2026-07-27T15:57:26.148Z",
+      "source": "openai-repair"
     },
     "marin:28ad8806f48c1a6d": {
       "voice": "marin",
@@ -51310,10 +51310,10 @@
       "displayText": "spring",
       "spokenText": "spring",
       "status": "completed",
-      "bytes": 13824,
-      "sha256": "ea3490553584663540326da29e324f3683a643f7c5953236be6e4db184846882",
-      "completedAt": "2026-07-27T03:49:47.810Z",
-      "source": "openai"
+      "bytes": 36096,
+      "sha256": "b052aeb7d7fbaae900ebebf30b60bb4c14ce6ff31392812229572dcf43fbd39e",
+      "completedAt": "2026-07-27T15:57:26.405Z",
+      "source": "openai-repair"
     },
     "marin:80bcfe3432354843": {
       "voice": "marin",
@@ -52162,10 +52162,10 @@
       "displayText": "straight",
       "spokenText": "straight",
       "status": "completed",
-      "bytes": 3456,
-      "sha256": "1b4e863f1cb05b7cdcd97f58f3641673dfde7218de6f1c9619fb2a0fec80ef62",
-      "completedAt": "2026-07-27T03:50:00.079Z",
-      "source": "openai"
+      "bytes": 24960,
+      "sha256": "d3b9df279e4e78cec6cd81cee695419e9349e21343bf0ff54fe8d1623b9f76a6",
+      "completedAt": "2026-07-27T15:57:26.188Z",
+      "source": "openai-repair"
     },
     "cedar:4ac297b4d93d490d": {
       "voice": "cedar",
@@ -52258,10 +52258,10 @@
       "displayText": "straw",
       "spokenText": "straw",
       "status": "completed",
-      "bytes": 13056,
-      "sha256": "c1f751bf4c0ebe08574ce34977e520c9d151b51112a9289b60a391f809b855c2",
-      "completedAt": "2026-07-27T03:50:01.563Z",
-      "source": "openai"
+      "bytes": 28032,
+      "sha256": "58e0c68964be712dcbb66a2013474e342dd5934e98f2d3f75e490dd861fb178d",
+      "completedAt": "2026-07-27T15:57:26.493Z",
+      "source": "openai-repair"
     },
     "marin:de5475c1d65ffd95": {
       "voice": "marin",
@@ -53278,10 +53278,10 @@
       "displayText": "system",
       "spokenText": "system",
       "status": "completed",
-      "bytes": 5760,
-      "sha256": "e70d2991127199d9d9539df95023175044c6b9662a3d335f2eb7c0ae4beacbeb",
-      "completedAt": "2026-07-27T03:50:15.765Z",
-      "source": "openai"
+      "bytes": 19968,
+      "sha256": "741aa441827ce066e215d0cdec47852d224db48959712a4626bee7af0f9e486f",
+      "completedAt": "2026-07-27T15:57:26.335Z",
+      "source": "openai-repair"
     },
     "cedar:9eec28886f411e97": {
       "voice": "cedar",
@@ -53374,10 +53374,10 @@
       "displayText": "tail",
       "spokenText": "tail",
       "status": "completed",
-      "bytes": 5760,
-      "sha256": "53f7e4d687f5484009db610f6a663e3a5827ca39639351c7d64ebcd9e83f3408",
-      "completedAt": "2026-07-27T03:50:17.075Z",
-      "source": "openai"
+      "bytes": 15360,
+      "sha256": "a828c63d908e181ab7ce8f7c3fc9c0bc5fba4016f4d5b9b5de0aa24fc17b8439",
+      "completedAt": "2026-07-27T15:57:26.977Z",
+      "source": "openai-repair"
     },
     "cedar:bc2d901b7d0a8558": {
       "voice": "cedar",
@@ -54478,10 +54478,10 @@
       "displayText": "term",
       "spokenText": "term",
       "status": "completed",
-      "bytes": 5760,
-      "sha256": "53f7e4d687f5484009db610f6a663e3a5827ca39639351c7d64ebcd9e83f3408",
-      "completedAt": "2026-07-27T03:50:33.769Z",
-      "source": "openai"
+      "bytes": 23424,
+      "sha256": "8194e7970bd83e50c1e47ed611672da2f3ca546d649e453e80b85ead85dc999d",
+      "completedAt": "2026-07-27T15:57:27.183Z",
+      "source": "openai-repair"
     },
     "cedar:394bb5492897fb19": {
       "voice": "cedar",
@@ -55198,10 +55198,10 @@
       "displayText": "think",
       "spokenText": "think",
       "status": "completed",
-      "bytes": 8064,
-      "sha256": "2ee561407ea7f1e3dd50d84c005ca08bf96325c270e68b55289595200ba8d6fa",
-      "completedAt": "2026-07-27T03:50:44.228Z",
-      "source": "openai"
+      "bytes": 21120,
+      "sha256": "55d9dca0494f700ecac6587ebc3f7db800b1aca63922dab213db1894969e4b1c",
+      "completedAt": "2026-07-27T15:57:27.435Z",
+      "source": "openai-repair"
     },
     "cedar:5eef8098ed6ec0a1": {
       "voice": "cedar",
@@ -55690,10 +55690,10 @@
       "displayText": "till",
       "spokenText": "till",
       "status": "completed",
-      "bytes": 11520,
-      "sha256": "d074eea46616c026b259d1d0646161edcd83011a6c8433b3a1c92a701ab5cdbc",
-      "completedAt": "2026-07-27T03:50:51.343Z",
-      "source": "openai"
+      "bytes": 17664,
+      "sha256": "7ea9dfea111543f172c7740b193c4742cea15089fb8470162197cc4db27a8144",
+      "completedAt": "2026-07-27T15:57:27.078Z",
+      "source": "openai-repair"
     },
     "cedar:036b19a6f28097d6": {
       "voice": "cedar",
@@ -55882,10 +55882,10 @@
       "displayText": "to",
       "spokenText": "to",
       "status": "completed",
-      "bytes": 5760,
-      "sha256": "c4fce22c1daf70bc6373ee5365dd155cf72281529bf89d4396515bb055707d39",
-      "completedAt": "2026-07-27T03:50:53.879Z",
-      "source": "openai"
+      "bytes": 16128,
+      "sha256": "4b43cefec0e2cc3e62c3ee464446b36645b2b9fe23ec358439f070a6ba3c8ff0",
+      "completedAt": "2026-07-27T15:57:27.317Z",
+      "source": "openai-repair"
     },
     "marin:be589f4e89317e9a": {
       "voice": "marin",
@@ -56458,10 +56458,10 @@
       "displayText": "town",
       "spokenText": "town",
       "status": "completed",
-      "bytes": 5760,
-      "sha256": "53f7e4d687f5484009db610f6a663e3a5827ca39639351c7d64ebcd9e83f3408",
-      "completedAt": "2026-07-27T03:51:01.954Z",
-      "source": "openai"
+      "bytes": 21888,
+      "sha256": "349c3de7350803a9c377b371c55e9c800643d3ba8ffa279762cb9b469566827a",
+      "completedAt": "2026-07-27T15:57:27.727Z",
+      "source": "openai-repair"
     },
     "cedar:39d4e6ab72df95b5": {
       "voice": "cedar",
@@ -56950,10 +56950,10 @@
       "displayText": "treat",
       "spokenText": "treat",
       "status": "completed",
-      "bytes": 5760,
-      "sha256": "06f3dc07787b2907df37172d604a341664b339e521a3e8d08c9e70582fd11100",
-      "completedAt": "2026-07-27T03:51:09.639Z",
-      "source": "openai"
+      "bytes": 17664,
+      "sha256": "1eb9fba96f5f670f9f403b649198cb23913b9db7cf68436d61acae75aaeaede1",
+      "completedAt": "2026-07-27T15:57:27.841Z",
+      "source": "openai-repair"
     },
     "cedar:a17fcf0a2f50e2d4": {
       "voice": "cedar",
@@ -59818,10 +59818,10 @@
       "displayText": "well",
       "spokenText": "well",
       "status": "completed",
-      "bytes": 7296,
-      "sha256": "0a430d9f3b23613cd0c5fa23b2ba5fe6aee626f180cca8c3955be001b45283ca",
-      "completedAt": "2026-07-27T03:51:50.259Z",
-      "source": "openai"
+      "bytes": 25728,
+      "sha256": "0634cad39093f11e866ccfff4e826fed2696ddac384881a7351494cdcb2817af",
+      "completedAt": "2026-07-27T15:57:28.113Z",
+      "source": "openai-repair"
     },
     "cedar:77f44b9024fd19a6": {
       "voice": "cedar",
@@ -59854,10 +59854,10 @@
       "displayText": "were",
       "spokenText": "were",
       "status": "completed",
-      "bytes": 3456,
-      "sha256": "dc00cb5c3cbf57e4bb72d95a7baa6faffef6a9522cd6c37dedd5520aa4f1f322",
-      "completedAt": "2026-07-27T03:51:50.697Z",
-      "source": "openai"
+      "bytes": 23424,
+      "sha256": "84ee5bf098a8c447d6381c232bc16ca1bfce12381aaae1e50a86cb30541b6082",
+      "completedAt": "2026-07-27T15:57:28.029Z",
+      "source": "openai-repair"
     },
     "marin:888ee84b391c1331": {
       "voice": "marin",
@@ -60370,10 +60370,10 @@
       "displayText": "will",
       "spokenText": "will",
       "status": "completed",
-      "bytes": 5760,
-      "sha256": "51b20a34108cb8813e3f6b6d1fff23779fdd133537edbb468afa87baa4fd83c6",
-      "completedAt": "2026-07-27T03:51:57.923Z",
-      "source": "openai"
+      "bytes": 13824,
+      "sha256": "8c80425b56101d21969ba7b95d485c15eba76ae1cfb1eac348a8cb432247b7cf",
+      "completedAt": "2026-07-27T15:57:28.221Z",
+      "source": "openai-repair"
     },
     "marin:bc3c9b999d671411": {
       "voice": "marin",
@@ -61258,10 +61258,10 @@
       "displayText": "yeah",
       "spokenText": "yeah",
       "status": "completed",
-      "bytes": 18432,
-      "sha256": "407a2416c23f4674005c2f6821a1052ded82d4e645b44df7d1f33940f79bf242",
-      "completedAt": "2026-07-27T03:52:10.551Z",
-      "source": "openai"
+      "bytes": 13056,
+      "sha256": "00e0b2d64a45a07e76aa87d50a496e7ddd83b877088ad2adfd24ee541a0ea5dd",
+      "completedAt": "2026-07-27T15:59:11.888Z",
+      "source": "openai-repair"
     },
     "cedar:543df89fec85b1c2": {
       "voice": "cedar",
@@ -61294,10 +61294,10 @@
       "displayText": "year",
       "spokenText": "year",
       "status": "completed",
-      "bytes": 5760,
-      "sha256": "1c9cc73ad0df31f2b6c7aa72aaaabb7e5b62c6c486c1d8d9978d9d28d6f3679b",
-      "completedAt": "2026-07-27T03:52:10.827Z",
-      "source": "openai"
+      "bytes": 13056,
+      "sha256": "f643743d6d75ba8601f745ebd0b2aee1384d737d621b2ba303bb6e341cf0f79e",
+      "completedAt": "2026-07-27T15:57:28.529Z",
+      "source": "openai-repair"
     },
     "cedar:fbfe6543f8d2b9a0": {
       "voice": "cedar",
@@ -61510,10 +61510,10 @@
       "displayText": "your",
       "spokenText": "your",
       "status": "completed",
-      "bytes": 16896,
-      "sha256": "34219d168bed8ad2568436287b7419d258117291d83f9faeec6fce7e8aab1f2d",
-      "completedAt": "2026-07-27T03:52:14.286Z",
-      "source": "openai"
+      "bytes": 21888,
+      "sha256": "ecdaf92eea93e0cb04b14c63f7e1839eb21c8fece612b5dc150934744aa1a7a7",
+      "completedAt": "2026-07-27T15:57:29.090Z",
+      "source": "openai-repair"
     },
     "cedar:2b3def7931a792d2": {
       "voice": "cedar",
