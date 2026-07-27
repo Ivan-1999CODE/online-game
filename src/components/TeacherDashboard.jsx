@@ -6,7 +6,6 @@ import {
     BookOpen,
     Clock,
     History,
-    Map,
     Trophy,
     User,
     X
@@ -223,7 +222,7 @@ const TeacherDashboard = ({ onClose }) => {
     }, []);
 
     const StudentDetailModal = ({ student, onClose }) => {
-        const [activeTab, setActiveTab] = useState('progress');
+        const [activeTab, setActiveTab] = useState('scores');
         const [scoreSection, setScoreSection] = useState('main');
         const levelRecords = student.levelRecords || {};
         const mainProgress = getMainProgressStats(levelRecords);
@@ -258,14 +257,7 @@ const TeacherDashboard = ({ onClose }) => {
                     </div>
 
                     <div className="bg-white px-3 pt-2 border-b border-slate-200 shrink-0">
-                        <div className="grid grid-cols-3 gap-1">
-                            <button
-                                onClick={() => setActiveTab('progress')}
-                                className={`flex items-center justify-center gap-1 px-1 py-2 text-[11px] font-bold border-b-2 transition-colors ${activeTab === 'progress' ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
-                            >
-                                <Map className="w-4 h-4" />
-                                普通篇章進度
-                            </button>
+                        <div className="grid grid-cols-2 gap-1">
                             <button
                                 onClick={() => setActiveTab('scores')}
                                 className={`flex items-center justify-center gap-1 px-1 py-2 text-[11px] font-bold border-b-2 transition-colors ${activeTab === 'scores' ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
@@ -284,66 +276,6 @@ const TeacherDashboard = ({ onClose }) => {
                     </div>
 
                     <div className="overflow-y-auto flex-1 bg-slate-100">
-                        {activeTab === 'progress' && (
-                            <div className="p-2 pb-6 space-y-2">
-                                <div className="rounded-xl bg-gradient-to-r from-indigo-700 to-violet-600 p-4 text-white shadow-sm">
-                                    <div className="flex items-end justify-between gap-3">
-                                        <div>
-                                            <p className="text-[10px] font-bold text-indigo-100">普通篇章完成進度</p>
-                                            <p className="mt-1 text-3xl font-black">{mainProgress.percentage.toFixed(1)}%</p>
-                                        </div>
-                                        <p className="text-xs font-bold">{mainProgress.completedTasks} / {TOTAL_TASKS} 任務</p>
-                                    </div>
-                                    <div className="mt-3 h-2.5 overflow-hidden rounded-full bg-white/20">
-                                        <div className="h-full rounded-full bg-amber-300 transition-all duration-500" style={{ width: `${mainProgress.percentage}%` }}></div>
-                                    </div>
-                                </div>
-
-                                <div className="grid grid-cols-3 gap-2 text-center">
-                                    <div className="rounded-lg border border-slate-200 bg-white p-2">
-                                        <div className="text-lg font-black text-indigo-600">{mainProgress.startedChapters} / 16</div>
-                                        <div className="text-[9px] font-bold text-slate-500">已開始章節</div>
-                                    </div>
-                                    <div className="rounded-lg border border-slate-200 bg-white p-2">
-                                        <div className="text-lg font-black text-emerald-600">{mainProgress.completedChapters} / 16</div>
-                                        <div className="text-[9px] font-bold text-slate-500">完成主線章節</div>
-                                    </div>
-                                    <div className="rounded-lg border border-slate-200 bg-white p-2">
-                                        <div className="text-lg font-black text-red-600">{mainProgress.completedBosses} / 6</div>
-                                        <div className="text-[9px] font-bold text-slate-500">Boss 已通關</div>
-                                    </div>
-                                </div>
-
-                                <div className="rounded-lg border border-slate-200 bg-white p-3">
-                                    <div className="mb-2 flex items-center justify-between">
-                                        <h4 className="text-xs font-black text-slate-800">各章節任務進度</h4>
-                                        <span className="text-[9px] text-slate-500">主線 A／S；Boss B 以上</span>
-                                    </div>
-                                    <div className="grid grid-cols-2 gap-2">
-                                        {mainProgress.nodeProgress.map(({ node, completed, total, percentage, started }) => {
-                                            const isBoss = node.type === 'boss';
-                                            const info = isBoss ? BOSS_INFO[node.id] : LEVEL_INFO[node.id];
-
-                                            return (
-                                                <div key={node.id} className={`rounded-md border p-2 ${started ? 'border-slate-200 bg-slate-50' : 'border-slate-200 bg-slate-100 text-slate-400'}`}>
-                                                    <div className="flex items-center justify-between gap-1">
-                                                        <span className="truncate text-[10px] font-bold">
-                                                            {isBoss ? (node.label || 'Boss') : `Level ${String(node.id).padStart(2, '0')}`}
-                                                        </span>
-                                                        <span className="text-[10px] font-black">{completed} / {total}</span>
-                                                    </div>
-                                                    <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-slate-200">
-                                                        <div className={`h-full rounded-full ${isBoss ? 'bg-red-500' : 'bg-indigo-500'}`} style={{ width: `${percentage}%` }}></div>
-                                                    </div>
-                                                    <div className="mt-1 truncate text-[9px]">{info?.title || (isBoss ? 'Boss 關卡' : `第 ${node.id} 章`)}</div>
-                                                </div>
-                                            );
-                                        })}
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-
                         {activeTab === 'scores' && (
                             <div className="pb-6">
                                 <div className="sticky top-0 z-20 border-b border-slate-200 bg-white p-2 shadow-sm">
@@ -365,6 +297,19 @@ const TeacherDashboard = ({ onClose }) => {
 
                                 {scoreSection === 'main' ? (
                                     <div className="grid grid-cols-1 gap-2 p-2">
+                                        <div className="rounded-xl bg-gradient-to-r from-indigo-700 to-violet-600 p-4 text-white shadow-sm">
+                                            <div className="flex items-end justify-between gap-3">
+                                                <div>
+                                                    <p className="text-[10px] font-bold text-indigo-100">普通篇章完成進度</p>
+                                                    <p className="mt-1 text-3xl font-black">{mainProgress.percentage.toFixed(1)}%</p>
+                                                </div>
+                                                <p className="text-xs font-bold">{mainProgress.completedTasks} / {TOTAL_TASKS} 任務</p>
+                                            </div>
+                                            <div className="mt-3 h-2.5 overflow-hidden rounded-full bg-white/20">
+                                                <div className="h-full rounded-full bg-amber-300 transition-all duration-500" style={{ width: `${mainProgress.percentage}%` }}></div>
+                                            </div>
+                                        </div>
+
                                         {MAP_STRUCTURE.map((node) => {
                                             const record = levelRecords[node.id] || {};
                                             const isBoss = node.type === 'boss';

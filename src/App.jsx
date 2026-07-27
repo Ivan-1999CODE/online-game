@@ -4834,7 +4834,9 @@ const StudyMode = ({ unitId, categoryId, data, lessonTitle, onBack, onStartQuiz 
         <div className="flex flex-col h-full bg-rpg-bg overflow-hidden">
             {/* Header Bar */}
             <div className="grid grid-cols-[2.5rem_1fr_auto] items-center gap-2 p-2 bg-black/50 border-b-2 border-rpg-border flex-shrink-0">
-                <button onClick={() => { playSound('click'); onBack(); }} className="bg-black/40 border border-white/20 p-2 text-white hover:bg-red-500" title="返回上一頁"><ArrowLeft size={16} /></button>
+                <RPGButton onClick={onBack} color="dark" className="px-2" title="返回上一頁" aria-label="返回上一頁">
+                    <ArrowLeft size={16} />
+                </RPGButton>
                 <div className="min-w-0 text-center">
                     <div className="text-white font-pixel text-[10px] truncate">{lessonTitle || catTitles[categoryId]}</div>
                     <div className="font-retro text-[9px] text-gray-400">{isAdvanced ? '先複習，再挑戰' : 'STUDY MODE'}</div>
