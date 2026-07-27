@@ -335,24 +335,162 @@ body.loaded {
 
 .arena-tier-badge-mark {
   width: var(--badge-size);
-  height: var(--badge-size);
+  height: calc(var(--badge-size) * 1.1);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 3px double var(--arena-primary);
-  background:
-    radial-gradient(circle at 35% 28%, color-mix(in srgb, var(--arena-glow) 30%, transparent), transparent 38%),
-    linear-gradient(145deg, color-mix(in srgb, var(--arena-secondary) 82%, #09050f), #09050f);
-  color: var(--arena-glow);
+  position: relative;
+  overflow: visible;
+  filter: drop-shadow(0 2px 1px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 5px color-mix(in srgb, var(--arena-glow) 32%, transparent));
+}
+
+.arena-tier-emblem {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  isolation: isolate;
+}
+
+.arena-tier-emblem svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.arena-emblem-shadow {
+  fill: #06040a;
+  stroke: color-mix(in srgb, var(--arena-glow) 48%, #000);
+  stroke-width: 4;
+  stroke-linejoin: round;
+}
+
+.arena-emblem-shield {
+  fill: color-mix(in srgb, var(--arena-secondary) 80%, #0b0710);
+  stroke: var(--arena-primary);
+  stroke-width: 4;
+  stroke-linejoin: round;
+}
+
+.arena-emblem-inner {
+  fill: color-mix(in srgb, var(--arena-primary) 18%, #0b0710);
+  stroke: color-mix(in srgb, var(--arena-glow) 72%, var(--arena-primary));
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.arena-emblem-highlight {
+  fill: none;
+  stroke: color-mix(in srgb, var(--arena-glow) 76%, white);
+  stroke-width: 2;
+  stroke-linecap: round;
+  opacity: 0.62;
+}
+
+.arena-emblem-detail,
+.arena-emblem-facet {
+  fill: none;
+  stroke: color-mix(in srgb, var(--arena-glow) 55%, var(--arena-primary));
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.72;
+}
+
+.arena-emblem-rivet {
+  fill: var(--arena-glow);
+  stroke: #09050f;
+  stroke-width: 1.5;
+}
+
+.arena-emblem-blade {
+  fill: color-mix(in srgb, var(--arena-glow) 70%, #dbeafe);
+  stroke: #09050f;
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+}
+
+.arena-emblem-rank-mark {
+  fill: var(--arena-glow);
+  stroke: #09050f;
+  stroke-width: 0.8;
+}
+
+.arena-emblem-diamond {
+  fill: color-mix(in srgb, var(--arena-secondary) 72%, #070b18);
+  stroke: var(--arena-primary);
+  stroke-width: 4;
+  stroke-linejoin: round;
+}
+
+.arena-emblem-diamond-inner {
+  fill: color-mix(in srgb, var(--arena-primary) 32%, #081329);
+  stroke: var(--arena-glow);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.arena-emblem-wing {
+  fill: color-mix(in srgb, var(--arena-primary) 64%, #2b0a10);
+  stroke: var(--arena-glow);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.arena-emblem-crown {
+  fill: var(--arena-primary);
+  stroke: color-mix(in srgb, var(--arena-glow) 82%, white);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.arena-emblem-flame {
+  fill: color-mix(in srgb, var(--arena-primary) 74%, #ef4444);
+  stroke: var(--arena-glow);
+  stroke-width: 1.5;
+  fill-rule: evenodd;
+}
+
+.arena-emblem-unranked {
+  fill: none;
+  stroke: var(--arena-glow);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-dasharray: 5 3;
+  opacity: 0.72;
+}
+
+.arena-tier-emblem-glyph {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: 47%;
+  transform: translate(-50%, -50%);
+  color: color-mix(in srgb, var(--arena-glow) 90%, white);
   font-family: "DotGothic16", sans-serif;
-  font-size: 0.72rem;
+  font-size: calc(var(--badge-size) * 0.25);
   font-weight: 900;
   line-height: 1;
-  text-shadow: 1px 1px 0 #000;
-  box-shadow:
-    inset 0 0 7px color-mix(in srgb, var(--arena-primary) 28%, transparent),
-    0 0 8px color-mix(in srgb, var(--arena-glow) 24%, transparent);
-  clip-path: polygon(50% 0, 88% 14%, 100% 50%, 86% 88%, 50% 100%, 14% 88%, 0 50%, 14% 14%);
+  text-shadow:
+    1px 1px 0 #000,
+    -1px -1px 0 color-mix(in srgb, var(--arena-primary) 45%, transparent),
+    0 0 5px color-mix(in srgb, var(--arena-glow) 55%, transparent);
+}
+
+[data-tier-emblem="unranked"] .arena-tier-emblem-glyph,
+[data-tier-emblem="wood"] .arena-tier-emblem-glyph,
+[data-tier-emblem="stone"] .arena-tier-emblem-glyph {
+  top: 48%;
+  font-size: calc(var(--badge-size) * 0.27);
+}
+
+[data-tier-emblem="diamond"] .arena-tier-emblem-glyph {
+  top: 46%;
+}
+
+[data-tier-emblem="warlord"] .arena-tier-emblem-glyph {
+  top: 52%;
 }
 
 .arena-tier-badge-label {
@@ -369,8 +507,7 @@ body.loaded {
 }
 
 .arena-tier-badge-sm .arena-tier-badge-mark {
-  border-width: 2px;
-  font-size: 0.58rem;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 3px color-mix(in srgb, var(--arena-glow) 28%, transparent));
 }
 
 .arena-tier-badge-sm .arena-tier-badge-label {
@@ -382,8 +519,7 @@ body.loaded {
 }
 
 .arena-tier-badge-lg .arena-tier-badge-mark {
-  font-size: 1.05rem;
-  border-width: 4px;
+  filter: drop-shadow(0 3px 2px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 8px color-mix(in srgb, var(--arena-glow) 44%, transparent));
 }
 
 .arena-tier-badge-lg .arena-tier-badge-label {

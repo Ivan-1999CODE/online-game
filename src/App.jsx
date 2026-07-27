@@ -687,6 +687,78 @@ const getArenaTierStyle = tierId => {
     };
 };
 
+const ArenaTierEmblem = ({ tier: tierId }) => {
+    const tier = getArenaTier(tierId);
+    const tierIndex = ARENA_TIERS.findIndex(item => item.id === tier.id);
+    const isMetalTier = ['bronze', 'silver', 'gold', 'platinum'].includes(tier.id);
+    const rankMarks = Math.max(1, Math.min(4, tierIndex - 2));
+
+    return (
+        <span className="arena-tier-emblem" data-tier-emblem={tier.id}>
+            <svg viewBox="0 0 72 80" role="presentation" focusable="false">
+                {tier.id === 'warlord' && (
+                    <>
+                        <path className="arena-emblem-wing" d="M16 27 3 20l6 14-7 5 17 5M56 27l13-7-6 14 7 5-17 5" />
+                        <path className="arena-emblem-crown" d="m20 18 5-12 11 9L47 6l5 12-6 6H26Z" />
+                    </>
+                )}
+                {tier.id === 'diamond' ? (
+                    <>
+                        <path className="arena-emblem-diamond" d="m36 3 27 21-9 38-18 15-18-15-9-38Z" />
+                        <path className="arena-emblem-diamond-inner" d="m36 10 17 17-6 29-11 12-11-12-6-29Z" />
+                        <path className="arena-emblem-facet" d="m19 27 17 9 17-9M25 56l11-20 11 20M36 10v26" />
+                    </>
+                ) : (
+                    <>
+                        <path className="arena-emblem-shadow" d="M36 3 62 14v25c0 18-11 30-26 38C21 69 10 57 10 39V14Z" />
+                        <path className="arena-emblem-shield" d="M36 6 58 16v22c0 15-9 26-22 34-13-8-22-19-22-34V16Z" />
+                        <path className="arena-emblem-inner" d="M36 13 51 20v17c0 11-6 20-15 27-9-7-15-16-15-27V20Z" />
+                    </>
+                )}
+
+                {tier.id === 'unranked' && (
+                    <path className="arena-emblem-unranked" d="M27 28c1-7 16-8 18 0 2 8-9 8-9 15M36 51v2" />
+                )}
+                {tier.id === 'wood' && (
+                    <>
+                        <path className="arena-emblem-detail" d="M27 18c8 7-4 12 4 19s-3 14 3 24M44 18c-7 6 2 11-4 17s2 12-2 24" />
+                        <path className="arena-emblem-detail" d="M23 31h8M41 45h8" />
+                    </>
+                )}
+                {tier.id === 'stone' && (
+                    <>
+                        <path className="arena-emblem-detail" d="m22 22 14 13 15-12M36 35l-7 26M36 35l8 25M22 43l7 18M51 42l-7 18" />
+                        <circle className="arena-emblem-rivet" cx="36" cy="35" r="3" />
+                    </>
+                )}
+                {isMetalTier && (
+                    <>
+                        <path className="arena-emblem-blade" d="m27 47 18-22 3-5-5 3-19 21Z" />
+                        <path className="arena-emblem-blade" d="m45 47-18-22-3-5 5 3 19 21Z" />
+                        <path className="arena-emblem-detail" d="M24 48h24" />
+                        {Array.from({ length: rankMarks }, (_, index) => (
+                            <path
+                                key={index}
+                                className="arena-emblem-rank-mark"
+                                d={`m${30 + (index * 4)} 57 1.7 3.4 3.8.6-2.7 2.7.6 3.8-3.4-1.8-3.4 1.8.6-3.8-2.7-2.7 3.8-.6Z`}
+                            />
+                        ))}
+                    </>
+                )}
+                {tier.id === 'warlord' && (
+                    <>
+                        <path className="arena-emblem-blade" d="m24 53 23-31 4-4-2 6-21 32Z" />
+                        <path className="arena-emblem-blade" d="m48 53-23-31-4-4 2 6 21 32Z" />
+                        <path className="arena-emblem-flame" d="M36 24c9 9 9 17 0 25-9-8-9-16 0-25Zm0 8c-3 4-3 7 0 10 3-3 3-6 0-10Z" />
+                    </>
+                )}
+                <path className="arena-emblem-highlight" d="M23 20 36 14" />
+            </svg>
+            <span className="arena-tier-emblem-glyph">{tier.badge}</span>
+        </span>
+    );
+};
+
 const ArenaTierBadge = ({ tier: tierId, size = 'md', showLabel = true, className = '' }) => {
     const tier = getArenaTier(tierId);
     return (
@@ -696,7 +768,9 @@ const ArenaTierBadge = ({ tier: tierId, size = 'md', showLabel = true, className
             style={getArenaTierStyle(tier.id)}
             aria-label={`競技場階級：${tier.shortLabel}`}
         >
-            <span className="arena-tier-badge-mark" aria-hidden="true">{tier.badge}</span>
+            <span className="arena-tier-badge-mark" aria-hidden="true">
+                <ArenaTierEmblem tier={tier.id} />
+            </span>
             {showLabel && <span className="arena-tier-badge-label">{tier.shortLabel}</span>}
         </span>
     );
