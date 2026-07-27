@@ -2,7 +2,7 @@
 
 let availableVoices = [];
 let pronunciationAudio = null;
-const TTS_PILOT_VOICE_KEY = 'englishQuestTtsPilotVoice';
+const TTS_VOICE_KEY_PREFIX = 'englishQuestTtsVoice';
 const loadVoices = () => {
     if (!window.speechSynthesis) return;
     availableVoices = window.speechSynthesis.getVoices();
@@ -10,15 +10,26 @@ const loadVoices = () => {
 loadVoices();
 if (window.speechSynthesis) window.speechSynthesis.onvoiceschanged = loadVoices;
 
-export const getTtsPilotVoice = () => {
+export const getTtsPilotVoice = (scopeKey = 'default') => {
     if (typeof window === 'undefined') return 'cedar';
-    return window.localStorage.getItem(TTS_PILOT_VOICE_KEY) === 'marin' ? 'marin' : 'cedar';
+    try {
+        return window.localStorage.getItem(`${TTS_VOICE_KEY_PREFIX}:${scopeKey}`) === 'marin'
+            ? 'marin'
+            : 'cedar';
+    } catch {
+        return 'cedar';
+    }
 };
 
-export const setTtsPilotVoice = (voice) => {
+export const setTtsPilotVoice = (voice, scopeKey = 'default') => {
     const safeVoice = voice === 'cedar' ? 'cedar' : 'marin';
     if (typeof window !== 'undefined') {
-        window.localStorage.setItem(TTS_PILOT_VOICE_KEY, safeVoice);
+        try {
+            window.localStorage.setItem(`${TTS_VOICE_KEY_PREFIX}:${scopeKey}`, safeVoice);
+        } catch {
+            // Browsers may block storage in strict privacy mode; the current
+            // selection still works for this screen through React state.
+        }
     }
     return safeVoice;
 };
@@ -34,10 +45,12 @@ const speakWithDeviceTts = (text) => {
     window.speechSynthesis.speak(utterance);
 };
 
-export const speakText = (text, audioSources = null) => {
+export const speakText = (text, audioSources = null, scopeKey = 'default', voiceOverride = null) => {
     if (!text) return;
 
-    const selectedVoice = getTtsPilotVoice();
+    const selectedVoice = voiceOverride === 'marin' || voiceOverride === 'cedar'
+        ? voiceOverride
+        : getTtsPilotVoice(scopeKey);
     const audioSource = typeof audioSources === 'string'
         ? audioSources
         : audioSources?.[selectedVoice];

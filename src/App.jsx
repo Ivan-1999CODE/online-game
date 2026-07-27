@@ -9,7 +9,7 @@ import { collection, query, where, getDocs, doc, getDoc, setDoc, updateDoc, Fiel
 import { signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut } from 'firebase/auth';
 import { db, auth, googleProvider } from './config/firebase';
 import { speakText, playSound, shuffleArray, playMusic, stopMusic, setMute, getMuteStatus, setVolume, unlockAudio, getTtsPilotVoice, setTtsPilotVoice } from './utils/audio';
-import { getAdvancedLesson133Audio } from './constants/ttsPilotData';
+import { getTtsAudio } from './constants/ttsAudioData';
 import TeacherDashboard from './components/TeacherDashboard.jsx';
 import { TRIVIA_CARDS, TRIVIA_CATEGORIES, TRIVIA_GROUPS, TRIVIA_LEGACY_ID_MAP, TRIVIA_SOURCES } from './constants/triviaData';
 import { hasAmbiguousTranslation, needsEnglishPrompt } from './constants/quizOptionRules';
@@ -200,6 +200,7 @@ const fetchLevelData = async (levelId) => {
 
         snapshot.forEach(doc => {
             const data = doc.data();
+            const categoryStr = String(data.category);
             const item = {
                 id: doc.id,
                 word: data.word || data.phrase || '',
@@ -208,15 +209,17 @@ const fetchLevelData = async (levelId) => {
                 sentence: data.example || data.sentence || '',
                 sentence_ch: data.sentence_ch || '',
                 book: data.book || mapping.book,
-                unit: data.unit || mapping.unit
+                unit: data.unit || mapping.unit,
+                category: categoryStr,
+                audioScope: String(levelId)
             };
+            const withAudio = (audioItem) => ({ ...audioItem, audio: getTtsAudio(audioItem) });
 
-            const categoryStr = String(data.category);
             if (categoryStr.includes("1") || categoryStr.includes("單字")) {
-                categories.vocab.push(item);
+                categories.vocab.push(withAudio(item));
             } else if (categoryStr.includes("2") || categoryStr.includes("搭配字")) {
                 // 搭配裝備：顯示完整片語，不是基礎動詞
-                categories.collocation.push({ ...item, word: data.phrase || data.word || '' });
+                categories.collocation.push(withAudio({ ...item, word: data.phrase || data.word || '' }));
             } else if (categoryStr.includes("4") || categoryStr.includes("一字多義")) {
                 // 支援 details 欄位、definitions[] 陣列格式和舊的單一 chinese 欄位
                 let chineseStr = data.chinese || '';
@@ -226,9 +229,19 @@ const fetchLevelData = async (levelId) => {
                 if (!chineseStr && data.definitions && Array.isArray(data.definitions)) {
                     chineseStr = data.definitions.map(d => `[${d.pos}] ${d.mean}`).join(' / ');
                 }
-                categories.polysemy.push({ id: doc.id, word: data.word, chinese: chineseStr, definitions: data.definitions || [], book: data.book || mapping.book, unit: data.unit || mapping.unit });
+                categories.polysemy.push(withAudio({
+                    id: doc.id,
+                    word: data.word,
+                    chinese: chineseStr,
+                    part: data.pos || data.part || '',
+                    definitions: data.definitions || [],
+                    book: data.book || mapping.book,
+                    unit: data.unit || mapping.unit,
+                    category: categoryStr,
+                    audioScope: String(levelId)
+                }));
             } else if (categoryStr.includes("3") || categoryStr.includes("片語") || categoryStr.includes("佳句")) {
-                categories.sentences.push(item);
+                categories.sentences.push(withAudio(item));
             }
         });
 
@@ -311,7 +324,7 @@ const fetchAdvancedLesson = async (lesson) => {
         const vocab = [];
         snapshot.forEach(docSnap => {
             const data = docSnap.data();
-            vocab.push({
+            const item = {
                 id: docSnap.id,
                 word: data.word || '',
                 chinese: data.chinese || '',
@@ -320,8 +333,10 @@ const fetchAdvancedLesson = async (lesson) => {
                 sentence_ch: data.sentence_ch || '',
                 series: 'advanced',
                 lesson,
-                audio: lesson === 133 ? getAdvancedLesson133Audio(data.word) : null
-            });
+                category: 'advanced',
+                audioScope: `adv_${lesson}`
+            };
+            vocab.push({ ...item, audio: getTtsAudio(item) });
         });
         vocab.sort((a, b) => a.word.localeCompare(b.word));
         return { vocab, vocab_a: [], vocab_b: [], collocation: [], polysemy: [], sentences: [] };
@@ -4195,10 +4210,14 @@ const StudyMode = ({ unitId, categoryId, data, lessonTitle, onBack, onStartQuiz 
     const [viewMode, setViewMode] = useState('card');
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isFlipped, setIsFlipped] = useState(false);
-    const [pilotVoice, setPilotVoice] = useState(getTtsPilotVoice);
+    const [pilotVoice, setPilotVoice] = useState(() => getTtsPilotVoice(unitId));
     const studyData = data[categoryId] || [];
     const isAdvanced = String(unitId).startsWith('adv_');
-    const isLesson133Pilot = unitId === 'adv_133';
+    const hasAiAudio = studyData.some(item => item?.audio?.marin && item?.audio?.cedar);
+
+    useEffect(() => {
+        setPilotVoice(getTtsPilotVoice(unitId));
+    }, [unitId]);
 
     const catTitles = { vocab: 'TREASURE', vocab_a: 'TREASURE A', vocab_b: 'TREASURE B', collocation: 'ARMORY', polysemy: 'ALCHEMY', sentences: 'SCROLLS' };
     const currentItem = studyData[currentIndex];
@@ -4206,10 +4225,10 @@ const StudyMode = ({ unitId, categoryId, data, lessonTitle, onBack, onStartQuiz 
     const handlePrev = () => { if (studyData.length === 0) return; setIsFlipped(false); setCurrentIndex((p) => (p - 1 + studyData.length) % studyData.length); };
     const handleSpeak = (e, item) => {
         e.stopPropagation();
-        speakText(item?.word, item?.audio);
+        speakText(item?.word, item?.audio, unitId, pilotVoice);
     };
     const handlePilotVoiceChange = (voice) => {
-        setPilotVoice(setTtsPilotVoice(voice));
+        setPilotVoice(setTtsPilotVoice(voice, unitId));
     };
 
     return (
@@ -4230,10 +4249,10 @@ const StudyMode = ({ unitId, categoryId, data, lessonTitle, onBack, onStartQuiz 
                     {viewMode === 'card' ? <List size={20} /> : <Grid size={20} />}
                 </button>
             </div>
-            {isLesson133Pilot && (
+            {hasAiAudio && (
                 <div className="flex-shrink-0 border-b-2 border-cyan-500/40 bg-cyan-950/40 px-3 py-2">
                     <div className="flex items-center justify-center gap-2">
-                        <span className="font-retro text-xs text-cyan-100">試聽聲音</span>
+                        <span className="font-retro text-xs text-cyan-100">AI 語音選擇</span>
                         {['marin', 'cedar'].map(voice => (
                             <button
                                 key={voice}
@@ -4250,9 +4269,6 @@ const StudyMode = ({ unitId, categoryId, data, lessonTitle, onBack, onStartQuiz 
                             </button>
                         ))}
                     </div>
-                    <p className="mt-1 text-center font-retro text-[10px] text-cyan-200/80">
-                        本課英文發音由 AI 語音產生
-                    </p>
                 </div>
             )}
             {/* Main Content Area */}
@@ -4407,7 +4423,7 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard'
             const currentQ = questions[currentQIndex];
             if (currentQ) {
                 // 不管題目是 en-ch 還是 ch-en，都播放正確單字的英文發音
-                speakText(currentQ.target.word, currentQ.target.audio);
+                speakText(currentQ.target.word, currentQ.target.audio, currentQ.target.audioScope);
             }
         }
     }, [status, currentQIndex, feedback, questions, quizMode]);
@@ -4836,7 +4852,7 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard'
                     {quizMode === 'listening' ? (
                         /* 聽力模式：不顯示單字，只放發音按鈕（點擊可重複播放） */
                         <button
-                            onClick={(e) => { e.stopPropagation(); speakText(currentQ.target.word, currentQ.target.audio); }}
+                            onClick={(e) => { e.stopPropagation(); speakText(currentQ.target.word, currentQ.target.audio, currentQ.target.audioScope); }}
                             className="flex flex-col items-center gap-1 mx-auto text-purple-300 hover:text-purple-100 transition-colors py-2"
                             title="再聽一次"
                         >
@@ -4851,7 +4867,7 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard'
                             {/* 簡易模式：顯示發音按鈕可重複播放 */}
                             {quizMode === 'simple' && (
                                 <button
-                                    onClick={(e) => { e.stopPropagation(); speakText(currentQ.target.word, currentQ.target.audio); }}
+                                    onClick={(e) => { e.stopPropagation(); speakText(currentQ.target.word, currentQ.target.audio, currentQ.target.audioScope); }}
                                     className="mt-1 text-cyan-400 hover:text-cyan-200 transition-colors p-1 inline-block"
                                     title="再聽一次"
                                 >
