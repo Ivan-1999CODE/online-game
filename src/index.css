@@ -536,6 +536,30 @@ body.loaded {
   box-shadow: inset 0 0 10px color-mix(in srgb, var(--arena-primary) 14%, transparent);
 }
 
+.weekly-report-calendar-button {
+  color: #eff6ff;
+  border: 2px solid #93c5fd;
+  background: linear-gradient(145deg, #2563eb, #1d4ed8 58%, #1e40af);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.2),
+    inset 0 0 10px rgba(147, 197, 253, 0.18),
+    0 0 9px rgba(59, 130, 246, 0.62);
+  transition: background-color 120ms ease, border-color 120ms ease, transform 120ms ease;
+}
+
+.weekly-report-calendar-button:hover,
+.weekly-report-calendar-button:focus-visible {
+  color: #fff;
+  border-color: #dbeafe;
+  background: linear-gradient(145deg, #3b82f6, #2563eb 58%, #1d4ed8);
+  outline: none;
+  transform: translateY(-1px);
+}
+
+.weekly-report-calendar-button:active {
+  transform: translateY(0);
+}
+
 .arena-tier-record-card {
   position: relative;
   overflow: hidden;

@@ -894,7 +894,7 @@ const ArenaTierPreviewLab = () => {
                         </div>
                         <div className="flex items-center gap-2 shrink-0">
                             <ArenaTierBadge tier={selectedTier.id} size="sm" />
-                            <button type="button" aria-label="測試日曆按鈕" className="border-2 border-gray-500 bg-black/40 p-2">
+                            <button type="button" aria-label="測試日曆按鈕" className="weekly-report-calendar-button p-2">
                                 <CalendarDays size={18} />
                             </button>
                             <button type="button" aria-label="測試登出按鈕" className="border-2 border-gray-500 bg-black/40 p-2">
@@ -2462,7 +2462,7 @@ const WeeklyReport = ({ onBack, onOpenAlbum, onViewLoginCalendar, currentUserId,
                 </div>
                 <div className="flex items-center gap-1">
                     <ArenaTierBadge tier={currentArenaTier.id} size="sm" showLabel={false} />
-                    <button onClick={onViewLoginCalendar} className="w-8 h-8 flex items-center justify-center border-2 bg-black/35 arena-tier-text" style={{ borderColor: currentArenaTier.colors.primary }} title="冒險打卡日曆" aria-label="打開冒險打卡日曆">
+                    <button onClick={onViewLoginCalendar} className="weekly-report-calendar-button w-8 h-8 flex items-center justify-center" title="冒險打卡日曆" aria-label="打開冒險打卡日曆">
                         <CalendarDays size={17} />
                     </button>
                 </div>
