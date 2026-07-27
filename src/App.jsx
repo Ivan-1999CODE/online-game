@@ -264,8 +264,8 @@ const getAdvancedStarGrades = (record = {}) => {
         : [];
     if (storedGrades.length > 0) {
         return [...storedGrades]
-            .sort((a, b) => ADV_GRADE_ORDER[a] - ADV_GRADE_ORDER[b])
-            .slice(-ADV_CLEARS_TO_COMPLETE);
+            .sort((a, b) => ADV_GRADE_ORDER[b] - ADV_GRADE_ORDER[a])
+            .slice(0, ADV_CLEARS_TO_COMPLETE);
     }
 
     const legacyCount = Math.min(getAdvancedQualifiedClears(record), ADV_CLEARS_TO_COMPLETE);
@@ -274,15 +274,22 @@ const getAdvancedStarGrades = (record = {}) => {
     if (ADV_PASSING_GRADES.includes(record.bestGrade)) {
         legacyGrades[legacyGrades.length - 1] = record.bestGrade;
     }
-    return legacyGrades.sort((a, b) => ADV_GRADE_ORDER[a] - ADV_GRADE_ORDER[b]);
+    return legacyGrades.sort((a, b) => ADV_GRADE_ORDER[b] - ADV_GRADE_ORDER[a]);
 };
 const addAdvancedStarGrade = (record = {}, grade) => {
     const grades = getAdvancedStarGrades(record);
-    if (ADV_PASSING_GRADES.includes(grade)) grades.push(grade);
-    return grades
-        .sort((a, b) => ADV_GRADE_ORDER[b] - ADV_GRADE_ORDER[a])
-        .slice(0, ADV_CLEARS_TO_COMPLETE)
-        .sort((a, b) => ADV_GRADE_ORDER[a] - ADV_GRADE_ORDER[b]);
+    if (!ADV_PASSING_GRADES.includes(grade)) return grades;
+
+    if (grades.length < ADV_CLEARS_TO_COMPLETE) {
+        return [...grades, grade]
+            .sort((a, b) => ADV_GRADE_ORDER[b] - ADV_GRADE_ORDER[a]);
+    }
+
+    const worstGrade = grades[grades.length - 1];
+    if (ADV_GRADE_ORDER[grade] <= ADV_GRADE_ORDER[worstGrade]) return grades;
+
+    return [...grades.slice(0, -1), grade]
+        .sort((a, b) => ADV_GRADE_ORDER[b] - ADV_GRADE_ORDER[a]);
 };
 
 // 進階書目錄：meta/advanced 文件 { totalLessons, titles: { "1": "篇章名" } }，由匯入腳本維護
@@ -1585,7 +1592,7 @@ const TriviaAlbum = ({ onBack, userData, onClaimTrivia }) => {
     );
 };
 
-const WeeklyReport = ({ onBack, onOpenAlbum, onOpenAchievements, currentUserId, userData, onSaveArenaRoster }) => {
+const WeeklyReport = ({ onBack, onOpenAlbum, onViewLoginCalendar, currentUserId, userData, onSaveArenaRoster }) => {
     const [period, setPeriod] = useState('current');
     const [students, setStudents] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -1698,8 +1705,8 @@ const WeeklyReport = ({ onBack, onOpenAlbum, onOpenAchievements, currentUserId, 
                     <h2 className="font-pixel text-sm text-yellow-300">每週冒險戰報</h2>
                     <p className="font-retro text-[10px] text-gray-400">WEEKLY QUEST REPORT</p>
                 </div>
-                <button onClick={onOpenAchievements} className="w-9 h-9 flex items-center justify-center border-2 border-cyan-400/60 bg-cyan-950/60 text-yellow-300 hover:bg-cyan-800" title="英雄徽章館" aria-label="打開英雄徽章館，查看尚未達成的成就">
-                    <Award size={20} />
+                <button onClick={onViewLoginCalendar} className="w-9 h-9 flex items-center justify-center border-2 border-cyan-400/60 bg-cyan-950/60 text-cyan-300 hover:bg-cyan-800" title="冒險打卡日曆" aria-label="打開冒險打卡日曆">
+                    <CalendarDays size={20} />
                 </button>
             </div>
 
@@ -1712,8 +1719,11 @@ const WeeklyReport = ({ onBack, onOpenAlbum, onOpenAchievements, currentUserId, 
                 <section className="border-4 border-cyan-400/60 bg-gradient-to-br from-cyan-950/80 to-purple-950/80 p-3 shadow-xl">
                     <div className="flex justify-between items-center mb-3">
                         <h3 className="font-pixel text-xs text-cyan-300">本日打卡</h3>
-                        <span className="font-retro text-[10px] text-gray-400">台北時間每日計算一次</span>
+                        <button onClick={onViewLoginCalendar} className="font-retro text-[10px] text-cyan-300 hover:text-white">
+                            查看日曆 ›
+                        </button>
                     </div>
+                    <p className="font-retro text-[10px] text-gray-400 mb-3">台北時間每日計算一次</p>
                     <div className={`border-2 p-3 text-center ${todayCheckedIn ? 'border-green-400 bg-green-950/50' : 'border-yellow-400 bg-yellow-950/35'}`}>
                         <div className={`font-pixel text-2xl ${todayCheckedIn ? 'text-green-300' : 'text-yellow-300'}`}>{todayCheckedIn ? '1 / 1' : '0 / 1'}</div>
                         <div className="font-retro text-[10px] text-gray-200 mt-2">{todayCheckedIn ? '今日打卡已完成' : '今日尚未完成打卡'}</div>
@@ -2075,7 +2085,7 @@ const AchievementHall = ({ onBack, userData }) => {
     );
 };
 
-const WorldMap = ({ onSelectNode, onViewJourney, onViewWeeklyReport, onViewLoginCalendar, onOpenAlbum, rewardSummary = {}, userData, onUltimateChallenge, onViewMistakeNotebook, onLogout, records = {}, advMeta = null, activeTab = 'main', onChangeTab }) => {
+const WorldMap = ({ onSelectNode, onViewJourney, onViewWeeklyReport, onOpenAchievements, onOpenAlbum, rewardSummary = {}, userData, onUltimateChallenge, onViewMistakeNotebook, onLogout, records = {}, advMeta = null, activeTab = 'main', onChangeTab }) => {
     const [showGuide, setShowGuide] = useState(false);
     const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
     const [expandedAdvVolume, setExpandedAdvVolume] = useState(null);
@@ -2200,8 +2210,8 @@ const WorldMap = ({ onSelectNode, onViewJourney, onViewWeeklyReport, onViewLogin
                         <Lightbulb size={21} />
                         {deferredTriviaCount > 0 && <span className="absolute -top-1 -right-1 min-w-4 h-4 px-1 rounded-full bg-red-600 text-white font-pixel text-[7px] flex items-center justify-center border border-white">{deferredTriviaCount > 99 ? '99+' : deferredTriviaCount}</span>}
                     </button>
-                    <button onClick={onViewLoginCalendar} className="text-cyan-300 hover:text-white p-1" title="冒險打卡日曆">
-                        <CalendarDays size={21} />
+                    <button onClick={onOpenAchievements} className="text-yellow-300 hover:text-white p-1" title="英雄徽章館" aria-label="打開英雄徽章館">
+                        <Award size={21} />
                     </button>
                     <button onClick={onViewMistakeNotebook} className="text-red-400 hover:text-red-300 p-1" title="錯題筆記本">
                         <Book size={20} />
@@ -5378,18 +5388,18 @@ const App = () => {
 
         switch (view) {
             case 'login': return <LoginScreen onLogin={handleLogin} />;
-            case 'map': return <WorldMap onLogout={handleLogout} onSelectNode={handleNodeSelect} onViewJourney={() => { playSound('click'); setView('journey'); }} onViewWeeklyReport={() => { playSound('click'); setView('weekly-report'); }} onViewLoginCalendar={() => { playSound('click'); setView('login-calendar'); }} onOpenAlbum={() => { playSound('click'); setTriviaAlbumBackView('map'); setView('trivia-album'); }} rewardSummary={getPendingRewardSummary(userData)} userData={userData} onUltimateChallenge={() => { playSound('click'); setView('challenge-setup'); }} onViewMistakeNotebook={() => { playSound('click'); setView('mistake-notebook'); }} records={userData?.levelRecords} advMeta={advMeta} activeTab={worldTab} onChangeTab={setWorldTab} />;
+            case 'map': return <WorldMap onLogout={handleLogout} onSelectNode={handleNodeSelect} onViewJourney={() => { playSound('click'); setView('journey'); }} onViewWeeklyReport={() => { playSound('click'); setView('weekly-report'); }} onOpenAchievements={() => { playSound('click'); setView('achievement-hall'); }} onOpenAlbum={() => { playSound('click'); setTriviaAlbumBackView('map'); setView('trivia-album'); }} rewardSummary={getPendingRewardSummary(userData)} userData={userData} onUltimateChallenge={() => { playSound('click'); setView('challenge-setup'); }} onViewMistakeNotebook={() => { playSound('click'); setView('mistake-notebook'); }} records={userData?.levelRecords} advMeta={advMeta} activeTab={worldTab} onChangeTab={setWorldTab} />;
             case 'weekly-report': return <WeeklyReport
                 onBack={() => { playSound('click'); setView('map'); }}
                 onOpenAlbum={() => { playSound('click'); setTriviaAlbumBackView('weekly-report'); setView('trivia-album'); }}
-                onOpenAchievements={() => { playSound('click'); setView('achievement-hall'); }}
+                onViewLoginCalendar={() => { playSound('click'); setView('login-calendar'); }}
                 currentUserId={currentUser?.uid}
                 userData={userData}
                 onSaveArenaRoster={handleSaveArenaRoster}
             />;
             case 'trivia-album': return <TriviaAlbum onBack={() => { playSound('click'); setView(triviaAlbumBackView); }} userData={userData} onClaimTrivia={handleClaimTrivia} />;
-            case 'login-calendar': return <LoginCalendar onBack={() => { playSound('click'); setView('map'); }} userData={userData} />;
-            case 'achievement-hall': return <AchievementHall onBack={() => { playSound('click'); setView('weekly-report'); }} userData={userData} />;
+            case 'login-calendar': return <LoginCalendar onBack={() => { playSound('click'); setView('weekly-report'); }} userData={userData} />;
+            case 'achievement-hall': return <AchievementHall onBack={() => { playSound('click'); setView('map'); }} userData={userData} />;
             case 'mistake-notebook': return <MistakeNotebook onBack={() => { playSound('click'); setView('map'); }} mistakeStats={userData?.mistakeStats} onClearMistakes={handleClearMistakes} onRemoveMistake={handleRemoveMistake} />;
             case 'journey': return <JourneyMode onBack={() => { playSound('click'); setView('map'); }} onViewTrialLog={() => { playSound('click'); setView('trial-log'); }} records={userData?.levelRecords} advMeta={advMeta} mistakeStats={userData?.mistakeStats} />;
             case 'trial-log': return <TrialLogView onBack={() => { playSound('click'); setView('journey'); }} onRetry={() => { playSound('click'); setView('challenge-setup'); }} trialHistory={userData?.trialHistory} />;
