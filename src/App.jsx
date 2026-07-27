@@ -13,6 +13,23 @@ import { getTtsAudio } from './constants/ttsAudioData';
 import TeacherDashboard from './components/TeacherDashboard.jsx';
 import { TRIVIA_CARDS, TRIVIA_CATEGORIES, TRIVIA_GROUPS, TRIVIA_LEGACY_ID_MAP, TRIVIA_SOURCES } from './constants/triviaData';
 import { hasAmbiguousTranslation, needsEnglishPrompt } from './constants/quizOptionRules';
+import {
+    ARENA_TIER_ACTIVATION_WEEK_START,
+    ARENA_TIERS,
+    getArenaTier,
+    normalizeArenaTierProgress,
+    settleArenaTier
+} from './utils/arena-tiers';
+import {
+    assignWeeklyArenaGroup,
+    ensureWeeklyArenaGroupSimulation,
+    fetchWeeklyArenaGroup
+} from './utils/arena-group-service';
+import {
+    buildSharedArenaEntries,
+    getSharedArenaStanding,
+    sortArenaLeaderboard
+} from './utils/arena-leaderboard';
 
 // --- Pixel Art SVGs ---
 const PixelArt = {
@@ -660,6 +677,338 @@ const ADVENTURE_MILESTONES = [3, 7, 14, 30, 60, 100, 150, 200, 365];
 const CORRECT_WORD_MILESTONES = [50, 150, 500, 1000, 2000, 3000];
 const LEGACY_WORD_MILESTONES = [50, 100, 250, 500, 1000];
 const CHECK_IN_GRADES = ['B', 'A', 'S'];
+
+const getArenaTierStyle = tierId => {
+    const tier = getArenaTier(tierId);
+    return {
+        '--arena-primary': tier.colors.primary,
+        '--arena-secondary': tier.colors.secondary,
+        '--arena-glow': tier.colors.glow
+    };
+};
+
+const ArenaTierEmblem = ({ tier: tierId }) => {
+    const tier = getArenaTier(tierId);
+    const tierIndex = ARENA_TIERS.findIndex(item => item.id === tier.id);
+    const isMetalTier = ['bronze', 'silver', 'gold', 'platinum'].includes(tier.id);
+    const rankMarks = Math.max(1, Math.min(4, tierIndex - 2));
+
+    return (
+        <span className="arena-tier-emblem" data-tier-emblem={tier.id}>
+            <svg viewBox="0 0 72 80" role="presentation" focusable="false">
+                {tier.id === 'warlord' && (
+                    <>
+                        <path className="arena-emblem-wing" d="M16 27 3 20l6 14-7 5 17 5M56 27l13-7-6 14 7 5-17 5" />
+                        <path className="arena-emblem-crown" d="m20 18 5-12 11 9L47 6l5 12-6 6H26Z" />
+                    </>
+                )}
+                {tier.id === 'diamond' ? (
+                    <>
+                        <path className="arena-emblem-diamond" d="m36 3 27 21-9 38-18 15-18-15-9-38Z" />
+                        <path className="arena-emblem-diamond-inner" d="m36 10 17 17-6 29-11 12-11-12-6-29Z" />
+                        <path className="arena-emblem-facet" d="m19 27 17 9 17-9M25 56l11-20 11 20M36 10v26" />
+                    </>
+                ) : (
+                    <>
+                        <path className="arena-emblem-shadow" d="M36 3 62 14v25c0 18-11 30-26 38C21 69 10 57 10 39V14Z" />
+                        <path className="arena-emblem-shield" d="M36 6 58 16v22c0 15-9 26-22 34-13-8-22-19-22-34V16Z" />
+                        <path className="arena-emblem-inner" d="M36 13 51 20v17c0 11-6 20-15 27-9-7-15-16-15-27V20Z" />
+                    </>
+                )}
+
+                {tier.id === 'unranked' && (
+                    <path className="arena-emblem-unranked" d="M27 28c1-7 16-8 18 0 2 8-9 8-9 15M36 51v2" />
+                )}
+                {tier.id === 'wood' && (
+                    <>
+                        <path className="arena-emblem-detail" d="M27 18c8 7-4 12 4 19s-3 14 3 24M44 18c-7 6 2 11-4 17s2 12-2 24" />
+                        <path className="arena-emblem-detail" d="M23 31h8M41 45h8" />
+                    </>
+                )}
+                {tier.id === 'stone' && (
+                    <>
+                        <path className="arena-emblem-detail" d="m22 22 14 13 15-12M36 35l-7 26M36 35l8 25M22 43l7 18M51 42l-7 18" />
+                        <circle className="arena-emblem-rivet" cx="36" cy="35" r="3" />
+                    </>
+                )}
+                {isMetalTier && (
+                    <>
+                        <path className="arena-emblem-blade" d="m27 47 18-22 3-5-5 3-19 21Z" />
+                        <path className="arena-emblem-blade" d="m45 47-18-22-3-5 5 3 19 21Z" />
+                        <path className="arena-emblem-detail" d="M24 48h24" />
+                        {Array.from({ length: rankMarks }, (_, index) => (
+                            <path
+                                key={index}
+                                className="arena-emblem-rank-mark"
+                                d={`m${30 + (index * 4)} 57 1.7 3.4 3.8.6-2.7 2.7.6 3.8-3.4-1.8-3.4 1.8.6-3.8-2.7-2.7 3.8-.6Z`}
+                            />
+                        ))}
+                    </>
+                )}
+                {tier.id === 'warlord' && (
+                    <>
+                        <path className="arena-emblem-blade" d="m24 53 23-31 4-4-2 6-21 32Z" />
+                        <path className="arena-emblem-blade" d="m48 53-23-31-4-4 2 6 21 32Z" />
+                        <path className="arena-emblem-flame" d="M36 24c9 9 9 17 0 25-9-8-9-16 0-25Zm0 8c-3 4-3 7 0 10 3-3 3-6 0-10Z" />
+                    </>
+                )}
+                <path className="arena-emblem-highlight" d="M23 20 36 14" />
+            </svg>
+            <span className="arena-tier-emblem-glyph">{tier.badge}</span>
+        </span>
+    );
+};
+
+const ArenaTierBadge = ({ tier: tierId, size = 'md', showLabel = true, className = '' }) => {
+    const tier = getArenaTier(tierId);
+    return (
+        <span
+            className={`arena-tier-badge arena-tier-badge-${size} ${className}`}
+            data-arena-frame={tier.frame}
+            style={getArenaTierStyle(tier.id)}
+            aria-label={`競技場階級：${tier.shortLabel}`}
+        >
+            <span className="arena-tier-badge-mark" aria-hidden="true">
+                <ArenaTierEmblem tier={tier.id} />
+            </span>
+            {showLabel && <span className="arena-tier-badge-label">{tier.shortLabel}</span>}
+        </span>
+    );
+};
+
+const getArenaTierOutcomeText = data => {
+    if (!data?.tierOutcome) return null;
+    const before = getArenaTier(data.tierBefore);
+    const after = getArenaTier(data.tierAfter);
+    switch (data.tierOutcome) {
+        case 'placement':
+            return { title: `首次定級：${after.label}`, detail: '歡迎加入英雄競技場聯賽！' };
+        case 'promoted':
+            return { title: `${before.label} → ${after.label}`, detail: '成功升階！' };
+        case 'demoted':
+        case 'inactive-demoted':
+            return { title: `${before.label} → ${after.label}`, detail: '下週再戰！' };
+        case 'inactive-hold':
+            return { title: `維持 ${after.label}`, detail: '本週未參賽，階級暫時保留。' };
+        case 'unranked':
+            return { title: '尚未定級', detail: '完成一週競技即可取得第一面牌位。' };
+        default:
+            return { title: `維持 ${after.label}`, detail: '本週階級維持不變。' };
+    }
+};
+
+const ArenaTierResult = ({ data, className = '' }) => {
+    const outcome = getArenaTierOutcomeText(data);
+    if (!outcome) return null;
+    return (
+        <div
+            className={`arena-tier-result ${className}`}
+            data-arena-frame={getArenaTier(data.tierAfter).frame}
+            style={getArenaTierStyle(data.tierAfter)}
+        >
+            <ArenaTierBadge tier={data.tierAfter} size="sm" showLabel={false} />
+            <div className="min-w-0 text-left">
+                <div className="font-pixel text-[10px] arena-tier-text">{outcome.title}</div>
+                <div className="font-retro text-xs text-gray-300 mt-1">{outcome.detail}</div>
+            </div>
+        </div>
+    );
+};
+
+const ArenaTierPreviewLab = () => {
+    const previewParams = new URLSearchParams(window.location.search);
+    const requestedTier = previewParams.get('tier');
+    const initialTier = ARENA_TIERS.some(tier => tier.id === requestedTier)
+        ? requestedTier
+        : 'gold';
+    const [selectedTierId, setSelectedTierId] = useState(initialTier);
+    const selectedTier = getArenaTier(selectedTierId);
+    const selectedTierIndex = ARENA_TIERS.findIndex(tier => tier.id === selectedTierId);
+    const previousTier = ARENA_TIERS[Math.max(0, selectedTierIndex - 1)];
+    const resultPreview = selectedTierId === 'unranked'
+        ? {
+            tierBefore: 'unranked',
+            tierAfter: 'unranked',
+            tierOutcome: 'unranked'
+        }
+        : {
+            tierBefore: previousTier.id,
+            tierAfter: selectedTierId,
+            tierOutcome: selectedTierId === 'wood' ? 'placement' : 'promoted'
+        };
+
+    const selectTier = tierId => {
+        setSelectedTierId(tierId);
+        const nextUrl = new URL(window.location.href);
+        nextUrl.searchParams.set('tier', tierId);
+        window.history.replaceState({}, '', nextUrl);
+    };
+
+    return (
+        <div className="arena-preview-lab min-h-screen text-white p-3 sm:p-6">
+            <div className="max-w-5xl mx-auto">
+                <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+                    <div>
+                        <div className="font-pixel text-[10px] text-rpg-primary mb-2">ARENA VISUAL TEST</div>
+                        <h1 className="font-display text-2xl sm:text-3xl text-yellow-300">英雄競技場 · 牌位畫面測試室</h1>
+                        <p className="font-retro text-sm text-gray-300 mt-2">
+                            只顯示測試資料，不登入、不讀取也不寫入學生資料。
+                        </p>
+                    </div>
+                    <a
+                        href="/"
+                        className="self-start sm:self-auto border-2 border-gray-500 bg-gray-900 px-3 py-2 font-pixel text-[9px] hover:border-white"
+                    >
+                        返回登入頁
+                    </a>
+                </header>
+
+                <section className="bg-black/35 border-2 border-gray-700 p-3 mb-4">
+                    <div className="font-pixel text-[9px] text-gray-400 mb-3">選擇要測試的牌位</div>
+                    <div className="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-9 gap-2">
+                        {ARENA_TIERS.map(tier => (
+                            <button
+                                key={tier.id}
+                                type="button"
+                                aria-pressed={tier.id === selectedTierId}
+                                onClick={() => selectTier(tier.id)}
+                                className={`arena-preview-tier-button ${tier.id === selectedTierId ? 'is-active' : ''}`}
+                                style={getArenaTierStyle(tier.id)}
+                            >
+                                <ArenaTierBadge tier={tier.id} size="sm" />
+                            </button>
+                        ))}
+                    </div>
+                </section>
+
+                <div
+                    className="arena-tier-shell overflow-hidden"
+                    data-arena-frame={selectedTier.frame}
+                    data-preview-tier={selectedTier.id}
+                    style={getArenaTierStyle(selectedTier.id)}
+                >
+                    <div className="arena-tier-header flex items-center justify-between gap-2 border-b-4 p-3">
+                        <div className="min-w-0">
+                            <div className="font-pixel text-[9px] text-gray-400">WEEKLY REPORT</div>
+                            <div className="font-display text-xl truncate">每週戰報</div>
+                        </div>
+                        <div className="flex items-center gap-2 shrink-0">
+                            <ArenaTierBadge tier={selectedTier.id} size="sm" />
+                            <button type="button" aria-label="測試日曆按鈕" className="weekly-report-calendar-button p-2">
+                                <CalendarDays size={18} />
+                            </button>
+                            <button type="button" aria-label="測試登出按鈕" className="border-2 border-gray-500 bg-black/40 p-2">
+                                <LogOut size={18} />
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="p-3 sm:p-5 grid lg:grid-cols-2 gap-4">
+                        <div className="space-y-4">
+                            <section className="arena-tier-feature border-2 p-4">
+                                <div className="font-pixel text-[9px] text-gray-400">本週階級</div>
+                                <div className="flex items-center gap-3 mt-3">
+                                    <ArenaTierBadge tier={selectedTier.id} size="lg" showLabel={false} />
+                                    <div>
+                                        <div className="arena-tier-text font-display text-2xl">{selectedTier.shortLabel}</div>
+                                        <div className="font-retro text-sm text-gray-300 mt-1">本週累積 8,640 分</div>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section>
+                                <div className="font-pixel text-[9px] text-gray-400 mb-2">地圖右上角入口</div>
+                                <div
+                                    className="arena-tier-record-card p-3 flex items-center gap-3"
+                                    data-arena-frame={selectedTier.frame}
+                                    style={getArenaTierStyle(selectedTier.id)}
+                                >
+                                    <ArenaTierBadge tier={selectedTier.id} size="sm" showLabel={false} />
+                                    <div className="min-w-0">
+                                        <div className="font-pixel text-[9px] text-white">每週戰報</div>
+                                        <div className="arena-tier-text font-retro text-xs mt-1">本週 {selectedTier.shortLabel}</div>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section>
+                                <div className="font-pixel text-[9px] text-gray-400 mb-2">週結算</div>
+                                <ArenaTierResult data={resultPreview} />
+                            </section>
+
+                            <section>
+                                <div className="font-pixel text-[9px] text-gray-400 mb-2">我的冒險旅程</div>
+                                <div
+                                    className="arena-tier-record-card p-3 flex items-center gap-3"
+                                    data-arena-frame={selectedTier.frame}
+                                    style={getArenaTierStyle(selectedTier.id)}
+                                >
+                                    <ArenaTierBadge tier={selectedTier.id} size="lg" showLabel={false} />
+                                    <div className="min-w-0">
+                                        <div className="font-pixel text-[9px] text-gray-400">HIGHEST ARENA TIER</div>
+                                        <div className="arena-tier-text font-pixel text-xs mt-2">
+                                            歷史最高排位 · {selectedTier.shortLabel}
+                                        </div>
+                                        <div className="font-retro text-xs text-gray-300 mt-1">
+                                            {selectedTier.id === 'unranked' ? '完成一週競技後即可定級' : '首次達成：2026/08/10'}
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+
+                        <section className="arena-tier-panel border-2 bg-black/25">
+                            <div className="p-3 border-b border-white/15">
+                                <div className="font-pixel text-[9px] text-gray-400">英雄競技場排行榜</div>
+                                <div className="font-retro text-sm mt-2">同階級 8 人小組 · 測試資料</div>
+                            </div>
+                            {[
+                                { rank: 1, name: '火○小宇', score: 10280 },
+                                { rank: 2, name: '陳○鍾', score: 8640, me: true },
+                                { rank: 3, name: '暴○布丁', score: 7320 },
+                                { rank: 4, name: '小○勇者', score: 5980 }
+                            ].map(player => (
+                                <div
+                                    key={player.rank}
+                                    className={`grid grid-cols-[2rem_1fr_auto] items-center gap-2 px-3 py-3 border-b border-white/10 ${player.me ? 'arena-tier-self' : ''}`}
+                                >
+                                    <div className="font-pixel text-xs text-center">{player.rank}</div>
+                                    <div className="min-w-0 flex items-center gap-2">
+                                        {player.me && <ArenaTierBadge tier={selectedTier.id} size="sm" showLabel={false} />}
+                                        <span className="font-retro text-sm truncate">
+                                            {player.name}{player.me ? ` · 你 · ${selectedTier.shortLabel}` : ''}
+                                        </span>
+                                    </div>
+                                    <div className="font-pixel text-[9px] text-yellow-300">{player.score.toLocaleString()}</div>
+                                </div>
+                            ))}
+                            <div className="p-3 font-retro text-xs text-gray-400">
+                                自己的列會套用目前牌位顏色；其他玩家保持中性，避免排行榜太花。
+                            </div>
+                        </section>
+                    </div>
+                </div>
+
+                <section className="mt-5">
+                    <div className="font-pixel text-[9px] text-gray-400 mb-3">九種牌位快速比較</div>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+                        {ARENA_TIERS.map(tier => (
+                            <div
+                                key={tier.id}
+                                className="arena-tier-record-card p-3 min-h-[5.5rem] flex items-center justify-center"
+                                data-arena-frame={tier.frame}
+                                style={getArenaTierStyle(tier.id)}
+                            >
+                                <ArenaTierBadge tier={tier.id} />
+                            </div>
+                        ))}
+                    </div>
+                </section>
+            </div>
+        </div>
+    );
+};
+
 const SIMULATED_ARENA_NAMES = [
     '功課失蹤中', '暴走布丁', '鯊魚吃泡麵', '今天不想睡', '火箭小宇',
     '冰龍隊長', '閃電皮蛋', '傳說小蝦米', '奶茶半糖', '作業等等我',
@@ -1076,13 +1425,6 @@ const toPublicArenaEntry = (student = {}) => ({
     }
 });
 
-const sortArenaLeaderboard = (entries = []) => [...entries].sort((a, b) => (
-    b.weekly.score - a.weekly.score ||
-    b.weekly.accuracy - a.weekly.accuracy ||
-    b.weekly.sessions - a.weekly.sessions ||
-    String(a.id).localeCompare(String(b.id))
-));
-
 const getQualifiedHistoryDates = (history = []) => [...new Set(history
     .filter(record => CHECK_IN_GRADES.includes(record?.rank))
     .map(getHistoryTime)
@@ -1439,15 +1781,18 @@ const maskStudentName = (name = '神秘勇者') => {
     return `${trimmed[0]}${'○'.repeat(Math.max(1, trimmed.length - 2))}${trimmed[trimmed.length - 1]}`;
 };
 
-const syncWeeklyLeaderboard = async ({ userId, studentName, history }) => {
+const syncWeeklyLeaderboard = async ({ userId, studentName, history, userData }) => {
     if (!userId) return;
     const range = getTaipeiWeekRange(0);
     const weekly = getWeeklyStats(history || [], range);
     if (weekly.sessions === 0) return;
+    const assignment = userData?.weeklyArenaGroupAssignments?.[String(range.startMs)];
     await setDoc(doc(db, 'weeklyLeaderboard', `${range.startMs}_${userId}`), {
         userId,
         weekStart: range.startMs,
         maskedName: maskStudentName(studentName),
+        groupId: assignment?.groupId || null,
+        tier: assignment?.tier || normalizeArenaTierProgress(userData?.arenaTierProgress).currentTier,
         score: weekly.score,
         sessions: weekly.sessions,
         accuracy: weekly.hasAccuracy ? weekly.accuracy : null,
@@ -1517,6 +1862,67 @@ const calculateWeeklyArenaResult = ({ userId, userData, range, roster, publicEnt
     };
 };
 
+const calculateSharedWeeklyArenaResult = ({
+    userId,
+    userData,
+    range,
+    group,
+    publicEntries
+}) => {
+    const currentStats = getWeeklyStats(userData.trialHistory || [], range);
+    const participated = currentStats.sessions > 0;
+    const currentUserEntry = {
+        id: userId,
+        maskedName: maskStudentName(userData.studentName),
+        weekly: currentStats
+    };
+    const arenaEntries = buildSharedArenaEntries({
+        group,
+        publicEntries,
+        currentUserId: userId,
+        currentUserEntry,
+        asOfMs: range.endMs - 1
+    });
+    const standing = getSharedArenaStanding({
+        entries: arenaEntries,
+        userId,
+        participated
+    });
+    return {
+        version: ARENA_RESULT_VERSION,
+        weekStart: range.startMs,
+        weekEnd: range.endMs,
+        participated,
+        rank: standing.rank,
+        score: standing.score,
+        participantCount: standing.participantCount,
+        rewardCount: standing.rank ? (ARENA_RANK_REWARD_COUNTS[standing.rank] || 0) : 0,
+        settledAt: new Date().toISOString(),
+        seenAt: null,
+        groupId: group.groupId,
+        tier: group.tier,
+        sharedLeaderboard: true
+    };
+};
+
+const calculateArenaFallbackResult = ({ userData, range }) => {
+    const currentStats = getWeeklyStats(userData.trialHistory || [], range);
+    return {
+        version: ARENA_RESULT_VERSION,
+        weekStart: range.startMs,
+        weekEnd: range.endMs,
+        participated: currentStats.sessions > 0,
+        rank: null,
+        score: currentStats.score,
+        participantCount: 0,
+        rewardCount: 0,
+        settledAt: new Date().toISOString(),
+        seenAt: null,
+        settlementFallback: true,
+        notificationEligible: false
+    };
+};
+
 const trimNumericKeyedRecords = (records = {}, limit = 8) => Object.fromEntries(
     Object.entries(records)
         .sort(([a], [b]) => Number(b) - Number(a))
@@ -1528,8 +1934,10 @@ const prepareWeeklyArenaOnLogin = async ({ userId, userData }) => {
     const rewardStartWeek = Number(userData.weeklyArenaRewardStartWeek) || currentRange.startMs;
     let rosters = { ...(userData.weeklyArenaRosters || {}) };
     let results = { ...(userData.weeklyArenaResults || {}) };
+    let arenaTierProgress = normalizeArenaTierProgress(userData.arenaTierProgress);
+    let groupAssignments = { ...(userData.weeklyArenaGroupAssignments || {}) };
 
-    const unsettledWeekStarts = Object.keys(rosters)
+    const legacyUnsettledWeekStarts = Object.keys(rosters)
         .map(Number)
         .filter(weekStart => (
             Number.isFinite(weekStart)
@@ -1537,27 +1945,89 @@ const prepareWeeklyArenaOnLogin = async ({ userId, userData }) => {
             && weekStart < currentRange.startMs
             && (Number(results[String(weekStart)]?.version) || 0) < ARENA_RESULT_VERSION
             && isStoredArenaRosterValid(rosters[String(weekStart)])
-        ))
-        .sort((a, b) => a - b);
+        ));
+
+    const tierCatchUpStart = arenaTierProgress.lastSettledWeek === null
+        ? ARENA_TIER_ACTIVATION_WEEK_START
+        : arenaTierProgress.lastSettledWeek + WEEK_MS;
+    const tierWeekStarts = [];
+    for (
+        let weekStart = tierCatchUpStart;
+        weekStart < currentRange.startMs;
+        weekStart += WEEK_MS
+    ) {
+        tierWeekStarts.push(weekStart);
+    }
+    const unsettledWeekStarts = [...new Set([
+        ...legacyUnsettledWeekStarts,
+        ...tierWeekStarts
+    ])].sort((a, b) => a - b);
 
     for (const weekStart of unsettledWeekStarts) {
         const range = { startMs: weekStart, endMs: weekStart + WEEK_MS };
         try {
-            const publicEntries = await fetchWeeklyLeaderboardEntries(range);
-            results[String(weekStart)] = calculateWeeklyArenaResult({
-                userId,
-                userData,
-                range,
-                roster: rosters[String(weekStart)],
-                publicEntries
-            });
+            const existingResult = results[String(weekStart)];
+            let arenaResult = existingResult;
+            if ((Number(existingResult?.version) || 0) < ARENA_RESULT_VERSION) {
+                const groupAssignment = groupAssignments[String(weekStart)];
+                const roster = rosters[String(weekStart)];
+                if (
+                    weekStart >= ARENA_TIER_ACTIVATION_WEEK_START
+                    && groupAssignment?.groupId
+                ) {
+                    const sharedGroup = await ensureWeeklyArenaGroupSimulation({
+                        db,
+                        groupId: groupAssignment.groupId
+                    });
+                    const publicEntries = await fetchWeeklyLeaderboardEntries(range);
+                    arenaResult = calculateSharedWeeklyArenaResult({
+                        userId,
+                        userData,
+                        range,
+                        group: sharedGroup,
+                        publicEntries
+                    });
+                } else if (isStoredArenaRosterValid(roster)) {
+                    const publicEntries = await fetchWeeklyLeaderboardEntries(range);
+                    arenaResult = calculateWeeklyArenaResult({
+                        userId,
+                        userData,
+                        range,
+                        roster,
+                        publicEntries
+                    });
+                } else {
+                    arenaResult = calculateArenaFallbackResult({ userData, range });
+                }
+            }
+            if (
+                weekStart >= ARENA_TIER_ACTIVATION_WEEK_START
+                && (Number(arenaResult?.tierVersion) || 0) < 1
+            ) {
+                const tierResult = settleArenaTier({
+                    progress: arenaTierProgress,
+                    participated: arenaResult.participated,
+                    rank: arenaResult.rank,
+                    weekStart,
+                    settledAt: arenaResult.settledAt
+                });
+                arenaTierProgress = tierResult.progress;
+                arenaResult = {
+                    ...arenaResult,
+                    ...tierResult.settlement
+                };
+            }
+            results[String(weekStart)] = arenaResult;
         } catch (error) {
             console.warn(`競技場 ${formatWeekRange(range)} 結算失敗，將於下次登入重試。`, error);
         }
     }
 
     const currentRosterKey = String(currentRange.startMs);
-    if (!isStoredArenaRosterValid(rosters[currentRosterKey])) {
+    if (
+        currentRange.startMs < ARENA_TIER_ACTIVATION_WEEK_START
+        && !isStoredArenaRosterValid(rosters[currentRosterKey])
+    ) {
         try {
             const publicEntries = await fetchWeeklyLeaderboardEntries(currentRange);
             const currentStats = getWeeklyStats(userData.trialHistory || [], currentRange);
@@ -1586,10 +2056,43 @@ const prepareWeeklyArenaOnLogin = async ({ userId, userData }) => {
         }
     }
 
+    if (currentRange.startMs >= ARENA_TIER_ACTIVATION_WEEK_START) {
+        try {
+            let assignment = groupAssignments[currentRosterKey];
+            if (!assignment) {
+                const previousRange = {
+                    startMs: currentRange.startMs - WEEK_MS,
+                    endMs: currentRange.startMs
+                };
+                const previousStats = getWeeklyStats(userData.trialHistory || [], previousRange);
+                assignment = await assignWeeklyArenaGroup({
+                    db,
+                    userId,
+                    maskedName: maskStudentName(userData.studentName),
+                    weekStart: currentRange.startMs,
+                    tier: arenaTierProgress.currentTier,
+                    activityStats: previousStats
+                });
+            }
+            const sharedGroup = await ensureWeeklyArenaGroupSimulation({
+                db,
+                groupId: assignment.groupId
+            });
+            groupAssignments[currentRosterKey] = {
+                ...assignment,
+                groupStatus: sharedGroup.status,
+                simulationVersion: Number(sharedGroup.simulationVersion) || 0,
+                simulatedMemberCount: Number(sharedGroup.simulatedMemberCount) || 0
+            };
+        } catch (error) {
+            console.warn('本週同階級競技小組或共享模擬玩家建立失敗，將於下次登入重試。', error);
+        }
+    }
+
     const completedResults = Object.values(results)
         .filter(result => Number(result?.weekStart) < currentRange.startMs)
         .sort((a, b) => Number(b.weekStart) - Number(a.weekStart));
-    const newestResult = completedResults[0] || null;
+    const newestResult = completedResults.find(result => result.notificationEligible !== false) || null;
     const notification = newestResult && !newestResult.seenAt ? newestResult : null;
     const skippedUnseenResults = completedResults.filter(result => (
         !result.seenAt && result.weekStart !== notification?.weekStart
@@ -1607,12 +2110,15 @@ const prepareWeeklyArenaOnLogin = async ({ userId, userData }) => {
 
     rosters = trimNumericKeyedRecords(rosters, 8);
     results = trimNumericKeyedRecords(results, 16);
+    groupAssignments = trimNumericKeyedRecords(groupAssignments, 8);
     return {
         userData: {
             ...userData,
             weeklyArenaRewardStartWeek: rewardStartWeek,
             weeklyArenaRosters: rosters,
-            weeklyArenaResults: results
+            weeklyArenaResults: results,
+            arenaTierProgress,
+            weeklyArenaGroupAssignments: groupAssignments
         },
         notification
     };
@@ -1825,21 +2331,37 @@ const TriviaAlbum = ({ onBack, userData, onClaimTrivia }) => {
 const WeeklyReport = ({ onBack, onOpenAlbum, onViewLoginCalendar, currentUserId, userData, onSaveArenaRoster }) => {
     const [period, setPeriod] = useState('current');
     const [students, setStudents] = useState([]);
+    const [sharedGroup, setSharedGroup] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [loadError, setLoadError] = useState(false);
     const rosterSaveRequestedRef = useRef(false);
     const range = getTaipeiWeekRange(period === 'current' ? 0 : -1);
+    const rosterKey = String(range.startMs);
+    const groupAssignment = userData?.weeklyArenaGroupAssignments?.[rosterKey] || null;
+    const currentArenaTier = getArenaTier(
+        normalizeArenaTierProgress(userData?.arenaTierProgress).currentTier
+    );
 
     useEffect(() => {
         let active = true;
         setIsLoading(true);
         setLoadError(false);
+        setSharedGroup(null);
         const leaderboardQuery = query(collection(db, 'weeklyLeaderboard'), where('weekStart', '==', range.startMs));
-        getDocs(leaderboardQuery)
-            .then(snapshot => {
+        const groupPromise = groupAssignment?.groupId
+            ? ensureWeeklyArenaGroupSimulation({ db, groupId: groupAssignment.groupId })
+                .catch(async error => {
+                    console.warn('共享競技小組整理失敗，改以唯讀方式載入。', error);
+                    return fetchWeeklyArenaGroup({ db, groupId: groupAssignment.groupId });
+                })
+            : Promise.resolve(null);
+        Promise.all([getDocs(leaderboardQuery), groupPromise])
+            .then(([snapshot, loadedGroup]) => {
                 if (!active) return;
                 const loaded = snapshot.docs.map(studentDoc => ({ id: studentDoc.id, ...studentDoc.data() }));
                 setStudents(loaded);
+                setSharedGroup(loadedGroup);
+                if (groupAssignment?.groupId && !loadedGroup) setLoadError(true);
             })
             .catch(error => {
                 console.error('讀取每週排行榜失敗', error);
@@ -1847,14 +2369,13 @@ const WeeklyReport = ({ onBack, onOpenAlbum, onViewLoginCalendar, currentUserId,
             })
             .finally(() => { if (active) setIsLoading(false); });
         return () => { active = false; };
-    }, [range.startMs]);
+    }, [range.startMs, groupAssignment?.groupId]);
 
     const currentStats = getWeeklyStats(userData?.trialHistory || [], range);
     const previousStats = getWeeklyStats(userData?.trialHistory || [], getTaipeiWeekRange(-1));
     const publicEntries = students.map(toPublicArenaEntry);
     const selfEntry = { id: currentUserId, maskedName: maskStudentName(userData?.studentName), weekly: currentStats };
     const entriesWithSelf = [selfEntry, ...publicEntries.filter(student => student.id !== currentUserId)];
-    const rosterKey = String(range.startMs);
     const storedRoster = userData?.weeklyArenaRosters?.[rosterKey];
     const priorRoster = userData?.weeklyArenaRosters?.[String(range.startMs - WEEK_MS)];
     const proposedRoster = buildArenaRoster(entriesWithSelf, currentUserId, currentStats.score, {
@@ -1865,14 +2386,27 @@ const WeeklyReport = ({ onBack, onOpenAlbum, onViewLoginCalendar, currentUserId,
     });
     const storedRosterIsCurrent = isStoredArenaRosterValid(storedRoster);
     const activeRoster = storedRosterIsCurrent ? storedRoster : proposedRoster;
-    const arenaEntries = getArenaEntriesForRoster({
-        userId: currentUserId,
-        userData,
-        range,
-        roster: activeRoster,
-        publicEntries,
-        asOfMs: Math.min(Date.now(), range.endMs - 1)
-    });
+    const usesSharedGroup = Boolean(
+        range.startMs >= ARENA_TIER_ACTIVATION_WEEK_START
+        && groupAssignment?.groupId
+        && sharedGroup
+    );
+    const arenaEntries = usesSharedGroup
+        ? buildSharedArenaEntries({
+            group: sharedGroup,
+            publicEntries,
+            currentUserId,
+            currentUserEntry: selfEntry,
+            asOfMs: Math.min(Date.now(), range.endMs - 1)
+        })
+        : getArenaEntriesForRoster({
+            userId: currentUserId,
+            userData,
+            range,
+            roster: activeRoster,
+            publicEntries,
+            asOfMs: Math.min(Date.now(), range.endMs - 1)
+        });
     const leaderboard = sortArenaLeaderboard(arenaEntries);
     const currentRank = leaderboard.findIndex(student => student.id === currentUserId) + 1;
     const settledResult = userData?.weeklyArenaResults?.[rosterKey] || null;
@@ -1893,34 +2427,50 @@ const WeeklyReport = ({ onBack, onOpenAlbum, onViewLoginCalendar, currentUserId,
     const currentIndex = Math.max(0, currentRank - 1);
     const nextOpponent = currentIndex > 0 ? leaderboard[currentIndex - 1] : null;
     const isChampion = currentRank === 1 && currentStats.sessions > 0;
-    const championTarget = Number(activeRoster.targetScore)
-        || roundArenaTarget(currentStats.score);
+    const championTarget = usesSharedGroup
+        ? Math.max(currentStats.score, Number(nextOpponent?.weekly.score) || 0)
+        : (Number(activeRoster.targetScore) || roundArenaTarget(currentStats.score));
     const pendingRewards = getAllPendingTriviaRewards(userData);
     const todayCheckedIn = (userData?.engagement?.adventure?.dates || []).includes(getTaipeiDateKey());
     const upcomingAchievement = getUpcomingAchievements(userData, 1)[0] || null;
 
     useEffect(() => {
-        if (period !== 'current' || isLoading || loadError || storedRosterIsCurrent || !onSaveArenaRoster || rosterSaveRequestedRef.current) return;
+        if (
+            period !== 'current'
+            || range.startMs >= ARENA_TIER_ACTIVATION_WEEK_START
+            || isLoading
+            || loadError
+            || storedRosterIsCurrent
+            || !onSaveArenaRoster
+            || rosterSaveRequestedRef.current
+        ) return;
         rosterSaveRequestedRef.current = true;
         onSaveArenaRoster(range.startMs, proposedRoster);
     }, [period, isLoading, loadError, storedRosterIsCurrent, onSaveArenaRoster, range.startMs, proposedRoster]);
 
     return (
-        <div className="flex flex-col h-full bg-[#24173a] text-white">
-            <div className="flex items-center justify-between p-3 border-b-4 border-yellow-500/70 bg-black/40">
+        <div
+            className="arena-tier-shell flex flex-col h-full text-white"
+            data-arena-frame={currentArenaTier.frame}
+            style={getArenaTierStyle(currentArenaTier.id)}
+        >
+            <div className="arena-tier-header flex items-center justify-between p-3 border-b-4">
                 <RPGButton onClick={onBack} color="dark" className="px-2"><ArrowLeft size={16} /></RPGButton>
                 <div className="text-center">
-                    <h2 className="font-pixel text-sm text-yellow-300">每週冒險戰報</h2>
-                    <p className="font-retro text-[10px] text-gray-400">WEEKLY QUEST REPORT</p>
+                    <h2 className="arena-tier-text font-pixel text-sm">每週冒險戰報</h2>
+                    <p className="font-retro text-[10px] text-gray-300">{currentArenaTier.shortLabel} · WEEKLY REPORT</p>
                 </div>
-                <button onClick={onViewLoginCalendar} className="w-9 h-9 flex items-center justify-center border-2 border-cyan-400/60 bg-cyan-950/60 text-cyan-300 hover:bg-cyan-800" title="冒險打卡日曆" aria-label="打開冒險打卡日曆">
-                    <CalendarDays size={20} />
-                </button>
+                <div className="flex items-center gap-1">
+                    <ArenaTierBadge tier={currentArenaTier.id} size="sm" showLabel={false} />
+                    <button onClick={onViewLoginCalendar} className="weekly-report-calendar-button w-8 h-8 flex items-center justify-center" title="冒險打卡日曆" aria-label="打開冒險打卡日曆">
+                        <CalendarDays size={17} />
+                    </button>
+                </div>
             </div>
 
             <div className="grid grid-cols-2 bg-black/50 border-b-2 border-yellow-500/30">
-                <button onClick={() => setPeriod('current')} className={`py-2 font-pixel text-[10px] ${period === 'current' ? 'bg-yellow-500 text-black' : 'text-gray-400'}`}>本週累積</button>
-                <button onClick={() => setPeriod('previous')} className={`py-2 font-pixel text-[10px] ${period === 'previous' ? 'bg-purple-500 text-white' : 'text-gray-400'}`}>上週結算</button>
+                <button onClick={() => setPeriod('current')} style={period === 'current' ? { backgroundColor: currentArenaTier.colors.primary, color: '#09050f' } : undefined} className={`py-2 font-pixel text-[10px] ${period === 'current' ? '' : 'text-gray-400'}`}>本週累積</button>
+                <button onClick={() => setPeriod('previous')} style={period === 'previous' ? { backgroundColor: currentArenaTier.colors.secondary, color: currentArenaTier.colors.glow } : undefined} className={`py-2 font-pixel text-[10px] ${period === 'previous' ? '' : 'text-gray-400'}`}>上週結算</button>
             </div>
 
             <div className="flex-1 overflow-y-auto p-3 space-y-4">
@@ -1950,7 +2500,7 @@ const WeeklyReport = ({ onBack, onOpenAlbum, onViewLoginCalendar, currentUserId,
                     )}
                 </section>
 
-                <section className="border-4 border-yellow-500/60 bg-gradient-to-br from-[#513018] to-[#24173a] p-4 shadow-xl">
+                <section className="arena-tier-feature border-4 p-4 shadow-xl">
                     <div className="flex justify-between items-start gap-3">
                         <div>
                             <p className="font-pixel text-[10px] text-yellow-300">{period === 'current' ? '本週累積戰力' : '上週最終戰績'}</p>
@@ -1992,6 +2542,7 @@ const WeeklyReport = ({ onBack, onOpenAlbum, onViewLoginCalendar, currentUserId,
                                 <div className="font-retro text-xs text-gray-500 mt-2">沒有產生競技小隊名次</div>
                             </>
                         )}
+                        <ArenaTierResult data={settledResult} className="mt-4" />
                     </section>
                 )}
 
@@ -2022,15 +2573,22 @@ const WeeklyReport = ({ onBack, onOpenAlbum, onViewLoginCalendar, currentUserId,
                     </div>
                 </section>
 
-                <section className="border-2 border-yellow-500/50 bg-black/30 overflow-hidden">
+                <section className="arena-tier-panel border-2 bg-black/30 overflow-hidden">
                     <div className="flex items-center justify-between p-3 border-b border-yellow-500/30">
                         <div>
                             <h3 className="font-pixel text-xs text-yellow-300">英雄競技場</h3>
                             <p className="font-retro text-[9px] text-gray-400 mt-1">為保護隱私，競技場名稱一律使用代稱顯示。</p>
-                            <p className="font-retro text-[8px] text-gray-600 mt-0.5">系統會依照近期冒險進度，安排實力接近的對手</p>
+                            <p className="font-retro text-[8px] text-gray-600 mt-0.5">
+                                {usesSharedGroup ? '同階級玩家共用同一張排行榜與結算結果' : '系統會依照近期冒險進度，安排實力接近的對手'}
+                            </p>
                         </div>
-                        <span className="font-retro text-[10px] text-gray-400">本週對手固定</span>
+                        <span className="font-retro text-[10px] text-gray-400">{usesSharedGroup ? '同階聯賽' : '本週對手固定'}</span>
                     </div>
+                    {usesSharedGroup && sharedGroup.status !== 'locked' && (
+                        <div className="border-b border-cyan-500/30 bg-cyan-950/40 px-3 py-2 font-retro text-[10px] text-cyan-200">
+                            同階級真人配對中；週二 00:00 鎖定後將以共享模擬玩家補滿 8 席。
+                        </div>
+                    )}
                     {isLoading ? (
                         <div className="p-5 text-center font-retro text-sm text-gray-400 animate-pulse">載入班級戰績...</div>
                     ) : loadError ? (
@@ -2042,9 +2600,12 @@ const WeeklyReport = ({ onBack, onOpenAlbum, onViewLoginCalendar, currentUserId,
                             {leaderboard.map((student, index) => {
                                 const isMe = student.id === currentUserId;
                                 return (
-                                    <div key={student.id} className={`grid grid-cols-[2rem_1fr_auto] items-center gap-2 px-3 py-2 border-b border-white/10 ${isMe ? 'bg-cyan-900/40' : ''}`}>
+                                    <div key={student.id} className={`grid grid-cols-[2rem_1fr_auto] items-center gap-2 px-3 py-2 border-b border-white/10 ${isMe ? 'arena-tier-self' : ''}`}>
                                         <span className={`font-pixel text-sm ${index < 3 ? 'text-yellow-300' : 'text-gray-400'}`}>#{index + 1}</span>
-                                        <div className="min-w-0"><div className="font-retro text-sm truncate">{isMe ? '我' : student.maskedName}</div><div className="font-retro text-[9px] text-gray-500">{student.weekly.hasAccuracy ? `準確率 ${Math.round(student.weekly.accuracy)}%` : `${student.weekly.sessions} 場挑戰`}</div></div>
+                                        <div className="min-w-0 flex items-center gap-2">
+                                            {isMe && <ArenaTierBadge tier={currentArenaTier.id} size="sm" showLabel={false} />}
+                                            <div className="min-w-0"><div className="font-retro text-sm truncate">{isMe ? `我 · ${currentArenaTier.shortLabel}` : student.maskedName}</div><div className="font-retro text-[9px] text-gray-500">{student.weekly.hasAccuracy ? `準確率 ${Math.round(student.weekly.accuracy)}%` : `${student.weekly.sessions} 場挑戰`}</div></div>
+                                        </div>
                                         <span className="font-pixel text-xs text-yellow-300">{student.weekly.score} 分</span>
                                     </div>
                                 );
@@ -2145,14 +2706,19 @@ const WeeklyArenaSettlementModal = ({ data, onPrimary, onLater }) => {
         color: 'text-blue-300'
     };
     const rangeLabel = formatWeekRange({ startMs: data.weekStart, endMs: data.weekEnd });
+    const settlementTier = getArenaTier(data.tierAfter || data.tier || 'unranked');
 
     return (
         <div className="absolute inset-0 z-[90] bg-black/85 flex items-center justify-center p-5">
-            <div className="w-full max-w-xs border-4 border-blue-400 bg-gradient-to-b from-[#182b5b] via-[#25194a] to-[#130d26] text-white p-5 text-center shadow-[0_0_28px_rgba(96,165,250,0.45)]">
+            <div
+                className="arena-tier-shell w-full max-w-xs text-white p-5 text-center"
+                data-arena-frame={settlementTier.frame}
+                style={getArenaTierStyle(settlementTier.id)}
+            >
                 {!revealed ? (
                     <>
-                        <div className="text-5xl mb-4">🏟️</div>
-                        <p className="font-pixel text-[9px] text-blue-300">{rangeLabel}</p>
+                        <div className="flex justify-center mb-4"><ArenaTierBadge tier={settlementTier.id} size="lg" /></div>
+                        <p className="arena-tier-text font-pixel text-[9px]">{rangeLabel}</p>
                         <h3 className="font-pixel text-sm text-white mt-3 leading-relaxed">上週競技場已結算！</h3>
                         <p className="font-retro text-sm text-gray-300 mt-3 leading-relaxed">
                             點擊查看你在競技小隊中的最終名次
@@ -2191,6 +2757,7 @@ const WeeklyArenaSettlementModal = ({ data, onPrimary, onLater }) => {
                                 </p>
                             </>
                         )}
+                        <ArenaTierResult data={data} className="mt-4" />
 
                         <div className="grid grid-cols-1 gap-2 mt-5">
                             <RPGButton onClick={onPrimary} color={data.rewardCount > 0 ? 'success' : 'accent'} className="w-full py-3">
@@ -2406,6 +2973,9 @@ const WorldMap = ({ onSelectNode, onViewJourney, onViewWeeklyReport, onOpenAchie
     const deferredTriviaCount = rewardSummary.totalPendingCount || 0;
     const upcomingAchievement = getUpcomingAchievements(userData, 1)[0] || null;
     const todayCheckedIn = (userData?.engagement?.adventure?.dates || []).includes(getTaipeiDateKey());
+    const currentArenaTier = getArenaTier(
+        normalizeArenaTierProgress(userData?.arenaTierProgress).currentTier
+    );
     const reportSummary = !todayCheckedIn
         ? '📅 本日打卡　0 / 1'
         : upcomingAchievement
@@ -2548,13 +3118,18 @@ const WorldMap = ({ onSelectNode, onViewJourney, onViewWeeklyReport, onOpenAchie
             <div className="world-status-row bg-[#171229] border-b-2 border-yellow-500/35 px-2 py-2 flex items-center gap-2 z-10">
                 <button
                     onClick={onViewWeeklyReport}
-                    className="relative flex-1 min-w-0 border-2 border-purple-600/60 bg-purple-950/50 hover:bg-purple-900/60 px-2 py-2 text-left transition-colors"
-                    aria-label={`開啟每週戰報，${reportSummary}`}
+                    className="arena-tier-record-card relative flex-1 min-w-0 px-2 py-2 text-left transition-colors"
+                    data-arena-frame={currentArenaTier.frame}
+                    style={getArenaTierStyle(currentArenaTier.id)}
+                    aria-label={`開啟每週戰報，本週階級 ${currentArenaTier.shortLabel}，${reportSummary}`}
                 >
                     <div className="flex items-center gap-2">
-                        <Award size={22} className="shrink-0 text-yellow-300" aria-hidden="true" />
+                        <ArenaTierBadge tier={currentArenaTier.id} size="sm" showLabel={false} />
                         <div className="min-w-0 flex-1">
-                            <span className="font-pixel text-[9px] text-yellow-300">每週戰報</span>
+                            <div className="flex items-center justify-between gap-2">
+                                <span className="font-pixel text-[9px] arena-tier-text">每週戰報</span>
+                                <span className="font-pixel text-[8px] arena-tier-text">本週 {currentArenaTier.shortLabel}</span>
+                            </div>
                             <div className="font-retro text-[11px] text-yellow-100 truncate mt-1" aria-label="近期即將完成的成就">
                                 {reportSummary}
                             </div>
@@ -3108,11 +3683,18 @@ const AdvancedJourneyView = ({ records = {}, advMeta = null, mistakeStats = {} }
     );
 };
 
-const JourneyMode = ({ onBack, onViewTrialLog, records = {}, advMeta = null, mistakeStats = {} }) => {
+const JourneyMode = ({ onBack, onViewTrialLog, records = {}, advMeta = null, mistakeStats = {}, arenaTierProgress = {} }) => {
     const [flippedCards, setFlippedCards] = useState({});
     const [showDashboard, setShowDashboard] = useState(false);
     const [showPasswordModal, setShowPasswordModal] = useState(false);
     const [activeTab, setActiveTab] = useState('main');
+    const normalizedArenaProgress = normalizeArenaTierProgress(arenaTierProgress);
+    const highestArenaTier = getArenaTier(normalizedArenaProgress.highestTier);
+    const highestTierDate = normalizedArenaProgress.highestTierReachedAt
+        ? new Intl.DateTimeFormat('zh-TW', {
+            timeZone: 'Asia/Taipei', year: 'numeric', month: 'numeric', day: 'numeric'
+        }).format(new Date(normalizedArenaProgress.highestTierReachedAt))
+        : null;
 
     const toggleFlip = (id) => {
         playSound('click');
@@ -3212,6 +3794,23 @@ const JourneyMode = ({ onBack, onViewTrialLog, records = {}, advMeta = null, mis
                 <>
             {/* 試煉日誌入口按鈕 */}
             <div className="px-4 pt-4 pb-2">
+                <div
+                    className="arena-tier-record-card mb-3 p-3"
+                    data-arena-frame={highestArenaTier.frame}
+                    style={getArenaTierStyle(highestArenaTier.id)}
+                    aria-label={`英雄競技場歷史最高排位：${highestArenaTier.shortLabel}`}
+                >
+                    <div className="relative z-[1] flex items-center gap-3">
+                        <ArenaTierBadge tier={highestArenaTier.id} size="lg" showLabel={false} />
+                        <div className="min-w-0 flex-1">
+                            <div className="font-pixel text-[9px] text-gray-300">英雄競技場</div>
+                            <div className="arena-tier-text font-pixel text-sm mt-1">歷史最高排位 · {highestArenaTier.shortLabel}</div>
+                            <div className="font-retro text-[10px] text-gray-400 mt-2">
+                                {highestTierDate ? `首次達成：${highestTierDate}` : '完成第一次每週結算後即可定級'}
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <button
                     onClick={onViewTrialLog}
                     className="w-full bg-gradient-to-r from-red-900 to-red-700 border-4 border-red-500 p-3 flex items-center justify-center gap-2 hover:from-red-800 hover:to-red-600 transition-all hover:scale-105 active:scale-95 shadow-lg"
@@ -5031,6 +5630,8 @@ const App = () => {
                 triviaRewardClaims: {},
                 weeklyArenaRosters: {},
                 weeklyArenaResults: {},
+                arenaTierProgress: normalizeArenaTierProgress(),
+                weeklyArenaGroupAssignments: {},
                 discoveredWordIds: [],
                 correctWordIds: []
             };
@@ -5073,7 +5674,9 @@ const App = () => {
                     weeklyArenaRewardStartWeek: Number(preparedData.weeklyArenaRewardStartWeek)
                 } : {}),
                 weeklyArenaRosters: preparedData.weeklyArenaRosters || {},
-                weeklyArenaResults: preparedData.weeklyArenaResults || {}
+                weeklyArenaResults: preparedData.weeklyArenaResults || {},
+                arenaTierProgress: normalizeArenaTierProgress(preparedData.arenaTierProgress),
+                weeklyArenaGroupAssignments: preparedData.weeklyArenaGroupAssignments || {}
             }, { merge: true });
 
             setUserData(preparedData);
@@ -5558,7 +6161,8 @@ const App = () => {
             await syncWeeklyLeaderboard({
                 userId: auth.currentUser.uid,
                 studentName: updatedUserData.studentName || userName,
-                history: updatedUserData.trialHistory || []
+                history: updatedUserData.trialHistory || [],
+                userData: updatedUserData
             });
         } catch (e) {
             // 公開排行榜只存匿名摘要；即使規則尚未開放，也不影響個人成績保存。
@@ -5814,7 +6418,7 @@ const App = () => {
             case 'login-calendar': return <LoginCalendar onBack={() => { playSound('click'); setView('weekly-report'); }} userData={userData} />;
             case 'achievement-hall': return <AchievementHall onBack={() => { playSound('click'); setView('map'); }} userData={userData} />;
             case 'mistake-notebook': return <MistakeNotebook onBack={() => { playSound('click'); setView('map'); }} mistakeStats={userData?.mistakeStats} onClearMistakes={handleClearMistakes} onRemoveMistake={handleRemoveMistake} />;
-            case 'journey': return <JourneyMode onBack={() => { playSound('click'); setView('map'); }} onViewTrialLog={() => { playSound('click'); setView('trial-log'); }} records={userData?.levelRecords} advMeta={advMeta} mistakeStats={userData?.mistakeStats} />;
+            case 'journey': return <JourneyMode onBack={() => { playSound('click'); setView('map'); }} onViewTrialLog={() => { playSound('click'); setView('trial-log'); }} records={userData?.levelRecords} advMeta={advMeta} mistakeStats={userData?.mistakeStats} arenaTierProgress={userData?.arenaTierProgress} />;
             case 'trial-log': return <TrialLogView onBack={() => { playSound('click'); setView('journey'); }} onRetry={() => { playSound('click'); setView('challenge-setup'); }} trialHistory={userData?.trialHistory} />;
             case 'challenge-setup': return <ChallengeSetup onBack={() => { playSound('click'); setView('map'); }} onStart={handleStartChallenge} advMeta={advMeta} />;
             case 'unit-hub': return <UnitHub unitId={selectedNode?.id} onBack={() => setView('map')} onSelectCategory={(cat) => { setSelectedCategory(cat); setView('study'); }} difficulty={selectedDifficulty} onChangeDifficulty={setSelectedDifficulty} />;
@@ -5965,4 +6569,9 @@ const App = () => {
 
 
 
-export default App;
+const RootApp = () => {
+    const isArenaPreview = new URLSearchParams(window.location.search).get('arena-preview') === '1';
+    return isArenaPreview ? <ArenaTierPreviewLab /> : <App />;
+};
+
+export default RootApp;
