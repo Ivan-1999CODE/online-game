@@ -537,21 +537,21 @@ body.loaded {
 }
 
 .weekly-report-calendar-button {
-  color: #eff6ff;
-  border: 2px solid #93c5fd;
-  background: linear-gradient(145deg, #2563eb, #1d4ed8 58%, #1e40af);
+  color: #dbeafe;
+  border: 2px solid #4f78a8;
+  background: linear-gradient(145deg, #1e3a5f, #172b4f 58%, #111d35);
   box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.2),
-    inset 0 0 10px rgba(147, 197, 253, 0.18),
-    0 0 9px rgba(59, 130, 246, 0.62);
+    inset 0 0 0 1px rgba(191, 219, 254, 0.09),
+    inset 0 0 7px rgba(96, 165, 250, 0.1),
+    0 0 3px rgba(59, 130, 246, 0.24);
   transition: background-color 120ms ease, border-color 120ms ease, transform 120ms ease;
 }
 
 .weekly-report-calendar-button:hover,
 .weekly-report-calendar-button:focus-visible {
   color: #fff;
-  border-color: #dbeafe;
-  background: linear-gradient(145deg, #3b82f6, #2563eb 58%, #1d4ed8);
+  border-color: #7aa2d5;
+  background: linear-gradient(145deg, #294d78, #1e3a5f 58%, #172b4f);
   outline: none;
   transform: translateY(-1px);
 }
