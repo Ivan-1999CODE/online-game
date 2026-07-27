@@ -1,6 +1,8 @@
 // Audio and Speech Management
 
 let availableVoices = [];
+let pronunciationAudio = null;
+const TTS_PILOT_VOICE_KEY = 'englishQuestTtsPilotVoice';
 const loadVoices = () => {
     if (!window.speechSynthesis) return;
     availableVoices = window.speechSynthesis.getVoices();
@@ -8,7 +10,20 @@ const loadVoices = () => {
 loadVoices();
 if (window.speechSynthesis) window.speechSynthesis.onvoiceschanged = loadVoices;
 
-export const speakText = (text) => {
+export const getTtsPilotVoice = () => {
+    if (typeof window === 'undefined') return 'marin';
+    return window.localStorage.getItem(TTS_PILOT_VOICE_KEY) === 'cedar' ? 'cedar' : 'marin';
+};
+
+export const setTtsPilotVoice = (voice) => {
+    const safeVoice = voice === 'cedar' ? 'cedar' : 'marin';
+    if (typeof window !== 'undefined') {
+        window.localStorage.setItem(TTS_PILOT_VOICE_KEY, safeVoice);
+    }
+    return safeVoice;
+};
+
+const speakWithDeviceTts = (text) => {
     if (!window.speechSynthesis) return;
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
@@ -17,6 +32,37 @@ export const speakText = (text) => {
     if (selectedVoice) utterance.voice = selectedVoice;
     utterance.rate = 0.8;
     window.speechSynthesis.speak(utterance);
+};
+
+export const speakText = (text, audioSources = null) => {
+    if (!text) return;
+
+    const selectedVoice = getTtsPilotVoice();
+    const audioSource = typeof audioSources === 'string'
+        ? audioSources
+        : audioSources?.[selectedVoice];
+
+    if (!audioSource) {
+        speakWithDeviceTts(text);
+        return;
+    }
+
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+    if (pronunciationAudio) {
+        pronunciationAudio.pause();
+        pronunciationAudio.currentTime = 0;
+    }
+
+    const audio = new Audio(audioSource);
+    pronunciationAudio = audio;
+    let hasFallenBack = false;
+    const fallback = () => {
+        if (hasFallenBack || pronunciationAudio !== audio) return;
+        hasFallenBack = true;
+        speakWithDeviceTts(text);
+    };
+    audio.addEventListener('error', fallback, { once: true });
+    audio.play().catch(fallback);
 };
 
 // --- BGM Logic ---
