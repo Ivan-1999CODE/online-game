@@ -84,9 +84,46 @@ bgmAudio.loop = true;
 let currentTrackType = null; // 'lobby' | 'challenge' | null
 let isMuted = false;
 let currentVolume = 0.5; // Default volume
+let bgmAudioContext = null;
+let bgmSourceNode = null;
+let bgmGainNode = null;
+
+const ensureBgmAudioGraph = () => {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return false;
+
+    try {
+        if (!bgmAudioContext) bgmAudioContext = new AudioContext();
+        if (!bgmGainNode) {
+            bgmGainNode = bgmAudioContext.createGain();
+            bgmGainNode.gain.value = currentVolume;
+            bgmGainNode.connect(bgmAudioContext.destination);
+        }
+        if (!bgmSourceNode) {
+            bgmSourceNode = bgmAudioContext.createMediaElementSource(bgmAudio);
+            bgmSourceNode.connect(bgmGainNode);
+        }
+        return true;
+    } catch (error) {
+        console.log("BGM Web Audio setup failed; using media element volume fallback:", error);
+        return false;
+    }
+};
+
+const resumeBgmAudioContext = () => {
+    if (
+        !ensureBgmAudioGraph()
+        || bgmAudioContext.state === 'running'
+        || bgmAudioContext.state === 'closed'
+    ) return;
+    bgmAudioContext.resume().catch(error => {
+        console.log("BGM audio context resume failed:", error);
+    });
+};
 
 export const unlockAudio = () => {
     // Mobile browsers require a user gesture to "unlock" the AudioContext/Element
+    resumeBgmAudioContext();
     if (bgmAudio) {
         bgmAudio.play().then(() => {
             bgmAudio.pause();
@@ -94,13 +131,6 @@ export const unlockAudio = () => {
         }).catch(e => {
             console.log("Audio unlock failed (likely already unlocked or policy restricted):", e);
         });
-    }
-
-    // Also unlock Web Audio API if used
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    if (AudioContext) {
-        const ctx = new AudioContext();
-        ctx.resume();
     }
 };
 
@@ -123,7 +153,14 @@ export const playMusic = (type) => {
         bgmAudio.src = path;
     }
 
-    bgmAudio.volume = currentVolume;
+    const usesWebAudioVolume = ensureBgmAudioGraph();
+    if (usesWebAudioVolume) {
+        bgmAudio.volume = 1;
+        bgmGainNode.gain.value = currentVolume;
+        resumeBgmAudioContext();
+    } else {
+        bgmAudio.volume = currentVolume;
+    }
 
     const playPromise = bgmAudio.play();
     if (playPromise !== undefined) {
@@ -145,6 +182,7 @@ export const setMute = (mute) => {
         bgmAudio.pause();
     } else {
         if (currentTrackType) {
+            resumeBgmAudioContext();
             // Attempt to resume
             bgmAudio.play().catch(e => console.log("Resume failed:", e));
         }
@@ -153,7 +191,14 @@ export const setMute = (mute) => {
 
 export const setVolume = (value) => {
     currentVolume = Math.max(0, Math.min(1, value));
-    if (bgmAudio) {
+    if (ensureBgmAudioGraph()) {
+        bgmAudio.volume = 1;
+        bgmGainNode.gain.value = currentVolume;
+        resumeBgmAudioContext();
+        if (!isMuted && currentTrackType && bgmAudio.paused) {
+            bgmAudio.play().catch(error => console.log("BGM slider resume failed:", error));
+        }
+    } else if (bgmAudio) {
         bgmAudio.volume = currentVolume;
     }
 };
