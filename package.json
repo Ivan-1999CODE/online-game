@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "audit:tts": "node scripts/audit_tts_audio.mjs",
+    "audit:tts:waveform": "node scripts/audit_tts_waveform_server.mjs"
   },
   "dependencies": {
     "firebase": "^10.7.1",

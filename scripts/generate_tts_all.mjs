@@ -24,8 +24,12 @@ const args = new Set(process.argv.slice(2));
 const dryRun = args.has('--dry-run');
 const concurrencyArg = process.argv.find(arg => arg.startsWith('--concurrency='));
 const limitArg = process.argv.find(arg => arg.startsWith('--limit='));
+const retryReportArg = process.argv.find(arg => arg.startsWith('--retry-report='));
 const concurrency = Math.max(1, Math.min(8, Number(concurrencyArg?.split('=')[1]) || 6));
 const limit = Math.max(0, Number(limitArg?.split('=')[1]) || 0);
+const retryReportPath = retryReportArg
+    ? join(projectRoot, retryReportArg.slice(retryReportArg.indexOf('=') + 1))
+    : '';
 
 const loadEnvValue = (key) => {
     if (!existsSync(envPath)) return '';
@@ -39,6 +43,22 @@ const loadEnvValue = (key) => {
 const inventory = buildTtsInventory(projectRoot);
 if (inventory.entryKeyCollisions.length > 0) {
     throw new Error(`發音清單有 ${inventory.entryKeyCollisions.length} 個索引碰撞，停止產生。`);
+}
+
+const retryStateKeys = new Set();
+if (retryReportPath) {
+    if (!existsSync(retryReportPath)) {
+        throw new Error(`找不到波形稽核報告：${retryReportPath}`);
+    }
+    const retryReport = JSON.parse(readFileSync(retryReportPath, 'utf8'));
+    for (const issue of retryReport.issues || []) {
+        const shouldRetry = (issue.issues || []).some(label =>
+            ['silent-or-near-silent', 'very-quiet', 'decode-error'].includes(label)
+        );
+        if (shouldRetry && voices.includes(issue.voice) && issue.specId) {
+            retryStateKeys.add(`${issue.voice}:${issue.specId}`);
+        }
+    }
 }
 
 const toObjectLiteral = (mapping) => JSON.stringify(Object.fromEntries(mapping), null, 4);
@@ -78,6 +98,7 @@ const summary = {
     ...inventory.sourceSummary,
     voices,
     requestedFiles: inventory.specs.length * voices.length,
+    requestedRepairs: retryStateKeys.size,
     concurrency,
     dryRun
 };
@@ -202,8 +223,9 @@ for (const spec of inventory.specs) {
         mkdirSync(voiceDirectory, { recursive: true });
         const filePath = join(voiceDirectory, `${spec.stem}.mp3`);
         const stateKey = `${voice}:${spec.id}`;
+        const shouldRetry = retryStateKeys.has(stateKey);
 
-        if (existsSync(filePath) && statSync(filePath).size > 500) {
+        if (!shouldRetry && existsSync(filePath) && statSync(filePath).size > 500) {
             const buffer = readFileSync(filePath);
             generationState.items[stateKey] = {
                 voice,
@@ -237,7 +259,7 @@ for (const spec of inventory.specs) {
             continue;
         }
 
-        tasks.push({ spec, voice, filePath, stateKey });
+        tasks.push({ spec, voice, filePath, stateKey, shouldRetry });
     }
 }
 saveState();
@@ -269,7 +291,7 @@ const worker = async () => {
                 bytes: buffer.length,
                 sha256: createHash('sha256').update(buffer).digest('hex'),
                 completedAt: new Date().toISOString(),
-                source: 'openai'
+                source: task.shouldRetry ? 'openai-repair' : 'openai'
             };
             completedThisRun += 1;
             if (completedThisRun % 10 === 0 || completedThisRun === pendingTasks.length) {
