@@ -3,12 +3,13 @@ import {
     Sword, Shield, Scroll, Skull, Coins, Heart, Star, ChevronLeft, ChevronRight,
     Volume2, Map as MapIcon, RefreshCw, XCircle, CheckCircle,
     HelpCircle, Backpack, Gem, Flame, Skull as SkullIcon, Book, User,
-    List, Grid, ArrowLeft, Lightbulb, MessageCircle, Clock, Award, Home, Lock, LogOut, Headphones, CalendarDays, Search
+    List, Grid, ArrowLeft, Lightbulb, MessageCircle, Clock, Award, ShieldCheck, Home, Lock, LogOut, Headphones, CalendarDays, Search
 } from 'lucide-react';
-import { collection, query, where, getDocs, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs, doc, getDoc, setDoc, updateDoc, FieldPath } from 'firebase/firestore';
 import { signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut } from 'firebase/auth';
 import { db, auth, googleProvider } from './config/firebase';
-import { speakText, playSound, shuffleArray, playMusic, stopMusic, setMute, getMuteStatus, setVolume, unlockAudio } from './utils/audio';
+import { speakText, playSound, shuffleArray, playMusic, stopMusic, setMute, getMuteStatus, setVolume, unlockAudio, getTtsPilotVoice, setTtsPilotVoice } from './utils/audio';
+import { getTtsAudio } from './constants/ttsAudioData';
 import TeacherDashboard from './components/TeacherDashboard.jsx';
 import { TRIVIA_CARDS, TRIVIA_CATEGORIES, TRIVIA_GROUPS, TRIVIA_LEGACY_ID_MAP, TRIVIA_SOURCES } from './constants/triviaData';
 import { hasAmbiguousTranslation, needsEnglishPrompt } from './constants/quizOptionRules';
@@ -199,6 +200,7 @@ const fetchLevelData = async (levelId) => {
 
         snapshot.forEach(doc => {
             const data = doc.data();
+            const categoryStr = String(data.category);
             const item = {
                 id: doc.id,
                 word: data.word || data.phrase || '',
@@ -207,15 +209,17 @@ const fetchLevelData = async (levelId) => {
                 sentence: data.example || data.sentence || '',
                 sentence_ch: data.sentence_ch || '',
                 book: data.book || mapping.book,
-                unit: data.unit || mapping.unit
+                unit: data.unit || mapping.unit,
+                category: categoryStr,
+                audioScope: String(levelId)
             };
+            const withAudio = (audioItem) => ({ ...audioItem, audio: getTtsAudio(audioItem) });
 
-            const categoryStr = String(data.category);
             if (categoryStr.includes("1") || categoryStr.includes("單字")) {
-                categories.vocab.push(item);
+                categories.vocab.push(withAudio(item));
             } else if (categoryStr.includes("2") || categoryStr.includes("搭配字")) {
                 // 搭配裝備：顯示完整片語，不是基礎動詞
-                categories.collocation.push({ ...item, word: data.phrase || data.word || '' });
+                categories.collocation.push(withAudio({ ...item, word: data.phrase || data.word || '' }));
             } else if (categoryStr.includes("4") || categoryStr.includes("一字多義")) {
                 // 支援 details 欄位、definitions[] 陣列格式和舊的單一 chinese 欄位
                 let chineseStr = data.chinese || '';
@@ -225,9 +229,19 @@ const fetchLevelData = async (levelId) => {
                 if (!chineseStr && data.definitions && Array.isArray(data.definitions)) {
                     chineseStr = data.definitions.map(d => `[${d.pos}] ${d.mean}`).join(' / ');
                 }
-                categories.polysemy.push({ id: doc.id, word: data.word, chinese: chineseStr, definitions: data.definitions || [], book: data.book || mapping.book, unit: data.unit || mapping.unit });
+                categories.polysemy.push(withAudio({
+                    id: doc.id,
+                    word: data.word,
+                    chinese: chineseStr,
+                    part: data.pos || data.part || '',
+                    definitions: data.definitions || [],
+                    book: data.book || mapping.book,
+                    unit: data.unit || mapping.unit,
+                    category: categoryStr,
+                    audioScope: String(levelId)
+                }));
             } else if (categoryStr.includes("3") || categoryStr.includes("片語") || categoryStr.includes("佳句")) {
-                categories.sentences.push(item);
+                categories.sentences.push(withAudio(item));
             }
         });
 
@@ -264,8 +278,8 @@ const getAdvancedStarGrades = (record = {}) => {
         : [];
     if (storedGrades.length > 0) {
         return [...storedGrades]
-            .sort((a, b) => ADV_GRADE_ORDER[a] - ADV_GRADE_ORDER[b])
-            .slice(-ADV_CLEARS_TO_COMPLETE);
+            .sort((a, b) => ADV_GRADE_ORDER[b] - ADV_GRADE_ORDER[a])
+            .slice(0, ADV_CLEARS_TO_COMPLETE);
     }
 
     const legacyCount = Math.min(getAdvancedQualifiedClears(record), ADV_CLEARS_TO_COMPLETE);
@@ -274,15 +288,22 @@ const getAdvancedStarGrades = (record = {}) => {
     if (ADV_PASSING_GRADES.includes(record.bestGrade)) {
         legacyGrades[legacyGrades.length - 1] = record.bestGrade;
     }
-    return legacyGrades.sort((a, b) => ADV_GRADE_ORDER[a] - ADV_GRADE_ORDER[b]);
+    return legacyGrades.sort((a, b) => ADV_GRADE_ORDER[b] - ADV_GRADE_ORDER[a]);
 };
 const addAdvancedStarGrade = (record = {}, grade) => {
     const grades = getAdvancedStarGrades(record);
-    if (ADV_PASSING_GRADES.includes(grade)) grades.push(grade);
-    return grades
-        .sort((a, b) => ADV_GRADE_ORDER[b] - ADV_GRADE_ORDER[a])
-        .slice(0, ADV_CLEARS_TO_COMPLETE)
-        .sort((a, b) => ADV_GRADE_ORDER[a] - ADV_GRADE_ORDER[b]);
+    if (!ADV_PASSING_GRADES.includes(grade)) return grades;
+
+    if (grades.length < ADV_CLEARS_TO_COMPLETE) {
+        return [...grades, grade]
+            .sort((a, b) => ADV_GRADE_ORDER[b] - ADV_GRADE_ORDER[a]);
+    }
+
+    const worstGrade = grades[grades.length - 1];
+    if (ADV_GRADE_ORDER[grade] <= ADV_GRADE_ORDER[worstGrade]) return grades;
+
+    return [...grades.slice(0, -1), grade]
+        .sort((a, b) => ADV_GRADE_ORDER[b] - ADV_GRADE_ORDER[a]);
 };
 
 // 進階書目錄：meta/advanced 文件 { totalLessons, titles: { "1": "篇章名" } }，由匯入腳本維護
@@ -303,7 +324,7 @@ const fetchAdvancedLesson = async (lesson) => {
         const vocab = [];
         snapshot.forEach(docSnap => {
             const data = docSnap.data();
-            vocab.push({
+            const item = {
                 id: docSnap.id,
                 word: data.word || '',
                 chinese: data.chinese || '',
@@ -311,8 +332,11 @@ const fetchAdvancedLesson = async (lesson) => {
                 sentence: data.example || data.sentence || '',
                 sentence_ch: data.sentence_ch || '',
                 series: 'advanced',
-                lesson
-            });
+                lesson,
+                category: 'advanced',
+                audioScope: `adv_${lesson}`
+            };
+            vocab.push({ ...item, audio: getTtsAudio(item) });
         });
         vocab.sort((a, b) => a.word.localeCompare(b.word));
         return { vocab, vocab_a: [], vocab_b: [], collocation: [], polysemy: [], sentences: [] };
@@ -630,6 +654,8 @@ const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 const DAY_MS = 24 * 60 * 60 * 1000;
 const ARENA_RIVAL_LIMIT = 7;
 const ARENA_RETAINED_REAL_LIMIT = 5;
+const ARENA_RESULT_VERSION = 1;
+const ARENA_RANK_REWARD_COUNTS = { 1: 2, 2: 1, 3: 1 };
 const ADVENTURE_MILESTONES = [3, 7, 14, 30, 60, 100, 150, 200, 365];
 const CORRECT_WORD_MILESTONES = [50, 150, 500, 1000, 2000, 3000];
 const LEGACY_WORD_MILESTONES = [50, 100, 250, 500, 1000];
@@ -1028,6 +1054,35 @@ const getWeeklyStats = (history = [], range) => {
     };
 };
 
+const getWeeklySessionScores = (history = [], range) => history
+    .filter(record => {
+        const time = getHistoryTime(record);
+        return time !== null && time >= range.startMs && time < range.endMs;
+    })
+    .sort((a, b) => getHistoryTime(a) - getHistoryTime(b))
+    .map(record => Number(record.score) || 0);
+
+const toPublicArenaEntry = (student = {}) => ({
+    id: student.userId || student.id,
+    maskedName: student.maskedName || '神秘勇者',
+    weekly: {
+        score: Number(student.score) || 0,
+        sessions: Number(student.sessions) || 0,
+        accuracy: Number(student.accuracy) || 0,
+        hasAccuracy: Boolean(student.hasAccuracy),
+        activeDays: Number(student.activeDays) || 0,
+        correct: 0,
+        answered: 0
+    }
+});
+
+const sortArenaLeaderboard = (entries = []) => [...entries].sort((a, b) => (
+    b.weekly.score - a.weekly.score ||
+    b.weekly.accuracy - a.weekly.accuracy ||
+    b.weekly.sessions - a.weekly.sessions ||
+    String(a.id).localeCompare(String(b.id))
+));
+
 const getQualifiedHistoryDates = (history = []) => [...new Set(history
     .filter(record => CHECK_IN_GRADES.includes(record?.rank))
     .map(getHistoryTime)
@@ -1322,9 +1377,30 @@ const getAllWeeklyPendingRewards = (data = {}) => {
         .flatMap(startMs => getWeeklyPendingRewards(data, { startMs, endMs: startMs + WEEK_MS }).rewards);
 };
 
+const getPendingArenaTriviaRewards = (data = {}) => {
+    const claims = data.triviaRewardClaims || {};
+    return Object.values(data.weeklyArenaResults || {})
+        .filter(result => result?.participated && Number(result.rewardCount) > 0)
+        .sort((a, b) => Number(a.weekStart) - Number(b.weekStart))
+        .flatMap(result => Array.from({ length: Number(result.rewardCount) }, (_, index) => {
+            const rewardNumber = index + 1;
+            const key = `arena:${result.weekStart}:rank:${result.rank}:reward:${rewardNumber}`;
+            if (claims[key]) return null;
+            return {
+                key,
+                label: `抽取上週競技場第 ${result.rank} 名獎勵${result.rewardCount > 1 ? `（${rewardNumber}/${result.rewardCount}）` : ''}`,
+                sourceLabel: `上週競技小隊第 ${result.rank} 名`,
+                isSpecial: Number(result.rank) === 1,
+                rewardType: 'arena'
+            };
+        }))
+        .filter(Boolean);
+};
+
 const getAllPendingTriviaRewards = (data = {}) => {
     const rewards = [
         ...getAllWeeklyPendingRewards(data),
+        ...getPendingArenaTriviaRewards(data),
         ...getPendingProgressTriviaRewards(data),
         ...getAchievementTriviaRewards(data)
     ];
@@ -1379,6 +1455,167 @@ const syncWeeklyLeaderboard = async ({ userId, studentName, history }) => {
         activeDays: weekly.activeDays,
         updatedAt: new Date().toISOString()
     }, { merge: true });
+};
+
+const fetchWeeklyLeaderboardEntries = async (range) => {
+    const leaderboardQuery = query(collection(db, 'weeklyLeaderboard'), where('weekStart', '==', range.startMs));
+    const snapshot = await getDocs(leaderboardQuery);
+    return snapshot.docs.map(studentDoc => toPublicArenaEntry({ id: studentDoc.id, ...studentDoc.data() }));
+};
+
+const isStoredArenaRosterValid = (roster) => (
+    Number(roster?.version) >= 5 && Array.isArray(roster?.simulatedRivals) && Array.isArray(roster?.rivalIds)
+);
+
+const getArenaEntriesForRoster = ({ userId, userData, range, roster, publicEntries, asOfMs }) => {
+    const currentStats = getWeeklyStats(userData.trialHistory || [], range);
+    const sessionScores = getWeeklySessionScores(userData.trialHistory || [], range);
+    const selfEntry = {
+        id: userId,
+        maskedName: maskStudentName(userData.studentName),
+        weekly: currentStats
+    };
+    const rivalIdSet = new Set(roster.rivalIds || []);
+    const simulatedEntries = (roster.simulatedRivals || []).map(rival => (
+        getSimulatedArenaEntry(rival, asOfMs, {
+            sessionScores,
+            activeDays: currentStats.activeDays
+        })
+    ));
+    return [
+        selfEntry,
+        ...publicEntries.filter(student => student.id !== userId && rivalIdSet.has(student.id)),
+        ...simulatedEntries
+    ];
+};
+
+const calculateWeeklyArenaResult = ({ userId, userData, range, roster, publicEntries }) => {
+    const currentStats = getWeeklyStats(userData.trialHistory || [], range);
+    const participated = currentStats.sessions > 0;
+    const arenaEntries = getArenaEntriesForRoster({
+        userId,
+        userData,
+        range,
+        roster,
+        publicEntries,
+        asOfMs: range.endMs - 1
+    });
+    const leaderboard = sortArenaLeaderboard(arenaEntries);
+    const calculatedRank = leaderboard.findIndex(student => student.id === userId) + 1;
+    const rank = participated && calculatedRank > 0 ? calculatedRank : null;
+    return {
+        version: ARENA_RESULT_VERSION,
+        weekStart: range.startMs,
+        weekEnd: range.endMs,
+        participated,
+        rank,
+        score: currentStats.score,
+        participantCount: arenaEntries.length,
+        rewardCount: rank ? (ARENA_RANK_REWARD_COUNTS[rank] || 0) : 0,
+        settledAt: new Date().toISOString(),
+        seenAt: null
+    };
+};
+
+const trimNumericKeyedRecords = (records = {}, limit = 8) => Object.fromEntries(
+    Object.entries(records)
+        .sort(([a], [b]) => Number(b) - Number(a))
+        .slice(0, limit)
+);
+
+const prepareWeeklyArenaOnLogin = async ({ userId, userData }) => {
+    const currentRange = getTaipeiWeekRange(0);
+    const rewardStartWeek = Number(userData.weeklyArenaRewardStartWeek) || currentRange.startMs;
+    let rosters = { ...(userData.weeklyArenaRosters || {}) };
+    let results = { ...(userData.weeklyArenaResults || {}) };
+
+    const unsettledWeekStarts = Object.keys(rosters)
+        .map(Number)
+        .filter(weekStart => (
+            Number.isFinite(weekStart)
+            && weekStart >= rewardStartWeek
+            && weekStart < currentRange.startMs
+            && (Number(results[String(weekStart)]?.version) || 0) < ARENA_RESULT_VERSION
+            && isStoredArenaRosterValid(rosters[String(weekStart)])
+        ))
+        .sort((a, b) => a - b);
+
+    for (const weekStart of unsettledWeekStarts) {
+        const range = { startMs: weekStart, endMs: weekStart + WEEK_MS };
+        try {
+            const publicEntries = await fetchWeeklyLeaderboardEntries(range);
+            results[String(weekStart)] = calculateWeeklyArenaResult({
+                userId,
+                userData,
+                range,
+                roster: rosters[String(weekStart)],
+                publicEntries
+            });
+        } catch (error) {
+            console.warn(`競技場 ${formatWeekRange(range)} 結算失敗，將於下次登入重試。`, error);
+        }
+    }
+
+    const currentRosterKey = String(currentRange.startMs);
+    if (!isStoredArenaRosterValid(rosters[currentRosterKey])) {
+        try {
+            const publicEntries = await fetchWeeklyLeaderboardEntries(currentRange);
+            const currentStats = getWeeklyStats(userData.trialHistory || [], currentRange);
+            const previousStats = getWeeklyStats(userData.trialHistory || [], {
+                startMs: currentRange.startMs - WEEK_MS,
+                endMs: currentRange.startMs
+            });
+            const selfEntry = {
+                id: userId,
+                maskedName: maskStudentName(userData.studentName),
+                weekly: currentStats
+            };
+            rosters[currentRosterKey] = buildArenaRoster(
+                [selfEntry, ...publicEntries.filter(student => student.id !== userId)],
+                userId,
+                currentStats.score,
+                {
+                    previousRoster: rosters[String(currentRange.startMs - WEEK_MS)],
+                    weekStart: currentRange.startMs,
+                    referenceScore: Math.max(currentStats.score, previousStats.score),
+                    seed: `${userId}:${currentRange.startMs}`
+                }
+            );
+        } catch (error) {
+            console.warn('本週競技小隊建立失敗，將於下次登入重試。', error);
+        }
+    }
+
+    const completedResults = Object.values(results)
+        .filter(result => Number(result?.weekStart) < currentRange.startMs)
+        .sort((a, b) => Number(b.weekStart) - Number(a.weekStart));
+    const newestResult = completedResults[0] || null;
+    const notification = newestResult && !newestResult.seenAt ? newestResult : null;
+    const skippedUnseenResults = completedResults.filter(result => (
+        !result.seenAt && result.weekStart !== notification?.weekStart
+    ));
+    if (skippedUnseenResults.length > 0) {
+        const skippedAt = new Date().toISOString();
+        skippedUnseenResults.forEach(result => {
+            results[String(result.weekStart)] = {
+                ...result,
+                seenAt: skippedAt,
+                notificationSkipped: true
+            };
+        });
+    }
+
+    rosters = trimNumericKeyedRecords(rosters, 8);
+    results = trimNumericKeyedRecords(results, 16);
+    return {
+        userData: {
+            ...userData,
+            weeklyArenaRewardStartWeek: rewardStartWeek,
+            weeklyArenaRosters: rosters,
+            weeklyArenaResults: results
+        },
+        notification
+    };
 };
 
 const TriviaAlbum = ({ onBack, userData, onClaimTrivia }) => {
@@ -1585,7 +1822,7 @@ const TriviaAlbum = ({ onBack, userData, onClaimTrivia }) => {
     );
 };
 
-const WeeklyReport = ({ onBack, onOpenAlbum, onOpenAchievements, currentUserId, userData, onSaveArenaRoster }) => {
+const WeeklyReport = ({ onBack, onOpenAlbum, onViewLoginCalendar, currentUserId, userData, onSaveArenaRoster }) => {
     const [period, setPeriod] = useState('current');
     const [students, setStudents] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -1614,26 +1851,7 @@ const WeeklyReport = ({ onBack, onOpenAlbum, onOpenAchievements, currentUserId, 
 
     const currentStats = getWeeklyStats(userData?.trialHistory || [], range);
     const previousStats = getWeeklyStats(userData?.trialHistory || [], getTaipeiWeekRange(-1));
-    const currentSessionScores = (userData?.trialHistory || [])
-        .filter(record => {
-            const time = getHistoryTime(record);
-            return time !== null && time >= range.startMs && time < range.endMs;
-        })
-        .sort((a, b) => getHistoryTime(a) - getHistoryTime(b))
-        .map(record => Number(record.score) || 0);
-    const publicEntries = students.map(student => ({
-        id: student.userId || student.id,
-        maskedName: student.maskedName || '神秘勇者',
-        weekly: {
-            score: Number(student.score) || 0,
-            sessions: Number(student.sessions) || 0,
-            accuracy: Number(student.accuracy) || 0,
-            hasAccuracy: Boolean(student.hasAccuracy),
-            activeDays: Number(student.activeDays) || 0,
-            correct: 0,
-            answered: 0
-        }
-    }));
+    const publicEntries = students.map(toPublicArenaEntry);
     const selfEntry = { id: currentUserId, maskedName: maskStudentName(userData?.studentName), weekly: currentStats };
     const entriesWithSelf = [selfEntry, ...publicEntries.filter(student => student.id !== currentUserId)];
     const rosterKey = String(range.startMs);
@@ -1645,22 +1863,19 @@ const WeeklyReport = ({ onBack, onOpenAlbum, onOpenAchievements, currentUserId, 
         referenceScore: Math.max(currentStats.score, previousStats.score),
         seed: `${currentUserId}:${range.startMs}`
     });
-    const storedRosterIsCurrent = storedRoster?.version === 5 && Array.isArray(storedRoster.simulatedRivals);
+    const storedRosterIsCurrent = isStoredArenaRosterValid(storedRoster);
     const activeRoster = storedRosterIsCurrent ? storedRoster : proposedRoster;
-    const rivalIdSet = new Set(activeRoster.rivalIds || []);
-    const simulatedEntries = (activeRoster.simulatedRivals || []).map(rival => (
-        getSimulatedArenaEntry(rival, Math.min(Date.now(), range.endMs - 1), {
-            sessionScores: currentSessionScores,
-            activeDays: currentStats.activeDays
-        })
-    ));
-    const arenaEntries = [selfEntry, ...publicEntries.filter(student => rivalIdSet.has(student.id)), ...simulatedEntries];
-    const leaderboard = [...arenaEntries].sort((a, b) => (
-        b.weekly.score - a.weekly.score ||
-        b.weekly.accuracy - a.weekly.accuracy ||
-        b.weekly.sessions - a.weekly.sessions
-    ));
+    const arenaEntries = getArenaEntriesForRoster({
+        userId: currentUserId,
+        userData,
+        range,
+        roster: activeRoster,
+        publicEntries,
+        asOfMs: Math.min(Date.now(), range.endMs - 1)
+    });
+    const leaderboard = sortArenaLeaderboard(arenaEntries);
     const currentRank = leaderboard.findIndex(student => student.id === currentUserId) + 1;
+    const settledResult = userData?.weeklyArenaResults?.[rosterKey] || null;
     const studentsWithAccuracy = arenaEntries.filter(student => student.weekly.hasAccuracy);
     const classAverage = arenaEntries.length > 0 ? {
         score: arenaEntries.reduce((sum, student) => sum + student.weekly.score, 0) / arenaEntries.length,
@@ -1698,8 +1913,8 @@ const WeeklyReport = ({ onBack, onOpenAlbum, onOpenAchievements, currentUserId, 
                     <h2 className="font-pixel text-sm text-yellow-300">每週冒險戰報</h2>
                     <p className="font-retro text-[10px] text-gray-400">WEEKLY QUEST REPORT</p>
                 </div>
-                <button onClick={onOpenAchievements} className="w-9 h-9 flex items-center justify-center border-2 border-cyan-400/60 bg-cyan-950/60 text-yellow-300 hover:bg-cyan-800" title="英雄徽章館" aria-label="打開英雄徽章館，查看尚未達成的成就">
-                    <Award size={20} />
+                <button onClick={onViewLoginCalendar} className="w-9 h-9 flex items-center justify-center border-2 border-cyan-400/60 bg-cyan-950/60 text-cyan-300 hover:bg-cyan-800" title="冒險打卡日曆" aria-label="打開冒險打卡日曆">
+                    <CalendarDays size={20} />
                 </button>
             </div>
 
@@ -1712,8 +1927,11 @@ const WeeklyReport = ({ onBack, onOpenAlbum, onOpenAchievements, currentUserId, 
                 <section className="border-4 border-cyan-400/60 bg-gradient-to-br from-cyan-950/80 to-purple-950/80 p-3 shadow-xl">
                     <div className="flex justify-between items-center mb-3">
                         <h3 className="font-pixel text-xs text-cyan-300">本日打卡</h3>
-                        <span className="font-retro text-[10px] text-gray-400">台北時間每日計算一次</span>
+                        <button onClick={onViewLoginCalendar} className="font-retro text-[10px] text-cyan-300 hover:text-white">
+                            查看日曆 ›
+                        </button>
                     </div>
+                    <p className="font-retro text-[10px] text-gray-400 mb-3">台北時間每日計算一次</p>
                     <div className={`border-2 p-3 text-center ${todayCheckedIn ? 'border-green-400 bg-green-950/50' : 'border-yellow-400 bg-yellow-950/35'}`}>
                         <div className={`font-pixel text-2xl ${todayCheckedIn ? 'text-green-300' : 'text-yellow-300'}`}>{todayCheckedIn ? '1 / 1' : '0 / 1'}</div>
                         <div className="font-retro text-[10px] text-gray-200 mt-2">{todayCheckedIn ? '今日打卡已完成' : '今日尚未完成打卡'}</div>
@@ -1752,6 +1970,30 @@ const WeeklyReport = ({ onBack, onOpenAlbum, onOpenAchievements, currentUserId, 
                         {period === 'current' ? '每週一 00:00 重新累積，週日 23:59 結算。' : '排行依每場分數加總；同分時依準確率與挑戰場次排序。'}
                     </p>
                 </section>
+
+                {period === 'previous' && settledResult && (
+                    <section className="border-4 border-blue-500/60 bg-gradient-to-br from-blue-950/80 to-purple-950/70 p-4 text-center">
+                        <div className="font-pixel text-[9px] text-blue-300">上週固定競技小隊結算</div>
+                        {settledResult.participated ? (
+                            <>
+                                <div className="font-pixel text-3xl text-white mt-3">第 {settledResult.rank} 名</div>
+                                <div className="font-retro text-xs text-gray-300 mt-2">
+                                    {settledResult.score} 分 · 共 {settledResult.participantCount} 人
+                                </div>
+                                <div className="font-retro text-xs text-amber-300 mt-2">
+                                    {settledResult.rewardCount > 0
+                                        ? `獲得 ${settledResult.rewardCount} 次冷知識抽卡`
+                                        : '本週沒有額外抽卡獎勵'}
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                <div className="font-pixel text-lg text-gray-300 mt-3">上週未參賽</div>
+                                <div className="font-retro text-xs text-gray-500 mt-2">沒有產生競技小隊名次</div>
+                            </>
+                        )}
+                    </section>
+                )}
 
                 <section className="border-2 border-purple-400/50 bg-black/30 p-3">
                     <div className="flex items-center justify-between mb-3">
@@ -1888,6 +2130,83 @@ const LoginStampModal = ({ data, onClose }) => {
     );
 };
 
+const WeeklyArenaSettlementModal = ({ data, onPrimary, onLater }) => {
+    const [revealed, setRevealed] = useState(false);
+    if (!data) return null;
+
+    const rankMessages = {
+        1: { icon: '👑', title: '小隊冠軍！', color: 'text-yellow-300' },
+        2: { icon: '🥈', title: '勇者亞軍！', color: 'text-slate-200' },
+        3: { icon: '🥉', title: '躋身前三名！', color: 'text-orange-300' }
+    };
+    const rankMessage = rankMessages[data.rank] || {
+        icon: '⚔️',
+        title: `上週競技小隊第 ${data.rank} 名`,
+        color: 'text-blue-300'
+    };
+    const rangeLabel = formatWeekRange({ startMs: data.weekStart, endMs: data.weekEnd });
+
+    return (
+        <div className="absolute inset-0 z-[90] bg-black/85 flex items-center justify-center p-5">
+            <div className="w-full max-w-xs border-4 border-blue-400 bg-gradient-to-b from-[#182b5b] via-[#25194a] to-[#130d26] text-white p-5 text-center shadow-[0_0_28px_rgba(96,165,250,0.45)]">
+                {!revealed ? (
+                    <>
+                        <div className="text-5xl mb-4">🏟️</div>
+                        <p className="font-pixel text-[9px] text-blue-300">{rangeLabel}</p>
+                        <h3 className="font-pixel text-sm text-white mt-3 leading-relaxed">上週競技場已結算！</h3>
+                        <p className="font-retro text-sm text-gray-300 mt-3 leading-relaxed">
+                            點擊查看你在競技小隊中的最終名次
+                        </p>
+                        <RPGButton onClick={() => setRevealed(true)} color="primary" className="w-full mt-5 py-3">
+                            揭曉名次
+                        </RPGButton>
+                    </>
+                ) : (
+                    <>
+                        {data.participated ? (
+                            <>
+                                <div className="text-6xl mb-3">{rankMessage.icon}</div>
+                                <p className={`font-pixel text-sm leading-relaxed ${rankMessage.color}`}>{rankMessage.title}</p>
+                                <div className="font-pixel text-4xl text-white mt-4">第 {data.rank} 名</div>
+                                <p className="font-retro text-sm text-gray-300 mt-3">
+                                    上週累積 {data.score} 分 · 共 {data.participantCount} 人
+                                </p>
+                                {data.rewardCount > 0 ? (
+                                    <div className="border-2 border-amber-400 bg-amber-950/50 p-3 mt-4">
+                                        <div className="font-pixel text-lg text-amber-300">+{data.rewardCount} 次</div>
+                                        <div className="font-retro text-xs text-amber-100 mt-1">冷知識抽卡獎勵</div>
+                                    </div>
+                                ) : (
+                                    <p className="font-retro text-sm text-blue-200 mt-4">
+                                        新的一週已開始，再向前三名發起挑戰吧！
+                                    </p>
+                                )}
+                            </>
+                        ) : (
+                            <>
+                                <div className="text-6xl mb-3">🌙</div>
+                                <h3 className="font-pixel text-lg text-gray-300">上週未參賽</h3>
+                                <p className="font-retro text-sm text-gray-400 mt-3 leading-relaxed">
+                                    上週沒有完成挑戰，因此不顯示競技小隊名次。
+                                </p>
+                            </>
+                        )}
+
+                        <div className="grid grid-cols-1 gap-2 mt-5">
+                            <RPGButton onClick={onPrimary} color={data.rewardCount > 0 ? 'success' : 'accent'} className="w-full py-3">
+                                {data.rewardCount > 0 ? '前往收藏冊抽卡' : '查看上週戰報'}
+                            </RPGButton>
+                            <button onClick={onLater} className="w-full min-h-11 border-2 border-blue-500/60 bg-black/30 text-blue-200 hover:bg-blue-950 font-retro text-sm">
+                                {data.rewardCount > 0 ? '稍後再抽' : '開始本週冒險'}
+                            </button>
+                        </div>
+                    </>
+                )}
+            </div>
+        </div>
+    );
+};
+
 const LoginCalendar = ({ onBack, userData }) => {
     const todayKey = getTaipeiDateKey();
     const [todayYear, todayMonth] = todayKey.split('-').map(Number);
@@ -1993,7 +2312,7 @@ const AchievementHall = ({ onBack, userData }) => {
             <div className="flex items-center justify-between p-3 border-b-4 border-cyan-500/60 bg-black/50">
                 <RPGButton onClick={onBack} color="dark" className="px-2"><ArrowLeft size={16} /></RPGButton>
                 <div className="text-center"><h2 className="font-pixel text-sm text-cyan-300">英雄徽章館</h2><p className="font-retro text-[10px] text-gray-400">HERO BADGE HALL</p></div>
-                <Award size={23} className="text-yellow-300" />
+                <ShieldCheck size={23} className="text-blue-400" />
             </div>
             <div className="flex-1 overflow-y-auto p-3 space-y-3">
                 <p className="font-retro text-xs text-gray-300 border-2 border-cyan-500/30 bg-cyan-950/30 p-3">
@@ -2075,7 +2394,7 @@ const AchievementHall = ({ onBack, userData }) => {
     );
 };
 
-const WorldMap = ({ onSelectNode, onViewJourney, onViewWeeklyReport, onViewLoginCalendar, onOpenAlbum, rewardSummary = {}, userData, onUltimateChallenge, onViewMistakeNotebook, onLogout, records = {}, advMeta = null, activeTab = 'main', onChangeTab }) => {
+const WorldMap = ({ onSelectNode, onViewJourney, onViewWeeklyReport, onOpenAchievements, onOpenAlbum, rewardSummary = {}, userData, onUltimateChallenge, onViewMistakeNotebook, onLogout, records = {}, advMeta = null, activeTab = 'main', onChangeTab }) => {
     const [showGuide, setShowGuide] = useState(false);
     const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
     const [expandedAdvVolume, setExpandedAdvVolume] = useState(null);
@@ -2200,8 +2519,8 @@ const WorldMap = ({ onSelectNode, onViewJourney, onViewWeeklyReport, onViewLogin
                         <Lightbulb size={21} />
                         {deferredTriviaCount > 0 && <span className="absolute -top-1 -right-1 min-w-4 h-4 px-1 rounded-full bg-red-600 text-white font-pixel text-[7px] flex items-center justify-center border border-white">{deferredTriviaCount > 99 ? '99+' : deferredTriviaCount}</span>}
                     </button>
-                    <button onClick={onViewLoginCalendar} className="text-cyan-300 hover:text-white p-1" title="冒險打卡日曆">
-                        <CalendarDays size={21} />
+                    <button onClick={onOpenAchievements} className="text-blue-400 hover:text-white p-1" title="英雄徽章館" aria-label="打開英雄徽章館">
+                        <ShieldCheck size={21} />
                     </button>
                     <button onClick={onViewMistakeNotebook} className="text-red-400 hover:text-red-300 p-1" title="錯題筆記本">
                         <Book size={20} />
@@ -3891,14 +4210,26 @@ const StudyMode = ({ unitId, categoryId, data, lessonTitle, onBack, onStartQuiz 
     const [viewMode, setViewMode] = useState('card');
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isFlipped, setIsFlipped] = useState(false);
+    const [pilotVoice, setPilotVoice] = useState(() => getTtsPilotVoice(unitId));
     const studyData = data[categoryId] || [];
     const isAdvanced = String(unitId).startsWith('adv_');
+    const hasAiAudio = studyData.some(item => item?.audio?.marin && item?.audio?.cedar);
+
+    useEffect(() => {
+        setPilotVoice(getTtsPilotVoice(unitId));
+    }, [unitId]);
 
     const catTitles = { vocab: 'TREASURE', vocab_a: 'TREASURE A', vocab_b: 'TREASURE B', collocation: 'ARMORY', polysemy: 'ALCHEMY', sentences: 'SCROLLS' };
     const currentItem = studyData[currentIndex];
     const handleNext = () => { if (studyData.length === 0) return; setIsFlipped(false); setCurrentIndex((p) => (p + 1) % studyData.length); };
     const handlePrev = () => { if (studyData.length === 0) return; setIsFlipped(false); setCurrentIndex((p) => (p - 1 + studyData.length) % studyData.length); };
-    const handleSpeak = (e, text) => { e.stopPropagation(); speakText(text); };
+    const handleSpeak = (e, item) => {
+        e.stopPropagation();
+        speakText(item?.word, item?.audio, unitId, pilotVoice);
+    };
+    const handlePilotVoiceChange = (voice) => {
+        setPilotVoice(setTtsPilotVoice(voice, unitId));
+    };
 
     return (
         <div className="flex flex-col h-full bg-rpg-bg overflow-hidden">
@@ -3918,12 +4249,47 @@ const StudyMode = ({ unitId, categoryId, data, lessonTitle, onBack, onStartQuiz 
                     {viewMode === 'card' ? <List size={20} /> : <Grid size={20} />}
                 </button>
             </div>
+            {hasAiAudio && (
+                <div className="flex-shrink-0 border-b-2 border-cyan-500/40 bg-cyan-950/40 px-3 py-2">
+                    <div className="flex items-center justify-center gap-2">
+                        <span className="font-retro text-xs text-cyan-100">AI 語音選擇</span>
+                        {['marin', 'cedar'].map(voice => (
+                            <button
+                                key={voice}
+                                type="button"
+                                onClick={() => handlePilotVoiceChange(voice)}
+                                className={`min-h-9 border-2 px-3 font-pixel text-[9px] uppercase transition-colors ${
+                                    pilotVoice === voice
+                                        ? 'border-cyan-300 bg-cyan-700 text-white'
+                                        : 'border-cyan-700 bg-black/40 text-cyan-200 hover:border-cyan-400'
+                                }`}
+                                aria-pressed={pilotVoice === voice}
+                            >
+                                {voice}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            )}
             {/* Main Content Area */}
             {viewMode === 'list' ? (
                 <div className="flex-1 overflow-y-auto p-4">
                     <div className="w-full space-y-3 pb-10">
                         {studyData.map((item, idx) => (
-                            <div key={idx} className="bg-rpg-panel border-4 border-rpg-border p-3 flex flex-col gap-2 relative">
+                            <div
+                                key={idx}
+                                className="bg-rpg-panel border-4 border-rpg-border p-3 flex flex-col gap-2 cursor-pointer transition-colors hover:bg-[#fff1be] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rpg-primary"
+                                onClick={(e) => handleSpeak(e, item)}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter' || e.key === ' ') {
+                                        e.preventDefault();
+                                        handleSpeak(e, item);
+                                    }
+                                }}
+                                role="button"
+                                tabIndex={0}
+                                aria-label={`播放 ${item.word} 的發音`}
+                            >
                                 <div className="flex justify-between items-start border-b-2 border-rpg-border pb-1">
                                     <h3 className="font-bold font-retro text-xl">{item.word}</h3>
                                     {item.part && item.part.trim() !== '' && (
@@ -3931,7 +4297,6 @@ const StudyMode = ({ unitId, categoryId, data, lessonTitle, onBack, onStartQuiz 
                                     )}
                                 </div>
                                 <p className="font-retro text-lg text-rpg-bg">{item.chinese}</p>
-                                <button onClick={(e) => { handleSpeak(e, item.word); }} className="absolute top-2 right-12 text-black hover:text-rpg-primary"><Volume2 size={16} /></button>
                             </div>
                         ))}
                     </div>
@@ -3973,7 +4338,7 @@ const StudyMode = ({ unitId, categoryId, data, lessonTitle, onBack, onStartQuiz 
                                 ) : (
                                     <div className="h-[22px] mt-2"></div>
                                 )}
-                                <RPGButton onClick={(e) => handleSpeak(e, currentItem?.word)} color="primary" className="p-2 mt-4" silent><Volume2 size={16} /></RPGButton>
+                                <RPGButton onClick={(e) => handleSpeak(e, currentItem)} color="primary" className="p-2 mt-4" silent><Volume2 size={16} /></RPGButton>
                                 <div className="absolute bottom-2 text-[8px] font-pixel text-rpg-border animate-pulse">CLICK TO FLIP</div>
                             </RPGBorder>
                             {/* Back Face */}
@@ -4058,7 +4423,7 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard'
             const currentQ = questions[currentQIndex];
             if (currentQ) {
                 // 不管題目是 en-ch 還是 ch-en，都播放正確單字的英文發音
-                speakText(currentQ.target.word);
+                speakText(currentQ.target.word, currentQ.target.audio, currentQ.target.audioScope);
             }
         }
     }, [status, currentQIndex, feedback, questions, quizMode]);
@@ -4487,7 +4852,7 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard'
                     {quizMode === 'listening' ? (
                         /* 聽力模式：不顯示單字，只放發音按鈕（點擊可重複播放） */
                         <button
-                            onClick={(e) => { e.stopPropagation(); speakText(currentQ.target.word); }}
+                            onClick={(e) => { e.stopPropagation(); speakText(currentQ.target.word, currentQ.target.audio, currentQ.target.audioScope); }}
                             className="flex flex-col items-center gap-1 mx-auto text-purple-300 hover:text-purple-100 transition-colors py-2"
                             title="再聽一次"
                         >
@@ -4502,7 +4867,7 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard'
                             {/* 簡易模式：顯示發音按鈕可重複播放 */}
                             {quizMode === 'simple' && (
                                 <button
-                                    onClick={(e) => { e.stopPropagation(); speakText(currentQ.target.word); }}
+                                    onClick={(e) => { e.stopPropagation(); speakText(currentQ.target.word, currentQ.target.audio, currentQ.target.audioScope); }}
                                     className="mt-1 text-cyan-400 hover:text-cyan-200 transition-colors p-1 inline-block"
                                     title="再聽一次"
                                 >
@@ -4576,6 +4941,7 @@ const App = () => {
     const [isMuted, setIsMuted] = useState(false); // UI state for mute button
     const [volume, setVolumeState] = useState(50); // Volume state (0-100)
     const [loginStampData, setLoginStampData] = useState(null);
+    const [weeklyArenaSettlement, setWeeklyArenaSettlement] = useState(null);
     const [triviaAlbumBackView, setTriviaAlbumBackView] = useState('map');
 
     useEffect(() => { document.body.classList.add('loaded'); }, []);
@@ -4641,6 +5007,7 @@ const App = () => {
             setUserData(null);
             setCurrentUser(null);
             setLoginStampData(null);
+            setWeeklyArenaSettlement(null);
             setView('login');
         }).catch(err => {
             console.error("Logout error", err);
@@ -4663,6 +5030,7 @@ const App = () => {
                 triviaCollection: {},
                 triviaRewardClaims: {},
                 weeklyArenaRosters: {},
+                weeklyArenaResults: {},
                 discoveredWordIds: [],
                 correctWordIds: []
             };
@@ -4679,25 +5047,77 @@ const App = () => {
                 photoURL: user.photoURL || null,
                 email: user.email
             };
+            let preparedData = hydratedData;
+            let settlementNotification = null;
+            try {
+                const arenaPreparation = await prepareWeeklyArenaOnLogin({
+                    userId: user.uid,
+                    userData: hydratedData
+                });
+                preparedData = arenaPreparation.userData;
+                settlementNotification = arenaPreparation.notification;
+            } catch (error) {
+                console.warn('競技場登入結算暫時無法完成，將於下次登入重試。', error);
+            }
 
             await setDoc(userRef, {
-                photoURL: hydratedData.photoURL,
-                email: hydratedData.email,
-                engagement: hydratedData.engagement,
+                photoURL: preparedData.photoURL,
+                email: preparedData.email,
+                engagement: preparedData.engagement,
                 ...(triviaMigration.changed ? {
                     triviaCollection: triviaMigration.triviaCollection,
                     triviaRewardClaims: triviaMigration.triviaRewardClaims
                 } : {}),
-                ...(!userSnap.exists() ? migratedBaseData : {})
+                ...(!userSnap.exists() ? migratedBaseData : {}),
+                ...(Number.isFinite(Number(preparedData.weeklyArenaRewardStartWeek)) ? {
+                    weeklyArenaRewardStartWeek: Number(preparedData.weeklyArenaRewardStartWeek)
+                } : {}),
+                weeklyArenaRosters: preparedData.weeklyArenaRosters || {},
+                weeklyArenaResults: preparedData.weeklyArenaResults || {}
             }, { merge: true });
 
-            setUserData(hydratedData);
+            setUserData(preparedData);
+            setWeeklyArenaSettlement(settlementNotification);
             setView('map');
         } catch (e) {
             console.error("Error loading user data:", e);
             alert("載入資料失敗，請重試");
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleWeeklyArenaSettlementAction = (destination = 'map') => {
+        if (!weeklyArenaSettlement || !auth.currentUser) return;
+        const weekKey = String(weeklyArenaSettlement.weekStart);
+        const seenAt = new Date().toISOString();
+        setUserData(previousData => {
+            if (!previousData) return previousData;
+            return {
+                ...previousData,
+                weeklyArenaResults: {
+                    ...(previousData.weeklyArenaResults || {}),
+                    [weekKey]: {
+                        ...(previousData.weeklyArenaResults?.[weekKey] || weeklyArenaSettlement),
+                        seenAt
+                    }
+                }
+            };
+        });
+        setWeeklyArenaSettlement(null);
+        updateDoc(
+            doc(db, 'users', auth.currentUser.uid),
+            new FieldPath('weeklyArenaResults', weekKey, 'seenAt'),
+            seenAt
+        ).catch(error => {
+            console.warn('上週競技場結算已讀狀態保存失敗，將於下次操作重試。', error);
+        });
+
+        if (destination === 'trivia-album') {
+            setTriviaAlbumBackView('map');
+            setView('trivia-album');
+        } else if (destination === 'weekly-report') {
+            setView('weekly-report');
         }
     };
 
@@ -4750,7 +5170,10 @@ const App = () => {
                 .sort(([a], [b]) => Number(b) - Number(a))
                 .slice(0, 8)
         );
-        setUserData({ ...userData, weeklyArenaRosters: trimmedRosters });
+        setUserData(previousData => previousData ? {
+            ...previousData,
+            weeklyArenaRosters: trimmedRosters
+        } : previousData);
         try {
             await updateDoc(doc(db, 'users', auth.currentUser.uid), {
                 weeklyArenaRosters: trimmedRosters
@@ -5378,18 +5801,18 @@ const App = () => {
 
         switch (view) {
             case 'login': return <LoginScreen onLogin={handleLogin} />;
-            case 'map': return <WorldMap onLogout={handleLogout} onSelectNode={handleNodeSelect} onViewJourney={() => { playSound('click'); setView('journey'); }} onViewWeeklyReport={() => { playSound('click'); setView('weekly-report'); }} onViewLoginCalendar={() => { playSound('click'); setView('login-calendar'); }} onOpenAlbum={() => { playSound('click'); setTriviaAlbumBackView('map'); setView('trivia-album'); }} rewardSummary={getPendingRewardSummary(userData)} userData={userData} onUltimateChallenge={() => { playSound('click'); setView('challenge-setup'); }} onViewMistakeNotebook={() => { playSound('click'); setView('mistake-notebook'); }} records={userData?.levelRecords} advMeta={advMeta} activeTab={worldTab} onChangeTab={setWorldTab} />;
+            case 'map': return <WorldMap onLogout={handleLogout} onSelectNode={handleNodeSelect} onViewJourney={() => { playSound('click'); setView('journey'); }} onViewWeeklyReport={() => { playSound('click'); setView('weekly-report'); }} onOpenAchievements={() => { playSound('click'); setView('achievement-hall'); }} onOpenAlbum={() => { playSound('click'); setTriviaAlbumBackView('map'); setView('trivia-album'); }} rewardSummary={getPendingRewardSummary(userData)} userData={userData} onUltimateChallenge={() => { playSound('click'); setView('challenge-setup'); }} onViewMistakeNotebook={() => { playSound('click'); setView('mistake-notebook'); }} records={userData?.levelRecords} advMeta={advMeta} activeTab={worldTab} onChangeTab={setWorldTab} />;
             case 'weekly-report': return <WeeklyReport
                 onBack={() => { playSound('click'); setView('map'); }}
                 onOpenAlbum={() => { playSound('click'); setTriviaAlbumBackView('weekly-report'); setView('trivia-album'); }}
-                onOpenAchievements={() => { playSound('click'); setView('achievement-hall'); }}
+                onViewLoginCalendar={() => { playSound('click'); setView('login-calendar'); }}
                 currentUserId={currentUser?.uid}
                 userData={userData}
                 onSaveArenaRoster={handleSaveArenaRoster}
             />;
             case 'trivia-album': return <TriviaAlbum onBack={() => { playSound('click'); setView(triviaAlbumBackView); }} userData={userData} onClaimTrivia={handleClaimTrivia} />;
-            case 'login-calendar': return <LoginCalendar onBack={() => { playSound('click'); setView('map'); }} userData={userData} />;
-            case 'achievement-hall': return <AchievementHall onBack={() => { playSound('click'); setView('weekly-report'); }} userData={userData} />;
+            case 'login-calendar': return <LoginCalendar onBack={() => { playSound('click'); setView('weekly-report'); }} userData={userData} />;
+            case 'achievement-hall': return <AchievementHall onBack={() => { playSound('click'); setView('map'); }} userData={userData} />;
             case 'mistake-notebook': return <MistakeNotebook onBack={() => { playSound('click'); setView('map'); }} mistakeStats={userData?.mistakeStats} onClearMistakes={handleClearMistakes} onRemoveMistake={handleRemoveMistake} />;
             case 'journey': return <JourneyMode onBack={() => { playSound('click'); setView('map'); }} onViewTrialLog={() => { playSound('click'); setView('trial-log'); }} records={userData?.levelRecords} advMeta={advMeta} mistakeStats={userData?.mistakeStats} />;
             case 'trial-log': return <TrialLogView onBack={() => { playSound('click'); setView('journey'); }} onRetry={() => { playSound('click'); setView('challenge-setup'); }} trialHistory={userData?.trialHistory} />;
@@ -5429,6 +5852,14 @@ const App = () => {
                     <div className="relative z-0 h-full overflow-hidden">{renderContent()}</div>
 
                     <LoginStampModal data={loginStampData} onClose={() => setLoginStampData(null)} />
+                    <WeeklyArenaSettlementModal
+                        key={weeklyArenaSettlement?.weekStart || 'no-settlement'}
+                        data={weeklyArenaSettlement}
+                        onPrimary={() => handleWeeklyArenaSettlementAction(
+                            weeklyArenaSettlement?.rewardCount > 0 ? 'trivia-album' : 'weekly-report'
+                        )}
+                        onLater={() => handleWeeklyArenaSettlementAction('map')}
+                    />
 
                     {/* 老師後台面板 - 嵌入手機螢幕 */}
                     {showTeacherDashboard && (

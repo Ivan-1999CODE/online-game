@@ -1,6 +1,8 @@
 // Audio and Speech Management
 
 let availableVoices = [];
+let pronunciationAudio = null;
+const TTS_VOICE_KEY_PREFIX = 'englishQuestTtsVoice';
 const loadVoices = () => {
     if (!window.speechSynthesis) return;
     availableVoices = window.speechSynthesis.getVoices();
@@ -8,7 +10,31 @@ const loadVoices = () => {
 loadVoices();
 if (window.speechSynthesis) window.speechSynthesis.onvoiceschanged = loadVoices;
 
-export const speakText = (text) => {
+export const getTtsPilotVoice = (scopeKey = 'default') => {
+    if (typeof window === 'undefined') return 'cedar';
+    try {
+        return window.localStorage.getItem(`${TTS_VOICE_KEY_PREFIX}:${scopeKey}`) === 'marin'
+            ? 'marin'
+            : 'cedar';
+    } catch {
+        return 'cedar';
+    }
+};
+
+export const setTtsPilotVoice = (voice, scopeKey = 'default') => {
+    const safeVoice = voice === 'cedar' ? 'cedar' : 'marin';
+    if (typeof window !== 'undefined') {
+        try {
+            window.localStorage.setItem(`${TTS_VOICE_KEY_PREFIX}:${scopeKey}`, safeVoice);
+        } catch {
+            // Browsers may block storage in strict privacy mode; the current
+            // selection still works for this screen through React state.
+        }
+    }
+    return safeVoice;
+};
+
+const speakWithDeviceTts = (text) => {
     if (!window.speechSynthesis) return;
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
@@ -17,6 +43,39 @@ export const speakText = (text) => {
     if (selectedVoice) utterance.voice = selectedVoice;
     utterance.rate = 0.8;
     window.speechSynthesis.speak(utterance);
+};
+
+export const speakText = (text, audioSources = null, scopeKey = 'default', voiceOverride = null) => {
+    if (!text) return;
+
+    const selectedVoice = voiceOverride === 'marin' || voiceOverride === 'cedar'
+        ? voiceOverride
+        : getTtsPilotVoice(scopeKey);
+    const audioSource = typeof audioSources === 'string'
+        ? audioSources
+        : audioSources?.[selectedVoice];
+
+    if (!audioSource) {
+        speakWithDeviceTts(text);
+        return;
+    }
+
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+    if (pronunciationAudio) {
+        pronunciationAudio.pause();
+        pronunciationAudio.currentTime = 0;
+    }
+
+    const audio = new Audio(audioSource);
+    pronunciationAudio = audio;
+    let hasFallenBack = false;
+    const fallback = () => {
+        if (hasFallenBack || pronunciationAudio !== audio) return;
+        hasFallenBack = true;
+        speakWithDeviceTts(text);
+    };
+    audio.addEventListener('error', fallback, { once: true });
+    audio.play().catch(fallback);
 };
 
 // --- BGM Logic ---
