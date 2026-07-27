@@ -11,8 +11,8 @@ loadVoices();
 if (window.speechSynthesis) window.speechSynthesis.onvoiceschanged = loadVoices;
 
 export const getTtsPilotVoice = () => {
-    if (typeof window === 'undefined') return 'marin';
-    return window.localStorage.getItem(TTS_PILOT_VOICE_KEY) === 'cedar' ? 'cedar' : 'marin';
+    if (typeof window === 'undefined') return 'cedar';
+    return window.localStorage.getItem(TTS_PILOT_VOICE_KEY) === 'marin' ? 'marin' : 'cedar';
 };
 
 export const setTtsPilotVoice = (voice) => {
