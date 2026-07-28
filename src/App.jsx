@@ -3792,6 +3792,7 @@ const JourneyMode = ({ onBack, onViewTrialLog, records = {}, advMeta = null, mis
                 <AdvancedJourneyView records={records} advMeta={advMeta} mistakeStats={mistakeStats} />
             ) : (
                 <>
+            <div className="flex-1 overflow-y-auto bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]">
             {/* 試煉日誌入口按鈕 */}
             <div className="px-4 pt-4 pb-2">
                 <div
@@ -3827,7 +3828,7 @@ const JourneyMode = ({ onBack, onViewTrialLog, records = {}, advMeta = null, mis
                 </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-4 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]">
+            <div className="p-4">
                 <div className="grid grid-cols-1 gap-6">
                     {/* Follow MAP_STRUCTURE order (same as world map) */}
                     {MAP_STRUCTURE.map((node) => {
@@ -4011,6 +4012,7 @@ const JourneyMode = ({ onBack, onViewTrialLog, records = {}, advMeta = null, mis
                     })}
                 </div>
                 <div className="h-10"></div>
+            </div>
             </div>
                 </>
             )}
