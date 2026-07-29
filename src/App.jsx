@@ -4994,6 +4994,10 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard'
     const [isSubmitting, setIsSubmitting] = useState(false); // 防止重复提交
     const [quizMode, setQuizMode] = useState(null); // 'standard' = 有發音, 'simple' = 無發音
 
+    // Keep one voice for the whole question so automatic playback and replay match.
+    // Cedar is the male voice; Marin is the female voice.
+    const quizPronunciationVoice = currentQIndex % 2 === 0 ? 'cedar' : 'marin';
+
     const MAX_TIME = 7.0;
     const [timeLeft, setTimeLeft] = useState(MAX_TIME);
     const timerRef = useRef(null);
@@ -5026,10 +5030,15 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard'
             const currentQ = questions[currentQIndex];
             if (currentQ) {
                 // 不管題目是 en-ch 還是 ch-en，都播放正確單字的英文發音
-                speakText(currentQ.target.word, currentQ.target.audio, currentQ.target.audioScope);
+                speakText(
+                    currentQ.target.word,
+                    currentQ.target.audio,
+                    currentQ.target.audioScope,
+                    quizPronunciationVoice
+                );
             }
         }
-    }, [status, currentQIndex, feedback, questions, quizMode]);
+    }, [status, currentQIndex, feedback, questions, quizMode, quizPronunciationVoice]);
 
     useEffect(() => {
         if (status === 'playing' && !feedback && questions.length > 0 && !showQuitConfirm) {
@@ -5455,7 +5464,15 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard'
                     {quizMode === 'listening' ? (
                         /* 聽力模式：不顯示單字，只放發音按鈕（點擊可重複播放） */
                         <button
-                            onClick={(e) => { e.stopPropagation(); speakText(currentQ.target.word, currentQ.target.audio, currentQ.target.audioScope); }}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                speakText(
+                                    currentQ.target.word,
+                                    currentQ.target.audio,
+                                    currentQ.target.audioScope,
+                                    quizPronunciationVoice
+                                );
+                            }}
                             className="flex flex-col items-center gap-1 mx-auto text-purple-300 hover:text-purple-100 transition-colors py-2"
                             title="再聽一次"
                         >
@@ -5470,7 +5487,15 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard'
                             {/* 簡易模式：顯示發音按鈕可重複播放 */}
                             {quizMode === 'simple' && (
                                 <button
-                                    onClick={(e) => { e.stopPropagation(); speakText(currentQ.target.word, currentQ.target.audio, currentQ.target.audioScope); }}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        speakText(
+                                            currentQ.target.word,
+                                            currentQ.target.audio,
+                                            currentQ.target.audioScope,
+                                            quizPronunciationVoice
+                                        );
+                                    }}
                                     className="mt-1 text-cyan-400 hover:text-cyan-200 transition-colors p-1 inline-block"
                                     title="再聽一次"
                                 >
