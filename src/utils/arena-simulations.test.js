@@ -4,6 +4,8 @@ import {
     ARENA_SIMULATION_PROFILES,
     ARENA_SIMULATION_VERSION,
     buildSharedArenaBots,
+    fillArenaGroupForDisplay,
+    maskArenaName,
     getSharedArenaBotEntry
 } from './arena-simulations.js';
 
@@ -16,6 +18,13 @@ const build = (overrides = {}) => buildSharedArenaBots({
     tier: 'gold',
     count: 5,
     ...overrides
+});
+
+test('暱稱與真人使用相同的中間遮罩規則', () => {
+    assert.equal(maskArenaName('陳彥鍾'), '陳○鍾');
+    assert.equal(maskArenaName('小明'), '小○');
+    assert.equal(maskArenaName('MangoBoss'), 'M○○○○○○○s');
+    assert.equal(maskArenaName('陳○鍾'), '陳○鍾');
 });
 
 test('同一小組、週次與階級會產生完全相同的共享模擬玩家', () => {
@@ -34,7 +43,26 @@ test('模擬玩家數量正確且全部屬於小組階級', () => {
     assert.equal(bots.length, 7);
     assert.ok(bots.every(bot => bot.tier === 'diamond'));
     assert.ok(bots.every(bot => bot.simulationVersion === ARENA_SIMULATION_VERSION));
+    assert.ok(bots.every(bot => bot.maskedName.includes('○')));
     assert.equal(new Set(bots.map(bot => bot.maskedName)).size, 7);
+});
+
+test('未鎖定的小組會在顯示時以遮罩暱稱補滿 8 席', () => {
+    const group = {
+        groupId: 'group-open-1',
+        weekStart: WEEK_START,
+        tier: 'gold',
+        status: 'open',
+        memberCount: 2,
+        memberIds: ['a', 'b']
+    };
+    const displayGroup = fillArenaGroupForDisplay(group);
+
+    assert.equal(displayGroup.simulatedRivals.length, 6);
+    assert.equal(displayGroup.memberIds.length + displayGroup.simulatedRivals.length, 8);
+    assert.ok(displayGroup.simulatedRivals.every(bot => bot.maskedName.includes('○')));
+    assert.equal(group.simulatedRivals, undefined);
+    assert.deepEqual(fillArenaGroupForDisplay(group), displayGroup);
 });
 
 test('模擬場次平均散布於整週且不超出週期', () => {

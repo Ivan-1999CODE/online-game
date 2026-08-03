@@ -1,4 +1,5 @@
 import { normalizeArenaTier } from './arena-tiers.js';
+import { ARENA_GROUP_MEMBER_LIMIT } from './arena-groups.js';
 
 export const ARENA_SIMULATION_VERSION = 1;
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -25,6 +26,13 @@ const SHARED_ARENA_NAMES = Object.freeze([
     '草莓騎士', '巧克力忍者', '雞塊守門員', '飛天小饅頭', '雲朵收藏家',
     '貓咪開坦克', '恐龍寫功課', '飯糰大魔王', '週末才上線', '猜猜我是誰'
 ]);
+
+export const maskArenaName = (name = '神秘勇者') => {
+    const trimmed = String(name).trim();
+    if (trimmed.length <= 1) return `${trimmed || '勇'}○`;
+    if (trimmed.length === 2) return `${trimmed[0]}○`;
+    return `${trimmed[0]}${'○'.repeat(Math.max(1, trimmed.length - 2))}${trimmed[trimmed.length - 1]}`;
+};
 
 const getSeedNumber = (seed) => [...String(seed)].reduce(
     (value, char) => Math.imul(value ^ char.charCodeAt(0), 16777619) >>> 0,
@@ -59,10 +67,16 @@ export const buildSharedArenaBots = ({
     const safeCount = Math.max(0, Math.min(8, Number(count) || 0));
     const random = createSeededRandom(`${groupId}:${Number(weekStart)}:${normalizedTier}:shared-v1`);
     const availableNames = [...SHARED_ARENA_NAMES];
+    const usedMaskedNames = new Set();
 
     return Array.from({ length: safeCount }, (_, index) => {
-        const nameIndex = Math.floor(random() * availableNames.length);
-        const maskedName = availableNames.splice(nameIndex, 1)[0];
+        const uniqueNames = availableNames.filter(name => !usedMaskedNames.has(maskArenaName(name)));
+        const namePool = uniqueNames.length > 0 ? uniqueNames : availableNames;
+        const nameIndex = Math.floor(random() * namePool.length);
+        const selectedName = namePool[nameIndex];
+        availableNames.splice(availableNames.indexOf(selectedName), 1);
+        const maskedName = maskArenaName(selectedName);
+        usedMaskedNames.add(maskedName);
         const sessionCount = randomInteger(random, profile.sessions[0], profile.sessions[1]);
         const accuracy = randomInteger(random, profile.accuracy[0], profile.accuracy[1]);
         const updates = Array.from({ length: sessionCount }, (__, sessionIndex) => {
@@ -92,6 +106,30 @@ export const buildSharedArenaBots = ({
     });
 };
 
+export const fillArenaGroupForDisplay = (group) => {
+    if (!group) return group;
+
+    const storedRivals = Array.isArray(group.simulatedRivals) ? group.simulatedRivals : [];
+    if (group.status === 'locked' || storedRivals.length > 0) return group;
+
+    const memberCount = Math.max(
+        Number(group.memberCount) || 0,
+        Array.isArray(group.memberIds) ? new Set(group.memberIds).size : 0
+    );
+    const simulatedRivals = buildSharedArenaBots({
+        groupId: group.groupId,
+        weekStart: group.weekStart,
+        tier: group.tier,
+        count: Math.max(0, ARENA_GROUP_MEMBER_LIMIT - memberCount)
+    });
+
+    return {
+        ...group,
+        simulatedMemberCount: simulatedRivals.length,
+        simulatedRivals
+    };
+};
+
 export const getSharedArenaBotEntry = (bot, asOfMs = Date.now()) => {
     const completedUpdates = (bot.updates || []).filter(
         update => Number(update.atMs) <= Number(asOfMs)
@@ -102,7 +140,7 @@ export const getSharedArenaBotEntry = (bot, asOfMs = Date.now()) => {
 
     return {
         id: bot.id,
-        maskedName: bot.maskedName,
+        maskedName: maskArenaName(bot.maskedName),
         simulated: true,
         tier: normalizeArenaTier(bot.tier),
         weekly: {

@@ -30,6 +30,10 @@ import {
     getSharedArenaStanding,
     sortArenaLeaderboard
 } from './utils/arena-leaderboard';
+import {
+    fillArenaGroupForDisplay,
+    maskArenaName as maskStudentName
+} from './utils/arena-simulations';
 
 // --- Pixel Art SVGs ---
 const PixelArt = {
@@ -1537,9 +1541,9 @@ const buildSimulatedRivals = ({ count, weekStart, referenceScore, seed }) => {
 
     return Array.from({ length: count }, (_, index) => {
         const persona = SIMULATED_PERSONAS[(index + Math.floor(random() * SIMULATED_PERSONAS.length)) % SIMULATED_PERSONAS.length];
-        const availableNames = SIMULATED_ARENA_NAMES.filter(name => !usedNames.has(name));
+        const availableNames = SIMULATED_ARENA_NAMES.filter(name => !usedNames.has(maskStudentName(name)));
         const namePool = availableNames.length > 0 ? availableNames : SIMULATED_ARENA_NAMES;
-        const maskedName = namePool[Math.floor(random() * namePool.length)];
+        const maskedName = maskStudentName(namePool[Math.floor(random() * namePool.length)]);
         usedNames.add(maskedName);
         const updates = [];
 
@@ -1591,7 +1595,7 @@ const getSimulatedArenaEntry = (rival, asOfMs = Date.now(), playerStats = {}) =>
     const activeDays = new Set(completedUpdates.map(update => getTaipeiDateKey(update.atMs))).size;
     return {
         id: rival.id,
-        maskedName: rival.maskedName,
+        maskedName: maskStudentName(rival.maskedName),
         simulated: true,
         weekly: {
             score: completedScore + responsiveScore,
@@ -1772,13 +1776,6 @@ const formatWeekRange = ({ startMs, endMs }) => {
         timeZone: 'Asia/Taipei', month: 'numeric', day: 'numeric'
     });
     return `${formatter.format(new Date(startMs))}－${formatter.format(new Date(endMs - 1))}`;
-};
-
-const maskStudentName = (name = '神秘勇者') => {
-    const trimmed = String(name).trim();
-    if (trimmed.length <= 1) return `${trimmed || '勇'}○`;
-    if (trimmed.length === 2) return `${trimmed[0]}○`;
-    return `${trimmed[0]}${'○'.repeat(Math.max(1, trimmed.length - 2))}${trimmed[trimmed.length - 1]}`;
 };
 
 const syncWeeklyLeaderboard = async ({ userId, studentName, history, userData }) => {
@@ -2391,9 +2388,10 @@ const WeeklyReport = ({ onBack, onOpenAlbum, onViewLoginCalendar, currentUserId,
         && groupAssignment?.groupId
         && sharedGroup
     );
+    const displayGroup = usesSharedGroup ? fillArenaGroupForDisplay(sharedGroup) : sharedGroup;
     const arenaEntries = usesSharedGroup
         ? buildSharedArenaEntries({
-            group: sharedGroup,
+            group: displayGroup,
             publicEntries,
             currentUserId,
             currentUserEntry: selfEntry,
@@ -2584,11 +2582,6 @@ const WeeklyReport = ({ onBack, onOpenAlbum, onViewLoginCalendar, currentUserId,
                         </div>
                         <span className="font-retro text-[10px] text-gray-400">{usesSharedGroup ? '同階聯賽' : '本週對手固定'}</span>
                     </div>
-                    {usesSharedGroup && sharedGroup.status !== 'locked' && (
-                        <div className="border-b border-cyan-500/30 bg-cyan-950/40 px-3 py-2 font-retro text-[10px] text-cyan-200">
-                            同階級真人配對中；週二 00:00 鎖定後將以共享模擬玩家補滿 8 席。
-                        </div>
-                    )}
                     {isLoading ? (
                         <div className="p-5 text-center font-retro text-sm text-gray-400 animate-pulse">載入班級戰績...</div>
                     ) : loadError ? (
