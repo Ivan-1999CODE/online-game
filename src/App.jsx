@@ -3270,6 +3270,7 @@ const WorldMap = ({ onSelectNode, onViewJourney, onViewWeeklyReport, onOpenAchie
                                 const completedLessons = volume.lessons.filter(lesson =>
                                     getAdvancedQualifiedClears(records[advLessonId(lesson)] || {}) >= ADV_CLEARS_TO_COMPLETE
                                 ).length;
+                                const isVolumeComplete = completedLessons === volume.lessons.length;
 
                                 return (
                                     <section key={volume.index} className="w-full flex flex-col items-center">
@@ -3289,6 +3290,15 @@ const WorldMap = ({ onSelectNode, onViewJourney, onViewWeeklyReport, onOpenAchie
                                                     <h3 className="font-pixel text-sm">進階 第 {volume.index + 1} 卷</h3>
                                                     <p className="font-retro text-[11px] mt-1">Lesson {volume.start} - {volume.end} · 完成 {completedLessons}/{volume.lessons.length}</p>
                                                 </div>
+                                                {isVolumeComplete && (
+                                                    <span
+                                                        className="shrink-0 rounded-full border-2 border-green-800 bg-green-100 p-1 text-green-800 shadow-[1px_1px_0_rgba(41,27,63,0.45)]"
+                                                        title="本卷已完成"
+                                                        aria-label={`進階第 ${volume.index + 1} 卷已完成`}
+                                                    >
+                                                        <CheckCircle size={22} strokeWidth={3} aria-hidden="true" />
+                                                    </span>
+                                                )}
                                                 <ChevronRight size={20} className={`shrink-0 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
                                             </button>
                                         </div>
