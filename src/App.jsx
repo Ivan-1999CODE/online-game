@@ -2131,13 +2131,16 @@ const TriviaAlbum = ({ onBack, userData, onClaimTrivia }) => {
     const [teacherPreview, setTeacherPreview] = useState(false);
     const [isClaiming, setIsClaiming] = useState(false);
     const [drawBlocked, setDrawBlocked] = useState(false);
+    const [showOwnedOnly, setShowOwnedOnly] = useState(false);
     const collection = userData?.triviaCollection || {};
     const ownedCount = Object.keys(collection).length;
     const pendingRewards = getAllPendingTriviaRewards(userData);
     const reward = pendingRewards[0] || null;
     const groupCategories = TRIVIA_CATEGORIES.filter(category => category.group === activeGroup);
     const visibleCards = TRIVIA_CARDS.filter(card => (
-        card.group === activeGroup && (activeCategory === 'all' || card.category === activeCategory)
+        card.group === activeGroup
+        && (activeCategory === 'all' || card.category === activeCategory)
+        && (!showOwnedOnly || Boolean(collection[card.id]))
     ));
 
     const changeGroup = groupId => {
@@ -2194,7 +2197,18 @@ const TriviaAlbum = ({ onBack, userData, onClaimTrivia }) => {
                     <h2 className="font-pixel text-sm text-amber-300">冷知識收藏冊</h2>
                     <p className="font-retro text-[10px] text-gray-400">KNOWLEDGE ALBUM · {ownedCount} / {TRIVIA_CARDS.length}</p>
                 </div>
-                <button onClick={openTeacherPrompt} className={`w-9 h-9 flex items-center justify-center border-2 ${teacherPreview ? 'bg-green-700 border-green-300' : 'bg-amber-950/60 border-amber-500/50'} text-xl hover:scale-105`} title={teacherPreview ? '退出教師預覽' : '教師預覽'}>📚</button>
+                <div className="flex items-center gap-1">
+                    <button
+                        type="button"
+                        onClick={() => setShowOwnedOnly(current => !current)}
+                        aria-pressed={showOwnedOnly}
+                        className={`h-9 px-2 flex items-center gap-1 border-2 font-retro text-[10px] whitespace-nowrap transition-colors ${showOwnedOnly ? 'bg-amber-500 border-yellow-200 text-black' : 'bg-black/40 border-gray-600 text-gray-300 hover:border-amber-400 hover:text-amber-200'}`}
+                        title="只顯示已擁有的冷知識"
+                    >
+                        <CheckCircle size={14} /> 已擁有
+                    </button>
+                    <button onClick={openTeacherPrompt} className={`w-9 h-9 flex items-center justify-center border-2 ${teacherPreview ? 'bg-green-700 border-green-300' : 'bg-amber-950/60 border-amber-500/50'} text-xl hover:scale-105`} title={teacherPreview ? '退出教師預覽' : '教師預覽'}>📚</button>
+                </div>
             </div>
 
             {teacherPreview && (
@@ -2259,29 +2273,43 @@ const TriviaAlbum = ({ onBack, userData, onClaimTrivia }) => {
             </div>
 
             <div className="flex-1 overflow-y-auto p-3">
-                <div className="grid grid-cols-4 gap-2 pb-6">
-                    {visibleCards.map(card => {
-                        const unlock = collection[card.id];
-                        const category = TRIVIA_CATEGORIES.find(item => item.id === card.category);
-                        const canInspect = Boolean(unlock) || teacherPreview;
-                        const cardNumber = TRIVIA_CARDS.findIndex(item => item.id === card.id) + 1;
-                        return (
-                            <button
-                                key={card.id}
-                                onClick={() => canInspect && setSelectedCard(card)}
-                                disabled={!canInspect}
-                                className={`aspect-[3/4] border-2 p-1 flex flex-col items-center justify-center gap-1 transition-all ${unlock ? 'bg-gradient-to-b from-amber-100 to-amber-300 border-yellow-500 text-black hover:scale-105' : teacherPreview ? 'bg-gradient-to-b from-green-950 to-purple-950 border-green-500 text-white hover:scale-105' : 'bg-black/40 border-gray-700 text-gray-600'}`}
-                                title={canInspect ? card.title : `尚未解鎖 ${card.id}`}
-                            >
-                                <span className="font-pixel text-[8px]">#{String(cardNumber).padStart(3, '0')}</span>
-                                <span className={`text-xl ${canInspect ? '' : 'grayscale opacity-30'}`}>{canInspect ? category?.icon : '❔'}</span>
-                                <span className="font-retro text-[9px] leading-tight line-clamp-2">{canInspect ? card.title : '未解鎖'}</span>
-                                {unlock?.isSpecial && <span className="font-pixel text-[7px] text-purple-700">SPECIAL</span>}
-                                {!unlock && teacherPreview && <span className="font-pixel text-[6px] text-green-300">PREVIEW</span>}
-                            </button>
-                        );
-                    })}
-                </div>
+                {visibleCards.length > 0 ? (
+                    <div className="grid grid-cols-4 gap-2 pb-6">
+                        {visibleCards.map(card => {
+                            const unlock = collection[card.id];
+                            const category = TRIVIA_CATEGORIES.find(item => item.id === card.category);
+                            const canInspect = Boolean(unlock) || teacherPreview;
+                            const cardNumber = TRIVIA_CARDS.findIndex(item => item.id === card.id) + 1;
+                            return (
+                                <button
+                                    key={card.id}
+                                    onClick={() => canInspect && setSelectedCard(card)}
+                                    disabled={!canInspect}
+                                    className={`aspect-[3/4] border-2 p-1 flex flex-col items-center justify-center gap-1 transition-all ${unlock ? 'bg-gradient-to-b from-amber-100 to-amber-300 border-yellow-500 text-black hover:scale-105' : teacherPreview ? 'bg-gradient-to-b from-green-950 to-purple-950 border-green-500 text-white hover:scale-105' : 'bg-black/40 border-gray-700 text-gray-600'}`}
+                                    title={canInspect ? card.title : `尚未解鎖 ${card.id}`}
+                                >
+                                    <span className="font-pixel text-[8px]">#{String(cardNumber).padStart(3, '0')}</span>
+                                    <span className={`text-xl ${canInspect ? '' : 'grayscale opacity-30'}`}>{canInspect ? category?.icon : '❔'}</span>
+                                    <span className="font-retro text-[9px] leading-tight line-clamp-2">{canInspect ? card.title : '未解鎖'}</span>
+                                    {unlock?.isSpecial && <span className="font-pixel text-[7px] text-purple-700">SPECIAL</span>}
+                                    {!unlock && teacherPreview && <span className="font-pixel text-[6px] text-green-300">PREVIEW</span>}
+                                </button>
+                            );
+                        })}
+                    </div>
+                ) : (
+                    <div className="min-h-40 flex flex-col items-center justify-center gap-3 border-2 border-dashed border-gray-700 bg-black/20 px-4 text-center">
+                        <Book size={28} className="text-gray-600" />
+                        <p className="font-retro text-xs text-gray-400">這個分類還沒有已擁有的冷知識</p>
+                        <button
+                            type="button"
+                            onClick={() => setShowOwnedOnly(false)}
+                            className="border-2 border-amber-500/70 bg-amber-950/50 px-3 py-2 font-retro text-[10px] text-amber-200 hover:bg-amber-900"
+                        >
+                            顯示全部卡片
+                        </button>
+                    </div>
+                )}
             </div>
 
             {selectedCard && (() => {
