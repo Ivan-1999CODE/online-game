@@ -2195,7 +2195,8 @@ const TriviaAlbum = ({ onBack, userData, onClaimTrivia }) => {
                 <RPGButton onClick={onBack} color="dark" className="px-2"><ArrowLeft size={16} /></RPGButton>
                 <div className="text-center">
                     <h2 className="font-pixel text-sm text-amber-300">冷知識收藏冊</h2>
-                    <p className="font-retro text-[10px] text-gray-400">KNOWLEDGE ALBUM · {ownedCount} / {TRIVIA_CARDS.length}</p>
+                    <p className="font-retro text-[10px] text-gray-400">KNOWLEDGE ALBUM</p>
+                    <p className="font-retro text-[10px] leading-none text-gray-400">{ownedCount} / {TRIVIA_CARDS.length}</p>
                 </div>
                 <div className="flex items-center gap-1">
                     <button
