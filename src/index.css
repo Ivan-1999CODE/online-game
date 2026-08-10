@@ -536,6 +536,146 @@ body.loaded {
   box-shadow: inset 0 0 10px color-mix(in srgb, var(--arena-primary) 14%, transparent);
 }
 
+.arena-tier-guide {
+  border: 2px solid color-mix(in srgb, var(--arena-primary) 65%, #475569);
+  background: color-mix(in srgb, var(--arena-secondary) 58%, #09050f);
+  box-shadow: inset 0 0 14px color-mix(in srgb, var(--arena-primary) 10%, transparent);
+}
+
+.arena-tier-guide-toggle {
+  width: 100%;
+  min-height: 3.6rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.7rem 0.75rem;
+  color: white;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--arena-secondary) 78%, #09050f), rgba(9, 5, 15, 0.72));
+  transition: background-color 120ms ease, box-shadow 120ms ease;
+}
+
+.arena-tier-guide-toggle:hover,
+.arena-tier-guide-toggle:focus-visible {
+  outline: none;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--arena-secondary) 70%, #24173a), rgba(23, 18, 41, 0.9));
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--arena-glow) 38%, transparent);
+}
+
+.arena-tier-guide-icon {
+  width: 2rem;
+  height: 2rem;
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  color: var(--arena-glow);
+  border: 2px solid color-mix(in srgb, var(--arena-primary) 72%, transparent);
+  background: color-mix(in srgb, var(--arena-secondary) 78%, #09050f);
+}
+
+.arena-tier-guide-chevron {
+  flex-shrink: 0;
+  color: var(--arena-glow);
+  transition: transform 150ms ease;
+}
+
+.arena-tier-guide-chevron.is-open {
+  transform: rotate(90deg);
+}
+
+.arena-tier-guide-content {
+  padding: 0.85rem;
+  border-top: 1px solid color-mix(in srgb, var(--arena-primary) 45%, transparent);
+  background: rgba(0, 0, 0, 0.22);
+}
+
+.arena-tier-ladder {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.45rem;
+}
+
+.arena-tier-ladder-item {
+  position: relative;
+  min-width: 0;
+  min-height: 3.3rem;
+  display: grid;
+  grid-template-columns: 0.7rem 1.8rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.45rem;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--arena-primary) 38%, #374151);
+  background: color-mix(in srgb, var(--arena-secondary) 45%, #09050f);
+  opacity: 0.62;
+}
+
+.arena-tier-ladder-item.is-reached {
+  opacity: 0.9;
+}
+
+.arena-tier-ladder-item.is-current {
+  padding-right: 2.5rem;
+  border: 2px solid var(--arena-glow);
+  opacity: 1;
+  box-shadow:
+    inset 0 0 10px color-mix(in srgb, var(--arena-primary) 18%, transparent),
+    0 0 8px color-mix(in srgb, var(--arena-glow) 24%, transparent);
+}
+
+.arena-tier-current-label {
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 0.15rem 0.25rem;
+  color: #09050f;
+  background: var(--arena-glow);
+  font-family: "DotGothic16", sans-serif;
+  font-size: 0.45rem;
+  font-weight: 900;
+}
+
+.arena-tier-rule-card {
+  padding: 0.7rem;
+  text-align: center;
+  border: 2px solid;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.arena-tier-rule-card.is-promote {
+  color: #bbf7d0;
+  border-color: rgba(74, 222, 128, 0.55);
+  background: rgba(20, 83, 45, 0.34);
+}
+
+.arena-tier-rule-card.is-hold {
+  color: #bfdbfe;
+  border-color: rgba(96, 165, 250, 0.5);
+  background: rgba(30, 58, 138, 0.28);
+}
+
+.arena-tier-rule-card.is-demote {
+  color: #fecaca;
+  border-color: rgba(248, 113, 113, 0.5);
+  background: rgba(127, 29, 29, 0.28);
+}
+
+.arena-tier-guide-notes {
+  display: grid;
+  gap: 0.45rem;
+  margin-top: 0.8rem;
+  padding: 0.7rem;
+  border-left: 3px solid color-mix(in srgb, var(--arena-primary) 70%, transparent);
+  background: rgba(0, 0, 0, 0.28);
+  line-height: 1.45;
+}
+
+@media (min-width: 640px) {
+  .arena-tier-ladder {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
 .weekly-report-calendar-button {
   color: #dbeafe;
   border: 2px solid #4f78a8;
