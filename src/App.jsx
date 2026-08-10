@@ -780,6 +780,95 @@ const ArenaTierBadge = ({ tier: tierId, size = 'md', showLabel = true, className
     );
 };
 
+const ArenaTierGuide = ({ currentTierId }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const currentTier = getArenaTier(currentTierId);
+    const formalTiers = ARENA_TIERS.filter(tier => tier.id !== 'unranked');
+    const currentFormalIndex = formalTiers.findIndex(tier => tier.id === currentTier.id);
+    const nextTier = currentFormalIndex >= 0 && currentFormalIndex < formalTiers.length - 1
+        ? formalTiers[currentFormalIndex + 1]
+        : null;
+    const summary = currentTier.id === 'unranked'
+        ? '完成一週競技，結算後從木牌開始'
+        : nextTier
+            ? `目前 ${currentTier.shortLabel} · 下一階 ${nextTier.shortLabel}`
+            : '你已抵達最高排位：戰神';
+
+    return (
+        <section className={`arena-tier-guide ${isOpen ? 'is-open' : ''}`}>
+            <button
+                type="button"
+                onClick={() => setIsOpen(open => !open)}
+                className="arena-tier-guide-toggle"
+                aria-expanded={isOpen}
+                aria-controls="arena-tier-guide-content"
+            >
+                <span className="arena-tier-guide-icon" aria-hidden="true"><HelpCircle size={17} /></span>
+                <span className="min-w-0 flex-1 text-left">
+                    <span className="block font-pixel text-[10px] text-yellow-200">排位指南</span>
+                    <span className="block font-retro text-[11px] text-gray-300 mt-1 truncate">{summary}</span>
+                </span>
+                <span className="font-retro text-[10px] text-cyan-200">{isOpen ? '收起' : '查看全部'}</span>
+                <ChevronRight size={16} className={`arena-tier-guide-chevron ${isOpen ? 'is-open' : ''}`} aria-hidden="true" />
+            </button>
+
+            {isOpen && (
+                <div id="arena-tier-guide-content" className="arena-tier-guide-content">
+                    <div className="flex items-end justify-between gap-3 mb-3">
+                        <div>
+                            <h3 className="font-pixel text-[10px] text-yellow-200">全部排位</h3>
+                            <p className="font-retro text-[10px] text-gray-400 mt-1">由低到高，共 8 個正式排位</p>
+                        </div>
+                        <span className="font-retro text-[9px] text-gray-500">每週最多移動一階</span>
+                    </div>
+
+                    <ol className="arena-tier-ladder" aria-label="英雄競技場排位由低到高">
+                        {formalTiers.map((tier, index) => {
+                            const isCurrent = tier.id === currentTier.id;
+                            const isReached = currentFormalIndex >= index;
+                            return (
+                                <li
+                                    key={tier.id}
+                                    className={`arena-tier-ladder-item ${isCurrent ? 'is-current' : ''} ${isReached ? 'is-reached' : ''}`}
+                                    data-arena-frame={tier.frame}
+                                    style={getArenaTierStyle(tier.id)}
+                                    aria-current={isCurrent ? 'step' : undefined}
+                                >
+                                    <span className="font-pixel text-[8px] text-gray-500">{index + 1}</span>
+                                    <ArenaTierBadge tier={tier.id} size="sm" showLabel={false} />
+                                    <span className="font-retro text-[11px] arena-tier-text">{tier.shortLabel}</span>
+                                    {isCurrent && <span className="arena-tier-current-label">目前</span>}
+                                </li>
+                            );
+                        })}
+                    </ol>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mt-4">
+                        <div className="arena-tier-rule-card is-promote">
+                            <div className="font-pixel text-[10px]">↑ 升一階</div>
+                            <div className="font-retro text-xs mt-2">每週小隊第 1～2 名</div>
+                        </div>
+                        <div className="arena-tier-rule-card is-hold">
+                            <div className="font-pixel text-[10px]">— 維持</div>
+                            <div className="font-retro text-xs mt-2">每週小隊第 3～6 名</div>
+                        </div>
+                        <div className="arena-tier-rule-card is-demote">
+                            <div className="font-pixel text-[10px]">↓ 降一階</div>
+                            <div className="font-retro text-xs mt-2">每週小隊第 7～8 名</div>
+                        </div>
+                    </div>
+
+                    <div className="arena-tier-guide-notes font-retro text-[11px] text-gray-300">
+                        <p><span className="text-yellow-200">首次定級：</span>一週內完成至少一場挑戰，週結算後成為木牌。</p>
+                        <p><span className="text-cyan-200">未參賽保護：</span>第一週未參賽會保留排位；連續第二週起，每週降一階。</p>
+                        <p><span className="text-purple-200">上下限：</span>木牌不會再降，戰神也不會再升；歷史最高排位不會因降階而消失。</p>
+                    </div>
+                </div>
+            )}
+        </section>
+    );
+};
+
 const getArenaTierOutcomeText = data => {
     if (!data?.tierOutcome) return null;
     const before = getArenaTier(data.tierBefore);
@@ -907,7 +996,11 @@ const ArenaTierPreviewLab = () => {
                         </div>
                     </div>
 
-                    <div className="p-3 sm:p-5 grid lg:grid-cols-2 gap-4">
+                    <div className="p-3 sm:px-5 sm:pt-5">
+                        <ArenaTierGuide currentTierId={selectedTier.id} />
+                    </div>
+
+                    <div className="px-3 pb-3 sm:px-5 sm:pb-5 grid lg:grid-cols-2 gap-4">
                         <div className="space-y-4">
                             <section className="arena-tier-feature border-2 p-4">
                                 <div className="font-pixel text-[9px] text-gray-400">本週階級</div>
@@ -2501,6 +2594,8 @@ const WeeklyReport = ({ onBack, onOpenAlbum, onViewLoginCalendar, currentUserId,
             </div>
 
             <div className="flex-1 overflow-y-auto p-3 space-y-4">
+                <ArenaTierGuide currentTierId={currentArenaTier.id} />
+
                 <section className="border-4 border-cyan-400/60 bg-gradient-to-br from-cyan-950/80 to-purple-950/80 p-3 shadow-xl">
                     <div className="flex justify-between items-center mb-3">
                         <h3 className="font-pixel text-xs text-cyan-300">本日打卡</h3>
