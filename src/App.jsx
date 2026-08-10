@@ -4623,23 +4623,32 @@ const ChallengeSetup = ({ onBack, onStart, advMeta = null }) => {
     const advIds = Array.from({ length: totalLessons }, (_, i) => advLessonId(i + 1));
 
     const toggleUnit = (id) => {
-        if (selectedUnits.includes(id)) {
-            setSelectedUnits(selectedUnits.filter(uid => uid !== id));
-        } else {
-            setSelectedUnits([...selectedUnits, id]);
-        }
+        setSelectedUnits(current => current.includes(id)
+            ? current.filter(uid => uid !== id)
+            : [...current, id]
+        );
     };
 
     // 全選只切換「當前分頁」的項目
     const currentTabIds = tab === 'main' ? mainIds : advIds;
     const currentAllSelected = currentTabIds.length > 0 && currentTabIds.every(id => selectedUnits.includes(id));
     const toggleAll = () => {
-        if (currentAllSelected) {
-            setSelectedUnits(selectedUnits.filter(id => !currentTabIds.includes(id)));
-        } else {
-            const merged = new Set([...selectedUnits, ...currentTabIds]);
-            setSelectedUnits(Array.from(merged));
-        }
+        setSelectedUnits(current => {
+            const allSelected = currentTabIds.length > 0 && currentTabIds.every(id => current.includes(id));
+            if (allSelected) return current.filter(id => !currentTabIds.includes(id));
+
+            return Array.from(new Set([...current, ...currentTabIds]));
+        });
+    };
+
+    // 進階篇章每 10 課為一卷，可快速切換整卷選取狀態
+    const toggleSection = (sectionIds) => {
+        setSelectedUnits(current => {
+            const allSelected = sectionIds.every(id => current.includes(id));
+            if (allSelected) return current.filter(id => !sectionIds.includes(id));
+
+            return Array.from(new Set([...current, ...sectionIds]));
+        });
     };
 
     return (
@@ -4684,6 +4693,9 @@ const ChallengeSetup = ({ onBack, onStart, advMeta = null }) => {
                         <div className="space-y-7">
                             {Array.from({ length: Math.ceil(totalLessons / ADV_LESSONS_PER_SECTION) }, (_, sectionIndex) => {
                                 const sectionIds = advIds.slice(sectionIndex * ADV_LESSONS_PER_SECTION, (sectionIndex + 1) * ADV_LESSONS_PER_SECTION);
+                                const sectionSelectedCount = sectionIds.filter(id => selectedUnits.includes(id)).length;
+                                const sectionAllSelected = sectionSelectedCount === sectionIds.length;
+                                const sectionPartiallySelected = sectionSelectedCount > 0 && !sectionAllSelected;
                                 return (
                                     <section key={sectionIndex}>
                                         <div className="flex items-center gap-2 mb-3">
@@ -4691,7 +4703,34 @@ const ChallengeSetup = ({ onBack, onStart, advMeta = null }) => {
                                             <div className="px-3 py-1 rounded-full bg-pink-100 text-purple-800 border-2 border-white shadow font-pixel text-[9px]">
                                                 PHOTO STRIP {String(sectionIndex + 1).padStart(2, '0')}
                                             </div>
-                                            <div className="h-px flex-1 bg-gradient-to-l from-transparent via-pink-300/70 to-purple-300/70"></div>
+                                            <div className="flex flex-1 items-center gap-2">
+                                                <div className="h-px flex-1 bg-gradient-to-l from-transparent via-pink-300/70 to-purple-300/70"></div>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => { playSound('click'); toggleSection(sectionIds); }}
+                                                    aria-label={`${sectionAllSelected ? '取消選取' : '選取'}進階第 ${sectionIndex + 1} 卷全部 ${sectionIds.length} 課`}
+                                                    aria-pressed={sectionAllSelected}
+                                                    title={sectionAllSelected ? '取消本卷全選' : '本卷全選'}
+                                                    className={`flex min-h-9 shrink-0 items-center gap-1.5 rounded-lg border-2 px-2 py-1 shadow transition-all active:scale-95 ${
+                                                        sectionAllSelected
+                                                            ? 'border-pink-200 bg-purple-600 text-white'
+                                                            : sectionPartiallySelected
+                                                                ? 'border-purple-300 bg-pink-100 text-purple-800'
+                                                                : 'border-purple-300/70 bg-black/40 text-pink-100 hover:bg-purple-900/70'
+                                                    }`}
+                                                >
+                                                    <span className={`flex h-5 w-5 items-center justify-center rounded border-2 font-pixel text-xs ${
+                                                        sectionAllSelected
+                                                            ? 'border-white bg-pink-400 text-white'
+                                                            : sectionPartiallySelected
+                                                                ? 'border-purple-500 bg-white text-purple-700'
+                                                                : 'border-pink-200 bg-white/10 text-transparent'
+                                                    }`}>
+                                                        {sectionAllSelected ? '✔' : sectionPartiallySelected ? '−' : '·'}
+                                                    </span>
+                                                    <span className="font-pixel text-[8px] whitespace-nowrap">本卷 {sectionSelectedCount}/{sectionIds.length}</span>
+                                                </button>
+                                            </div>
                                         </div>
 
                                         <div className="grid grid-cols-2 gap-4 px-1">
