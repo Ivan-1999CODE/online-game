@@ -1,0 +1,19 @@
+{
+  "valid": true,
+  "expected": {
+    "parts": 9,
+    "groups": 75,
+    "phrases": 830
+  },
+  "actual": {
+    "parts": 9,
+    "groups": 75,
+    "phrases": 830
+  },
+  "groupSize": {
+    "minimum": 3,
+    "maximum": 34
+  },
+  "errors": [],
+  "warnings": []
+}

@@ -13,6 +13,16 @@ import { getTtsAudio } from './constants/ttsAudioData';
 import TeacherDashboard from './components/TeacherDashboard.jsx';
 import { TRIVIA_CARDS, TRIVIA_CATEGORIES, TRIVIA_GROUPS, TRIVIA_LEGACY_ID_MAP, TRIVIA_SOURCES } from './constants/triviaData';
 import { hasAmbiguousTranslation, needsEnglishPrompt } from './constants/quizOptionRules';
+import phraseLibrary from './data/phraseLibrary.json';
+import {
+    PHRASE_CLEAR_TARGET,
+    PHRASE_QUESTION_LIMIT,
+    addPhraseAttempt,
+    buildPhraseQuestions,
+    getPhraseGrade,
+    normalizePhraseProgress,
+    selectSmartPhrases
+} from './utils/phrase-library';
 import {
     ARENA_TIER_ACTIVATION_WEEK_START,
     ARENA_TIERS,
@@ -287,6 +297,18 @@ const ADV_PASSING_GRADES = ['S', 'A', 'B'];
 const ADV_GRADE_ORDER = { B: 1, A: 2, S: 3 };
 const BOSS_CLEAR_GRADES = ['S', 'A', 'B'];
 const BOSS_CLEARS_REQUIRED = 5;
+
+const PHRASE_PARTS = phraseLibrary.parts || [];
+const PHRASE_GROUPS = PHRASE_PARTS.flatMap(part => part.groups || []);
+const PHRASE_GROUP_BY_ID = new Map(PHRASE_GROUPS.map(group => [group.id, group]));
+const PHRASE_PART_BY_ID = new Map(PHRASE_PARTS.map(part => [part.id, part]));
+const withPhraseAudio = phrase => ({
+    ...phrase,
+    series: 'phrases',
+    category: 'phrases',
+    audioScope: `phrase_${phrase.groupId}`,
+    audio: getTtsAudio(phrase)
+});
 
 const advLessonId = (lesson) => `adv_${lesson}`;
 const getAdvancedQualifiedClears = (record = {}) => Math.max(
@@ -1952,6 +1974,37 @@ const calculateWeeklyArenaResult = ({ userId, userData, range, roster, publicEnt
     };
 };
 
+const PhraseMarks = ({ record = {}, size = 'md', label }) => {
+    const progress = normalizePhraseProgress(record);
+    const sizeClass = size === 'lg' ? 'w-10 h-10' : size === 'sm' ? 'w-5 h-5' : 'w-7 h-7';
+    const gradeClass = {
+        S: 'border-yellow-300 bg-yellow-500/25 text-yellow-300',
+        A: 'border-green-300 bg-green-500/25 text-green-300',
+        B: 'border-blue-300 bg-blue-500/25 text-blue-300'
+    };
+
+    return (
+        <span
+            className="inline-flex items-center gap-1"
+            role="img"
+            aria-label={label || `有效通關 ${progress.clears} 次，最佳勾勾 ${progress.grades.join('、') || '尚無'}`}
+        >
+            {Array.from({ length: PHRASE_CLEAR_TARGET }, (_, index) => {
+                const grade = progress.grades[index];
+                return (
+                    <span
+                        key={index}
+                        aria-hidden="true"
+                        className={`${sizeClass} border-2 flex items-center justify-center ${grade ? gradeClass[grade] : 'border-gray-600 bg-black/30 text-gray-700'}`}
+                    >
+                        {grade && <CheckCircle className="w-[85%] h-[85%]" strokeWidth={3} />}
+                    </span>
+                );
+            })}
+        </span>
+    );
+};
+
 const calculateSharedWeeklyArenaResult = ({
     userId,
     userData,
@@ -3078,6 +3131,114 @@ const AchievementHall = ({ onBack, userData }) => {
     );
 };
 
+const PhraseLibraryMap = ({ progressByGroup = {}, onSelectGroup }) => {
+    const [expandedPart, setExpandedPart] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('');
+    const queryText = searchTerm.trim().toLocaleLowerCase('en');
+    const searchResults = queryText
+        ? PHRASE_PARTS.flatMap(part => part.groups.flatMap(group => group.phrases
+            .filter(phrase => `${phrase.word} ${phrase.chinese}`.toLocaleLowerCase('en').includes(queryText))
+            .map(phrase => ({ part, group, phrase }))))
+        : [];
+
+    return (
+        <div className="space-y-4">
+            <div className="max-w-xs mx-auto border-4 border-teal-500 bg-[#102c31] p-3 shadow-[4px_4px_0_#071416]">
+                <label htmlFor="phrase-library-search" className="font-pixel text-[10px] text-teal-200 flex items-center gap-2 mb-2">
+                    <Search size={14} /> 搜尋完整片語庫
+                </label>
+                <input
+                    id="phrase-library-search"
+                    type="search"
+                    value={searchTerm}
+                    onChange={event => setSearchTerm(event.target.value)}
+                    placeholder="輸入英文或中文..."
+                    className="w-full bg-black/60 border-2 border-teal-400 px-3 py-2 text-white font-retro text-base outline-none focus:border-yellow-300"
+                />
+                <p className="font-retro text-[10px] text-teal-100/70 mt-2">9 個 Part · 75 個群組 · 830 筆片語</p>
+            </div>
+
+            {queryText ? (
+                <div className="max-w-xs mx-auto space-y-2">
+                    <div className="font-pixel text-[10px] text-teal-200">找到 {searchResults.length} 筆</div>
+                    {searchResults.length === 0 ? (
+                        <div className="border-2 border-gray-700 bg-black/40 p-6 text-center font-retro text-gray-400">找不到符合的片語</div>
+                    ) : searchResults.slice(0, 80).map(({ part, group, phrase }) => (
+                        <button
+                            key={phrase.id}
+                            onClick={() => { playSound('click'); onSelectGroup(group, part); }}
+                            className="w-full border-2 border-teal-700 bg-black/55 hover:bg-teal-950 p-3 text-left flex items-center gap-3"
+                        >
+                            <div className="min-w-0 flex-1">
+                                <div className="font-retro text-base text-white font-bold truncate">{phrase.word}</div>
+                                <div className="font-retro text-sm text-teal-200 truncate">{phrase.chinese}</div>
+                                <div className="font-pixel text-[8px] text-gray-500 mt-1 truncate">{group.title}</div>
+                            </div>
+                            <ChevronRight size={18} className="text-teal-300 shrink-0" />
+                        </button>
+                    ))}
+                    {searchResults.length > 80 && (
+                        <p className="font-retro text-xs text-center text-gray-400">結果較多，請輸入更完整的關鍵字。</p>
+                    )}
+                </div>
+            ) : (
+                <div className="space-y-4">
+                    {PHRASE_PARTS.map(part => {
+                        const isExpanded = expandedPart === part.id;
+                        const completedGroups = part.groups.filter(group => normalizePhraseProgress(progressByGroup[group.id]).completed).length;
+                        return (
+                            <section key={part.id} className="max-w-xs mx-auto">
+                                <button
+                                    onClick={() => {
+                                        playSound('click');
+                                        setExpandedPart(isExpanded ? null : part.id);
+                                    }}
+                                    aria-expanded={isExpanded}
+                                    className="w-full border-4 border-teal-700 bg-gradient-to-b from-[#d8f2ec] to-[#8fc9bf] text-[#123b3b] p-3 flex items-center gap-3 text-left shadow-[4px_4px_0_#071416] active:translate-y-1"
+                                >
+                                    <Book size={28} className="shrink-0" />
+                                    <div className="min-w-0 flex-1">
+                                        <h3 className="font-pixel text-[10px] leading-relaxed">{part.title}</h3>
+                                        <p className="font-retro text-xs mt-1">完成 {completedGroups}/{part.groups.length} 群組</p>
+                                    </div>
+                                    <ChevronRight size={20} className={`shrink-0 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
+                                </button>
+
+                                {isExpanded && (
+                                    <div className="pt-3 space-y-3">
+                                        {part.groups.map(group => {
+                                            const progress = normalizePhraseProgress(progressByGroup[group.id]);
+                                            return (
+                                                <button
+                                                    key={group.id}
+                                                    onClick={() => { playSound('click'); onSelectGroup(group, part); }}
+                                                    className={`w-full border-4 p-3 text-left flex items-center gap-3 shadow-lg transition-transform hover:scale-[1.01] active:scale-95 ${progress.completed ? 'border-yellow-400 bg-teal-950' : 'border-teal-700 bg-[#173b42]'}`}
+                                                >
+                                                    <div className="w-11 h-11 shrink-0 border-2 border-teal-300 bg-black/40 flex items-center justify-center">
+                                                        <span className="font-pixel text-[9px] text-teal-100">{group.phraseCount}</span>
+                                                    </div>
+                                                    <div className="min-w-0 flex-1">
+                                                        <h4 className={`font-pixel text-[10px] leading-relaxed ${progress.completed ? 'text-yellow-300' : 'text-white'}`}>{group.title}</h4>
+                                                        <div className="mt-2 flex items-center justify-between gap-2">
+                                                            <PhraseMarks record={progress} size="sm" />
+                                                            <span className="font-retro text-[10px] text-gray-400">通關 {progress.clears} 次</span>
+                                                        </div>
+                                                    </div>
+                                                    <ChevronRight size={16} className="text-teal-300 shrink-0" />
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                )}
+                            </section>
+                        );
+                    })}
+                </div>
+            )}
+        </div>
+    );
+};
+
 const WorldMap = ({ onSelectNode, onViewJourney, onViewWeeklyReport, onOpenAchievements, onOpenAlbum, rewardSummary = {}, userData, onUltimateChallenge, onViewMistakeNotebook, onLogout, records = {}, advMeta = null, activeTab = 'main', onChangeTab }) => {
     const [showGuide, setShowGuide] = useState(false);
     const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
@@ -3217,19 +3378,25 @@ const WorldMap = ({ onSelectNode, onViewJourney, onViewWeeklyReport, onOpenAchie
                     </button>
                 </div>
             </div>
-            {/* 主線 / 進階 地圖切換 */}
+            {/* 主線 / 進階 / 完整片語庫切換 */}
             <div className="flex bg-black/60 border-b-4 border-rpg-border z-10">
                 <button
                     onClick={() => { playSound('click'); onChangeTab && onChangeTab('main'); }}
-                    className={`flex-1 py-2 font-pixel text-xs transition-colors ${activeTab === 'main' ? 'bg-rpg-primary text-white' : 'text-gray-400 hover:text-white'}`}
+                    className={`min-w-0 flex-1 py-2 px-1 font-pixel text-[9px] sm:text-xs transition-colors ${activeTab === 'main' ? 'bg-rpg-primary text-white' : 'text-gray-400 hover:text-white'}`}
                 >
                     ⚔ 主線冒險
                 </button>
                 <button
                     onClick={() => { playSound('click'); onChangeTab && onChangeTab('adv'); }}
-                    className={`flex-1 py-2 font-pixel text-xs transition-colors ${activeTab === 'adv' ? 'bg-purple-700 text-white' : 'text-gray-400 hover:text-white'}`}
+                    className={`min-w-0 flex-1 py-2 px-1 font-pixel text-[9px] sm:text-xs transition-colors ${activeTab === 'adv' ? 'bg-purple-700 text-white' : 'text-gray-400 hover:text-white'}`}
                 >
                     ✦ 進階篇章
+                </button>
+                <button
+                    onClick={() => { playSound('click'); onChangeTab && onChangeTab('phrases'); }}
+                    className={`min-w-0 flex-1 py-2 px-1 font-pixel text-[9px] sm:text-xs transition-colors ${activeTab === 'phrases' ? 'bg-teal-700 text-white' : 'text-gray-400 hover:text-white'}`}
+                >
+                    ▣ 完整片語庫
                 </button>
             </div>
             <div className="world-status-row bg-[#171229] border-b-2 border-yellow-500/35 px-2 py-2 flex items-center gap-2 z-10">
@@ -3470,6 +3637,12 @@ const WorldMap = ({ onSelectNode, onViewJourney, onViewWeeklyReport, onOpenAchie
                         </div>
                     );
                 })()}
+                {activeTab === 'phrases' && (
+                    <PhraseLibraryMap
+                        progressByGroup={userData?.phraseProgress || {}}
+                        onSelectGroup={(group, part) => onSelectNode({ type: 'phrase', id: group.id, partId: part.id })}
+                    />
+                )}
                 <div className="h-10"></div>
             </div>
         </div>
@@ -3810,7 +3983,58 @@ const AdvancedJourneyView = ({ records = {}, advMeta = null, mistakeStats = {} }
     );
 };
 
-const JourneyMode = ({ onBack, onViewTrialLog, records = {}, advMeta = null, mistakeStats = {}, arenaTierProgress = {} }) => {
+const PhraseJourneyView = ({ progressByGroup = {} }) => {
+    const playedGroups = PHRASE_GROUPS
+        .map(group => ({ group, progress: normalizePhraseProgress(progressByGroup[group.id]) }))
+        .filter(({ progress }) => progress.attempts > 0);
+    const completedCount = playedGroups.filter(({ progress }) => progress.completed).length;
+
+    return (
+        <div className="flex-1 overflow-y-auto p-4 bg-gradient-to-b from-[#102c31] to-[#07181f]">
+            <div className="grid grid-cols-2 gap-3 mb-4">
+                <div className="border-2 border-teal-500 bg-black/35 p-3 text-center">
+                    <div className="font-pixel text-2xl text-teal-200">{playedGroups.length}</div>
+                    <div className="font-retro text-xs text-gray-400 mt-1">已挑戰群組</div>
+                </div>
+                <div className="border-2 border-yellow-500 bg-black/35 p-3 text-center">
+                    <div className="font-pixel text-2xl text-yellow-300">{completedCount}</div>
+                    <div className="font-retro text-xs text-gray-400 mt-1">已完成群組</div>
+                </div>
+            </div>
+
+            {playedGroups.length === 0 ? (
+                <div className="h-64 flex flex-col items-center justify-center text-center border-2 border-teal-900 bg-black/20">
+                    <Book size={52} className="text-teal-700 mb-4" />
+                    <p className="font-pixel text-xs text-teal-200">尚無片語挑戰紀錄</p>
+                    <p className="font-retro text-xs text-gray-500 mt-2">到完整片語庫開始第一個群組吧！</p>
+                </div>
+            ) : (
+                <div className="space-y-3">
+                    {playedGroups.map(({ group, progress }) => (
+                        <div key={group.id} className={`border-2 p-3 bg-black/40 ${progress.completed ? 'border-yellow-400' : 'border-teal-700'}`}>
+                            <div className="flex items-start justify-between gap-3">
+                                <div className="min-w-0 flex-1">
+                                    <h3 className={`font-pixel text-[10px] leading-relaxed ${progress.completed ? 'text-yellow-300' : 'text-white'}`}>{group.title}</h3>
+                                    <p className="font-retro text-[10px] text-gray-400 mt-1">
+                                        挑戰 {progress.attempts} 次 · 有效通關 {progress.clears} 次 · 最高 {progress.bestScore} 分
+                                    </p>
+                                    {progress.lastPlayedAt && (
+                                        <p className="font-retro text-[9px] text-gray-600 mt-1">
+                                            {new Intl.DateTimeFormat('zh-TW', { timeZone: 'Asia/Taipei', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(progress.lastPlayedAt))}
+                                        </p>
+                                    )}
+                                </div>
+                                <PhraseMarks record={progress} size="sm" />
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+};
+
+const JourneyMode = ({ onBack, onViewTrialLog, records = {}, advMeta = null, mistakeStats = {}, phraseProgress = {}, arenaTierProgress = {} }) => {
     const [flippedCards, setFlippedCards] = useState({});
     const [showDashboard, setShowDashboard] = useState(false);
     const [showPasswordModal, setShowPasswordModal] = useState(false);
@@ -3903,19 +4127,27 @@ const JourneyMode = ({ onBack, onViewTrialLog, records = {}, advMeta = null, mis
             <div className="flex bg-black/70 border-b-4 border-rpg-border">
                 <button
                     onClick={() => { playSound('click'); setActiveTab('main'); }}
-                    className={`flex-1 py-2 font-pixel text-xs transition-colors ${activeTab === 'main' ? 'bg-rpg-primary text-white' : 'text-gray-400 hover:text-white'}`}
+                    className={`min-w-0 flex-1 py-2 px-1 font-pixel text-[9px] sm:text-xs transition-colors ${activeTab === 'main' ? 'bg-rpg-primary text-white' : 'text-gray-400 hover:text-white'}`}
                 >
                     ⚔ 一般旅程
                 </button>
                 <button
                     onClick={() => { playSound('click'); setActiveTab('adv'); }}
-                    className={`flex-1 py-2 font-pixel text-xs transition-colors ${activeTab === 'adv' ? 'bg-purple-700 text-white' : 'text-gray-400 hover:text-white'}`}
+                    className={`min-w-0 flex-1 py-2 px-1 font-pixel text-[9px] sm:text-xs transition-colors ${activeTab === 'adv' ? 'bg-purple-700 text-white' : 'text-gray-400 hover:text-white'}`}
                 >
                     ✦ 進階旅程
                 </button>
+                <button
+                    onClick={() => { playSound('click'); setActiveTab('phrases'); }}
+                    className={`min-w-0 flex-1 py-2 px-1 font-pixel text-[9px] sm:text-xs transition-colors ${activeTab === 'phrases' ? 'bg-teal-700 text-white' : 'text-gray-400 hover:text-white'}`}
+                >
+                    ▣ 片語旅程
+                </button>
             </div>
 
-            {activeTab === 'adv' ? (
+            {activeTab === 'phrases' ? (
+                <PhraseJourneyView progressByGroup={phraseProgress} />
+            ) : activeTab === 'adv' ? (
                 <AdvancedJourneyView records={records} advMeta={advMeta} mistakeStats={mistakeStats} />
             ) : (
                 <>
@@ -4351,32 +4583,44 @@ const MistakeNotebook = ({ onBack, mistakeStats = {}, onClearMistakes, onRemoveM
     const [showSlashConfirm, setShowSlashConfirm] = useState(false); // 斬除個別確認
     const [pendingRemoveId, setPendingRemoveId] = useState(null); // 待刪除的單字 ID
     const [selectedUnit, setSelectedUnit] = useState('all'); // 新增：單元選擇狀態
-    const [activeTab, setActiveTab] = useState('main'); // 'main' | 'adv'
+    const [activeTab, setActiveTab] = useState('main'); // 'main' | 'adv' | 'phrases'
 
     useEffect(() => {
         setSelectedUnit('all');
     }, [activeTab]);
 
     const isAdvancedMistake = (data = {}) => data.source === 'advanced' && Number.isFinite(Number(data.lesson));
+    const isPhraseMistake = (data = {}) => data.source === 'phrases' && Boolean(data.groupId);
 
     // 將 mistakeStats 轉換為陣列並排序（按錯誤次數由多到少）
     const sortedMistakes = Object.entries(mistakeStats)
         .filter(([, data]) => data.count > 0)
-        .filter(([, data]) => activeTab === 'adv' ? isAdvancedMistake(data) : !isAdvancedMistake(data))
+        .filter(([, data]) => {
+            if (activeTab === 'adv') return isAdvancedMistake(data);
+            if (activeTab === 'phrases') return isPhraseMistake(data);
+            return !isAdvancedMistake(data) && !isPhraseMistake(data);
+        })
         .sort((a, b) => b[1].count - a[1].count);
 
     const availableUnits = activeTab === 'adv'
         ? [...new Set(sortedMistakes.map(([, data]) => Number(data.lesson)))].sort((a, b) => a - b)
-        : Array.from({ length: 16 }, (_, i) => i + 1);
+            .map(value => ({ value: String(value), label: `第 ${value} 課` }))
+        : activeTab === 'phrases'
+            ? [...new Map(sortedMistakes.map(([, data]) => [data.groupId, data.groupTitle || data.groupId])).entries()]
+                .map(([value, label]) => ({ value, label }))
+            : Array.from({ length: 16 }, (_, i) => ({ value: String(i + 1), label: `Unit ${i + 1}` }));
 
     // 根據選擇的單元過濾錯題
     const filteredMistakes = selectedUnit === 'all'
         ? sortedMistakes
-        : sortedMistakes.filter(([, data]) => activeTab === 'adv'
-            ? Number(data.lesson) === parseInt(selectedUnit, 10)
-            : data.gameUnitId === parseInt(selectedUnit, 10));
+        : sortedMistakes.filter(([, data]) => {
+            if (activeTab === 'adv') return Number(data.lesson) === parseInt(selectedUnit, 10);
+            if (activeTab === 'phrases') return data.groupId === selectedUnit;
+            return data.gameUnitId === parseInt(selectedUnit, 10);
+        });
 
     const totalMistakes = sortedMistakes.reduce((sum, [id, data]) => sum + data.count, 0);
+    const activeScopeLabel = activeTab === 'adv' ? '進階' : activeTab === 'phrases' ? '片語' : '一般';
 
     // 處理斬除按鈕點擊
     const handleSlashClick = (id) => {
@@ -4431,25 +4675,31 @@ const MistakeNotebook = ({ onBack, mistakeStats = {}, onClearMistakes, onRemoveM
                     <div className="bg-black/60 px-4 py-1 rounded border border-red-800 flex items-center gap-2">
                         <span className="font-pixel text-xs text-gray-400">殘留魔物:</span>
                         <span className="font-pixel text-sm text-red-400" style={{ textShadow: '0 0 5px rgba(255,0,0,0.5)' }}>
-                            {sortedMistakes.length} 字 / {totalMistakes} 次
+                            {sortedMistakes.length} {activeTab === 'phrases' ? '筆' : '字'} / {totalMistakes} 次
                         </span>
                     </div>
                 </div>
             </div>
 
-            {/* 一般／進階錯題切換 */}
+            {/* 一般／進階／片語錯題切換 */}
             <div className="flex bg-black/80 border-b-2 border-red-800">
                 <button
                     onClick={() => { playSound('click'); setActiveTab('main'); }}
-                    className={`flex-1 py-2 font-pixel text-xs transition-colors ${activeTab === 'main' ? 'bg-red-900 text-white' : 'text-gray-500 hover:text-gray-200'}`}
+                    className={`min-w-0 flex-1 py-2 px-1 font-pixel text-[9px] sm:text-xs transition-colors ${activeTab === 'main' ? 'bg-red-900 text-white' : 'text-gray-500 hover:text-gray-200'}`}
                 >
                     ⚔ 一般錯題
                 </button>
                 <button
                     onClick={() => { playSound('click'); setActiveTab('adv'); }}
-                    className={`flex-1 py-2 font-pixel text-xs transition-colors ${activeTab === 'adv' ? 'bg-purple-800 text-white' : 'text-gray-500 hover:text-gray-200'}`}
+                    className={`min-w-0 flex-1 py-2 px-1 font-pixel text-[9px] sm:text-xs transition-colors ${activeTab === 'adv' ? 'bg-purple-800 text-white' : 'text-gray-500 hover:text-gray-200'}`}
                 >
                     ✦ 進階錯題
+                </button>
+                <button
+                    onClick={() => { playSound('click'); setActiveTab('phrases'); }}
+                    className={`min-w-0 flex-1 py-2 px-1 font-pixel text-[9px] sm:text-xs transition-colors ${activeTab === 'phrases' ? 'bg-teal-800 text-white' : 'text-gray-500 hover:text-gray-200'}`}
+                >
+                    ▣ 片語錯題
                 </button>
             </div>
 
@@ -4466,17 +4716,17 @@ const MistakeNotebook = ({ onBack, mistakeStats = {}, onClearMistakes, onRemoveM
                     全部
                 </button>
 
-                {/* 一般顯示 16 單元，進階只顯示目前有錯題的課次 */}
-                {availableUnits.map(unitNum => (
+                {/* 一般顯示 16 單元，進階與片語只顯示目前有錯題的群組 */}
+                {availableUnits.map(unit => (
                     <button
-                        key={unitNum}
-                        onClick={() => setSelectedUnit(unitNum.toString())}
-                        className={`px-3 py-1 font-pixel text-xs transition-colors flex-shrink-0 ${selectedUnit === unitNum.toString()
+                        key={unit.value}
+                        onClick={() => setSelectedUnit(unit.value)}
+                        className={`px-3 py-1 font-pixel text-xs transition-colors flex-shrink-0 ${selectedUnit === unit.value
                             ? 'text-red-500 border-b-2 border-red-500'
                             : 'text-gray-400 hover:text-gray-200'
                             }`}
                     >
-                        {activeTab === 'adv' ? `第 ${unitNum} 課` : `Unit ${unitNum}`}
+                        {unit.label}
                     </button>
                 ))}
             </div>
@@ -4486,14 +4736,14 @@ const MistakeNotebook = ({ onBack, mistakeStats = {}, onClearMistakes, onRemoveM
                 {sortedMistakes.length === 0 ? (
                     <div className="flex flex-col items-center justify-center h-full text-center">
                         <CheckCircle size={64} className="text-green-500 opacity-50 mb-4" />
-                        <p className="font-pixel text-gray-400 text-sm">{activeTab === 'adv' ? '尚無進階錯題' : '尚無一般錯題'}</p>
+                        <p className="font-pixel text-gray-400 text-sm">尚無{activeScopeLabel}錯題</p>
                         <p className="font-retro text-gray-600 text-xs mt-2">太棒了！繼續保持！</p>
                     </div>
                 ) : filteredMistakes.length === 0 ? (
                     // 選擇了特定單元但該單元無錯題
                     <div className="flex flex-col items-center justify-center h-full text-center">
                         <CheckCircle size={64} className="text-green-500 opacity-50 mb-4" />
-                        <p className="font-pixel text-gray-400 text-sm">本{activeTab === 'adv' ? '課' : '單元'}無戰敗紀錄</p>
+                        <p className="font-pixel text-gray-400 text-sm">本{activeTab === 'phrases' ? '群組' : activeTab === 'adv' ? '課' : '單元'}無戰敗紀錄</p>
                         <p className="font-retro text-gray-600 text-xs mt-2">勇者繼續保持！</p>
                     </div>
                 ) : (
@@ -4527,6 +4777,9 @@ const MistakeNotebook = ({ onBack, mistakeStats = {}, onClearMistakes, onRemoveM
                                         </button>
                                     </div>
                                     <p className="font-retro text-sm text-gray-400 leading-relaxed">{data.chinese}</p>
+                                    {data.source === 'phrases' && (
+                                        <p className="font-pixel text-[8px] text-teal-400 mt-2 pr-16">{data.groupTitle || data.groupId}</p>
+                                    )}
                                 </div>
 
                                 {/* 個別刪除按鈕 - 右下角 */}
@@ -4553,7 +4806,7 @@ const MistakeNotebook = ({ onBack, mistakeStats = {}, onClearMistakes, onRemoveM
                         className="w-full bg-gradient-to-r from-gray-800 to-gray-700 border-4 border-gray-600 p-3 font-pixel text-gray-400 text-sm hover:from-red-900 hover:to-red-800 hover:border-red-600 hover:text-red-300 transition-all active:translate-y-1 flex items-center justify-center gap-2"
                     >
                         <XCircle size={16} />
-                        清空{activeTab === 'adv' ? '進階' : '一般'}錯題
+                        清空{activeScopeLabel}錯題
                     </button>
                 </div>
             )}
@@ -4591,7 +4844,7 @@ const MistakeNotebook = ({ onBack, mistakeStats = {}, onClearMistakes, onRemoveM
                 <div className="absolute inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4">
                     <div className="bg-gray-900 border-4 border-red-700 p-6 w-full max-w-xs text-center" style={{ boxShadow: '0 0 30px rgba(255,0,0,0.3)' }}>
                         <Skull size={48} className="text-red-500 mx-auto mb-4" />
-                        <h3 className="font-pixel text-lg text-white mb-2">確定要清空{activeTab === 'adv' ? '進階' : '一般'}錯題嗎?</h3>
+                        <h3 className="font-pixel text-lg text-white mb-2">確定要清空{activeScopeLabel}錯題嗎?</h3>
                         <p className="font-retro text-sm text-gray-400 mb-6">另一個頁籤的錯題會保留，此操作無法復原</p>
                         <div className="flex gap-4 justify-center">
                             <button
@@ -5145,10 +5398,91 @@ const StudyMode = ({ unitId, categoryId, data, lessonTitle, onBack, onStartQuiz 
     );
 };
 
-const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard', questionLimit = 20, onComplete, onFlee, currentRecord = null }) => {
+const PhraseGroupStudy = ({ group, part, record = {}, onBack, onStartQuiz }) => {
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const progress = normalizePhraseProgress(record);
+    const phrases = group?.phrases || [];
+    const currentPhrase = phrases[currentIndex];
+
+    const speakCurrentPhrase = () => {
+        if (!currentPhrase) return;
+        playSound('click');
+        const audioItem = withPhraseAudio(currentPhrase);
+        speakText(audioItem.word, audioItem.audio, audioItem.audioScope);
+    };
+
+    return (
+        <div className="flex flex-col h-full bg-gradient-to-b from-[#123b3b] to-[#081b24]">
+            <div className="flex items-center justify-between p-3 border-b-4 border-teal-500 bg-black/35">
+                <RPGButton onClick={onBack} color="dark" className="px-2"><ArrowLeft size={16} /></RPGButton>
+                <div className="min-w-0 flex-1 text-center mx-2">
+                    <h2 className="font-pixel text-[11px] text-white leading-relaxed truncate">{group?.title}</h2>
+                    <p className="font-retro text-[10px] text-teal-200 truncate">{part?.title}</p>
+                </div>
+                <div className="font-pixel text-[9px] text-teal-200">{phrases.length} 筆</div>
+            </div>
+
+            <div className="px-4 pt-4">
+                <div className="border-2 border-teal-600 bg-black/35 p-3 flex items-center justify-between gap-3">
+                    <div>
+                        <div className="font-pixel text-[9px] text-teal-200">通關進度 {progress.clears} 次</div>
+                        <div className="font-retro text-[10px] text-gray-400 mt-1">
+                            {progress.completed ? '已完成，可繼續挑戰刷新勾勾' : `取得 B 以上累積 ${PHRASE_CLEAR_TARGET} 次完成`}
+                        </div>
+                    </div>
+                    <PhraseMarks record={progress} />
+                </div>
+            </div>
+
+            <div className="flex-1 min-h-0 flex flex-col items-center justify-center p-4">
+                <div className="font-pixel text-[10px] text-teal-200 mb-3">{currentIndex + 1} / {phrases.length}</div>
+                <div className="w-full max-w-xs min-h-64 border-4 border-teal-300 bg-[#e7f8f3] text-[#102c31] shadow-[6px_6px_0_#061316] p-5 flex flex-col items-center justify-center text-center relative">
+                    <Book size={34} className="text-teal-700 mb-4" />
+                    <h3 className="font-retro text-2xl font-bold leading-relaxed break-words">{currentPhrase?.word || '資料讀取中...'}</h3>
+                    <div className="w-16 border-t-2 border-teal-600/40 my-4"></div>
+                    <p className="font-retro text-xl leading-relaxed text-teal-900">{currentPhrase?.chinese}</p>
+                    <button
+                        onClick={speakCurrentPhrase}
+                        className="mt-5 border-2 border-teal-700 bg-teal-800 text-white p-2 hover:bg-teal-700"
+                        aria-label={`播放 ${currentPhrase?.word || ''} 發音`}
+                    >
+                        <Volume2 size={20} />
+                    </button>
+                </div>
+
+                <div className="flex gap-6 mt-5">
+                    <RPGButton
+                        onClick={() => setCurrentIndex(index => (index - 1 + phrases.length) % phrases.length)}
+                        color="neutral"
+                        className="w-14"
+                        disabled={phrases.length <= 1}
+                    >
+                        <ChevronLeft /><span className="sr-only">上一張</span>
+                    </RPGButton>
+                    <RPGButton
+                        onClick={() => setCurrentIndex(index => (index + 1) % phrases.length)}
+                        color="neutral"
+                        className="w-14"
+                        disabled={phrases.length <= 1}
+                    >
+                        <ChevronRight /><span className="sr-only">下一張</span>
+                    </RPGButton>
+                </div>
+            </div>
+
+            <div className="flex-shrink-0 bg-black/70 border-t-4 border-teal-600 p-3">
+                <RPGButton onClick={onStartQuiz} color="primary" disabled={phrases.length === 0} className="w-full py-3">
+                    <Sword size={16} /> 開始最多 {PHRASE_QUESTION_LIMIT} 題挑戰
+                </RPGButton>
+            </div>
+        </div>
+    );
+};
+
+const BattleMode = ({ quizData, optionPool = null, isBoss, isChallenge = false, isPhrase = false, difficulty = 'hard', questionLimit = 20, onComplete, onFlee, currentRecord = null }) => {
     // 所有模式都先顯示 menu 選擇作答模式
-    const isEasy = difficulty === 'easy';
-    const maxHp = isEasy ? 5 : 3; // 簡單模式 5 條命，困難模式維持 3 條
+    const isEasy = !isPhrase && difficulty === 'easy';
+    const maxHp = isPhrase ? 3 : (isEasy ? 5 : 3); // 片語固定 3 條命
     const [status, setStatus] = useState('menu');
     const [currentQIndex, setCurrentQIndex] = useState(0);
     const [questions, setQuestions] = useState([]);
@@ -5170,6 +5504,14 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard'
 
     useEffect(() => {
         if (!quizData) return;
+        if (isPhrase) {
+            setQuestions(buildPhraseQuestions({
+                selectedPhrases: quizData,
+                groupPhrases: quizData,
+                partPhrases: optionPool || quizData
+            }));
+            return;
+        }
         const generatedQuestions = quizData.flatMap(item => {
             const otherItems = quizData.filter(i => i.id !== item.id);
             // A direct translation question is unfair when two choices have the
@@ -5188,7 +5530,7 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard'
         });
         const limit = Math.min(generatedQuestions.length, questionLimit);
         setQuestions(shuffleArray(generatedQuestions).slice(0, limit));
-    }, [quizData, isBoss, questionLimit]);
+    }, [quizData, optionPool, isBoss, isPhrase, questionLimit]);
 
     // 簡易 / 聽力模式：每題出現時自動播放正確單字的發音
     useEffect(() => {
@@ -5238,7 +5580,10 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard'
             targetBook: currentQ.target.book,
             targetUnit: currentQ.target.unit,
             targetSeries: currentQ.target.series,
-            targetLesson: currentQ.target.lesson
+            targetLesson: currentQ.target.lesson,
+            targetGroupId: currentQ.target.groupId,
+            targetPartId: currentQ.target.partId,
+            targetGroupTitle: currentQ.target.groupTitle
         }]);
         setHp(h => h - 1);
         setFeedback('miss');
@@ -5258,9 +5603,9 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard'
 
         if (isCorrect) {
             playSound('correct');
-            // New logic: 100 pts if timeLeft >= 6 (first 1s), then scale based on 6s
+            // 片語模式答對固定 100 分；其他模式維持速度計分。
             pointsEarned = 100;
-            if (timeLeft < 6.0) {
+            if (!isPhrase && timeLeft < 6.0) {
                 const scoreTime = Math.max(0, timeLeft);
                 pointsEarned = Math.ceil((scoreTime / 6.0) * 100);
             }
@@ -5291,7 +5636,10 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard'
             targetBook: currentQ.target.book,
             targetUnit: currentQ.target.unit,
             targetSeries: currentQ.target.series,
-            targetLesson: currentQ.target.lesson
+            targetLesson: currentQ.target.lesson,
+            targetGroupId: currentQ.target.groupId,
+            targetPartId: currentQ.target.partId,
+            targetGroupTitle: currentQ.target.groupTitle
         }]);
 
         nextQuestion(isDead);
@@ -5307,6 +5655,17 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard'
 
     const getRank = (finalScore) => {
         const maxPossible = questions.length * 100;
+        if (isPhrase) {
+            const rank = getPhraseGrade({
+                correct: Math.round(finalScore / 100),
+                total: questions.length,
+                completed: true
+            });
+            if (rank === 'S') return { rank, color: 'text-yellow-300', bg: 'bg-yellow-400', title: 'PERFECT CHECK!' };
+            if (rank === 'A') return { rank, color: 'text-green-300', bg: 'bg-green-500', title: 'GREEN CHECK!' };
+            if (rank === 'B') return { rank, color: 'text-blue-300', bg: 'bg-blue-500', title: 'BLUE CHECK!' };
+            return { rank: null, color: 'text-gray-400', bg: 'bg-gray-600', title: 'KEEP TRAINING' };
+        }
         const normalized = maxPossible > 0 ? (finalScore / maxPossible) * 1000 : 0;
 
         // 簡單模式評級上限為 B：分數再高也只給到 B（要拿 S/A 必須玩困難模式）
@@ -5325,11 +5684,18 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard'
 
         return (
             <div className="flex flex-col items-center justify-center h-full gap-4 text-center p-4 bg-black/90">
-                {isBoss ? <div className="animate-pulse"><PixelArt.MonsterBat /></div> : isChallenge ? <div className="animate-pulse"><PixelArt.MonsterBat /></div> : <PixelArt.MonsterSlime />}
-                <h2 className="font-pixel text-xl text-white leading-loose">{isBoss ? "BOSS BATTLE" : isChallenge ? "終極試煉" : "MONSTER APPEARS"}<br /><span className="text-xs text-gray-400">{questions.length} Questions. 7 Seconds.</span></h2>
+                {isPhrase ? <div className="w-24 h-24"><PixelArt.Book /></div> : isBoss ? <div className="animate-pulse"><PixelArt.MonsterBat /></div> : isChallenge ? <div className="animate-pulse"><PixelArt.MonsterBat /></div> : <PixelArt.MonsterSlime />}
+                <h2 className="font-pixel text-xl text-white leading-loose">{isPhrase ? '片語挑戰' : isBoss ? "BOSS BATTLE" : isChallenge ? "終極試煉" : "MONSTER APPEARS"}<br /><span className="text-xs text-gray-400">{questions.length} Questions. 7 Seconds.</span></h2>
 
                 {isEasy && (
                     <div className="font-pixel text-[10px] text-cyan-300 border-2 border-cyan-500/60 bg-cyan-900/30 px-3 py-1">簡單模式 · 5命 · 評級上限 B</div>
+                )}
+
+                {isPhrase && (
+                    <div className="flex flex-col items-center gap-2 border-2 border-teal-600 bg-teal-950/40 p-3 w-full max-w-xs">
+                        <PhraseMarks record={currentRecord} />
+                        <span className="font-retro text-xs text-teal-100">固定 3 命 · 答對 100 分 · B 以上累積通關</span>
+                    </div>
                 )}
 
                 {/* Boss Progress Checkboxes */}
@@ -5403,7 +5769,7 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard'
                 >
                     FIGHT!
                 </RPGButton>
-                <button onClick={onFlee} className="text-gray-500 font-pixel text-xs hover:text-white">{isChallenge ? 'BACK' : 'RUN AWAY'}</button>
+                <button onClick={onFlee} className="text-gray-500 font-pixel text-xs hover:text-white">{isChallenge || isPhrase ? 'BACK' : 'RUN AWAY'}</button>
             </div>
         );
     }
@@ -5413,12 +5779,16 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard'
 
         let rankData;
         if (status === 'gameover') {
-            rankData = { rank: 'E', color: 'text-gray-500', bg: 'bg-rpg-primary', title: 'GAME OVER' };
+            rankData = { rank: isPhrase ? null : 'E', color: 'text-gray-500', bg: 'bg-rpg-primary', title: 'GAME OVER' };
         } else {
             rankData = getRank(score);
         }
 
-        const ranks = [
+        const ranks = isPhrase ? [
+            { label: 'S', min: maxPossible, color: 'text-yellow-300' },
+            { label: 'A', min: Math.ceil(maxPossible * 0.9), color: 'text-green-300' },
+            { label: 'B', min: Math.ceil(maxPossible * 0.8), color: 'text-blue-300' }
+        ] : [
             { label: 'S', min: Math.ceil(maxPossible * 0.9), color: 'text-yellow-400' },
             { label: 'A', min: Math.ceil(maxPossible * 0.8), color: 'text-orange-500' },
             { label: 'B', min: Math.ceil(maxPossible * 0.7), color: 'text-blue-400' },
@@ -5438,7 +5808,7 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard'
                             <>
                                 <Award size={48} className="text-rpg-accent animate-bounce-pixel" />
                                 <h2 className="font-pixel text-xl text-white">{rankData.title}</h2>
-                                <div className={`font-pixel text-4xl ${rankData.color} text-shadow`}>RANK {rankData.rank}</div>
+                                <div className={`font-pixel text-4xl ${rankData.color} text-shadow`}>{isPhrase ? `CHECK ${rankData.rank || '-'}` : `RANK ${rankData.rank}`}</div>
                             </>
                         ) : (
                             <>
@@ -5469,8 +5839,8 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard'
                         {(() => {
                             const rankOrder = { 'S': 6, 'A': 5, 'B': 4, 'C': 3, 'D': 2, 'E': 1 };
                             const isNewRecord = !currentRecord ||
-                                score > currentRecord.score ||
-                                (score === currentRecord.score && rankOrder[rankData.rank] > rankOrder[currentRecord.rank]);
+                                score > (isPhrase ? currentRecord.bestScore : currentRecord.score) ||
+                                (score === (isPhrase ? currentRecord.bestScore : currentRecord.score) && rankOrder[rankData.rank] > rankOrder[isPhrase ? currentRecord.bestGrade : currentRecord.rank]);
 
                             return isNewRecord ? (
                                 <div className="animate-bounce-pixel text-yellow-300 font-pixel text-sm text-shadow drop-shadow-md border-2 border-yellow-500 bg-black/50 px-2 rounded">
@@ -5536,7 +5906,14 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard'
                             onClick={() => {
                                 if (isSubmitting) return;
                                 setIsSubmitting(true);
-                                onComplete({ score, rank: rankData.rank, battleLog, victory: status === 'victory' });
+                                onComplete({
+                                    score,
+                                    rank: rankData.rank,
+                                    battleLog,
+                                    victory: status === 'victory',
+                                    completed: status === 'victory',
+                                    correctCount: battleLog.filter(log => log.isCorrect).length
+                                });
                             }}
                             disabled={isSubmitting}
                             color="neutral"
@@ -5549,7 +5926,15 @@ const BattleMode = ({ quizData, isBoss, isChallenge = false, difficulty = 'hard'
                                 if (isSubmitting) return;
                                 setIsSubmitting(true);
                                 // 先存檔，存完後重置戰鬥狀態
-                                onComplete({ score, rank: rankData.rank, battleLog, victory: status === 'victory', retry: true });
+                                onComplete({
+                                    score,
+                                    rank: rankData.rank,
+                                    battleLog,
+                                    victory: status === 'victory',
+                                    completed: status === 'victory',
+                                    correctCount: battleLog.filter(log => log.isCorrect).length,
+                                    retry: true
+                                });
                             }}
                             disabled={isSubmitting}
                             color="primary"
@@ -5717,7 +6102,7 @@ const App = () => {
 
     // 進階書相關狀態
     const [advMeta, setAdvMeta] = useState(null);     // meta/advanced 目錄
-    const [worldTab, setWorldTab] = useState('main'); // 'main' | 'adv'
+    const [worldTab, setWorldTab] = useState('main'); // 'main' | 'adv' | 'phrases'
 
     // New State for Async Loading
     const [loading, setLoading] = useState(false);
@@ -5775,7 +6160,7 @@ const App = () => {
         }
 
         // Determine which track to play based on view
-        if (view === 'quiz' || view === 'challenge-quiz') {
+        if (view === 'quiz' || view === 'challenge-quiz' || view === 'phrase-quiz') {
             playMusic('challenge');
         } else {
             playMusic('lobby');
@@ -5828,7 +6213,8 @@ const App = () => {
                 arenaTierProgress: normalizeArenaTierProgress(),
                 weeklyArenaGroupAssignments: {},
                 discoveredWordIds: [],
-                correctWordIds: []
+                correctWordIds: [],
+                phraseProgress: {}
             };
             const triviaMigration = migrateTriviaProgress(baseData);
             const migratedBaseData = {
@@ -6031,6 +6417,69 @@ const App = () => {
         const currentSessionAccuracy = sessionLogs.length > 0
             ? (sessionCorrectCount / sessionLogs.length) * 100
             : null;
+
+        // 片語庫使用完全獨立的進度與統計，不納入主線成就、打卡、試煉或每週戰報。
+        const isPhraseSession = view === 'phrase-quiz' && selectedNode?.type === 'phrase';
+        if (isPhraseSession) {
+            const group = PHRASE_GROUP_BY_ID.get(selectedNode.id);
+            const playedAt = new Date().toISOString();
+            const grade = getPhraseGrade({
+                correct: sessionCorrectCount,
+                total: sessionLogs.length,
+                completed: Boolean(result.completed)
+            });
+            const previousProgress = updatedUserData.phraseProgress?.[selectedNode.id] || {};
+            const nextProgress = addPhraseAttempt(previousProgress, {
+                grade,
+                score: result.score,
+                askedPhraseIds: sessionLogs.map(log => log.targetId),
+                playedAt
+            });
+            if (group && nextProgress.seenPhraseIds.length >= group.phrases.length) {
+                nextProgress.seenPhraseIds = [];
+            }
+            updatedUserData.phraseProgress = {
+                ...(updatedUserData.phraseProgress || {}),
+                [selectedNode.id]: nextProgress
+            };
+            updatesForFirestore.phraseProgress = updatedUserData.phraseProgress;
+
+            const wrongAnswers = sessionLogs.filter(log => !log.isCorrect && log.targetId);
+            if (wrongAnswers.length > 0) {
+                const currentMistakeStats = { ...(updatedUserData.mistakeStats || {}) };
+                wrongAnswers.forEach(log => {
+                    const groupId = log.targetGroupId || selectedNode.id;
+                    const key = `phrases:${groupId}:${log.targetId}`;
+                    const previous = currentMistakeStats[key] || {};
+                    currentMistakeStats[key] = {
+                        ...previous,
+                        count: (Number(previous.count) || 0) + 1,
+                        word: log.targetWord || '',
+                        chinese: log.targetChinese || '',
+                        source: 'phrases',
+                        groupId,
+                        groupTitle: log.targetGroupTitle || group?.title || groupId,
+                        partId: log.targetPartId || selectedNode.partId,
+                        phraseId: log.targetId,
+                        lastWrongAt: playedAt
+                    };
+                });
+                updatedUserData.mistakeStats = currentMistakeStats;
+                updatesForFirestore.mistakeStats = currentMistakeStats;
+            }
+
+            setUserData(updatedUserData);
+            if (result.retry) setBattleKey(previous => previous + 1);
+            else setView('phrase-study');
+
+            try {
+                await updateDoc(doc(db, 'users', auth.currentUser.uid), updatesForFirestore);
+            } catch (error) {
+                console.error('片語進度儲存失敗:', error);
+            }
+            return;
+        }
+
         const correctWordIds = new Set(updatedUserData.correctWordIds || []);
         const previousCorrectWordCount = correctWordIds.size;
         sessionLogs.filter(log => log.isCorrect).forEach(log => {
@@ -6419,7 +6868,8 @@ const App = () => {
             // 進階課直接進學習頁，挑戰成為學習完成後的單一下一步。
             setSelectedCategory('vocab');
             setView('study');
-        } else setView('unit-hub');
+        } else if (node.type === 'phrase') setView('phrase-study');
+        else setView('unit-hub');
     };
 
     const handleForceQuiz = () => setView('quiz');
@@ -6533,7 +6983,10 @@ const App = () => {
             const remainingMistakes = Object.fromEntries(
                 Object.entries(currentMistakeStats).filter(([, data]) => {
                     const isAdvanced = data?.source === 'advanced' && Number.isFinite(Number(data?.lesson));
-                    return scope === 'adv' ? !isAdvanced : isAdvanced;
+                    const isPhrase = data?.source === 'phrases' && Boolean(data?.groupId);
+                    if (scope === 'adv') return !isAdvanced;
+                    if (scope === 'phrases') return !isPhrase;
+                    return isAdvanced || isPhrase;
                 })
             );
 
@@ -6570,6 +7023,31 @@ const App = () => {
         }
     };
 
+    const getPhraseBattleData = () => {
+        if (selectedNode?.type !== 'phrase') return [];
+        const group = PHRASE_GROUP_BY_ID.get(selectedNode.id);
+        if (!group) return [];
+        const progress = normalizePhraseProgress(userData?.phraseProgress?.[group.id]);
+        const wrongPhraseIds = Object.values(userData?.mistakeStats || {})
+            .filter(data => data?.source === 'phrases' && data.groupId === group.id && data.count > 0)
+            .map(data => data.phraseId);
+        const phrases = group.phrases.map(phrase => withPhraseAudio({ ...phrase, groupTitle: group.title }));
+        return selectSmartPhrases(phrases, {
+            seenPhraseIds: progress.seenPhraseIds,
+            wrongPhraseIds,
+            limit: PHRASE_QUESTION_LIMIT
+        });
+    };
+
+    const getPhraseOptionPool = () => {
+        if (selectedNode?.type !== 'phrase') return [];
+        const part = PHRASE_PART_BY_ID.get(selectedNode.partId);
+        return (part?.groups || []).flatMap(group => group.phrases.map(phrase => withPhraseAudio({
+            ...phrase,
+            groupTitle: group.title
+        })));
+    };
+
     const getQuizData = () => {
         // 終極試煉模式 - 使用混合出題
         if (view === 'challenge-quiz') {
@@ -6577,6 +7055,8 @@ const App = () => {
         }
 
         if (!selectedNode) return [];
+
+        if (selectedNode.type === 'phrase') return getPhraseBattleData();
 
         // 進階課模式 - 交給 BattleMode 每次隨機抽最多 10 題
         if (selectedNode.type === 'adv') {
@@ -6613,7 +7093,7 @@ const App = () => {
             case 'login-calendar': return <LoginCalendar onBack={() => { playSound('click'); setView('weekly-report'); }} userData={userData} />;
             case 'achievement-hall': return <AchievementHall onBack={() => { playSound('click'); setView('map'); }} userData={userData} />;
             case 'mistake-notebook': return <MistakeNotebook onBack={() => { playSound('click'); setView('map'); }} mistakeStats={userData?.mistakeStats} onClearMistakes={handleClearMistakes} onRemoveMistake={handleRemoveMistake} />;
-            case 'journey': return <JourneyMode onBack={() => { playSound('click'); setView('map'); }} onViewTrialLog={() => { playSound('click'); setView('trial-log'); }} records={userData?.levelRecords} advMeta={advMeta} mistakeStats={userData?.mistakeStats} arenaTierProgress={userData?.arenaTierProgress} />;
+            case 'journey': return <JourneyMode onBack={() => { playSound('click'); setView('map'); }} onViewTrialLog={() => { playSound('click'); setView('trial-log'); }} records={userData?.levelRecords} advMeta={advMeta} mistakeStats={userData?.mistakeStats} phraseProgress={userData?.phraseProgress} arenaTierProgress={userData?.arenaTierProgress} />;
             case 'trial-log': return <TrialLogView onBack={() => { playSound('click'); setView('journey'); }} onRetry={() => { playSound('click'); setView('challenge-setup'); }} trialHistory={userData?.trialHistory} />;
             case 'challenge-setup': return <ChallengeSetup onBack={() => { playSound('click'); setView('map'); }} onStart={handleStartChallenge} advMeta={advMeta} />;
             case 'unit-hub': return <UnitHub unitId={selectedNode?.id} onBack={() => setView('map')} onSelectCategory={(cat) => { setSelectedCategory(cat); setView('study'); }} difficulty={selectedDifficulty} onChangeDifficulty={setSelectedDifficulty} />;
@@ -6633,6 +7113,30 @@ const App = () => {
                 onBack={() => setView(selectedNode?.type === 'adv' ? 'map' : 'unit-hub')}
                 onStartQuiz={handleForceQuiz}
             />;
+            case 'phrase-study': {
+                const group = PHRASE_GROUP_BY_ID.get(selectedNode?.id);
+                const part = PHRASE_PART_BY_ID.get(selectedNode?.partId);
+                if (!group || !part) return <div className="text-white text-center pt-20">找不到片語群組</div>;
+                return <PhraseGroupStudy
+                    group={group}
+                    part={part}
+                    record={userData?.phraseProgress?.[group.id]}
+                    onBack={() => { playSound('click'); setWorldTab('phrases'); setView('map'); }}
+                    onStartQuiz={() => { playSound('start'); setView('phrase-quiz'); }}
+                />;
+            }
+            case 'phrase-quiz':
+                return <BattleMode
+                    key={battleKey}
+                    quizData={getQuizData()}
+                    optionPool={getPhraseOptionPool()}
+                    isPhrase
+                    difficulty="hard"
+                    questionLimit={PHRASE_QUESTION_LIMIT}
+                    onComplete={handleBattleComplete}
+                    onFlee={() => setView('phrase-study')}
+                    currentRecord={userData?.phraseProgress?.[selectedNode?.id]}
+                />;
             case 'quiz':
             case 'challenge-quiz':
                 return <BattleMode key={battleKey} quizData={getQuizData()} isBoss={selectedNode?.type === 'boss'} isChallenge={view === 'challenge-quiz'} difficulty={(view === 'quiz' && selectedNode?.type === 'unit') ? selectedDifficulty : 'hard'} questionLimit={(view === 'quiz' && selectedNode?.type === 'adv') ? ADV_QUIZ_QUESTION_LIMIT : 20} onComplete={handleBattleComplete} onFlee={() => setView('map')} currentRecord={userData?.levelRecords?.[selectedNode?.id]} />;
@@ -6764,9 +7268,121 @@ const App = () => {
 
 
 
+const PhraseLibraryPreviewLab = () => {
+    const firstGroup = PHRASE_GROUPS[0];
+    const secondGroup = PHRASE_GROUPS[1];
+    const [screen, setScreen] = useState('map');
+    const [previewTab, setPreviewTab] = useState('phrases');
+    const [selectedPhraseNode, setSelectedPhraseNode] = useState(null);
+    const [previewBattleKey, setPreviewBattleKey] = useState(0);
+    const [previewProgress, setPreviewProgress] = useState({
+        [firstGroup.id]: {
+            attempts: 3,
+            clears: 3,
+            grades: ['S', 'A', 'B'],
+            bestScore: Math.min(firstGroup.phraseCount, 10) * 100,
+            bestGrade: 'S',
+            completed: true,
+            seenPhraseIds: [],
+            lastPlayedAt: new Date().toISOString()
+        },
+        [secondGroup.id]: {
+            attempts: 1,
+            clears: 1,
+            grades: ['B'],
+            bestScore: Math.ceil(Math.min(secondGroup.phraseCount, 10) * 0.8) * 100,
+            bestGrade: 'B',
+            completed: false,
+            seenPhraseIds: [],
+            lastPlayedAt: new Date().toISOString()
+        }
+    });
+
+    const selectedGroup = PHRASE_GROUP_BY_ID.get(selectedPhraseNode?.id);
+    const selectedPart = PHRASE_PART_BY_ID.get(selectedPhraseNode?.partId);
+    const previewQuizData = selectedGroup
+        ? selectSmartPhrases(selectedGroup.phrases.map(phrase => withPhraseAudio({ ...phrase, groupTitle: selectedGroup.title })), {
+            seenPhraseIds: normalizePhraseProgress(previewProgress[selectedGroup.id]).seenPhraseIds,
+            limit: PHRASE_QUESTION_LIMIT
+        })
+        : [];
+    const previewOptionPool = selectedPart
+        ? selectedPart.groups.flatMap(group => group.phrases.map(phrase => withPhraseAudio({ ...phrase, groupTitle: group.title })))
+        : [];
+
+    const handlePreviewComplete = result => {
+        if (!selectedGroup) return;
+        const correct = result.battleLog.filter(log => log.isCorrect).length;
+        const grade = getPhraseGrade({ correct, total: result.battleLog.length, completed: result.completed });
+        const nextProgress = addPhraseAttempt(previewProgress[selectedGroup.id], {
+            grade,
+            score: result.score,
+            askedPhraseIds: result.battleLog.map(log => log.targetId)
+        });
+        if (nextProgress.seenPhraseIds.length >= selectedGroup.phrases.length) nextProgress.seenPhraseIds = [];
+        setPreviewProgress(current => ({ ...current, [selectedGroup.id]: nextProgress }));
+        if (result.retry) setPreviewBattleKey(key => key + 1);
+        else setScreen('study');
+    };
+
+    let content;
+    if (screen === 'study' && selectedGroup && selectedPart) {
+        content = <PhraseGroupStudy
+            group={selectedGroup}
+            part={selectedPart}
+            record={previewProgress[selectedGroup.id]}
+            onBack={() => setScreen('map')}
+            onStartQuiz={() => setScreen('battle')}
+        />;
+    } else if (screen === 'battle' && selectedGroup) {
+        content = <BattleMode
+            key={previewBattleKey}
+            quizData={previewQuizData}
+            optionPool={previewOptionPool}
+            isPhrase
+            questionLimit={PHRASE_QUESTION_LIMIT}
+            onComplete={handlePreviewComplete}
+            onFlee={() => setScreen('study')}
+            currentRecord={previewProgress[selectedGroup.id]}
+        />;
+    } else {
+        content = <WorldMap
+            onLogout={() => {}}
+            onSelectNode={node => {
+                if (node.type !== 'phrase') return;
+                setSelectedPhraseNode(node);
+                setScreen('study');
+            }}
+            onViewJourney={() => {}}
+            onViewWeeklyReport={() => {}}
+            onOpenAchievements={() => {}}
+            onOpenAlbum={() => {}}
+            onUltimateChallenge={() => {}}
+            onViewMistakeNotebook={() => {}}
+            userData={{ phraseProgress: previewProgress }}
+            records={{}}
+            activeTab={previewTab}
+            onChangeTab={setPreviewTab}
+        />;
+    }
+
+    return (
+        <div className="min-h-screen flex items-center justify-center p-4">
+            <div className="w-full max-w-md bg-gray-800 p-4 rounded-xl shadow-2xl border-4 border-gray-600">
+                <div className="bg-rpg-bg w-full aspect-[9/16] sm:aspect-[3/4] rounded-lg border-4 border-black overflow-hidden relative shadow-inner">
+                    <div className="relative h-full overflow-hidden">{content}</div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
 const RootApp = () => {
     const isArenaPreview = new URLSearchParams(window.location.search).get('arena-preview') === '1';
-    return isArenaPreview ? <ArenaTierPreviewLab /> : <App />;
+    const isPhrasePreview = new URLSearchParams(window.location.search).get('phrase-preview') === '1';
+    if (isArenaPreview) return <ArenaTierPreviewLab />;
+    if (isPhrasePreview) return <PhraseLibraryPreviewLab />;
+    return <App />;
 };
 
 export default RootApp;
