@@ -18,6 +18,9 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 
+// Always let the player choose a Google account after signing out.
+googleProvider.setCustomParameters({ prompt: 'select_account' });
+
 // Set explicitly to localStorage to prevent mobile browsers returning to new sessions
 setPersistence(auth, browserLocalPersistence).catch(console.error);
 
