@@ -70,8 +70,8 @@ const PixelArt = {
             <circle cx="10" cy="18" r="1" fill="#fff" />
         </svg>
     ),
-    Scroll: () => (
-        <svg viewBox="0 0 24 24" className="w-16 h-16 drop-shadow-md" fill="none" xmlns="http://www.w3.org/2000/svg">
+    Scroll: ({ className = 'w-16 h-16 drop-shadow-md' }) => (
+        <svg viewBox="0 0 24 24" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M4 4H20V20H4V4Z" fill="#f5e0b6" stroke="#000" strokeWidth="2" />
             <path d="M6 8H18" stroke="#4a3c31" strokeWidth="2" />
             <path d="M6 12H18" stroke="#4a3c31" strokeWidth="2" />
@@ -1314,6 +1314,7 @@ const getAchievementStats = (userData = {}) => ({
 
 const getCorrectWordKey = (log = {}) => {
     if (!log.targetId) return null;
+    if (log.targetSeries === 'phrases') return null;
     const lesson = Number(log.targetLesson);
     return log.targetSeries === 'advanced' && Number.isFinite(lesson)
         ? `advanced:${lesson}:${log.targetId}`
@@ -3214,8 +3215,11 @@ const PhraseLibraryMap = ({ progressByGroup = {}, onSelectGroup }) => {
                                                     onClick={() => { playSound('click'); onSelectGroup(group, part); }}
                                                     className={`w-full border-4 p-3 text-left flex items-center gap-3 shadow-lg transition-transform hover:scale-[1.01] active:scale-95 ${progress.completed ? 'border-yellow-400 bg-teal-950' : 'border-teal-700 bg-[#173b42]'}`}
                                                 >
-                                                    <div className="w-11 h-11 shrink-0 border-2 border-teal-300 bg-black/40 flex items-center justify-center">
-                                                        <span className="font-pixel text-[9px] text-teal-100">{group.phraseCount}</span>
+                                                    <div className="relative w-12 h-12 shrink-0 flex items-center justify-center" title={`${group.phraseCount} 筆片語`}>
+                                                        <PixelArt.Scroll className="w-12 h-12 drop-shadow-md" />
+                                                        <span className="absolute -right-1 -bottom-1 min-w-5 h-5 px-1 border-2 border-teal-200 bg-teal-950 text-teal-100 font-pixel text-[7px] leading-none flex items-center justify-center">
+                                                            {group.phraseCount}
+                                                        </span>
                                                     </div>
                                                     <div className="min-w-0 flex-1">
                                                         <h4 className={`font-pixel text-[10px] leading-relaxed ${progress.completed ? 'text-yellow-300' : 'text-white'}`}>{group.title}</h4>
@@ -4869,11 +4873,12 @@ const MistakeNotebook = ({ onBack, mistakeStats = {}, onClearMistakes, onRemoveM
 
 const ChallengeSetup = ({ onBack, onStart, advMeta = null }) => {
     const [selectedUnits, setSelectedUnits] = useState([]);
-    const [tab, setTab] = useState('main'); // 'main' | 'adv'
+    const [tab, setTab] = useState('main'); // 'main' | 'adv' | 'phrases'
 
     const totalLessons = advMeta?.totalLessons || 0;
     const mainIds = Array.from({ length: 16 }, (_, i) => (i + 1).toString());
     const advIds = Array.from({ length: totalLessons }, (_, i) => advLessonId(i + 1));
+    const phraseIds = PHRASE_GROUPS.map(group => group.id);
 
     const toggleUnit = (id) => {
         setSelectedUnits(current => current.includes(id)
@@ -4882,8 +4887,17 @@ const ChallengeSetup = ({ onBack, onStart, advMeta = null }) => {
         );
     };
 
+    const changeTab = (nextTab) => {
+        playSound('click');
+        setTab(nextTab);
+        setSelectedUnits(current => nextTab === 'phrases'
+            ? current.filter(id => PHRASE_GROUP_BY_ID.has(id))
+            : current.filter(id => !PHRASE_GROUP_BY_ID.has(id))
+        );
+    };
+
     // 全選只切換「當前分頁」的項目
-    const currentTabIds = tab === 'main' ? mainIds : advIds;
+    const currentTabIds = tab === 'main' ? mainIds : tab === 'adv' ? advIds : phraseIds;
     const currentAllSelected = currentTabIds.length > 0 && currentTabIds.every(id => selectedUnits.includes(id));
     const toggleAll = () => {
         setSelectedUnits(current => {
@@ -4912,31 +4926,85 @@ const ChallengeSetup = ({ onBack, onStart, advMeta = null }) => {
                 <div className="w-8"></div>
             </div>
 
-            {/* 主線／進階頁籤 */}
+            {/* 主線／進階／片語頁籤 */}
             <div className="flex bg-black/60 border-b-4 border-rpg-border z-10">
                 <button
-                    onClick={() => { playSound('click'); setTab('main'); }}
-                    className={`flex-1 py-2 font-pixel text-xs transition-colors ${tab === 'main' ? 'bg-rpg-primary text-white' : 'text-gray-400 hover:text-white'}`}
+                    onClick={() => changeTab('main')}
+                    className={`min-w-0 flex-1 py-2 px-1 font-pixel text-[9px] sm:text-xs transition-colors ${tab === 'main' ? 'bg-rpg-primary text-white' : 'text-gray-400 hover:text-white'}`}
                 >
                     ⚔ 主線冒險
                 </button>
                 <button
-                    onClick={() => { playSound('click'); setTab('adv'); }}
-                    className={`flex-1 py-2 font-pixel text-xs transition-colors ${tab === 'adv' ? 'bg-purple-700 text-white' : 'text-gray-400 hover:text-white'}`}
+                    onClick={() => changeTab('adv')}
+                    className={`min-w-0 flex-1 py-2 px-1 font-pixel text-[9px] sm:text-xs transition-colors ${tab === 'adv' ? 'bg-purple-700 text-white' : 'text-gray-400 hover:text-white'}`}
                 >
                     ✦ 進階篇章
+                </button>
+                <button
+                    onClick={() => changeTab('phrases')}
+                    className={`min-w-0 flex-1 py-2 px-1 font-pixel text-[9px] sm:text-xs transition-colors ${tab === 'phrases' ? 'bg-teal-700 text-white' : 'text-gray-400 hover:text-white'}`}
+                >
+                    ▣ 片語模式
                 </button>
             </div>
 
             <div className="flex-1 overflow-y-auto p-4 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]">
                 <div className="flex justify-between items-center mb-4 bg-black/40 p-2 rounded border border-gray-600 backdrop-blur-sm sticky top-0 z-10">
-                    <p className="font-retro text-gray-300 text-sm">選擇試煉範圍：<span className="text-rpg-secondary">{selectedUnits.length}</span> {tab === 'adv' ? '課' : '章'}</p>
+                    <p className="font-retro text-gray-300 text-sm">選擇試煉範圍：<span className="text-rpg-secondary">{selectedUnits.length}</span> {tab === 'phrases' ? '群組' : tab === 'adv' ? '課' : '章'}</p>
                     <button onClick={() => { playSound('click'); toggleAll(); }} className="text-xs font-pixel text-white bg-rpg-primary px-2 py-1 border-2 border-white hover:bg-red-400">
                         {currentAllSelected ? "取消全選" : "全選"}
                     </button>
                 </div>
 
-                {tab === 'adv' ? (
+                {tab === 'phrases' ? (
+                    <div className="space-y-6">
+                        {PHRASE_PARTS.map(part => {
+                            const partIds = part.groups.map(group => group.id);
+                            const selectedCount = partIds.filter(id => selectedUnits.includes(id)).length;
+                            const allSelected = selectedCount === partIds.length;
+                            return (
+                                <section key={part.id} className="border-2 border-teal-700 bg-black/35 p-3">
+                                    <div className="flex items-center justify-between gap-3 mb-3">
+                                        <div className="min-w-0">
+                                            <h3 className="font-pixel text-[10px] leading-relaxed text-teal-200">{part.title}</h3>
+                                            <p className="font-retro text-[10px] text-gray-400 mt-1">已選 {selectedCount}/{part.groups.length} 群組</p>
+                                        </div>
+                                        <button
+                                            type="button"
+                                            onClick={() => { playSound('click'); toggleSection(partIds); }}
+                                            className={`shrink-0 border-2 px-2 py-1 font-pixel text-[8px] ${allSelected ? 'border-teal-200 bg-teal-700 text-white' : 'border-teal-600 bg-black/50 text-teal-200'}`}
+                                        >
+                                            {allSelected ? '取消本 Part' : '全選本 Part'}
+                                        </button>
+                                    </div>
+                                    <div className="space-y-2">
+                                        {part.groups.map(group => {
+                                            const isSelected = selectedUnits.includes(group.id);
+                                            return (
+                                                <button
+                                                    key={group.id}
+                                                    type="button"
+                                                    onClick={() => { playSound('click'); toggleUnit(group.id); }}
+                                                    className={`w-full border-2 p-2 flex items-center gap-3 text-left transition-all active:scale-[0.98] ${isSelected ? 'border-yellow-300 bg-teal-900 ring-2 ring-yellow-300/40' : 'border-teal-800 bg-[#102c31] hover:border-teal-500'}`}
+                                                    aria-pressed={isSelected}
+                                                >
+                                                    <div className="relative w-11 h-11 shrink-0 flex items-center justify-center">
+                                                        <PixelArt.Scroll className="w-11 h-11 drop-shadow-md" />
+                                                        {isSelected && <CheckCircle size={18} className="absolute -right-1 -bottom-1 text-yellow-300 bg-teal-950" strokeWidth={3} />}
+                                                    </div>
+                                                    <div className="min-w-0 flex-1">
+                                                        <div className={`font-pixel text-[9px] leading-relaxed ${isSelected ? 'text-yellow-200' : 'text-white'}`}>{group.title}</div>
+                                                        <div className="font-retro text-[10px] text-teal-200 mt-1">{group.phraseCount} 筆片語</div>
+                                                    </div>
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                </section>
+                            );
+                        })}
+                    </div>
+                ) : tab === 'adv' ? (
                     totalLessons === 0 ? (
                         <div className="flex flex-col items-center justify-center py-16 text-center">
                             <div className="font-pixel text-purple-300 text-sm mb-2">✦ 進階篇章準備中</div>
@@ -5398,77 +5466,99 @@ const StudyMode = ({ unitId, categoryId, data, lessonTitle, onBack, onStartQuiz 
     );
 };
 
-const PhraseGroupStudy = ({ group, part, record = {}, onBack, onStartQuiz }) => {
+const PhraseGroupStudy = ({ group, part, onBack, onStartQuiz }) => {
+    const [viewMode, setViewMode] = useState('card');
     const [currentIndex, setCurrentIndex] = useState(0);
-    const progress = normalizePhraseProgress(record);
     const phrases = group?.phrases || [];
     const currentPhrase = phrases[currentIndex];
 
-    const speakCurrentPhrase = () => {
-        if (!currentPhrase) return;
+    const speakPhrase = (phrase) => {
+        if (!phrase) return;
         playSound('click');
-        const audioItem = withPhraseAudio(currentPhrase);
+        const audioItem = withPhraseAudio(phrase);
         speakText(audioItem.word, audioItem.audio, audioItem.audioScope);
     };
 
     return (
-        <div className="flex flex-col h-full bg-gradient-to-b from-[#123b3b] to-[#081b24]">
-            <div className="flex items-center justify-between p-3 border-b-4 border-teal-500 bg-black/35">
+        <div className="flex flex-col h-full overflow-hidden bg-gradient-to-b from-[#123b3b] to-[#081b24]">
+            <div className="grid grid-cols-[2.5rem_1fr_auto] items-center gap-2 p-3 border-b-4 border-teal-500 bg-black/35 flex-shrink-0">
                 <RPGButton onClick={onBack} color="dark" className="px-2"><ArrowLeft size={16} /></RPGButton>
-                <div className="min-w-0 flex-1 text-center mx-2">
+                <div className="min-w-0 text-center">
                     <h2 className="font-pixel text-[11px] text-white leading-relaxed truncate">{group?.title}</h2>
                     <p className="font-retro text-[10px] text-teal-200 truncate">{part?.title}</p>
                 </div>
-                <div className="font-pixel text-[9px] text-teal-200">{phrases.length} 筆</div>
+                <button
+                    type="button"
+                    onClick={() => { playSound('click'); setViewMode(mode => mode === 'card' ? 'list' : 'card'); }}
+                    className="text-teal-200 hover:text-white flex items-center gap-1"
+                    title={viewMode === 'card' ? '切換為列表模式' : '切換為卡片模式'}
+                    aria-label={viewMode === 'card' ? '切換為列表模式' : '切換為卡片模式'}
+                >
+                    <span className="font-pixel text-[8px] opacity-70">{viewMode === 'card' ? 'LIST' : 'CARD'}</span>
+                    {viewMode === 'card' ? <List size={20} /> : <Grid size={20} />}
+                </button>
             </div>
 
-            <div className="px-4 pt-4">
-                <div className="border-2 border-teal-600 bg-black/35 p-3 flex items-center justify-between gap-3">
-                    <div>
-                        <div className="font-pixel text-[9px] text-teal-200">通關進度 {progress.clears} 次</div>
-                        <div className="font-retro text-[10px] text-gray-400 mt-1">
-                            {progress.completed ? '已完成，可繼續挑戰刷新勾勾' : `取得 B 以上累積 ${PHRASE_CLEAR_TARGET} 次完成`}
-                        </div>
+            {viewMode === 'list' ? (
+                <div className="flex-1 min-h-0 overflow-y-auto p-4">
+                    <div className="w-full space-y-3 pb-10">
+                        {phrases.map((phrase, index) => (
+                            <button
+                                key={phrase.id || index}
+                                type="button"
+                                onClick={() => speakPhrase(phrase)}
+                                className="w-full border-4 border-teal-300 bg-[#e7f8f3] text-[#102c31] shadow-[4px_4px_0_#061316] p-3 text-left transition-colors hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-300"
+                                aria-label={`播放 ${phrase.word} 的發音`}
+                            >
+                                <div className="flex items-start justify-between gap-3 border-b-2 border-teal-700/50 pb-1">
+                                    <h3 className="font-retro text-xl font-bold leading-relaxed break-words">{phrase.word}</h3>
+                                    <span className="font-pixel text-[8px] text-teal-700 shrink-0">{index + 1}/{phrases.length}</span>
+                                </div>
+                                <div className="flex items-center justify-between gap-3 pt-2">
+                                    <p className="font-retro text-lg leading-relaxed text-teal-900">{phrase.chinese}</p>
+                                    <Volume2 size={18} className="text-teal-700 shrink-0" aria-hidden="true" />
+                                </div>
+                            </button>
+                        ))}
                     </div>
-                    <PhraseMarks record={progress} />
                 </div>
-            </div>
+            ) : (
+                <div className="flex-1 min-h-0 flex flex-col items-center justify-center p-4">
+                    <div className="font-pixel text-[10px] text-teal-200 mb-3">{currentIndex + 1} / {phrases.length}</div>
+                    <div className="w-full max-w-xs min-h-64 border-4 border-teal-300 bg-[#e7f8f3] text-[#102c31] shadow-[6px_6px_0_#061316] p-5 flex flex-col items-center justify-center text-center relative">
+                        <Book size={34} className="text-teal-700 mb-4" />
+                        <h3 className="font-retro text-2xl font-bold leading-relaxed break-words">{currentPhrase?.word || '資料讀取中...'}</h3>
+                        <div className="w-16 border-t-2 border-teal-600/40 my-4"></div>
+                        <p className="font-retro text-xl leading-relaxed text-teal-900">{currentPhrase?.chinese}</p>
+                        <button
+                            onClick={() => speakPhrase(currentPhrase)}
+                            className="mt-5 border-2 border-teal-700 bg-teal-800 text-white p-2 hover:bg-teal-700"
+                            aria-label={`播放 ${currentPhrase?.word || ''} 發音`}
+                        >
+                            <Volume2 size={20} />
+                        </button>
+                    </div>
 
-            <div className="flex-1 min-h-0 flex flex-col items-center justify-center p-4">
-                <div className="font-pixel text-[10px] text-teal-200 mb-3">{currentIndex + 1} / {phrases.length}</div>
-                <div className="w-full max-w-xs min-h-64 border-4 border-teal-300 bg-[#e7f8f3] text-[#102c31] shadow-[6px_6px_0_#061316] p-5 flex flex-col items-center justify-center text-center relative">
-                    <Book size={34} className="text-teal-700 mb-4" />
-                    <h3 className="font-retro text-2xl font-bold leading-relaxed break-words">{currentPhrase?.word || '資料讀取中...'}</h3>
-                    <div className="w-16 border-t-2 border-teal-600/40 my-4"></div>
-                    <p className="font-retro text-xl leading-relaxed text-teal-900">{currentPhrase?.chinese}</p>
-                    <button
-                        onClick={speakCurrentPhrase}
-                        className="mt-5 border-2 border-teal-700 bg-teal-800 text-white p-2 hover:bg-teal-700"
-                        aria-label={`播放 ${currentPhrase?.word || ''} 發音`}
-                    >
-                        <Volume2 size={20} />
-                    </button>
+                    <div className="flex gap-6 mt-5">
+                        <RPGButton
+                            onClick={() => setCurrentIndex(index => (index - 1 + phrases.length) % phrases.length)}
+                            color="neutral"
+                            className="w-14"
+                            disabled={phrases.length <= 1}
+                        >
+                            <ChevronLeft /><span className="sr-only">上一張</span>
+                        </RPGButton>
+                        <RPGButton
+                            onClick={() => setCurrentIndex(index => (index + 1) % phrases.length)}
+                            color="neutral"
+                            className="w-14"
+                            disabled={phrases.length <= 1}
+                        >
+                            <ChevronRight /><span className="sr-only">下一張</span>
+                        </RPGButton>
+                    </div>
                 </div>
-
-                <div className="flex gap-6 mt-5">
-                    <RPGButton
-                        onClick={() => setCurrentIndex(index => (index - 1 + phrases.length) % phrases.length)}
-                        color="neutral"
-                        className="w-14"
-                        disabled={phrases.length <= 1}
-                    >
-                        <ChevronLeft /><span className="sr-only">上一張</span>
-                    </RPGButton>
-                    <RPGButton
-                        onClick={() => setCurrentIndex(index => (index + 1) % phrases.length)}
-                        color="neutral"
-                        className="w-14"
-                        disabled={phrases.length <= 1}
-                    >
-                        <ChevronRight /><span className="sr-only">下一張</span>
-                    </RPGButton>
-                </div>
-            </div>
+            )}
 
             <div className="flex-shrink-0 bg-black/70 border-t-4 border-teal-600 p-3">
                 <RPGButton onClick={onStartQuiz} color="primary" disabled={phrases.length === 0} className="w-full py-3">
@@ -5486,6 +5576,7 @@ const BattleMode = ({ quizData, optionPool = null, isBoss, isChallenge = false, 
     const [status, setStatus] = useState('menu');
     const [currentQIndex, setCurrentQIndex] = useState(0);
     const [questions, setQuestions] = useState([]);
+    const [questionBuildError, setQuestionBuildError] = useState('');
     const [score, setScore] = useState(0);
     const [hp, setHp] = useState(maxHp);
     const [feedback, setFeedback] = useState(null);
@@ -5503,33 +5594,50 @@ const BattleMode = ({ quizData, optionPool = null, isBoss, isChallenge = false, 
     const timerRef = useRef(null);
 
     useEffect(() => {
-        if (!quizData) return;
-        if (isPhrase) {
-            setQuestions(buildPhraseQuestions({
-                selectedPhrases: quizData,
-                groupPhrases: quizData,
-                partPhrases: optionPool || quizData
-            }));
+        if (!Array.isArray(quizData) || quizData.length === 0) {
+            setQuestions([]);
+            setQuestionBuildError(isPhrase
+                ? '找不到可用的題目，請返回片語列表後再試一次。'
+                : '找不到可用的題目，請返回上一頁後再試一次。');
             return;
         }
-        const generatedQuestions = quizData.flatMap(item => {
-            const otherItems = quizData.filter(i => i.id !== item.id);
-            // A direct translation question is unfair when two choices have the
-            // same (or near-identical) Chinese meaning. Prefer unambiguous
-            // distractors, regardless of the chapter the words came from.
-            const eligibleDistractors = otherItems.filter(option => !hasAmbiguousTranslation(item, option));
-            if (eligibleDistractors.length < 3) return [];
-            const distractors = shuffleArray(eligibleDistractors).slice(0, 3);
-            const options = shuffleArray([item, ...distractors]);
-            // Randomly decide mode: 'en-ch' (English Q, Chinese A) or 'ch-en' (Chinese Q, English A)
-            const hasAmbiguousChinesePrompt = otherItems.some(option => hasAmbiguousTranslation(item, option));
-            const mode = needsEnglishPrompt(item) || hasAmbiguousChinesePrompt || Math.random() > 0.5
-                ? 'en-ch'
-                : 'ch-en';
-            return [{ target: item, options, mode }];
-        });
-        const limit = Math.min(generatedQuestions.length, questionLimit);
-        setQuestions(shuffleArray(generatedQuestions).slice(0, limit));
+        try {
+            setQuestionBuildError('');
+            if (isPhrase) {
+                const phraseQuestions = buildPhraseQuestions({
+                    selectedPhrases: quizData,
+                    groupPhrases: quizData,
+                    partPhrases: Array.isArray(optionPool) && optionPool.length > 0 ? optionPool : quizData
+                });
+                if (phraseQuestions.length === 0) throw new Error('片語題組為空');
+                setQuestions(phraseQuestions);
+                return;
+            }
+            const generatedQuestions = quizData.flatMap(item => {
+                const otherItems = quizData.filter(i => i.id !== item.id);
+                // A direct translation question is unfair when two choices have the
+                // same (or near-identical) Chinese meaning. Prefer unambiguous
+                // distractors, regardless of the chapter the words came from.
+                const eligibleDistractors = otherItems.filter(option => !hasAmbiguousTranslation(item, option));
+                if (eligibleDistractors.length < 3) return [];
+                const distractors = shuffleArray(eligibleDistractors).slice(0, 3);
+                const options = shuffleArray([item, ...distractors]);
+                // Randomly decide mode: 'en-ch' (English Q, Chinese A) or 'ch-en' (Chinese Q, English A)
+                const hasAmbiguousChinesePrompt = otherItems.some(option => hasAmbiguousTranslation(item, option));
+                const mode = needsEnglishPrompt(item) || hasAmbiguousChinesePrompt || Math.random() > 0.5
+                    ? 'en-ch'
+                    : 'ch-en';
+                return [{ target: item, options, mode }];
+            });
+            const limit = Math.min(generatedQuestions.length, questionLimit);
+            const nextQuestions = shuffleArray(generatedQuestions).slice(0, limit);
+            if (nextQuestions.length === 0) throw new Error('找不到足夠的有效選項');
+            setQuestions(nextQuestions);
+        } catch (error) {
+            console.error('Battle question setup failed:', error);
+            setQuestions([]);
+            setQuestionBuildError('題目建立失敗，請返回上一頁後重新開始。');
+        }
     }, [quizData, optionPool, isBoss, isPhrase, questionLimit]);
 
     // 簡易 / 聽力模式：每題出現時自動播放正確單字的發音
@@ -5685,7 +5793,7 @@ const BattleMode = ({ quizData, optionPool = null, isBoss, isChallenge = false, 
         return (
             <div className="flex flex-col items-center justify-center h-full gap-4 text-center p-4 bg-black/90">
                 {isPhrase ? <div className="w-24 h-24"><PixelArt.Book /></div> : isBoss ? <div className="animate-pulse"><PixelArt.MonsterBat /></div> : isChallenge ? <div className="animate-pulse"><PixelArt.MonsterBat /></div> : <PixelArt.MonsterSlime />}
-                <h2 className="font-pixel text-xl text-white leading-loose">{isPhrase ? '片語挑戰' : isBoss ? "BOSS BATTLE" : isChallenge ? "終極試煉" : "MONSTER APPEARS"}<br /><span className="text-xs text-gray-400">{questions.length} Questions. 7 Seconds.</span></h2>
+                <h2 className="font-pixel text-xl text-white leading-loose">{isPhrase ? (isChallenge ? '片語試煉' : '片語挑戰') : isBoss ? "BOSS BATTLE" : isChallenge ? "終極試煉" : "MONSTER APPEARS"}<br /><span className="text-xs text-gray-400">{questions.length} Questions. 7 Seconds.</span></h2>
 
                 {isEasy && (
                     <div className="font-pixel text-[10px] text-cyan-300 border-2 border-cyan-500/60 bg-cyan-900/30 px-3 py-1">簡單模式 · 5命 · 評級上限 B</div>
@@ -5693,8 +5801,16 @@ const BattleMode = ({ quizData, optionPool = null, isBoss, isChallenge = false, 
 
                 {isPhrase && (
                     <div className="flex flex-col items-center gap-2 border-2 border-teal-600 bg-teal-950/40 p-3 w-full max-w-xs">
-                        <PhraseMarks record={currentRecord} />
-                        <span className="font-retro text-xs text-teal-100">固定 3 命 · 答對 100 分 · B 以上累積通關</span>
+                        {!isChallenge && <PhraseMarks record={currentRecord} />}
+                        <span className="font-retro text-xs text-teal-100">
+                            {isChallenge ? '固定 3 命 · 最多 20 題 · 記錄於試煉日誌' : '固定 3 命 · 答對 100 分 · B 以上累積通關'}
+                        </span>
+                    </div>
+                )}
+
+                {questionBuildError && (
+                    <div className="w-full max-w-xs border-2 border-red-500 bg-red-950/60 p-3 font-retro text-sm text-red-100">
+                        {questionBuildError}
                     </div>
                 )}
 
@@ -5757,6 +5873,7 @@ const BattleMode = ({ quizData, optionPool = null, isBoss, isChallenge = false, 
 
                 <RPGButton
                     onClick={() => {
+                        if (questions.length === 0 || questionBuildError) return;
                         // 聽力模式：所有題目統一為「聽英文發音、選中文」(en-ch)
                         if (quizMode === 'listening') {
                             setQuestions(prev => prev.map(q => ({ ...q, mode: 'en-ch' })));
@@ -5764,8 +5881,8 @@ const BattleMode = ({ quizData, optionPool = null, isBoss, isChallenge = false, 
                         setStatus('playing');
                     }}
                     color="primary"
-                    className={`text-lg px-8 py-4 transition-all duration-300 ${quizMode ? 'opacity-100 translate-y-0' : 'opacity-30 pointer-events-none translate-y-2'}`}
-                    disabled={!quizMode}
+                    className={`text-lg px-8 py-4 transition-all duration-300 ${quizMode && questions.length > 0 && !questionBuildError ? 'opacity-100 translate-y-0' : 'opacity-30 pointer-events-none translate-y-2'}`}
+                    disabled={!quizMode || questions.length === 0 || Boolean(questionBuildError)}
                 >
                     FIGHT!
                 </RPGButton>
@@ -6532,7 +6649,12 @@ const App = () => {
                     if (log.targetId) {
                         const lesson = Number(log.targetLesson);
                         const isAdvanced = log.targetSeries === 'advanced' && Number.isFinite(lesson);
-                        const key = isAdvanced ? `advanced:${lesson}:${log.targetId}` : log.targetId;
+                        const isPhrase = log.targetSeries === 'phrases' && Boolean(log.targetGroupId);
+                        const key = isAdvanced
+                            ? `advanced:${lesson}:${log.targetId}`
+                            : isPhrase
+                                ? `phrases:${log.targetGroupId}:${log.targetId}`
+                                : log.targetId;
                         const gameUnitId = (log.targetBook && log.targetUnit)
                             ? getGameUnitId(log.targetBook, log.targetUnit)
                             : null;
@@ -6541,13 +6663,30 @@ const App = () => {
                             currentMistakeStats[key].count += 1;
                             if (gameUnitId !== null) currentMistakeStats[key].gameUnitId = gameUnitId;
                             currentMistakeStats[key].lastWrongAt = new Date().toISOString();
+                            if (isPhrase) {
+                                currentMistakeStats[key].source = 'phrases';
+                                currentMistakeStats[key].groupId = log.targetGroupId;
+                                currentMistakeStats[key].groupTitle = log.targetGroupTitle || log.targetGroupId;
+                                currentMistakeStats[key].partId = log.targetPartId || null;
+                                currentMistakeStats[key].phraseId = log.targetId;
+                            }
                         } else {
                             currentMistakeStats[key] = {
                                 count: 1,
                                 word: log.targetWord || '',
                                 chinese: log.targetChinese || '',
                                 gameUnitId,
-                                ...(isAdvanced ? { source: 'advanced', lesson } : { source: 'main' }),
+                                ...(isAdvanced
+                                    ? { source: 'advanced', lesson }
+                                    : isPhrase
+                                        ? {
+                                            source: 'phrases',
+                                            groupId: log.targetGroupId,
+                                            groupTitle: log.targetGroupTitle || log.targetGroupId,
+                                            partId: log.targetPartId || null,
+                                            phraseId: log.targetId
+                                        }
+                                        : { source: 'main' }),
                                 lastWrongAt: new Date().toISOString()
                             };
                         }
@@ -6723,6 +6862,8 @@ const App = () => {
             historyType = "quiz";
             historyUnitTitle = challengeUnits.map(unitId => {
                 if (String(unitId).startsWith('adv_')) return `進階 L${String(unitId).slice(4)}`;
+                const phraseGroup = PHRASE_GROUP_BY_ID.get(unitId);
+                if (phraseGroup) return `片語 ${phraseGroup.title}`;
                 const info = LEVEL_INFO[unitId];
                 return info ? `Level ${unitId < 10 ? '0' + unitId : unitId}: ${info.title}` : `Unit ${unitId}`;
             }).join(', ');
@@ -6882,6 +7023,7 @@ const App = () => {
         setLoading(true);
         try {
             const promises = selectedIds.map(async uid => {
+                if (PHRASE_GROUP_BY_ID.has(uid)) return null;
                 if (!levelDataCache[uid]) {
                     const data = String(uid).startsWith('adv_')
                         ? await fetchAdvancedLesson(parseInt(String(uid).slice(4), 10))
@@ -6975,6 +7117,34 @@ const App = () => {
         return shuffleArray(finalPool);
     };
 
+    const isPhraseChallengeSelection = (unitIds = []) => (
+        unitIds.length > 0 && unitIds.every(id => PHRASE_GROUP_BY_ID.has(id))
+    );
+
+    const getPhraseChallengeData = (groupIds) => {
+        const selectedPhrases = groupIds.flatMap(groupId => {
+            const group = PHRASE_GROUP_BY_ID.get(groupId);
+            return (group?.phrases || []).map(phrase => withPhraseAudio({
+                ...phrase,
+                groupTitle: group.title
+            }));
+        });
+        return shuffleArray(selectedPhrases).slice(0, 20);
+    };
+
+    const getPhraseChallengeOptionPool = (groupIds) => {
+        const partIds = new Set(groupIds
+            .map(groupId => PHRASE_GROUP_BY_ID.get(groupId)?.partId)
+            .filter(Boolean));
+        return [...partIds].flatMap(partId => {
+            const part = PHRASE_PART_BY_ID.get(partId);
+            return (part?.groups || []).flatMap(group => group.phrases.map(phrase => withPhraseAudio({
+                ...phrase,
+                groupTitle: group.title
+            })));
+        });
+    };
+
     // 只清空目前頁籤的錯題，避免一般／進階互相誤刪
     const handleClearMistakes = async (scope = 'main') => {
         if (!auth.currentUser || !userData) return;
@@ -7051,7 +7221,9 @@ const App = () => {
     const getQuizData = () => {
         // 終極試煉模式 - 使用混合出題
         if (view === 'challenge-quiz') {
-            return getMixedQuizData(challengeUnits);
+            return isPhraseChallengeSelection(challengeUnits)
+                ? getPhraseChallengeData(challengeUnits)
+                : getMixedQuizData(challengeUnits);
         }
 
         if (!selectedNode) return [];
@@ -7120,7 +7292,6 @@ const App = () => {
                 return <PhraseGroupStudy
                     group={group}
                     part={part}
-                    record={userData?.phraseProgress?.[group.id]}
                     onBack={() => { playSound('click'); setWorldTab('phrases'); setView('map'); }}
                     onStartQuiz={() => { playSound('start'); setView('phrase-quiz'); }}
                 />;
@@ -7138,8 +7309,22 @@ const App = () => {
                     currentRecord={userData?.phraseProgress?.[selectedNode?.id]}
                 />;
             case 'quiz':
-            case 'challenge-quiz':
-                return <BattleMode key={battleKey} quizData={getQuizData()} isBoss={selectedNode?.type === 'boss'} isChallenge={view === 'challenge-quiz'} difficulty={(view === 'quiz' && selectedNode?.type === 'unit') ? selectedDifficulty : 'hard'} questionLimit={(view === 'quiz' && selectedNode?.type === 'adv') ? ADV_QUIZ_QUESTION_LIMIT : 20} onComplete={handleBattleComplete} onFlee={() => setView('map')} currentRecord={userData?.levelRecords?.[selectedNode?.id]} />;
+            case 'challenge-quiz': {
+                const isPhraseChallenge = view === 'challenge-quiz' && isPhraseChallengeSelection(challengeUnits);
+                return <BattleMode
+                    key={battleKey}
+                    quizData={getQuizData()}
+                    optionPool={isPhraseChallenge ? getPhraseChallengeOptionPool(challengeUnits) : null}
+                    isBoss={selectedNode?.type === 'boss'}
+                    isChallenge={view === 'challenge-quiz'}
+                    isPhrase={isPhraseChallenge}
+                    difficulty={(view === 'quiz' && selectedNode?.type === 'unit') ? selectedDifficulty : 'hard'}
+                    questionLimit={(view === 'quiz' && selectedNode?.type === 'adv') ? ADV_QUIZ_QUESTION_LIMIT : 20}
+                    onComplete={handleBattleComplete}
+                    onFlee={() => setView('map')}
+                    currentRecord={isPhraseChallenge ? null : userData?.levelRecords?.[selectedNode?.id]}
+                />;
+            }
             default: return <div>Error</div>;
         }
     };
@@ -7309,6 +7494,18 @@ const PhraseLibraryPreviewLab = () => {
     const previewOptionPool = selectedPart
         ? selectedPart.groups.flatMap(group => group.phrases.map(phrase => withPhraseAudio({ ...phrase, groupTitle: group.title })))
         : [];
+    const previewPhraseMistakes = {
+        [`phrases:${firstGroup.id}:${firstGroup.phrases[0].id}`]: {
+            count: 2,
+            word: firstGroup.phrases[0].word,
+            chinese: firstGroup.phrases[0].chinese,
+            source: 'phrases',
+            groupId: firstGroup.id,
+            groupTitle: firstGroup.title,
+            partId: firstGroup.partId,
+            phraseId: firstGroup.phrases[0].id
+        }
+    };
 
     const handlePreviewComplete = result => {
         if (!selectedGroup) return;
@@ -7326,7 +7523,27 @@ const PhraseLibraryPreviewLab = () => {
     };
 
     let content;
-    if (screen === 'study' && selectedGroup && selectedPart) {
+    if (screen === 'challenge') {
+        content = <ChallengeSetup
+            advMeta={{ totalLessons: 0 }}
+            onBack={() => setScreen('map')}
+            onStart={() => setScreen('map')}
+        />;
+    } else if (screen === 'journey') {
+        content = <JourneyMode
+            onBack={() => setScreen('map')}
+            onViewTrialLog={() => {}}
+            records={{}}
+            phraseProgress={previewProgress}
+        />;
+    } else if (screen === 'mistakes') {
+        content = <MistakeNotebook
+            onBack={() => setScreen('map')}
+            mistakeStats={previewPhraseMistakes}
+            onClearMistakes={() => {}}
+            onRemoveMistake={() => {}}
+        />;
+    } else if (screen === 'study' && selectedGroup && selectedPart) {
         content = <PhraseGroupStudy
             group={selectedGroup}
             part={selectedPart}
@@ -7353,12 +7570,12 @@ const PhraseLibraryPreviewLab = () => {
                 setSelectedPhraseNode(node);
                 setScreen('study');
             }}
-            onViewJourney={() => {}}
+            onViewJourney={() => setScreen('journey')}
             onViewWeeklyReport={() => {}}
             onOpenAchievements={() => {}}
             onOpenAlbum={() => {}}
-            onUltimateChallenge={() => {}}
-            onViewMistakeNotebook={() => {}}
+            onUltimateChallenge={() => setScreen('challenge')}
+            onViewMistakeNotebook={() => setScreen('mistakes')}
             userData={{ phraseProgress: previewProgress }}
             records={{}}
             activeTab={previewTab}

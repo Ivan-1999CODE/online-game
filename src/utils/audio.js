@@ -136,37 +136,35 @@ export const unlockAudio = () => {
 
 export const playMusic = (type) => {
     if (isMuted) return;
-    if (currentTrackType === type && !bgmAudio.paused) return; // Already playing same track
+    try {
+        if (currentTrackType === type && !bgmAudio.paused) return; // Already playing same track
 
-    currentTrackType = type;
-    const path = type === 'challenge' ? '/audio/BATTLE.MP3' : '/audio/HOME.MP3';
+        currentTrackType = type;
+        const path = type === 'challenge' ? '/audio/BATTLE.MP3' : '/audio/HOME.MP3';
 
-    // Update source only if different (or if we want to ensure restart)
-    // For simplicity, we just set src and play. 
-    // Note: In some browsers, setting src causes reload.
-    const currentSrc = bgmAudio.src;
-    // Check if src actually changed to avoid reloading if not needed, 
-    // though 'type' check above usually handles logic.
-    // However, if we stopped music, src might still be same but we need to play.
+        if (!bgmAudio.src.includes(path)) {
+            bgmAudio.src = path;
+        }
 
-    if (!bgmAudio.src.includes(path)) {
-        bgmAudio.src = path;
-    }
+        const usesWebAudioVolume = ensureBgmAudioGraph();
+        if (usesWebAudioVolume) {
+            bgmAudio.volume = 1;
+            bgmGainNode.gain.value = currentVolume;
+            resumeBgmAudioContext();
+        } else {
+            bgmAudio.volume = currentVolume;
+        }
 
-    const usesWebAudioVolume = ensureBgmAudioGraph();
-    if (usesWebAudioVolume) {
-        bgmAudio.volume = 1;
-        bgmGainNode.gain.value = currentVolume;
-        resumeBgmAudioContext();
-    } else {
-        bgmAudio.volume = currentVolume;
-    }
-
-    const playPromise = bgmAudio.play();
-    if (playPromise !== undefined) {
-        playPromise.catch(error => {
-            console.log("Audio autoplay prevented. User interaction needed.", error);
-        });
+        const playPromise = bgmAudio.play();
+        if (playPromise !== undefined) {
+            playPromise.catch(error => {
+                console.log("Audio autoplay prevented. User interaction needed.", error);
+            });
+        }
+    } catch (error) {
+        // Some mobile Safari versions can throw synchronously while switching
+        // media sources or setting up Web Audio. Music must never take down UI.
+        console.log("Background music switch failed; continuing without music.", error);
     }
 };
 
