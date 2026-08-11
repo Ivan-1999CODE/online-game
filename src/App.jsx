@@ -310,6 +310,34 @@ const withPhraseAudio = phrase => ({
     audio: getTtsAudio(phrase)
 });
 
+const isPhraseChallengeSelection = (groupIds = []) => (
+    groupIds.length > 0 && groupIds.every(groupId => PHRASE_GROUP_BY_ID.has(groupId))
+);
+
+const getPhraseChallengeData = (groupIds = []) => {
+    const selectedPhrases = groupIds.flatMap(groupId => {
+        const group = PHRASE_GROUP_BY_ID.get(groupId);
+        return (group?.phrases || []).map(phrase => withPhraseAudio({
+            ...phrase,
+            groupTitle: group.title
+        }));
+    });
+    return shuffleArray(selectedPhrases).slice(0, 20);
+};
+
+const getPhraseChallengeOptionPool = (groupIds = []) => {
+    const partIds = new Set(groupIds
+        .map(groupId => PHRASE_GROUP_BY_ID.get(groupId)?.partId)
+        .filter(Boolean));
+    return [...partIds].flatMap(partId => {
+        const part = PHRASE_PART_BY_ID.get(partId);
+        return (part?.groups || []).flatMap(group => group.phrases.map(phrase => withPhraseAudio({
+            ...phrase,
+            groupTitle: group.title
+        })));
+    });
+};
+
 const advLessonId = (lesson) => `adv_${lesson}`;
 const getAdvancedQualifiedClears = (record = {}) => Math.max(
     0,
@@ -7016,14 +7044,22 @@ const App = () => {
     const handleForceQuiz = () => setView('quiz');
 
     const handleStartChallenge = async (selectedIds) => {
-        setChallengeUnits(selectedIds);
+        const nextChallengeUnits = [...selectedIds];
+        setChallengeUnits(nextChallengeUnits);
         playSound('start');
+
+        // 片語資料已經隨程式載入，不需要再進入一般／進階題庫的非同步
+        // loading 流程。直接切換可避免測驗畫面被 LoadingScreen 蓋掉或切回。
+        if (isPhraseChallengeSelection(nextChallengeUnits)) {
+            setLoading(false);
+            setView('challenge-quiz');
+            return;
+        }
 
         // Fetch all needed
         setLoading(true);
         try {
-            const promises = selectedIds.map(async uid => {
-                if (PHRASE_GROUP_BY_ID.has(uid)) return null;
+            const promises = nextChallengeUnits.map(async uid => {
                 if (!levelDataCache[uid]) {
                     const data = String(uid).startsWith('adv_')
                         ? await fetchAdvancedLesson(parseInt(String(uid).slice(4), 10))
@@ -7115,34 +7151,6 @@ const App = () => {
 
         // 最終打亂順序
         return shuffleArray(finalPool);
-    };
-
-    const isPhraseChallengeSelection = (unitIds = []) => (
-        unitIds.length > 0 && unitIds.every(id => PHRASE_GROUP_BY_ID.has(id))
-    );
-
-    const getPhraseChallengeData = (groupIds) => {
-        const selectedPhrases = groupIds.flatMap(groupId => {
-            const group = PHRASE_GROUP_BY_ID.get(groupId);
-            return (group?.phrases || []).map(phrase => withPhraseAudio({
-                ...phrase,
-                groupTitle: group.title
-            }));
-        });
-        return shuffleArray(selectedPhrases).slice(0, 20);
-    };
-
-    const getPhraseChallengeOptionPool = (groupIds) => {
-        const partIds = new Set(groupIds
-            .map(groupId => PHRASE_GROUP_BY_ID.get(groupId)?.partId)
-            .filter(Boolean));
-        return [...partIds].flatMap(partId => {
-            const part = PHRASE_PART_BY_ID.get(partId);
-            return (part?.groups || []).flatMap(group => group.phrases.map(phrase => withPhraseAudio({
-                ...phrase,
-                groupTitle: group.title
-            })));
-        });
     };
 
     // 只清空目前頁籤的錯題，避免一般／進階互相誤刪
@@ -7459,6 +7467,7 @@ const PhraseLibraryPreviewLab = () => {
     const [screen, setScreen] = useState('map');
     const [previewTab, setPreviewTab] = useState('phrases');
     const [selectedPhraseNode, setSelectedPhraseNode] = useState(null);
+    const [previewChallengeUnits, setPreviewChallengeUnits] = useState([]);
     const [previewBattleKey, setPreviewBattleKey] = useState(0);
     const [previewProgress, setPreviewProgress] = useState({
         [firstGroup.id]: {
@@ -7494,6 +7503,12 @@ const PhraseLibraryPreviewLab = () => {
     const previewOptionPool = selectedPart
         ? selectedPart.groups.flatMap(group => group.phrases.map(phrase => withPhraseAudio({ ...phrase, groupTitle: group.title })))
         : [];
+    const previewChallengeQuizData = isPhraseChallengeSelection(previewChallengeUnits)
+        ? getPhraseChallengeData(previewChallengeUnits)
+        : [];
+    const previewChallengeOptionPool = isPhraseChallengeSelection(previewChallengeUnits)
+        ? getPhraseChallengeOptionPool(previewChallengeUnits)
+        : [];
     const previewPhraseMistakes = {
         [`phrases:${firstGroup.id}:${firstGroup.phrases[0].id}`]: {
             count: 2,
@@ -7522,12 +7537,31 @@ const PhraseLibraryPreviewLab = () => {
         else setScreen('study');
     };
 
+    const handlePreviewChallengeComplete = result => {
+        if (result.retry) setPreviewBattleKey(key => key + 1);
+        else setScreen('challenge');
+    };
+
     let content;
     if (screen === 'challenge') {
         content = <ChallengeSetup
             advMeta={{ totalLessons: 0 }}
             onBack={() => setScreen('map')}
-            onStart={() => setScreen('map')}
+            onStart={selectedIds => {
+                setPreviewChallengeUnits([...selectedIds]);
+                setScreen('challenge-battle');
+            }}
+        />;
+    } else if (screen === 'challenge-battle' && isPhraseChallengeSelection(previewChallengeUnits)) {
+        content = <BattleMode
+            key={previewBattleKey}
+            quizData={previewChallengeQuizData}
+            optionPool={previewChallengeOptionPool}
+            isChallenge
+            isPhrase
+            questionLimit={20}
+            onComplete={handlePreviewChallengeComplete}
+            onFlee={() => setScreen('challenge')}
         />;
     } else if (screen === 'journey') {
         content = <JourneyMode
