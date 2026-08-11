@@ -1,0 +1,124 @@
+{
+  "generatedAt": "2026-07-27T15:46:33.181Z",
+  "filters": {
+    "voice": "all",
+    "word": "kid",
+    "lesson": "all",
+    "limit": null,
+    "transcribe": true
+  },
+  "inventorySummary": {
+    "textbookFiles": 16,
+    "textbookEntries": 1740,
+    "advancedLessons": 133,
+    "advancedEntries": 2152,
+    "totalEntries": 3892,
+    "uniqueAudioSpecs": 2572,
+    "reusableEntries": 1320,
+    "entryKeyCollisions": 0
+  },
+  "auditSummary": {
+    "checkedFiles": 2,
+    "missingFiles": 0,
+    "invalidMp3Files": 0,
+    "durationWarnings": 0,
+    "transcribedFiles": 0,
+    "emptyTranscripts": 0,
+    "transcriptMismatches": 0,
+    "transcriptReviews": 0,
+    "transcriptionErrors": 2,
+    "issueFiles": 2
+  },
+  "issues": [
+    {
+      "voice": "marin",
+      "specId": "6fc05d29d29c5335",
+      "stem": "kid-6fc05d29d29c5335",
+      "displayText": "kid",
+      "expectedText": "kid",
+      "lessons": [
+        1
+      ],
+      "occurrences": 4,
+      "relativePath": "public/audio/tts/library/marin/kid-6fc05d29d29c5335.mp3",
+      "exists": true,
+      "bytes": 13824,
+      "durationSeconds": 0.864,
+      "bitrateKbps": 128,
+      "sampleRate": 24000,
+      "staticIssues": [],
+      "transcript": "",
+      "similarity": null,
+      "semanticIssue": "",
+      "transcriptionError": "fetch failed"
+    },
+    {
+      "voice": "cedar",
+      "specId": "6fc05d29d29c5335",
+      "stem": "kid-6fc05d29d29c5335",
+      "displayText": "kid",
+      "expectedText": "kid",
+      "lessons": [
+        1
+      ],
+      "occurrences": 4,
+      "relativePath": "public/audio/tts/library/cedar/kid-6fc05d29d29c5335.mp3",
+      "exists": true,
+      "bytes": 10368,
+      "durationSeconds": 0.648,
+      "bitrateKbps": 128,
+      "sampleRate": 24000,
+      "staticIssues": [],
+      "transcript": "",
+      "similarity": null,
+      "semanticIssue": "",
+      "transcriptionError": "fetch failed"
+    }
+  ],
+  "records": [
+    {
+      "voice": "marin",
+      "specId": "6fc05d29d29c5335",
+      "stem": "kid-6fc05d29d29c5335",
+      "displayText": "kid",
+      "expectedText": "kid",
+      "lessons": [
+        1
+      ],
+      "occurrences": 4,
+      "relativePath": "public/audio/tts/library/marin/kid-6fc05d29d29c5335.mp3",
+      "exists": true,
+      "bytes": 13824,
+      "durationSeconds": 0.864,
+      "bitrateKbps": 128,
+      "sampleRate": 24000,
+      "staticIssues": [],
+      "transcript": "",
+      "similarity": null,
+      "semanticIssue": "",
+      "transcriptionError": "fetch failed"
+    },
+    {
+      "voice": "cedar",
+      "specId": "6fc05d29d29c5335",
+      "stem": "kid-6fc05d29d29c5335",
+      "displayText": "kid",
+      "expectedText": "kid",
+      "lessons": [
+        1
+      ],
+      "occurrences": 4,
+      "relativePath": "public/audio/tts/library/cedar/kid-6fc05d29d29c5335.mp3",
+      "exists": true,
+      "bytes": 10368,
+      "durationSeconds": 0.648,
+      "bitrateKbps": 128,
+      "sampleRate": 24000,
+      "staticIssues": [],
+      "transcript": "",
+      "similarity": null,
+      "semanticIssue": "",
+      "transcriptionError": "fetch failed"
+    }
+  ]
+}

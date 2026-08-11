@@ -72,7 +72,9 @@ const normalize = (value) => String(value ?? '').trim().replace(/\\s+/g, ' ').to
 const makeEntryKey = (item = {}) => {
     const location = item.series === 'advanced'
         ? \`advanced|\${item.lesson}\`
-        : \`textbook|\${item.book}|\${item.unit}\`;
+        : item.series === 'phrases'
+            ? \`phrases|\${item.groupId}\`
+            : \`textbook|\${item.book}|\${item.unit}\`;
     return [
         location,
         normalize(item.category),

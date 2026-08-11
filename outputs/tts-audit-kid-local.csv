@@ -1,0 +1,3 @@
+﻿"voice","displayText","expectedText","transcript","similarity","semanticIssue","staticIssues","transcriptionError","bytes","durationSeconds","lessons","relativePath"
+"marin","kid","kid","","","","","","13824","0.864","1","public/audio/tts/library/marin/kid-6fc05d29d29c5335.mp3"
+"cedar","kid","kid","","","","","","10368","0.648","1","public/audio/tts/library/cedar/kid-6fc05d29d29c5335.mp3"

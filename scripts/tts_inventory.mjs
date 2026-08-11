@@ -156,7 +156,9 @@ const getDisplayText = (row) => {
 const makeEntryKey = (entry) => {
     const location = entry.series === 'advanced'
         ? `advanced|${entry.lesson}`
-        : `textbook|${entry.book}|${entry.unit}`;
+        : entry.series === 'phrases'
+            ? `phrases|${entry.groupId}`
+            : `textbook|${entry.book}|${entry.unit}`;
     return [
         location,
         normalizeKeyPart(entry.category),
@@ -325,6 +327,32 @@ export const buildTtsInventory = (projectRoot) => {
         });
     });
 
+    const phraseLibrary = JSON.parse(
+        readFileSync(join(projectRoot, 'src', 'data', 'phraseLibrary.json'), 'utf8')
+    );
+    (phraseLibrary.parts || []).forEach(part => {
+        (part.groups || []).forEach(group => {
+            (group.phrases || []).forEach((phrase, index) => {
+                const word = normalizeText(phrase.word);
+                if (!word) return;
+                entries.push({
+                    series: 'phrases',
+                    sourceFile: 'src/data/phraseLibrary.json',
+                    sourceIndex: index + 1,
+                    book: '',
+                    unit: '',
+                    lesson: '',
+                    partId: part.id,
+                    groupId: group.id,
+                    category: 'phrases',
+                    word,
+                    chinese: normalizeText(phrase.chinese),
+                    part: ''
+                });
+            });
+        });
+    });
+
     const specs = new Map();
     const entryMappings = new Map();
     const fallbackCandidates = new Map();
@@ -379,6 +407,12 @@ export const buildTtsInventory = (projectRoot) => {
             textbookEntries: entries.filter(entry => entry.series === 'textbook').length,
             advancedLessons: advancedLessons.length,
             advancedEntries: entries.filter(entry => entry.series === 'advanced').length,
+            phraseParts: (phraseLibrary.parts || []).length,
+            phraseGroups: (phraseLibrary.parts || []).reduce(
+                (count, part) => count + (part.groups || []).length,
+                0
+            ),
+            phraseEntries: entries.filter(entry => entry.series === 'phrases').length,
             totalEntries: entries.length,
             uniqueAudioSpecs: specs.size,
             reusableEntries: entries.length - specs.size,
