@@ -16,8 +16,8 @@ const makePhrases = count => Array.from({ length: count }, (_, index) => ({
     chinese: `意思 ${index + 1}`
 }));
 
-test('舊使用者沒有片語欄位時會得到安全預設值', () => {
-    assert.deepEqual(normalizePhraseProgress(), {
+test('舊使用者或新群組沒有片語進度時會得到安全預設值', () => {
+    const expected = {
         attempts: 0,
         clears: 0,
         grades: [],
@@ -26,7 +26,10 @@ test('舊使用者沒有片語欄位時會得到安全預設值', () => {
         completed: false,
         seenPhraseIds: [],
         lastPlayedAt: null
-    });
+    };
+
+    assert.deepEqual(normalizePhraseProgress(), expected);
+    assert.deepEqual(normalizePhraseProgress(null), expected);
 });
 
 test('片語評級符合 S 100%、A 90%、B 80% 規則', () => {

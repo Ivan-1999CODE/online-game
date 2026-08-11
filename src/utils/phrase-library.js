@@ -25,25 +25,26 @@ export const shuffleWith = (items, random = Math.random) => {
 };
 
 export const normalizePhraseProgress = (record = {}) => {
-    const grades = Array.isArray(record.grades)
-        ? record.grades.filter(grade => PHRASE_PASSING_GRADES.includes(grade))
+    const safeRecord = record && typeof record === 'object' ? record : {};
+    const grades = Array.isArray(safeRecord.grades)
+        ? safeRecord.grades.filter(grade => PHRASE_PASSING_GRADES.includes(grade))
             .sort((a, b) => PHRASE_GRADE_ORDER[b] - PHRASE_GRADE_ORDER[a])
             .slice(0, PHRASE_CLEAR_TARGET)
         : [];
-    const clears = Math.max(0, Number(record.clears) || 0);
-    const bestGrade = PHRASE_PASSING_GRADES.includes(record.bestGrade)
-        ? record.bestGrade
+    const clears = Math.max(0, Number(safeRecord.clears) || 0);
+    const bestGrade = PHRASE_PASSING_GRADES.includes(safeRecord.bestGrade)
+        ? safeRecord.bestGrade
         : (grades[0] || null);
 
     return {
-        attempts: Math.max(0, Number(record.attempts) || 0),
+        attempts: Math.max(0, Number(safeRecord.attempts) || 0),
         clears,
         grades,
-        bestScore: Math.max(0, Number(record.bestScore) || 0),
+        bestScore: Math.max(0, Number(safeRecord.bestScore) || 0),
         bestGrade,
         completed: clears >= PHRASE_CLEAR_TARGET,
-        seenPhraseIds: unique(Array.isArray(record.seenPhraseIds) ? record.seenPhraseIds : []),
-        lastPlayedAt: record.lastPlayedAt || null
+        seenPhraseIds: unique(Array.isArray(safeRecord.seenPhraseIds) ? safeRecord.seenPhraseIds : []),
+        lastPlayedAt: safeRecord.lastPlayedAt || null
     };
 };
 

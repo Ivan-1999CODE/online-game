@@ -4015,53 +4015,227 @@ const AdvancedJourneyView = ({ records = {}, advMeta = null, mistakeStats = {} }
     );
 };
 
-const PhraseJourneyView = ({ progressByGroup = {} }) => {
-    const playedGroups = PHRASE_GROUPS
-        .map(group => ({ group, progress: normalizePhraseProgress(progressByGroup[group.id]) }))
-        .filter(({ progress }) => progress.attempts > 0);
-    const completedCount = playedGroups.filter(({ progress }) => progress.completed).length;
+const PhraseJourneyView = ({ progressByGroup = {}, mistakeStats = {} }) => {
+    const [expandedPart, setExpandedPart] = useState(null);
+    const gradePoints = { S: 100, A: 90, B: 80, '?': 0 };
+    const gradeColors = { S: '#fde047', A: '#86efac', B: '#93c5fd', '?': '#6b7280' };
+    const groupRecords = PHRASE_GROUPS.map(group => ({
+        group,
+        progress: normalizePhraseProgress(progressByGroup[group.id])
+    }));
+    const attemptedGroups = groupRecords.filter(({ progress }) => progress.attempts > 0);
+    const completedGroups = groupRecords.filter(({ progress }) => progress.completed);
+    const totalAttempts = groupRecords.reduce((sum, { progress }) => sum + progress.attempts, 0);
+    const totalClears = groupRecords.reduce((sum, { progress }) => sum + progress.clears, 0);
+    const earnedMarks = groupRecords.reduce((sum, { progress }) => sum + Math.min(progress.clears, PHRASE_CLEAR_TARGET), 0);
+    const maxMarks = PHRASE_GROUPS.length * PHRASE_CLEAR_TARGET;
+    const markProgress = maxMarks > 0 ? earnedMarks / maxMarks : 0;
+    const gradeCoverage = PHRASE_GROUPS.length > 0
+        ? groupRecords.reduce((sum, { progress }) => sum + (gradePoints[progress.bestGrade] || 0), 0) / (PHRASE_GROUPS.length * 100)
+        : 0;
+    const mastery = Math.round((markProgress * 0.65 + gradeCoverage * 0.35) * 100);
+    const title = mastery >= 95 ? '片語宗師'
+        : mastery >= 80 ? '片語達人'
+            : mastery >= 60 ? '片語高手'
+                : mastery >= 40 ? '穩定挑戰者'
+                    : mastery >= 20 ? '片語學徒'
+                        : '片語探索者';
+    const passRate = totalAttempts > 0 ? Math.round((totalClears / totalAttempts) * 100) : null;
+    const gradeDistribution = ['S', 'A', 'B'].reduce((counts, grade) => {
+        counts[grade] = attemptedGroups.filter(({ progress }) => progress.bestGrade === grade).length;
+        return counts;
+    }, {});
+    const ungradedCount = attemptedGroups.filter(({ progress }) => !progress.bestGrade).length;
+
+    const phraseMistakes = Object.values(mistakeStats).filter(data =>
+        data?.source === 'phrases' && Boolean(data?.groupId) && (data.count || 0) > 0
+    );
+    const mistakesByGroup = phraseMistakes.reduce((groups, data) => {
+        const groupId = data.groupId;
+        if (!groups[groupId]) groups[groupId] = { groupId, phraseCount: 0, errorCount: 0 };
+        groups[groupId].phraseCount += 1;
+        groups[groupId].errorCount += Number(data.count) || 0;
+        return groups;
+    }, {});
+    const weakestGroups = Object.values(mistakesByGroup)
+        .map(item => ({ ...item, group: PHRASE_GROUP_BY_ID.get(item.groupId) }))
+        .filter(item => item.group)
+        .sort((a, b) => b.phraseCount - a.phraseCount || b.errorCount - a.errorCount)
+        .slice(0, 3);
+    const totalErrorCount = phraseMistakes.reduce((sum, data) => sum + (Number(data.count) || 0), 0);
+
+    const nearCompletion = groupRecords
+        .filter(({ progress }) => progress.attempts > 0 && !progress.completed)
+        .sort((a, b) => b.progress.clears - a.progress.clears || b.progress.bestScore - a.progress.bestScore)[0];
+    const firstUnattempted = groupRecords.find(({ progress }) => progress.attempts === 0);
+    const recommendation = weakestGroups.length > 0
+        ? { group: weakestGroups[0].group, reason: `目前有 ${weakestGroups[0].phraseCount} 筆錯題，建議優先複習後再挑戰` }
+        : nearCompletion
+            ? { group: nearCompletion.group, reason: `已取得 ${Math.min(nearCompletion.progress.clears, PHRASE_CLEAR_TARGET)}/${PHRASE_CLEAR_TARGET} 個勾勾，最接近完成` }
+            : firstUnattempted
+                ? { group: firstUnattempted.group, reason: '從尚未挑戰的群組繼續擴大片語範圍' }
+                : null;
+
+    const formatDate = (timestamp) => {
+        if (!timestamp) return '尚未挑戰';
+        const date = new Date(timestamp);
+        if (Number.isNaN(date.getTime())) return '資料累積中';
+        return new Intl.DateTimeFormat('zh-TW', {
+            timeZone: 'Asia/Taipei', year: 'numeric', month: '2-digit', day: '2-digit'
+        }).format(date);
+    };
+
+    const averageGrade = (groups) => {
+        const played = groups
+            .map(group => gradePoints[normalizePhraseProgress(progressByGroup[group.id]).bestGrade] || 0)
+            .filter(score => score > 0);
+        if (played.length === 0) return '?';
+        const score = played.reduce((sum, value) => sum + value, 0) / played.length;
+        if (score >= 95) return 'S';
+        if (score >= 85) return 'A';
+        return 'B';
+    };
 
     return (
-        <div className="flex-1 overflow-y-auto p-4 bg-gradient-to-b from-[#102c31] to-[#07181f]">
-            <div className="grid grid-cols-2 gap-3 mb-4">
-                <div className="border-2 border-teal-500 bg-black/35 p-3 text-center">
-                    <div className="font-pixel text-2xl text-teal-200">{playedGroups.length}</div>
-                    <div className="font-retro text-xs text-gray-400 mt-1">已挑戰群組</div>
+        <div className="flex-1 overflow-y-auto p-4 bg-[#071f25] bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]">
+            <section className="mb-5 border-4 border-teal-500 bg-gradient-to-b from-teal-950 to-black p-4 shadow-[0_0_24px_rgba(20,184,166,0.25)]">
+                <div className="flex items-center justify-between gap-3 mb-3">
+                    <div>
+                        <p className="font-pixel text-[9px] text-teal-300">PHRASE PROFICIENCY REPORT</p>
+                        <h3 className="font-pixel text-sm text-white mt-1">片語能力分析</h3>
+                    </div>
+                    <div className="text-right flex-shrink-0">
+                        <div className="font-pixel text-yellow-300 text-sm">{title}</div>
+                        <div className="font-retro text-[10px] text-gray-400">片語掌握度 {mastery}%</div>
+                    </div>
                 </div>
-                <div className="border-2 border-yellow-500 bg-black/35 p-3 text-center">
-                    <div className="font-pixel text-2xl text-yellow-300">{completedCount}</div>
-                    <div className="font-retro text-xs text-gray-400 mt-1">已完成群組</div>
-                </div>
-            </div>
 
-            {playedGroups.length === 0 ? (
-                <div className="h-64 flex flex-col items-center justify-center text-center border-2 border-teal-900 bg-black/20">
-                    <Book size={52} className="text-teal-700 mb-4" />
-                    <p className="font-pixel text-xs text-teal-200">尚無片語挑戰紀錄</p>
-                    <p className="font-retro text-xs text-gray-500 mt-2">到完整片語庫開始第一個群組吧！</p>
+                <div className="h-3 bg-black border border-teal-700 mb-4 overflow-hidden">
+                    <div className="h-full bg-gradient-to-r from-teal-500 via-cyan-400 to-yellow-400 transition-all" style={{ width: `${mastery}%` }}></div>
                 </div>
-            ) : (
-                <div className="space-y-3">
-                    {playedGroups.map(({ group, progress }) => (
-                        <div key={group.id} className={`border-2 p-3 bg-black/40 ${progress.completed ? 'border-yellow-400' : 'border-teal-700'}`}>
-                            <div className="flex items-start justify-between gap-3">
-                                <div className="min-w-0 flex-1">
-                                    <h3 className={`font-pixel text-[10px] leading-relaxed ${progress.completed ? 'text-yellow-300' : 'text-white'}`}>{group.title}</h3>
-                                    <p className="font-retro text-[10px] text-gray-400 mt-1">
-                                        挑戰 {progress.attempts} 次 · 有效通關 {progress.clears} 次 · 最高 {progress.bestScore} 分
-                                    </p>
-                                    {progress.lastPlayedAt && (
-                                        <p className="font-retro text-[9px] text-gray-600 mt-1">
-                                            {new Intl.DateTimeFormat('zh-TW', { timeZone: 'Asia/Taipei', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(progress.lastPlayedAt))}
-                                        </p>
-                                    )}
-                                </div>
-                                <PhraseMarks record={progress} size="sm" />
-                            </div>
+
+                <div className="grid grid-cols-2 gap-2 mb-3">
+                    <div className="bg-white/5 border border-teal-700/70 p-2">
+                        <div className="font-retro text-[10px] text-gray-400">完成進度</div>
+                        <div className="font-pixel text-sm text-white mt-1">{completedGroups.length}/{PHRASE_GROUPS.length} 群組</div>
+                        <div className="font-retro text-[10px] text-yellow-300 mt-1">✓ {earnedMarks}/{maxMarks} 勾勾</div>
+                    </div>
+                    <div className="bg-white/5 border border-teal-700/70 p-2">
+                        <div className="font-retro text-[10px] text-gray-400">有效通關率</div>
+                        <div className="font-pixel text-sm text-white mt-1">{passRate === null ? '累積中' : `${passRate}%`}</div>
+                        <div className="font-retro text-[10px] text-gray-400 mt-1">{totalClears}/{totalAttempts} 次達 B 以上</div>
+                    </div>
+                    <div className="bg-white/5 border border-teal-700/70 p-2">
+                        <div className="font-retro text-[10px] text-gray-400">目前片語錯題</div>
+                        <div className="font-pixel text-sm text-red-300 mt-1">{phraseMistakes.length} 筆</div>
+                        <div className="font-retro text-[10px] text-gray-400 mt-1">累積 {totalErrorCount} 次錯誤</div>
+                    </div>
+                    <div className="bg-white/5 border border-teal-700/70 p-2">
+                        <div className="font-retro text-[10px] text-gray-400">已挑戰範圍</div>
+                        <div className="font-pixel text-sm text-cyan-300 mt-1">{attemptedGroups.length} 群組</div>
+                        <div className="font-retro text-[10px] text-gray-400 mt-1">共 {totalAttempts} 次挑戰</div>
+                    </div>
+                </div>
+
+                {weakestGroups.length > 0 && (
+                    <div className="mb-3">
+                        <div className="font-retro text-[10px] text-gray-400 mb-1">錯題較集中的群組</div>
+                        <div className="flex flex-wrap gap-2">
+                            {weakestGroups.map(item => (
+                                <span key={item.groupId} className="font-pixel text-[9px] text-red-200 bg-red-950 border border-red-700 px-2 py-1">
+                                    {item.group.title} · {item.phraseCount} 筆
+                                </span>
+                            ))}
                         </div>
-                    ))}
+                    </div>
+                )}
+
+                <div className="mb-3">
+                    <div className="font-retro text-[10px] text-gray-400 mb-1">群組最佳評級分布</div>
+                    <div className="grid grid-cols-4 gap-1">
+                        {['S', 'A', 'B'].map(grade => (
+                            <div key={grade} className="bg-black/50 border border-gray-700 py-1 text-center">
+                                <div className="font-pixel text-[9px]" style={{ color: gradeColors[grade] }}>{grade}</div>
+                                <div className="font-retro text-[10px] text-white mt-1">{gradeDistribution[grade]}</div>
+                            </div>
+                        ))}
+                        <div className="bg-black/50 border border-gray-700 py-1 text-center">
+                            <div className="font-pixel text-[9px] text-gray-500">—</div>
+                            <div className="font-retro text-[10px] text-white mt-1">{ungradedCount}</div>
+                        </div>
+                    </div>
                 </div>
-            )}
+
+                {recommendation && (
+                    <div className="bg-yellow-950/50 border-2 border-yellow-600 p-2 flex gap-2 items-start">
+                        <Lightbulb size={18} className="text-yellow-300 flex-shrink-0" />
+                        <div>
+                            <div className="font-pixel text-[10px] text-yellow-300">下一步：{recommendation.group.title}</div>
+                            <div className="font-retro text-xs text-gray-300 mt-1">{recommendation.reason}</div>
+                        </div>
+                    </div>
+                )}
+
+                <p className="font-retro text-[9px] text-gray-600 mt-3 text-center">掌握度綜合勾勾完成率與各群組最佳評級計算，供學習規劃參考。</p>
+            </section>
+
+            <div className="space-y-3 pb-10">
+                {PHRASE_PARTS.map((part, partIndex) => {
+                    const partGroups = part.groups || [];
+                    const partProgress = partGroups.map(group => normalizePhraseProgress(progressByGroup[group.id]));
+                    const partAttempted = partProgress.filter(progress => progress.attempts > 0).length;
+                    const partCompleted = partProgress.filter(progress => progress.completed).length;
+                    const partMarks = partProgress.reduce((sum, progress) => sum + Math.min(progress.clears, PHRASE_CLEAR_TARGET), 0);
+                    const grade = averageGrade(partGroups);
+                    const isExpanded = expandedPart === part.id;
+                    return (
+                        <section key={part.id} className="border-2 border-teal-700 bg-black/50">
+                            <button
+                                onClick={() => { playSound('click'); setExpandedPart(isExpanded ? null : part.id); }}
+                                className="w-full p-3 flex items-center justify-between gap-3 text-left hover:bg-teal-900/40 transition-colors"
+                            >
+                                <div className="min-w-0">
+                                    <div className="font-pixel text-[10px] text-teal-200 leading-relaxed">PART {String(partIndex + 1).padStart(2, '0')}</div>
+                                    <div className="font-retro text-[10px] text-gray-400 mt-1 truncate">{part.title} · 完成 {partCompleted}/{partGroups.length}</div>
+                                </div>
+                                <div className="flex items-center gap-3 flex-shrink-0">
+                                    <div className="text-right">
+                                        <div className="font-pixel text-[9px] text-yellow-300">✓ {partMarks}/{partGroups.length * PHRASE_CLEAR_TARGET}</div>
+                                        <div className="font-pixel text-[9px] mt-1" style={{ color: gradeColors[grade] }}>AVG {grade}</div>
+                                    </div>
+                                    <ChevronRight size={18} className={`text-teal-300 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
+                                </div>
+                            </button>
+
+                            {isExpanded && (
+                                <div className="border-t border-teal-800 p-2 space-y-2">
+                                    <div className="font-retro text-[9px] text-teal-300 px-1">已挑戰 {partAttempted}/{partGroups.length} 群組</div>
+                                    {partGroups.map(group => {
+                                        const progress = normalizePhraseProgress(progressByGroup[group.id]);
+                                        const hasPlayed = progress.attempts > 0;
+                                        return (
+                                            <div key={group.id} className={`p-2 border flex items-center justify-between gap-2 ${hasPlayed ? 'bg-teal-950/50 border-teal-700' : 'bg-gray-900/50 border-gray-800 opacity-60'}`}>
+                                                <div className="min-w-0 pr-1">
+                                                    <div className={`font-pixel text-[10px] leading-relaxed ${progress.completed ? 'text-yellow-300' : 'text-white'}`}>{group.title}</div>
+                                                    <div className="font-retro text-[10px] text-gray-400 mt-1">
+                                                        {hasPlayed ? `${progress.attempts} 次挑戰 · 最高 ${progress.bestScore} 分 · ${formatDate(progress.lastPlayedAt)}` : '尚未挑戰'}
+                                                    </div>
+                                                </div>
+                                                <div className="text-right flex-shrink-0">
+                                                    <PhraseMarks record={progress} size="sm" />
+                                                    <div className="font-pixel text-[9px] mt-1" style={{ color: gradeColors[progress.bestGrade || '?'] }}>
+                                                        {hasPlayed ? `BEST ${progress.bestGrade || '—'}` : '—'}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            )}
+                        </section>
+                    );
+                })}
+            </div>
         </div>
     );
 };
@@ -4178,7 +4352,7 @@ const JourneyMode = ({ onBack, onViewTrialLog, records = {}, advMeta = null, mis
             </div>
 
             {activeTab === 'phrases' ? (
-                <PhraseJourneyView progressByGroup={phraseProgress} />
+                <PhraseJourneyView progressByGroup={phraseProgress} mistakeStats={mistakeStats} />
             ) : activeTab === 'adv' ? (
                 <AdvancedJourneyView records={records} advMeta={advMeta} mistakeStats={mistakeStats} />
             ) : (
@@ -7569,6 +7743,7 @@ const PhraseLibraryPreviewLab = () => {
             onViewTrialLog={() => {}}
             records={{}}
             phraseProgress={previewProgress}
+            mistakeStats={previewPhraseMistakes}
         />;
     } else if (screen === 'mistakes') {
         content = <MistakeNotebook
