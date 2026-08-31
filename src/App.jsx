@@ -13,6 +13,7 @@ import { getTtsAudio } from './constants/ttsAudioData';
 import TeacherDashboard from './components/TeacherDashboard.jsx';
 import { TRIVIA_CARDS, TRIVIA_CATEGORIES, TRIVIA_GROUPS, TRIVIA_LEGACY_ID_MAP, TRIVIA_SOURCES } from './constants/triviaData';
 import { hasAmbiguousTranslation, needsEnglishPrompt } from './constants/quizOptionRules';
+import { getBattleTimerSnapshot } from './utils/battle-timer';
 import phraseLibrary from './data/phraseLibrary.json';
 import {
     PHRASE_CLEAR_TARGET,
@@ -5794,6 +5795,9 @@ const BattleMode = ({ quizData, optionPool = null, isBoss, isChallenge = false, 
     const MAX_TIME = 7.0;
     const [timeLeft, setTimeLeft] = useState(MAX_TIME);
     const timerRef = useRef(null);
+    const questionDeadlineRef = useRef(null);
+    const timeoutHandledRef = useRef(false);
+    const lastTickSecondRef = useRef(null);
 
     useEffect(() => {
         if (!Array.isArray(quizData) || quizData.length === 0) {
@@ -5859,19 +5863,49 @@ const BattleMode = ({ quizData, optionPool = null, isBoss, isChallenge = false, 
     }, [status, currentQIndex, feedback, questions, quizMode, quizPronunciationVoice]);
 
     useEffect(() => {
-        if (status === 'playing' && !feedback && questions.length > 0 && !showQuitConfirm) {
-            timerRef.current = setInterval(() => {
-                setTimeLeft(prev => {
-                    if (prev <= 0) { clearInterval(timerRef.current); handleTimeOut(); return 0; }
-                    if (Math.floor(prev) < Math.floor(prev + 0.1) && prev < 4) playSound('tick');
-                    return prev - 0.1;
+        if (status === 'playing' && !feedback && questions.length > 0) {
+            questionDeadlineRef.current = Date.now() + (MAX_TIME * 1000);
+            timeoutHandledRef.current = false;
+            lastTickSecondRef.current = Math.ceil(MAX_TIME);
+            setTimeLeft(MAX_TIME);
+        } else {
+            questionDeadlineRef.current = null;
+        }
+    }, [status, currentQIndex, feedback, questions.length]);
+
+    useEffect(() => {
+        if (status === 'playing' && !feedback && questions.length > 0) {
+            const updateTimer = () => {
+                const snapshot = getBattleTimerSnapshot({
+                    deadlineMs: questionDeadlineRef.current,
+                    isPauseOpen: showQuitConfirm
                 });
-            }, 100);
+
+                setTimeLeft(snapshot.secondsLeft);
+
+                if (snapshot.expired) {
+                    clearInterval(timerRef.current);
+                    if (!showQuitConfirm) handleTimeOut();
+                    return false;
+                }
+
+                const nextTickSecond = Math.ceil(snapshot.secondsLeft);
+                if (nextTickSecond < lastTickSecondRef.current && nextTickSecond > 0 && nextTickSecond < 4) {
+                    playSound('tick');
+                }
+                lastTickSecondRef.current = nextTickSecond;
+                return true;
+            };
+
+            if (updateTimer()) timerRef.current = setInterval(updateTimer, 100);
         }
         return () => clearInterval(timerRef.current);
     }, [status, currentQIndex, feedback, showQuitConfirm, questions.length]);
 
     const handleTimeOut = () => {
+        if (timeoutHandledRef.current) return;
+        timeoutHandledRef.current = true;
+        clearInterval(timerRef.current);
         playSound('wrong');
         const currentQ = questions[currentQIndex];
         // 記錄超時未答
@@ -5904,7 +5938,17 @@ const BattleMode = ({ quizData, optionPool = null, isBoss, isChallenge = false, 
 
     const handleAnswer = (selectedOption) => {
         if (isAnswerLocked) return;
+        const answerTimer = getBattleTimerSnapshot({
+            deadlineMs: questionDeadlineRef.current
+        });
+        if (answerTimer.expired) {
+            setTimeLeft(0);
+            handleTimeOut();
+            return;
+        }
         clearInterval(timerRef.current);
+        timeoutHandledRef.current = true;
+        setTimeLeft(answerTimer.secondsLeft);
         const currentQ = questions[currentQIndex];
         const isCorrect = selectedOption.id === currentQ.target.id;
 
@@ -5915,8 +5959,8 @@ const BattleMode = ({ quizData, optionPool = null, isBoss, isChallenge = false, 
             playSound('correct');
             // 片語模式答對固定 100 分；其他模式維持速度計分。
             pointsEarned = 100;
-            if (!isPhrase && timeLeft < 6.0) {
-                const scoreTime = Math.max(0, timeLeft);
+            if (!isPhrase && answerTimer.secondsLeft < 6.0) {
+                const scoreTime = Math.max(0, answerTimer.secondsLeft);
                 pointsEarned = Math.ceil((scoreTime / 6.0) * 100);
             }
             setScore(s => s + pointsEarned);
@@ -5961,6 +6005,21 @@ const BattleMode = ({ quizData, optionPool = null, isBoss, isChallenge = false, 
             else if (currentQIndex >= questions.length - 1) setStatus('victory');
             else { setCurrentQIndex(prev => prev + 1); setFeedback(null); setTimeLeft(MAX_TIME); }
         }, 1000);
+    };
+
+    const handleResumeFromQuitConfirm = () => {
+        playSound('click');
+        const resumeTimer = getBattleTimerSnapshot({
+            deadlineMs: questionDeadlineRef.current
+        });
+        setShowQuitConfirm(false);
+
+        if (resumeTimer.expired) {
+            setTimeLeft(0);
+            handleTimeOut();
+        } else {
+            setTimeLeft(resumeTimer.secondsLeft);
+        }
     };
 
     const getRank = (finalScore) => {
@@ -6304,7 +6363,7 @@ const BattleMode = ({ quizData, optionPool = null, isBoss, isChallenge = false, 
             {/* Top HUD */}
             <div className="flex justify-between items-center p-2 bg-black border-b-2 border-gray-700 z-10">
                 <div className="flex items-center gap-3">
-                    <RPGButton onClick={() => setShowQuitConfirm(true)} color="dark" className="px-2 py-2" title="返回">
+                    <RPGButton onClick={() => setShowQuitConfirm(true)} color="dark" className="px-2 py-2" title="返回" disabled={feedback !== null}>
                         <ArrowLeft size={20} />
                     </RPGButton>
                     <div className="flex gap-1 text-rpg-primary">
@@ -6399,7 +6458,7 @@ const BattleMode = ({ quizData, optionPool = null, isBoss, isChallenge = false, 
                     <RPGBorder className="bg-rpg-panel p-6 w-full max-w-xs text-center shadow-2xl">
                         <h3 className="font-retro text-xl font-bold text-rpg-bg mb-6">你確定要離開戰鬥嗎?</h3>
                         <div className="flex gap-4 justify-center">
-                            <RPGButton onClick={() => { playSound('click'); setShowQuitConfirm(false); }} color="neutral">取消</RPGButton>
+                            <RPGButton onClick={handleResumeFromQuitConfirm} color="neutral">取消</RPGButton>
                             <RPGButton onClick={() => { playSound('click'); onFlee(); }} color="primary">確定</RPGButton>
                         </div>
                     </RPGBorder>
