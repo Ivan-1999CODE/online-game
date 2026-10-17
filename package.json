@@ -10,6 +10,7 @@
     "import:phrases": "node scripts/import_phrase_library.mjs",
     "validate:phrases": "node scripts/validate_phrase_library.mjs",
     "test:phrases": "node --test src/utils/phrase-library.test.js",
+    "test:battle": "node --test src/utils/battle-timer.test.js src/utils/battle-scoring.test.js",
     "test:arena-tier": "node --test src/utils/arena-tiers.test.js",
     "test:arena-group": "node --test src/utils/arena-groups.test.js",
     "test:arena-simulation": "node --test src/utils/arena-simulations.test.js",

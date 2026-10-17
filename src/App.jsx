@@ -16,6 +16,7 @@ const ArenaScoringPreview = React.lazy(() => import('./components/ArenaScoringPr
 import { TRIVIA_CARDS, TRIVIA_CATEGORIES, TRIVIA_GROUPS, TRIVIA_LEGACY_ID_MAP, TRIVIA_SOURCES } from './constants/triviaData';
 import { hasAmbiguousTranslation, needsEnglishPrompt } from './constants/quizOptionRules';
 import { getBattleTimerSnapshot } from './utils/battle-timer';
+import { getBattleAnswerScore } from './utils/battle-scoring';
 import phraseLibrary from './data/phraseLibrary.json';
 import {
     PHRASE_CLEAR_TARGET,
@@ -6006,12 +6007,7 @@ const BattleMode = ({ quizData, optionPool = null, isBoss, isChallenge = false, 
 
         if (isCorrect) {
             playSound('correct');
-            // 片語模式答對固定 100 分；其他模式維持速度計分。
-            pointsEarned = 100;
-            if (!isPhrase && answerTimer.secondsLeft < 6.0) {
-                const scoreTime = Math.max(0, answerTimer.secondsLeft);
-                pointsEarned = Math.ceil((scoreTime / 6.0) * 100);
-            }
+            pointsEarned = getBattleAnswerScore({ secondsLeft: answerTimer.secondsLeft });
             setScore(s => s + pointsEarned);
             setFeedback('hit');
         } else {
@@ -6076,7 +6072,7 @@ const BattleMode = ({ quizData, optionPool = null, isBoss, isChallenge = false, 
         const maxPossible = questions.length * 100;
         if (isPhrase) {
             const rank = getPhraseGrade({
-                correct: Math.round(finalScore / 100),
+                correct: battleLog.filter(log => log.isCorrect).length,
                 total: questions.length,
                 completed: true
             });
@@ -6114,8 +6110,9 @@ const BattleMode = ({ quizData, optionPool = null, isBoss, isChallenge = false, 
                     <div className="flex flex-col items-center gap-2 border-2 border-teal-600 bg-teal-950/40 p-3 w-full max-w-xs">
                         {!isChallenge && <PhraseMarks record={currentRecord} />}
                         <span className="font-retro text-xs text-teal-100">
-                            {isChallenge ? '固定 3 命 · 最多 20 題 · 記錄於試煉日誌' : '固定 3 命 · 答對 100 分 · B 以上累積通關'}
+                            {isChallenge ? '固定 3 命 · 最多 20 題 · 記錄於試煉日誌' : '固定 3 命 · B 以上累積通關'}
                         </span>
+                        <span className="font-retro text-xs text-teal-100">答對依剩餘時間得 1～100 分；評級依正確率。</span>
                     </div>
                 )}
 
@@ -6241,9 +6238,9 @@ const BattleMode = ({ quizData, optionPool = null, isBoss, isChallenge = false, 
         const dayScore = stats => stats.daily.find(day => day.date === arenaDateKey(roundTime))?.score || 0;
 
         const ranks = isPhrase ? [
-            { label: 'S', min: maxPossible, color: 'text-yellow-300' },
-            { label: 'A', min: Math.ceil(maxPossible * 0.9), color: 'text-green-300' },
-            { label: 'B', min: Math.ceil(maxPossible * 0.8), color: 'text-blue-300' }
+            { label: 'S', min: 100, color: 'text-yellow-300' },
+            { label: 'A', min: 90, color: 'text-green-300' },
+            { label: 'B', min: 80, color: 'text-blue-300' }
         ] : [
             { label: 'S', min: Math.ceil(maxPossible * 0.9), color: 'text-yellow-400' },
             { label: 'A', min: Math.ceil(maxPossible * 0.8), color: 'text-orange-500' },
@@ -6286,6 +6283,7 @@ const BattleMode = ({ quizData, optionPool = null, isBoss, isChallenge = false, 
                         {/* RANKING 表格 */}
                         <div className="w-full bg-black/50 border-2 border-rpg-border p-2 mt-1">
                             <h4 className="text-rpg-accent font-pixel text-[10px] mb-1">- RANKING -</h4>
+                            {isPhrase && <p className="font-retro text-xs text-gray-300 mb-1">評級依正確率；SCORE 依答題速度計分。</p>}
                             <div className="grid grid-cols-2 gap-x-4 gap-y-0.5 text-[10px] font-pixel">
                                 {ranks.map(r => {
                                     // 簡單模式評級上限 B：S/A 顯示為鎖定（拿不到）
@@ -6293,7 +6291,7 @@ const BattleMode = ({ quizData, optionPool = null, isBoss, isChallenge = false, 
                                     return (
                                         <div key={r.label} className={`flex justify-between ${isLocked ? 'text-gray-600 opacity-60' : r.color} ${(!isLocked && rankData.rank === r.label) ? 'bg-white/20 px-1 rounded' : ''}`}>
                                             <span>RANK {r.label}</span>
-                                            <span>{isLocked ? '🔒 LOCK' : `${r.min}+`}</span>
+                                            <span>{isLocked ? '🔒 LOCK' : isPhrase ? `${r.min}%${r.min < 100 ? '+' : ''}` : `${r.min}+`}</span>
                                         </div>
                                     );
                                 })}
