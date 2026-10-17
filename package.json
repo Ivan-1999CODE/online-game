@@ -14,7 +14,7 @@
     "test:arena-group": "node --test src/utils/arena-groups.test.js",
     "test:arena-simulation": "node --test src/utils/arena-simulations.test.js",
     "test:arena-leaderboard": "node --test src/utils/arena-leaderboard.test.js",
-    "test:arena": "node --test src/utils/arena-tiers.test.js src/utils/arena-groups.test.js src/utils/arena-simulations.test.js src/utils/arena-leaderboard.test.js src/utils/arena-integration.test.js",
+    "test:arena": "node --test src/utils/arena-tiers.test.js src/utils/arena-groups.test.js src/utils/arena-simulations.test.js src/utils/arena-leaderboard.test.js src/utils/arena-integration.test.js src/utils/arena-scoring.test.js src/utils/arena-v2.test.js",
     "audit:tts": "node scripts/audit_tts_audio.mjs",
     "audit:tts:waveform": "node scripts/audit_tts_waveform_server.mjs"
   },

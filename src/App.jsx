@@ -5,12 +5,14 @@ import {
     HelpCircle, Backpack, Gem, Flame, Skull as SkullIcon, Book, User,
     List, Grid, ArrowLeft, Lightbulb, MessageCircle, Clock, Award, ShieldCheck, Home, Lock, LogOut, Headphones, CalendarDays, Search
 } from 'lucide-react';
-import { collection, query, where, getDocs, doc, getDoc, setDoc, updateDoc, FieldPath } from 'firebase/firestore';
+import { collection, query, where, getDocs, doc, getDoc, getDocFromServer, setDoc, updateDoc, FieldPath, runTransaction } from 'firebase/firestore';
 import { signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut } from 'firebase/auth';
 import { db, auth, googleProvider } from './config/firebase';
 import { speakText, playSound, shuffleArray, playMusic, stopMusic, setMute, getMuteStatus, setVolume, unlockAudio, getTtsPilotVoice, setTtsPilotVoice } from './utils/audio';
 import { getTtsAudio } from './constants/ttsAudioData';
 import TeacherDashboard from './components/TeacherDashboard.jsx';
+import ArenaScoreSummary from './components/ArenaScoreSummary.jsx';
+const ArenaScoringPreview = React.lazy(() => import('./components/ArenaScoringPreview.jsx'));
 import { TRIVIA_CARDS, TRIVIA_CATEGORIES, TRIVIA_GROUPS, TRIVIA_LEGACY_ID_MAP, TRIVIA_SOURCES } from './constants/triviaData';
 import { hasAmbiguousTranslation, needsEnglishPrompt } from './constants/quizOptionRules';
 import { getBattleTimerSnapshot } from './utils/battle-timer';
@@ -29,7 +31,8 @@ import {
     ARENA_TIERS,
     getArenaTier,
     normalizeArenaTierProgress,
-    settleArenaTier
+    settleArenaTier,
+    applyArenaInactivity
 } from './utils/arena-tiers';
 import {
     assignWeeklyArenaGroup,
@@ -45,6 +48,8 @@ import {
     fillArenaGroupForDisplay,
     maskArenaName as maskStudentName
 } from './utils/arena-simulations';
+import { ARENA_V2_START, isArenaV2Week, getArenaRoundScore, getArenaWeeklyStats, getArenaHistory, arenaWeekRange, arenaDateKey, makeArenaAttempt } from './utils/arena-scoring';
+import { arenaNow, synchronizeArenaClock, saveArenaAttempt, publishArenaSummary, touchArenaActivity, saveLearningUpdates } from './utils/arena-session-service';
 
 // --- Pixel Art SVGs ---
 const PixelArt = {
@@ -831,7 +836,7 @@ const ArenaTierBadge = ({ tier: tierId, size = 'md', showLabel = true, className
     );
 };
 
-const ArenaTierGuide = ({ currentTierId }) => {
+const ArenaTierGuide = ({ currentTierId, v2 = isArenaV2Week(arenaWeekRange(arenaNow()).startMs) }) => {
     const [isOpen, setIsOpen] = useState(false);
     const currentTier = getArenaTier(currentTierId);
     const formalTiers = ARENA_TIERS.filter(tier => tier.id !== 'unranked');
@@ -870,7 +875,7 @@ const ArenaTierGuide = ({ currentTierId }) => {
                             <h3 className="font-pixel text-[10px] text-yellow-200">全部排位</h3>
                             <p className="font-retro text-[10px] text-gray-400 mt-1">由低到高，共 8 個正式排位</p>
                         </div>
-                        <span className="font-retro text-[9px] text-gray-500">每週最多移動一階</span>
+                        <span className="font-retro text-[9px] text-gray-500">每週最多升一階</span>
                     </div>
 
                     <ol className="arena-tier-ladder" aria-label="英雄競技場排位由低到高">
@@ -897,7 +902,7 @@ const ArenaTierGuide = ({ currentTierId }) => {
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mt-4">
                         <div className="arena-tier-rule-card is-promote">
                             <div className="font-pixel text-[10px]">↑ 升一階</div>
-                            <div className="font-retro text-xs mt-2">每週小隊第 1～2 名</div>
+                            <div className="font-retro text-xs mt-2">每週小隊第 1～2 名{v2 && '，且達到分數與參賽天數門檻'}</div>
                         </div>
                         <div className="arena-tier-rule-card is-hold">
                             <div className="font-pixel text-[10px]">— 維持</div>
@@ -910,8 +915,8 @@ const ArenaTierGuide = ({ currentTierId }) => {
                     </div>
 
                     <div className="arena-tier-guide-notes font-retro text-[11px] text-gray-300">
-                        <p><span className="text-yellow-200">首次定級：</span>一週內完成至少一場挑戰，週結算後成為木牌。</p>
-                        <p><span className="text-cyan-200">未參賽保護：</span>第一週未參賽會保留排位；連續第二週起，每週降一階。</p>
+                        <p><span className="text-yellow-200">首次定級：</span>一週內{v2 ? '成功通關' : '完成'}至少一場挑戰，週結算後成為木牌。</p>
+                        <p><span className="text-cyan-200">{v2 ? '未登入降階：' : '未參賽保護：'}</span>{v2 ? '連續 7 天未登入降一階；持續未登入每滿 7 天再降一階。同一缺席區間的排名降階會抵扣一次。' : '第一週未參賽會保留排位；連續第二週起，每週降一階。'}</p>
                         <p><span className="text-purple-200">上下限：</span>木牌不會再降，戰神也不會再升；歷史最高排位不會因降階而消失。</p>
                     </div>
                 </div>
@@ -934,6 +939,8 @@ const getArenaTierOutcomeText = data => {
             return { title: `${before.label} → ${after.label}`, detail: '下週再戰！' };
         case 'inactive-hold':
             return { title: `維持 ${after.label}`, detail: '本週未參賽，階級暫時保留。' };
+        case 'requirements-not-met':
+            return { title: `維持 ${after.label}`, detail: '尚未達到晉級分數或參賽天數，或本週已因未登入降階。' };
         case 'unranked':
             return { title: '尚未定級', detail: '完成一週競技即可取得第一面牌位。' };
         default:
@@ -1478,7 +1485,7 @@ const getPendingProgressTriviaRewards = (data = {}) => {
 };
 
 const getTaipeiWeekRange = (weekOffset = 0) => {
-    const shiftedNow = new Date(Date.now() + TAIPEI_OFFSET_MS);
+    const shiftedNow = new Date(arenaNow() + TAIPEI_OFFSET_MS);
     const daysSinceMonday = (shiftedNow.getUTCDay() + 6) % 7;
     const mondayInTaipeiClock = Date.UTC(
         shiftedNow.getUTCFullYear(),
@@ -1516,7 +1523,7 @@ const getHistoryTime = (record) => {
     return Number.isFinite(parsed) ? parsed : null;
 };
 
-const getWeeklyStats = (history = [], range) => {
+const getPracticeWeeklyStats = (history = [], range) => {
     const records = history.filter(record => {
         const time = getHistoryTime(record);
         return time !== null && time >= range.startMs && time < range.endMs;
@@ -1552,6 +1559,9 @@ const getWeeklyStats = (history = [], range) => {
     };
 };
 
+const getWeeklyStats = (history = [], range) => isArenaV2Week(range.startMs)
+    ? getArenaWeeklyStats(history, range) : getPracticeWeeklyStats(history, range);
+
 const getWeeklySessionScores = (history = [], range) => history
     .filter(record => {
         const time = getHistoryTime(record);
@@ -1564,6 +1574,7 @@ const toPublicArenaEntry = (student = {}) => ({
     id: student.userId || student.id,
     maskedName: student.maskedName || '神秘勇者',
     weekly: {
+        scoringVersion: Number(student.scoringVersion) || 1,
         score: Number(student.score) || 0,
         sessions: Number(student.sessions) || 0,
         accuracy: Number(student.accuracy) || 0,
@@ -1818,12 +1829,12 @@ const getBonusGoal = (currentStats, previousStats) => {
 };
 
 const getWeeklyPendingRewards = (data = {}, range = getTaipeiWeekRange(0)) => {
-    const history = data.trialHistory || [];
-    const currentStats = getWeeklyStats(history, range);
-    const previousStats = getWeeklyStats(history, {
+    const currentStats = getPracticeWeeklyStats(data.trialHistory || [], range);
+    const previousRange = {
         startMs: range.startMs - WEEK_MS,
         endMs: range.startMs
-    });
+    };
+    const previousStats = getPracticeWeeklyStats(data.trialHistory || [], previousRange);
     const weeklyAdventureDays = getWeeklyAdventureDays(data.engagement?.adventure || {}, range);
     const bonusGoal = getBonusGoal(currentStats, previousStats);
     const claims = data.triviaRewardClaims || {};
@@ -1854,7 +1865,7 @@ const getWeeklyPendingRewards = (data = {}, range = getTaipeiWeekRange(0)) => {
 
 const getAllWeeklyPendingRewards = (data = {}) => {
     const weekStarts = new Set([getTaipeiWeekRange(0).startMs]);
-    (data.trialHistory || []).forEach(record => {
+    [...(data.trialHistory || []), ...Object.values(data.arenaHistory || {})].forEach(record => {
         const timestamp = getHistoryTime(record);
         if (timestamp !== null) weekStarts.add(getTaipeiWeekRangeForValue(timestamp).startMs);
     });
@@ -1926,6 +1937,7 @@ const formatWeekRange = ({ startMs, endMs }) => {
 const syncWeeklyLeaderboard = async ({ userId, studentName, history, userData }) => {
     if (!userId) return;
     const range = getTaipeiWeekRange(0);
+    if (isArenaV2Week(range.startMs)) return publishArenaSummary(db, userId, range);
     const weekly = getWeeklyStats(history || [], range);
     if (weekly.sessions === 0) return;
     const assignment = userData?.weeklyArenaGroupAssignments?.[String(range.startMs)];
@@ -1955,7 +1967,7 @@ const isStoredArenaRosterValid = (roster) => (
 );
 
 const getArenaEntriesForRoster = ({ userId, userData, range, roster, publicEntries, asOfMs }) => {
-    const currentStats = getWeeklyStats(userData.trialHistory || [], range);
+    const currentStats = getWeeklyStats(getArenaHistory(userData, range), range);
     const sessionScores = getWeeklySessionScores(userData.trialHistory || [], range);
     const selfEntry = {
         id: userId,
@@ -1977,7 +1989,7 @@ const getArenaEntriesForRoster = ({ userId, userData, range, roster, publicEntri
 };
 
 const calculateWeeklyArenaResult = ({ userId, userData, range, roster, publicEntries }) => {
-    const currentStats = getWeeklyStats(userData.trialHistory || [], range);
+    const currentStats = getWeeklyStats(getArenaHistory(userData, range), range);
     const participated = currentStats.sessions > 0;
     const arenaEntries = getArenaEntriesForRoster({
         userId,
@@ -2042,7 +2054,7 @@ const calculateSharedWeeklyArenaResult = ({
     group,
     publicEntries
 }) => {
-    const currentStats = getWeeklyStats(userData.trialHistory || [], range);
+    const currentStats = getWeeklyStats(getArenaHistory(userData, range), range);
     const participated = currentStats.sessions > 0;
     const currentUserEntry = {
         id: userId,
@@ -2068,6 +2080,8 @@ const calculateSharedWeeklyArenaResult = ({
         participated,
         rank: standing.rank,
         score: standing.score,
+        activeDays: currentStats.activeDays,
+        scoringVersion: currentStats.scoringVersion || 1,
         participantCount: standing.participantCount,
         rewardCount: standing.rank ? (ARENA_RANK_REWARD_COUNTS[standing.rank] || 0) : 0,
         settledAt: new Date().toISOString(),
@@ -2079,7 +2093,7 @@ const calculateSharedWeeklyArenaResult = ({
 };
 
 const calculateArenaFallbackResult = ({ userData, range }) => {
-    const currentStats = getWeeklyStats(userData.trialHistory || [], range);
+    const currentStats = getWeeklyStats(getArenaHistory(userData, range), range);
     return {
         version: ARENA_RESULT_VERSION,
         weekStart: range.startMs,
@@ -2087,6 +2101,8 @@ const calculateArenaFallbackResult = ({ userData, range }) => {
         participated: currentStats.sessions > 0,
         rank: null,
         score: currentStats.score,
+        activeDays: currentStats.activeDays,
+        scoringVersion: currentStats.scoringVersion || 1,
         participantCount: 0,
         rewardCount: 0,
         settledAt: new Date().toISOString(),
@@ -2108,6 +2124,7 @@ const prepareWeeklyArenaOnLogin = async ({ userId, userData }) => {
     let rosters = { ...(userData.weeklyArenaRosters || {}) };
     let results = { ...(userData.weeklyArenaResults || {}) };
     let arenaTierProgress = normalizeArenaTierProgress(userData.arenaTierProgress);
+    const initialProgress = arenaTierProgress;
     let groupAssignments = { ...(userData.weeklyArenaGroupAssignments || {}) };
 
     const legacyUnsettledWeekStarts = Object.keys(rosters)
@@ -2141,7 +2158,8 @@ const prepareWeeklyArenaOnLogin = async ({ userId, userData }) => {
         try {
             const existingResult = results[String(weekStart)];
             let arenaResult = existingResult;
-            if ((Number(existingResult?.version) || 0) < ARENA_RESULT_VERSION) {
+            if ((Number(existingResult?.version) || 0) < ARENA_RESULT_VERSION
+                || (isArenaV2Week(weekStart) && existingResult?.scoringVersion !== 2)) {
                 const groupAssignment = groupAssignments[String(weekStart)];
                 const roster = rosters[String(weekStart)];
                 if (
@@ -2175,13 +2193,16 @@ const prepareWeeklyArenaOnLogin = async ({ userId, userData }) => {
             }
             if (
                 weekStart >= ARENA_TIER_ACTIVATION_WEEK_START
-                && (Number(arenaResult?.tierVersion) || 0) < 1
+                && (Number(arenaResult?.tierVersion) || 0) < (isArenaV2Week(weekStart) ? 2 : 1)
             ) {
+                arenaTierProgress = applyArenaInactivity(arenaTierProgress, range.endMs);
                 const tierResult = settleArenaTier({
                     progress: arenaTierProgress,
                     participated: arenaResult.participated,
                     rank: arenaResult.rank,
                     weekStart,
+                    score: arenaResult.score,
+                    activeDays: arenaResult.activeDays || 0,
                     settledAt: arenaResult.settledAt
                 });
                 arenaTierProgress = tierResult.progress;
@@ -2193,8 +2214,23 @@ const prepareWeeklyArenaOnLogin = async ({ userId, userData }) => {
             results[String(weekStart)] = arenaResult;
         } catch (error) {
             console.warn(`競技場 ${formatWeekRange(range)} 結算失敗，將於下次登入重試。`, error);
+            throw error; // Do not advance past a week that has not been settled.
         }
     }
+
+    arenaTierProgress = applyArenaInactivity(arenaTierProgress, arenaNow(), { touch: true });
+    // Protect catch-up settlement against another tab advancing the same user's state.
+    await runTransaction(db, async transaction => {
+        const ref = doc(db, 'users', userId);
+        const latest = await transaction.get(ref);
+        if (JSON.stringify(normalizeArenaTierProgress(latest.data()?.arenaTierProgress)) !== JSON.stringify(initialProgress)) {
+            throw new Error('另一個裝置已更新牌位，請重新登入以載入最新結果。');
+        }
+        if (JSON.stringify(latest.data()?.arenaHistory || {}) !== JSON.stringify(userData.arenaHistory || {})) {
+            throw new Error('挑戰紀錄已在另一個裝置更新，請重新載入後結算。');
+        }
+        transaction.set(ref, { arenaTierProgress, weeklyArenaResults: results }, { merge: true });
+    });
 
     const currentRosterKey = String(currentRange.startMs);
     if (
@@ -2203,7 +2239,7 @@ const prepareWeeklyArenaOnLogin = async ({ userId, userData }) => {
     ) {
         try {
             const publicEntries = await fetchWeeklyLeaderboardEntries(currentRange);
-            const currentStats = getWeeklyStats(userData.trialHistory || [], currentRange);
+            const currentStats = getWeeklyStats(getArenaHistory(userData, currentRange), currentRange);
             const previousStats = getWeeklyStats(userData.trialHistory || [], {
                 startMs: currentRange.startMs - WEEK_MS,
                 endMs: currentRange.startMs
@@ -2237,7 +2273,7 @@ const prepareWeeklyArenaOnLogin = async ({ userId, userData }) => {
                     startMs: currentRange.startMs - WEEK_MS,
                     endMs: currentRange.startMs
                 };
-                const previousStats = getWeeklyStats(userData.trialHistory || [], previousRange);
+                const previousStats = getWeeklyStats(getArenaHistory(userData, previousRange), previousRange);
                 assignment = await assignWeeklyArenaGroup({
                     db,
                     userId,
@@ -2536,6 +2572,11 @@ const WeeklyReport = ({ onBack, onOpenAlbum, onViewLoginCalendar, currentUserId,
     const [sharedGroup, setSharedGroup] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [loadError, setLoadError] = useState(false);
+    const [refreshTick, setRefreshTick] = useState(0);
+    useEffect(() => {
+        const timer = setInterval(() => { if (document.visibilityState === 'visible') setRefreshTick(tick => tick + 1); }, 60000);
+        return () => clearInterval(timer);
+    }, []);
     const rosterSaveRequestedRef = useRef(false);
     const range = getTaipeiWeekRange(period === 'current' ? 0 : -1);
     const rosterKey = String(range.startMs);
@@ -2571,10 +2612,10 @@ const WeeklyReport = ({ onBack, onOpenAlbum, onViewLoginCalendar, currentUserId,
             })
             .finally(() => { if (active) setIsLoading(false); });
         return () => { active = false; };
-    }, [range.startMs, groupAssignment?.groupId]);
+    }, [range.startMs, groupAssignment?.groupId, refreshTick]);
 
-    const currentStats = getWeeklyStats(userData?.trialHistory || [], range);
-    const previousStats = getWeeklyStats(userData?.trialHistory || [], getTaipeiWeekRange(-1));
+    const currentStats = getWeeklyStats(getArenaHistory(userData, range), range);
+    const previousStats = getWeeklyStats(getArenaHistory(userData, getTaipeiWeekRange(-1)), getTaipeiWeekRange(-1));
     const publicEntries = students.map(toPublicArenaEntry);
     const selfEntry = { id: currentUserId, maskedName: maskStudentName(userData?.studentName), weekly: currentStats };
     const entriesWithSelf = [selfEntry, ...publicEntries.filter(student => student.id !== currentUserId)];
@@ -2600,7 +2641,7 @@ const WeeklyReport = ({ onBack, onOpenAlbum, onViewLoginCalendar, currentUserId,
             publicEntries,
             currentUserId,
             currentUserEntry: selfEntry,
-            asOfMs: Math.min(Date.now(), range.endMs - 1)
+            asOfMs: Math.min(arenaNow(), range.endMs - 1)
         })
         : getArenaEntriesForRoster({
             userId: currentUserId,
@@ -2623,8 +2664,8 @@ const WeeklyReport = ({ onBack, onOpenAlbum, onViewLoginCalendar, currentUserId,
             : null
     } : { score: 0, correct: 0, sessions: 0, accuracy: null };
     const comparisonRows = [
-        { label: '累積戰力', mine: currentStats.score, average: classAverage.score, suffix: ' 分' },
-        { label: '挑戰場次', mine: currentStats.sessions, average: classAverage.sessions, suffix: ' 場' },
+        { label: isArenaV2Week(range.startMs) ? '競技積分' : '累積戰力', mine: currentStats.score, average: classAverage.score, suffix: ' 分' },
+        { label: isArenaV2Week(range.startMs) ? '通關場次' : '挑戰場次', mine: currentStats.sessions, average: classAverage.sessions, suffix: ' 場' },
         { label: '答題準確率', mine: currentStats.hasAccuracy ? currentStats.accuracy : null, average: classAverage.accuracy, suffix: '%' }
     ];
     const currentIndex = Math.max(0, currentRank - 1);
@@ -2677,7 +2718,8 @@ const WeeklyReport = ({ onBack, onOpenAlbum, onViewLoginCalendar, currentUserId,
             </div>
 
             <div className="flex-1 overflow-y-auto p-3 space-y-4">
-                <ArenaTierGuide currentTierId={currentArenaTier.id} />
+                <ArenaTierGuide currentTierId={currentArenaTier.id} v2={isArenaV2Week(range.startMs)} />
+                {groupAssignment?.tier && groupAssignment.tier !== currentArenaTier.id && <p className="text-xs text-amber-200">目前牌位：{currentArenaTier.label} · 本週仍在{getArenaTier(groupAssignment.tier).label}組，下週重新配對。</p>}
 
                 <section className="border-4 border-cyan-400/60 bg-gradient-to-br from-cyan-950/80 to-purple-950/80 p-3 shadow-xl">
                     <div className="flex justify-between items-center mb-3">
@@ -2708,12 +2750,12 @@ const WeeklyReport = ({ onBack, onOpenAlbum, onViewLoginCalendar, currentUserId,
                 <section className="arena-tier-feature border-4 p-4 shadow-xl">
                     <div className="flex justify-between items-start gap-3">
                         <div>
-                            <p className="font-pixel text-[10px] text-yellow-300">{period === 'current' ? '本週累積戰力' : '上週最終戰績'}</p>
+                            <p className="font-pixel text-[10px] text-yellow-300">{period === 'current' ? (isArenaV2Week(range.startMs) ? '本週競技積分' : '本週累積戰力') : '上週最終戰績'}</p>
                             <p className="font-retro text-[11px] text-gray-300 mt-1">{formatWeekRange(range)} · 週一至週日</p>
                         </div>
                         <div className="text-right">
                             <div className="font-pixel text-3xl text-yellow-300">{currentStats.score}</div>
-                            <div className="font-retro text-[10px] text-yellow-100">累積戰力</div>
+                            <div className="font-retro text-[10px] text-yellow-100">{isArenaV2Week(range.startMs) ? '競技積分' : '累積戰力'}</div>
                         </div>
                     </div>
                     <div className="grid grid-cols-3 gap-2 mt-4 text-center">
@@ -2722,7 +2764,7 @@ const WeeklyReport = ({ onBack, onOpenAlbum, onViewLoginCalendar, currentUserId,
                         <div className="bg-black/35 border border-white/10 p-2"><div className="font-pixel text-lg text-purple-300">{currentStats.activeDays}</div><div className="font-retro text-[10px] text-gray-300">活躍天數</div></div>
                     </div>
                     <p className="font-retro text-[10px] text-gray-400 mt-3">
-                        {period === 'current' ? '每週一 00:00 重新累積，週日 23:59 結算。' : '排行依每場分數加總；同分時依準確率與挑戰場次排序。'}
+                        {isArenaV2Week(range.startMs) ? '每週一 00:00 結算；每日最高 5 回、每週最高 5 天。同分依採計正確率與參賽天數排序。' : period === 'current' ? '每週一 00:00 重新累積，週日 23:59 結算。' : '排行依每場分數加總；同分時依準確率與挑戰場次排序。'}
                     </p>
                 </section>
 
@@ -2789,6 +2831,9 @@ const WeeklyReport = ({ onBack, onOpenAlbum, onViewLoginCalendar, currentUserId,
                         </div>
                         <span className="font-retro text-[10px] text-gray-400">{usesSharedGroup ? '同階聯賽' : '本週對手固定'}</span>
                     </div>
+                    {isArenaV2Week(range.startMs) && <ArenaScoreSummary stats={currentStats}
+                        tier={groupAssignment?.tier || currentArenaTier.id} nowMs={Math.min(arenaNow(), range.endMs - 1)} rank={currentRank} />}
+                    {!isArenaV2Week(range.startMs) && <p className="p-3 text-xs text-cyan-200">10 月 19 日起：通關才計分，10 題成績 × 2，每天最高 5 回、每週最高 5 天。</p>}
                     {isLoading ? (
                         <div className="p-5 text-center font-retro text-sm text-gray-400 animate-pulse">載入班級戰績...</div>
                     ) : loadError ? (
@@ -2815,7 +2860,7 @@ const WeeklyReport = ({ onBack, onOpenAlbum, onViewLoginCalendar, currentUserId,
                                     <>
                                         <div className="font-pixel text-[10px] text-yellow-300">👑 守擂中 · 第一名屬於你</div>
                                         <p className="font-retro text-xs text-gray-300 mt-1">
-                                            {currentStats.score >= championTarget ? `本週越級目標 ${championTarget} 分已達成！本週門檻不會再提高。` : `本週越級目標：${championTarget} 分（還差 ${championTarget - currentStats.score} 分）`}
+                                            {isArenaV2Week(range.startMs) ? '保持領先，並達到積分與參賽天數門檻，才能在週結算晉級。' : currentStats.score >= championTarget ? `本週越級目標 ${championTarget} 分已達成！本週門檻不會再提高。` : `本週越級目標：${championTarget} 分（還差 ${championTarget - currentStats.score} 分）`}
                                         </p>
                                     </>
                                 ) : nextOpponent ? (
@@ -5772,7 +5817,7 @@ const PhraseGroupStudy = ({ group, part, onBack, onStartQuiz }) => {
     );
 };
 
-const BattleMode = ({ quizData, optionPool = null, isBoss, isChallenge = false, isPhrase = false, difficulty = 'hard', questionLimit = 20, onComplete, onFlee, currentRecord = null }) => {
+const BattleMode = ({ quizData, optionPool = null, isBoss, isChallenge = false, isPhrase = false, requiresPassingGrade = false, difficulty = 'hard', questionLimit = 20, onComplete, onFlee, currentRecord = null, arenaHistory = {} }) => {
     // 所有模式都先顯示 menu 選擇作答模式
     const isEasy = !isPhrase && difficulty === 'easy';
     const maxHp = isPhrase ? 3 : (isEasy ? 5 : 3); // 片語固定 3 條命
@@ -5787,6 +5832,10 @@ const BattleMode = ({ quizData, optionPool = null, isBoss, isChallenge = false, 
     const [battleLog, setBattleLog] = useState([]); // 戰鬥回顧記錄
     const [isSubmitting, setIsSubmitting] = useState(false); // 防止重复提交
     const [quizMode, setQuizMode] = useState(null); // 'standard' = 有發音, 'simple' = 無發音
+    const [sessionId] = useState(() => crypto.randomUUID());
+    const completedAtRef = useRef(null);
+    const [saveError, setSaveError] = useState('');
+    const submittingRef = useRef(false);
 
     // Keep one voice for the whole question so automatic playback and replay match.
     // Cedar is the male voice; Marin is the female voice.
@@ -6000,6 +6049,7 @@ const BattleMode = ({ quizData, optionPool = null, isBoss, isChallenge = false, 
     };
 
     const nextQuestion = (isDead = false) => {
+        if (isDead || currentQIndex >= questions.length - 1) completedAtRef.current = arenaNow();
         setTimeout(() => {
             if (isDead) setStatus('gameover');
             else if (currentQIndex >= questions.length - 1) setStatus('victory');
@@ -6154,6 +6204,25 @@ const BattleMode = ({ quizData, optionPool = null, isBoss, isChallenge = false, 
 
     if (status === 'victory' || status === 'gameover') {
         const maxPossible = questions.length * 100;
+        const finishBattle = async (retry = false) => {
+            if (submittingRef.current) return;
+            submittingRef.current = true;
+            setIsSubmitting(true);
+            setSaveError('');
+            try {
+                await onComplete({ score, rank: rankData.rank, battleLog, sessionId,
+                    plannedQuestions: questions.length, difficulty, quizMode,
+                    completedAtMs: completedAtRef.current,
+                    arenaCleared,
+                    victory: status === 'victory', completed: status === 'victory',
+                    correctCount: battleLog.filter(log => log.isCorrect).length, retry });
+            } catch (error) {
+                console.error('儲存挑戰失敗', error);
+                setSaveError('尚未完成儲存，請確認連線後再試。重試不會重複計分。');
+                setIsSubmitting(false);
+                submittingRef.current = false;
+            }
+        };
 
         let rankData;
         if (status === 'gameover') {
@@ -6161,6 +6230,15 @@ const BattleMode = ({ quizData, optionPool = null, isBoss, isChallenge = false, 
         } else {
             rankData = getRank(score);
         }
+        const arenaCleared = status === 'victory' && (!(isPhrase || isBoss || requiresPassingGrade) || ['S', 'A', 'B'].includes(rankData.rank));
+        const arenaScore = getArenaRoundScore({ score, plannedQuestions: questions.length, completed: arenaCleared });
+        const roundTime = completedAtRef.current ?? arenaNow();
+        const roundRange = arenaWeekRange(roundTime);
+        const draftAttempt = makeArenaAttempt({ sessionId, score, plannedQuestions: questions.length,
+            completed: status === 'victory', arenaCleared, battleLog }, { completedAtMs: roundTime });
+        const beforeStats = getArenaWeeklyStats(Object.values(arenaHistory), roundRange);
+        const afterStats = getArenaWeeklyStats(Object.values({ ...arenaHistory, [sessionId]: draftAttempt }), roundRange);
+        const dayScore = stats => stats.daily.find(day => day.date === arenaDateKey(roundTime))?.score || 0;
 
         const ranks = isPhrase ? [
             { label: 'S', min: maxPossible, color: 'text-yellow-300' },
@@ -6195,6 +6273,15 @@ const BattleMode = ({ quizData, optionPool = null, isBoss, isChallenge = false, 
                             </>
                         )}
                         <p className="font-retro text-base text-rpg-panel border-t border-b border-gray-600 py-1 w-full">SCORE: {score} / {maxPossible}</p>
+                        <div className="font-retro text-xs text-cyan-200 mt-2 text-center" role="status">
+                            {arenaCleared
+                                ? `排行榜成績：${arenaScore} / 2000${questions.length === 10 ? '（10 題分數 × 2）' : ''}`
+                                : '未達通關條件，本回競技積分為 0；錯題仍會保存。'}
+                            <p>每天最高 5 回・每週最高 5 天</p>
+                            <p>請在本週結束前按下 CONTINUE 或 RETRY 儲存成績。</p>
+                            {isArenaV2Week(roundRange.startMs) && <p>本回儲存後：今日 +{dayScore(afterStats) - dayScore(beforeStats)} 分 · 本週 +{afterStats.score - beforeStats.score} 分</p>}
+                            {completedAtRef.current < ARENA_V2_START && <p>新版規則將於 10 月 19 日開始，當週聯賽沿用舊制。</p>}
+                        </div>
 
                         {/* RANKING 表格 */}
                         <div className="w-full bg-black/50 border-2 border-rpg-border p-2 mt-1">
@@ -6279,20 +6366,10 @@ const BattleMode = ({ quizData, optionPool = null, isBoss, isChallenge = false, 
 
                 {/* 底部按鈕區域 */}
                 <div className="flex-shrink-0 p-4 z-10 w-full max-w-xs mx-auto">
+                    {saveError && <p role="alert" className="text-red-300 text-xs mb-2">{saveError}</p>}
                     <div className="flex gap-3">
                         <RPGButton
-                            onClick={() => {
-                                if (isSubmitting) return;
-                                setIsSubmitting(true);
-                                onComplete({
-                                    score,
-                                    rank: rankData.rank,
-                                    battleLog,
-                                    victory: status === 'victory',
-                                    completed: status === 'victory',
-                                    correctCount: battleLog.filter(log => log.isCorrect).length
-                                });
-                            }}
+                            onClick={() => finishBattle(false)}
                             disabled={isSubmitting}
                             color="neutral"
                             className="flex-1 py-3 tracking-normal"
@@ -6300,20 +6377,7 @@ const BattleMode = ({ quizData, optionPool = null, isBoss, isChallenge = false, 
                             {isSubmitting ? 'SAVING...' : 'CONTINUE'}
                         </RPGButton>
                         <RPGButton
-                            onClick={() => {
-                                if (isSubmitting) return;
-                                setIsSubmitting(true);
-                                // 先存檔，存完後重置戰鬥狀態
-                                onComplete({
-                                    score,
-                                    rank: rankData.rank,
-                                    battleLog,
-                                    victory: status === 'victory',
-                                    completed: status === 'victory',
-                                    correctCount: battleLog.filter(log => log.isCorrect).length,
-                                    retry: true
-                                });
-                            }}
+                            onClick={() => finishBattle(true)}
                             disabled={isSubmitting}
                             color="primary"
                             className="flex-1 py-3 tracking-normal"
@@ -6500,6 +6564,34 @@ const App = () => {
     const [loginStampData, setLoginStampData] = useState(null);
     const [weeklyArenaSettlement, setWeeklyArenaSettlement] = useState(null);
     const [triviaAlbumBackView, setTriviaAlbumBackView] = useState('map');
+    const [inactivityNotice, setInactivityNotice] = useState(null);
+
+    useEffect(() => {
+        if (!currentUser?.uid || !userData || loading) return;
+        let active = true;
+        let busy = false;
+        let lastTouch = performance.now();
+        const touch = async () => {
+            if (document.visibilityState !== 'visible' || busy || performance.now() - lastTouch < 60000) return;
+            busy = true;
+            try {
+                const progress = await touchArenaActivity(db, currentUser.uid);
+                if (active && progress) setUserData(previous => previous ? { ...previous, arenaTierProgress: progress } : previous);
+                lastTouch = performance.now();
+            } catch (error) {
+                console.warn('登入活動尚未同步，下一次操作會重試。', error);
+            } finally { busy = false; }
+        };
+        window.addEventListener('pointerdown', touch);
+        window.addEventListener('keydown', touch);
+        document.addEventListener('visibilitychange', touch);
+        return () => {
+            active = false;
+            window.removeEventListener('pointerdown', touch);
+            window.removeEventListener('keydown', touch);
+            document.removeEventListener('visibilitychange', touch);
+        };
+    }, [currentUser?.uid, Boolean(userData), loading]);
 
     useEffect(() => { document.body.classList.add('loaded'); }, []);
 
@@ -6578,7 +6670,7 @@ const App = () => {
         const userRef = doc(db, 'users', user.uid);
         try {
             const userSnap = await getDoc(userRef);
-            const baseData = userSnap.exists() ? userSnap.data() : {
+            let baseData = userSnap.exists() ? userSnap.data() : {
                 avgAccuracy: 0,
                 totalSessions: 0,
                 grades: { S: 0, A: 0, B: 0, C: 0, D: 0 },
@@ -6594,6 +6686,8 @@ const App = () => {
                 correctWordIds: [],
                 phraseProgress: {}
             };
+            await synchronizeArenaClock(db, user.uid);
+            baseData = { ...baseData, ...(await getDocFromServer(userRef)).data() };
             const triviaMigration = migrateTriviaProgress(baseData);
             const migratedBaseData = {
                 ...baseData,
@@ -6618,6 +6712,7 @@ const App = () => {
                 settlementNotification = arenaPreparation.notification;
             } catch (error) {
                 console.warn('競技場登入結算暫時無法完成，將於下次登入重試。', error);
+                throw error;
             }
 
             await setDoc(userRef, {
@@ -6628,17 +6723,20 @@ const App = () => {
                     triviaCollection: triviaMigration.triviaCollection,
                     triviaRewardClaims: triviaMigration.triviaRewardClaims
                 } : {}),
-                ...(!userSnap.exists() ? migratedBaseData : {}),
+                ...(!userSnap.exists() ? { ...migratedBaseData, arenaTierProgress: preparedData.arenaTierProgress } : {}),
                 ...(Number.isFinite(Number(preparedData.weeklyArenaRewardStartWeek)) ? {
                     weeklyArenaRewardStartWeek: Number(preparedData.weeklyArenaRewardStartWeek)
                 } : {}),
                 weeklyArenaRosters: preparedData.weeklyArenaRosters || {},
                 weeklyArenaResults: preparedData.weeklyArenaResults || {},
-                arenaTierProgress: normalizeArenaTierProgress(preparedData.arenaTierProgress),
                 weeklyArenaGroupAssignments: preparedData.weeklyArenaGroupAssignments || {}
             }, { merge: true });
 
             setUserData(preparedData);
+            const lastDemotion = preparedData.arenaTierProgress?.activity?.lastDemotedAt;
+            if (lastDemotion && lastDemotion > (baseData.arenaTierProgress?.activity?.lastDemotedAt || 0)) {
+                setInactivityNotice(`連續未登入已觸發降階，目前牌位為${getArenaTier(preparedData.arenaTierProgress.currentTier).label}。學習紀錄與歷史最高牌位仍保留。`);
+            }
             setWeeklyArenaSettlement(settlementNotification);
             setView('map');
         } catch (e) {
@@ -6796,7 +6894,14 @@ const App = () => {
             ? (sessionCorrectCount / sessionLogs.length) * 100
             : null;
 
-        // 片語庫使用完全獨立的進度與統計，不納入主線成就、打卡、試煉或每週戰報。
+        const savedArena = await saveArenaAttempt({ db, userId: auth.currentUser.uid, result,
+            mode: view, unit: String(selectedNode?.id || challengeUnits.join(',')) });
+        updatedUserData.arenaHistory = savedArena.history;
+        if (savedArena.attempt.exclusionReason === 'closed-week') {
+            window.alert('這一回的週次已結束，已保留練習紀錄，但不再更動已結算的聯賽分數。');
+        }
+
+        // 片語保留獨立學習進度，通關成績與其他模式共用競技紀錄。
         const isPhraseSession = view === 'phrase-quiz' && selectedNode?.type === 'phrase';
         if (isPhraseSession) {
             const group = PHRASE_GROUP_BY_ID.get(selectedNode.id);
@@ -6846,15 +6951,15 @@ const App = () => {
                 updatesForFirestore.mistakeStats = currentMistakeStats;
             }
 
+            try {
+                await saveLearningUpdates(db, auth.currentUser.uid, result.sessionId, updatesForFirestore);
+            } catch (error) {
+                console.error('片語進度儲存失敗:', error);
+                throw error;
+            }
             setUserData(updatedUserData);
             if (result.retry) setBattleKey(previous => previous + 1);
             else setView('phrase-study');
-
-            try {
-                await updateDoc(doc(db, 'users', auth.currentUser.uid), updatesForFirestore);
-            } catch (error) {
-                console.error('片語進度儲存失敗:', error);
-            }
             return;
         }
 
@@ -7149,6 +7254,9 @@ const App = () => {
 
         if (historyUnitTitle) {
             const newTrialRecord = {
+                sessionId: result.sessionId,
+                completed: result.completed === true,
+                plannedQuestions: result.plannedQuestions,
                 timestamp: new Date().toISOString(),
                 date: new Date().toISOString(),
                 score: result.score,
@@ -7185,22 +7293,14 @@ const App = () => {
         // ==========================================
         // 5. 最終寫入
         // ==========================================
-        setUserData(updatedUserData);
-        if (result.retry) {
-            // Retry: 不跳回地圖，直接重新掛載 BattleMode
-            setBattleKey(prev => prev + 1);
-        } else {
-            setView('map');
-        }
-
         try {
             if (Object.keys(updatesForFirestore).length > 0) {
-                const userRef = doc(db, 'users', auth.currentUser.uid);
-                await updateDoc(userRef, updatesForFirestore);
+                await saveLearningUpdates(db, auth.currentUser.uid, result.sessionId, updatesForFirestore);
                 console.log("所有資料儲存成功！準確率已更新。");
             }
         } catch (e) {
             console.error("儲存失敗:", e);
+            throw e;
         }
 
         try {
@@ -7214,6 +7314,9 @@ const App = () => {
             // 公開排行榜只存匿名摘要；即使規則尚未開放，也不影響個人成績保存。
             console.warn("每週排行榜摘要同步失敗:", e);
         }
+        setUserData(updatedUserData);
+        if (result.retry) setBattleKey(prev => prev + 1);
+        else setView('map');
     };
 
     const handleNodeSelect = async (node) => {
@@ -7546,6 +7649,7 @@ const App = () => {
                     difficulty="hard"
                     questionLimit={PHRASE_QUESTION_LIMIT}
                     onComplete={handleBattleComplete}
+                    arenaHistory={userData?.arenaHistory || {}}
                     onFlee={() => setView('phrase-study')}
                     currentRecord={userData?.phraseProgress?.[selectedNode?.id]}
                 />;
@@ -7561,7 +7665,9 @@ const App = () => {
                     isPhrase={isPhraseChallenge}
                     difficulty={(view === 'quiz' && selectedNode?.type === 'unit') ? selectedDifficulty : 'hard'}
                     questionLimit={(view === 'quiz' && selectedNode?.type === 'adv') ? ADV_QUIZ_QUESTION_LIMIT : 20}
+                    requiresPassingGrade={view === 'quiz' && selectedNode?.type === 'adv'}
                     onComplete={handleBattleComplete}
+                    arenaHistory={userData?.arenaHistory || {}}
                     onFlee={() => setView('map')}
                     currentRecord={isPhraseChallenge ? null : userData?.levelRecords?.[selectedNode?.id]}
                 />;
@@ -7581,6 +7687,12 @@ const App = () => {
                     <div className="relative z-0 h-full overflow-hidden">{renderContent()}</div>
 
                     <LoginStampModal data={loginStampData} onClose={() => setLoginStampData(null)} />
+                    {inactivityNotice && <div role="dialog" aria-modal="true" aria-label="未登入降階通知" className="absolute inset-0 z-[70] bg-black/80 flex items-center justify-center p-5">
+                        <div className="bg-slate-900 border-2 border-amber-400 p-5 text-white space-y-4">
+                            <p>{inactivityNotice}</p>
+                            <RPGButton onClick={() => setInactivityNotice(null)}>開始挑戰</RPGButton>
+                        </div>
+                    </div>}
                     <WeeklyArenaSettlementModal
                         key={weeklyArenaSettlement?.weekStart || 'no-settlement'}
                         data={weeklyArenaSettlement}
@@ -7863,6 +7975,9 @@ const PhraseLibraryPreviewLab = () => {
 };
 
 const RootApp = () => {
+    if (import.meta.env.DEV && new URLSearchParams(window.location.search).get('arena-scoring-preview') === '1') {
+        return <React.Suspense fallback={<div>載入測試畫面…</div>}><ArenaScoringPreview /></React.Suspense>;
+    }
     const isArenaPreview = new URLSearchParams(window.location.search).get('arena-preview') === '1';
     const isPhrasePreview = new URLSearchParams(window.location.search).get('phrase-preview') === '1';
     if (isArenaPreview) return <ArenaTierPreviewLab />;

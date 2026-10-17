@@ -14,7 +14,7 @@ import {
 } from './arena-groups.js';
 import { normalizeArenaTier } from './arena-tiers.js';
 import {
-    ARENA_SIMULATION_VERSION,
+    getArenaSimulationVersion,
     buildSharedArenaBots
 } from './arena-simulations.js';
 
@@ -200,7 +200,9 @@ export const ensureWeeklyArenaGroupSimulation = async ({
         }
 
         const group = groupSnapshot.data();
-        if ((Number(group.simulationVersion) || 0) >= ARENA_SIMULATION_VERSION) {
+        const expectedVersion = getArenaSimulationVersion(group.weekStart);
+        // Never replace already stored old-week simulations with new-week rules.
+        if ((Number(group.simulationVersion) || 0) >= expectedVersion) {
             return group;
         }
 
@@ -222,7 +224,7 @@ export const ensureWeeklyArenaGroupSimulation = async ({
         });
         const finalizedGroup = {
             ...lockedGroup,
-            simulationVersion: ARENA_SIMULATION_VERSION,
+            simulationVersion: expectedVersion,
             simulationStatus: 'ready',
             simulatedMemberCount: simulatedRivals.length,
             simulatedRivals,

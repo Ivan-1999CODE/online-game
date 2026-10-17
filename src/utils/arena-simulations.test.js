@@ -2,7 +2,6 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
     ARENA_SIMULATION_PROFILES,
-    ARENA_SIMULATION_VERSION,
     buildSharedArenaBots,
     fillArenaGroupForDisplay,
     maskArenaName,
@@ -42,7 +41,7 @@ test('模擬玩家數量正確且全部屬於小組階級', () => {
     const bots = build({ count: 7, tier: 'diamond' });
     assert.equal(bots.length, 7);
     assert.ok(bots.every(bot => bot.tier === 'diamond'));
-    assert.ok(bots.every(bot => bot.simulationVersion === ARENA_SIMULATION_VERSION));
+    assert.ok(bots.every(bot => bot.simulationVersion === 1)); // Historical weeks retain v1.
     assert.ok(bots.every(bot => bot.maskedName.includes('○')));
     assert.equal(new Set(bots.map(bot => bot.maskedName)).size, 7);
 });

@@ -1,7 +1,9 @@
 import { normalizeArenaTier } from './arena-tiers.js';
 import { ARENA_GROUP_MEMBER_LIMIT } from './arena-groups.js';
+import { getArenaWeeklyStats, arenaWeekRange, isArenaV2Week } from './arena-scoring.js';
 
-export const ARENA_SIMULATION_VERSION = 1;
+export const ARENA_SIMULATION_VERSION = 2;
+export const getArenaSimulationVersion = weekStart => isArenaV2Week(weekStart) ? 2 : 1;
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 export const ARENA_SIMULATION_PROFILES = Object.freeze({
@@ -56,6 +58,45 @@ const randomInteger = (random, min, max) => (
 
 const roundToTen = value => Math.round(value / 10) * 10;
 
+export const ARENA_V2_PROFILES = Object.freeze({
+    unranked: { sessions: [8, 14], score: [1000, 1500] },
+    wood: { sessions: [14, 20], score: [1150, 1600] },
+    stone: { sessions: [18, 24], score: [1250, 1700] },
+    bronze: { sessions: [22, 28], score: [1350, 1780] },
+    silver: { sessions: [25, 32], score: [1450, 1850] },
+    gold: { sessions: [28, 35], score: [1550, 1900] },
+    platinum: { sessions: [32, 39], score: [1650, 1950] },
+    diamond: { sessions: [36, 44], score: [1730, 1980] },
+    warlord: { sessions: [40, 50], score: [1820, 2000] }
+});
+
+const buildV2Updates = ({ random, tier, weekStart, botIndex }) => {
+    const profile = ARENA_V2_PROFILES[tier];
+    const persona = ['steady', 'focused', 'persistent', 'variable'][botIndex % 4];
+    const count = randomInteger(random, ...profile.sessions);
+    // Each group has approachable opponents and stronger contenders. Never uses player activity.
+    const strength = botIndex % 4 === 0 ? 0.87 : 0.96 + random() * 0.08;
+    const days = Array.from({ length: 7 }, (_, index) => index);
+    if (persona === 'focused') days.splice(randomInteger(random, 0, 6), 1);
+    const updates = Array.from({ length: count }, (_, index) => {
+        const plannedQuestions = random() < 0.5 ? 10 : 20;
+        const day = days[index % days.length];
+        const atMs = Number(weekStart) + day * DAY_MS
+            + randomInteger(random, 7 * 60, 22 * 60 + 59) * 60000 + index;
+        const target = Math.min(2000, Math.round(randomInteger(random, ...profile.score) * strength));
+        const completed = random() >= (persona === 'variable' ? 0.12 : 0.03);
+        const correctCount = completed ? Math.min(plannedQuestions, Math.max(plannedQuestions - 2,
+            Math.ceil(target * plannedQuestions / 2000))) : Math.max(0, plannedQuestions - 4);
+        const score = Math.min(correctCount * 100, Math.round(target * plannedQuestions / 20));
+        return {
+            id: `bot-${botIndex}-${index}`, atMs, timestamp: new Date(atMs).toISOString(),
+            scoringVersion: 2, score, plannedQuestions, totalQuestions: completed ? plannedQuestions : plannedQuestions - 1,
+            correctCount, completed
+        };
+    }).sort((a, b) => a.atMs - b.atMs);
+    return { updates, persona };
+};
+
 export const buildSharedArenaBots = ({
     groupId,
     weekStart,
@@ -63,6 +104,7 @@ export const buildSharedArenaBots = ({
     count
 }) => {
     const normalizedTier = normalizeArenaTier(tier);
+    const version = getArenaSimulationVersion(weekStart);
     const profile = ARENA_SIMULATION_PROFILES[normalizedTier];
     const safeCount = Math.max(0, Math.min(8, Number(count) || 0));
     const random = createSeededRandom(`${groupId}:${Number(weekStart)}:${normalizedTier}:shared-v1`);
@@ -94,14 +136,17 @@ export const buildSharedArenaBots = ({
             };
         }).sort((a, b) => a.atMs - b.atMs);
 
+        const v2 = version === 2 ? buildV2Updates({ random, tier: normalizedTier, weekStart, botIndex: index }) : null;
         return {
             id: `shared-bot-${getSeedNumber(`${groupId}:${index}`).toString(36)}`,
             maskedName,
             simulated: true,
-            simulationVersion: ARENA_SIMULATION_VERSION,
+            simulationVersion: version,
+            weekStart: Number(weekStart),
             tier: normalizedTier,
             accuracy,
-            updates
+            updates,
+            ...(v2 || {})
         };
     });
 };
@@ -143,7 +188,7 @@ export const getSharedArenaBotEntry = (bot, asOfMs = Date.now()) => {
         maskedName: maskArenaName(bot.maskedName),
         simulated: true,
         tier: normalizeArenaTier(bot.tier),
-        weekly: {
+        weekly: bot.simulationVersion === 2 ? getArenaWeeklyStats(completedUpdates, arenaWeekRange(bot.weekStart)) : {
             score: completedUpdates.reduce(
                 (sum, update) => sum + (Number(update.score) || 0),
                 0

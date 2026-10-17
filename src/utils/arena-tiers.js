@@ -1,3 +1,4 @@
+import { ARENA_V2_START, ARENA_WEEK_MS, ARENA_PROMOTION_REQUIREMENTS, isArenaV2Week } from './arena-scoring.js';
 export const ARENA_TIER_PROGRESS_VERSION = 1;
 
 // 2026-08-03 00:00（Asia/Taipei）。階級制度只從完整週一開始生效。
@@ -128,7 +129,8 @@ export const normalizeArenaTierProgress = (progress = {}) => {
         lastSettledWeek: normalizeNullableNumber(
             progress.lastSettledWeek,
             defaults.lastSettledWeek
-        )
+        ),
+        ...(progress.activity ? { activity: { ...progress.activity } } : {})
     };
 };
 
@@ -142,11 +144,40 @@ const moveArenaTier = (tier, offset) => {
     return ARENA_TIERS[nextIndex].id;
 };
 
+// Due intervals are processed BEFORE touching last activity, including after a long absence.
+export const applyArenaInactivity = (progress, nowMs, { touch = false } = {}) => {
+    let next = normalizeArenaTierProgress(progress);
+    if (nowMs < ARENA_V2_START) return next;
+    const activity = { anchorAt: ARENA_V2_START, processed: 0, credits: [], ...next.activity };
+    activity.anchorAt = Math.max(ARENA_V2_START, Number(activity.anchorAt) || ARENA_V2_START);
+    const due = Math.max(0, Math.floor((nowMs - activity.anchorAt) / ARENA_WEEK_MS));
+    for (let interval = (Number(activity.processed) || 0) + 1; interval <= due; interval++) {
+        if (!(activity.credits || []).includes(interval) && next.currentTier !== 'unranked') {
+            const tier = moveArenaTier(next.currentTier, -1);
+            if (tier !== next.currentTier) {
+                activity.lastDemotedAt = activity.anchorAt + interval * ARENA_WEEK_MS;
+                activity.lastDemotedFrom = next.currentTier;
+                activity.lastDemotedTo = tier;
+                next.currentTier = tier;
+            }
+        }
+    }
+    activity.processed = Math.max(Number(activity.processed) || 0, due);
+    if (touch && nowMs >= activity.anchorAt) {
+        activity.anchorAt = nowMs;
+        activity.processed = 0;
+        activity.credits = [];
+    }
+    return { ...next, activity };
+};
+
 export const settleArenaTier = ({
     progress,
     participated,
     rank,
     weekStart,
+    score = 0,
+    activeDays = 0,
     settledAt = new Date().toISOString()
 }) => {
     const normalizedProgress = normalizeArenaTierProgress(progress);
@@ -164,7 +195,7 @@ export const settleArenaTier = ({
             changed: false,
             progress: normalizedProgress,
             settlement: {
-                tierVersion: ARENA_TIER_PROGRESS_VERSION,
+                tierVersion: isArenaV2Week(numericWeekStart) ? 2 : ARENA_TIER_PROGRESS_VERSION,
                 tierBefore: normalizedProgress.currentTier,
                 tierAfter: normalizedProgress.currentTier,
                 tierOutcome: 'already-settled',
@@ -183,24 +214,37 @@ export const settleArenaTier = ({
     let tierAfter = tierBefore;
     let tierOutcome = 'maintained';
     let consecutiveInactiveWeeks = normalizedProgress.consecutiveInactiveWeeks;
+    const v2 = isArenaV2Week(numericWeekStart);
+    const activity = v2 ? { anchorAt: ARENA_V2_START, processed: 0, credits: [], ...normalizedProgress.activity } : null;
+    const requirement = ARENA_PROMOTION_REQUIREMENTS[tierBefore];
+    const blockedByInactivity = v2 && Number(activity.lastDemotedAt) >= numericWeekStart
+        && Number(activity.lastDemotedAt) <= numericWeekStart + ARENA_WEEK_MS;
+    const qualified = !v2 || (score >= requirement.score && activeDays >= requirement.days && !blockedByInactivity);
 
     if (participated) {
         consecutiveInactiveWeeks = 0;
-        if (tierBefore === 'unranked') {
+        if (tierBefore === 'unranked' && qualified) {
             tierAfter = 'wood';
             tierOutcome = 'placement';
         } else if (hasValidRank && normalizedRank <= 2) {
-            tierAfter = moveArenaTier(tierBefore, 1);
-            tierOutcome = tierAfter === tierBefore ? 'maintained' : 'promoted';
+            if (qualified && tierBefore !== 'unranked') {
+                tierAfter = moveArenaTier(tierBefore, 1);
+                tierOutcome = tierAfter === tierBefore ? 'maintained' : 'promoted';
+            } else tierOutcome = 'requirements-not-met';
         } else if (hasValidRank && normalizedRank >= 7) {
-            tierAfter = moveArenaTier(tierBefore, -1);
-            tierOutcome = tierAfter === tierBefore ? 'maintained' : 'demoted';
+            const interval = v2 ? Math.ceil((numericWeekStart + ARENA_WEEK_MS - activity.anchorAt) / ARENA_WEEK_MS) : 0;
+            const alreadyCharged = v2 && interval > 0 && (interval <= activity.processed || activity.credits.includes(interval));
+            if (!alreadyCharged && tierBefore !== 'unranked') {
+                tierAfter = moveArenaTier(tierBefore, -1);
+                tierOutcome = tierAfter === tierBefore ? 'maintained' : 'demoted';
+                if (v2 && interval > 0 && tierAfter !== tierBefore) activity.credits = [...activity.credits, interval];
+            }
         }
     } else {
         consecutiveInactiveWeeks += 1;
         if (tierBefore === 'unranked') {
             tierOutcome = 'unranked';
-        } else if (consecutiveInactiveWeeks === 1) {
+        } else if (v2 || consecutiveInactiveWeeks === 1) {
             tierOutcome = 'inactive-hold';
         } else {
             tierAfter = moveArenaTier(tierBefore, -1);
@@ -224,14 +268,15 @@ export const settleArenaTier = ({
         highestTierReachedAt,
         highestTierWeekStart,
         consecutiveInactiveWeeks,
-        lastSettledWeek: numericWeekStart
+        lastSettledWeek: numericWeekStart,
+        ...(activity ? { activity } : normalizedProgress.activity ? { activity: normalizedProgress.activity } : {})
     };
 
     return {
         changed: true,
         progress: nextProgress,
         settlement: {
-            tierVersion: ARENA_TIER_PROGRESS_VERSION,
+            tierVersion: v2 ? 2 : ARENA_TIER_PROGRESS_VERSION,
             tierBefore,
             tierAfter,
             tierOutcome,
