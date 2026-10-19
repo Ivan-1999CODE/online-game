@@ -84,7 +84,7 @@ const ARENA_TIER_INDEX = Object.freeze(Object.fromEntries(
 ));
 
 export const normalizeArenaTier = (tier) => (
-    Object.hasOwn(ARENA_TIER_INDEX, tier) ? tier : 'unranked'
+    Object.prototype.hasOwnProperty.call(ARENA_TIER_INDEX, tier) ? tier : 'unranked'
 );
 
 export const getArenaTierIndex = (tier) => ARENA_TIER_INDEX[normalizeArenaTier(tier)];
@@ -102,6 +102,7 @@ export const createDefaultArenaTierProgress = () => ({
 });
 
 export const normalizeArenaTierProgress = (progress = {}) => {
+    progress = progress || {};
     const defaults = createDefaultArenaTierProgress();
     const currentTier = normalizeArenaTier(progress.currentTier);
     let highestTier = normalizeArenaTier(progress.highestTier);

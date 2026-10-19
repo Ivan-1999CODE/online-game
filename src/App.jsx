@@ -13,7 +13,8 @@ import { getTtsAudio } from './constants/ttsAudioData';
 import TeacherDashboard from './components/TeacherDashboard.jsx';
 import ArenaScoreSummary from './components/ArenaScoreSummary.jsx';
 import LoadingScreen from './components/LoadingScreen.jsx';
-import { createSingleFlight, observeAuthStartup, getLoginErrorMessage } from './utils/startup';
+import { createSingleFlight, observeAuthStartup, getLoginErrorMessage, getDataLoadErrorMessage, LOGIN_STAGES } from './utils/startup';
+import { assertArenaLoginStateUnchanged } from './utils/arena-login-state';
 import { createSessionId } from './utils/session-id';
 const ArenaScoringPreview = React.lazy(() => import('./components/ArenaScoringPreview.jsx'));
 import { TRIVIA_CARDS, TRIVIA_CATEGORIES, TRIVIA_GROUPS, TRIVIA_LEGACY_ID_MAP, TRIVIA_SOURCES } from './constants/triviaData';
@@ -613,7 +614,7 @@ const ProgressBar = ({ value, max, color = "bg-rpg-success", label = "HP" }) => 
 
 // --- UI Components ---
 // --- Screens ---
-const LoginScreen = ({ onRetry, errorMessage, canRetry }) => {
+export const LoginScreen = ({ onRetry, errorMessage, canRetry }) => {
     const [submitting, setSubmitting] = useState(false);
     const [loginError, setLoginError] = useState('');
     const [slowLogin, setSlowLogin] = useState(false);
@@ -658,9 +659,11 @@ const LoginScreen = ({ onRetry, errorMessage, canRetry }) => {
             <h1 className="font-pixel text-4xl text-rpg-accent mb-2 text-shadow tracking-widest">ENGLISH<br />HERO</h1>
             <p className="font-retro text-gray-300 mb-4 tracking-widest">PRESS START</p>
 
-            <RPGButton onClick={handleGoogleLogin} disabled={submitting} color="primary" className="w-full max-w-xs py-3 text-lg shrink-0">
-                {submitting ? '等待 Google 登入…' : 'GOOGLE LOGIN'}
-            </RPGButton>
+            {canRetry
+                ? <p className="text-sm text-green-300">Google 帳號已登入</p>
+                : <RPGButton onClick={handleGoogleLogin} disabled={submitting} color="primary" className="w-full max-w-xs py-3 text-lg shrink-0">
+                    {submitting ? '等待 Google 登入…' : 'GOOGLE LOGIN'}
+                </RPGButton>}
             {visibleError && <div role="alert" className="mt-4 max-w-xs text-sm text-amber-200 space-y-3">
                 <p>{visibleError}</p>
                 <button type="button" onClick={canRetry ? onRetry : () => window.location.reload()} className="border-2 border-amber-300 bg-slate-800 px-3 py-2 text-white hover:bg-slate-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow-300">
@@ -2137,7 +2140,6 @@ const prepareWeeklyArenaOnLogin = async ({ userId, userData }) => {
     let rosters = { ...(userData.weeklyArenaRosters || {}) };
     let results = { ...(userData.weeklyArenaResults || {}) };
     let arenaTierProgress = normalizeArenaTierProgress(userData.arenaTierProgress);
-    const initialProgress = arenaTierProgress;
     let groupAssignments = { ...(userData.weeklyArenaGroupAssignments || {}) };
 
     const legacyUnsettledWeekStarts = Object.keys(rosters)
@@ -2236,12 +2238,7 @@ const prepareWeeklyArenaOnLogin = async ({ userId, userData }) => {
     await runTransaction(db, async transaction => {
         const ref = doc(db, 'users', userId);
         const latest = await transaction.get(ref);
-        if (JSON.stringify(normalizeArenaTierProgress(latest.data()?.arenaTierProgress)) !== JSON.stringify(initialProgress)) {
-            throw new Error('另一個裝置已更新牌位，請重新登入以載入最新結果。');
-        }
-        if (JSON.stringify(latest.data()?.arenaHistory || {}) !== JSON.stringify(userData.arenaHistory || {})) {
-            throw new Error('挑戰紀錄已在另一個裝置更新，請重新載入後結算。');
-        }
+        assertArenaLoginStateUnchanged(userData, latest.data());
         transaction.set(ref, { arenaTierProgress, weeklyArenaResults: results }, { merge: true });
     });
 
@@ -6677,8 +6674,13 @@ const App = () => {
     const handleLogin = user => loginFlight.current(user.uid, async () => {
         if (loadedUserId.current === user.uid) return;
         const isCurrentUser = () => auth.currentUser?.uid === user.uid;
+        let stage = 'profile-read';
+        const reportStage = nextStage => {
+            stage = nextStage;
+            setLoginStage(`正在${LOGIN_STAGES[stage]}…`);
+        };
         setLoginError('');
-        setLoginStage('正在讀取學習紀錄…');
+        reportStage('profile-read');
         setUserName(user.displayName);
         setCurrentUser(user);
         setLoading(true);
@@ -6702,10 +6704,11 @@ const App = () => {
                 correctWordIds: [],
                 phraseProgress: {}
             };
-            setLoginStage('正在同步學習紀錄…');
+            reportStage('clock-sync');
             const { snapshot: synchronizedUser } = await synchronizeArenaSession(db, user.uid);
             if (!isCurrentUser()) return;
             baseData = { ...baseData, ...synchronizedUser.data() };
+            reportStage('profile-upgrade');
             const triviaMigration = migrateTriviaProgress(baseData);
             const migratedBaseData = {
                 ...baseData,
@@ -6721,7 +6724,7 @@ const App = () => {
             };
             let preparedData = hydratedData;
             let settlementNotification = null;
-            setLoginStage('正在同步競技場進度…');
+            reportStage('arena-sync');
             try {
                 const arenaPreparation = await prepareWeeklyArenaOnLogin({
                     userId: user.uid,
@@ -6734,7 +6737,7 @@ const App = () => {
                 throw error;
             }
             if (!isCurrentUser()) return;
-            setLoginStage('正在完成登入…');
+            reportStage('profile-save');
             await setDoc(userRef, {
                 photoURL: preparedData.photoURL,
                 email: preparedData.email,
@@ -6761,9 +6764,9 @@ const App = () => {
             setWeeklyArenaSettlement(settlementNotification);
             setView('map');
         } catch (e) {
-            console.error("Error loading user data:", e);
+            console.error(`Error loading user data (${stage}):`, e);
             if (isCurrentUser()) {
-                setLoginError(getLoginErrorMessage(e));
+                setLoginError(getDataLoadErrorMessage(e, stage));
                 setView('login');
             }
         } finally {

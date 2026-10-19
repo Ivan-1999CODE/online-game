@@ -58,3 +58,27 @@ export const getLoginErrorMessage = error => {
             return '登入或讀取資料失敗，請重試。若持續發生，請將這個畫面提供給老師。';
     }
 };
+
+export const LOGIN_STAGES = Object.freeze({
+    'profile-read': '讀取學習紀錄',
+    'clock-sync': '同步伺服器時間',
+    'profile-upgrade': '整理學習紀錄',
+    'arena-sync': '同步競技場進度',
+    'profile-save': '儲存學習紀錄'
+});
+
+export const getDataLoadErrorMessage = (error, stage) => {
+    const step = LOGIN_STAGES[stage] || '讀取學習資料';
+    const code = /^[a-z0-9/-]{1,80}$/i.test(error?.code || '')
+        ? error.code
+        : ['TypeError', 'RangeError', 'ReferenceError'].includes(error?.name) ? error.name : 'unknown';
+    const reason = code === 'startup/arena-state-changed'
+        ? '其他分頁或裝置剛更新了紀錄，請重新讀取。'
+        : ['unavailable', 'deadline-exceeded', 'auth/network-request-failed'].includes(code)
+            ? '目前連線不穩，請確認網路後重試。'
+            : code === 'permission-denied'
+                ? '資料存取被拒絕，請將此畫面提供給老師。'
+                : '請重新讀取；若仍失敗，請將此畫面提供給老師。';
+    // Do not show raw SDK messages: they can contain document paths or user data.
+    return `Google 已登入，但「${step}」未完成。${reason}（${Object.prototype.hasOwnProperty.call(LOGIN_STAGES, stage) ? stage : 'data-load'} / ${code}）`;
+};

@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
-import { createSingleFlight, observeAuthStartup, getLoginErrorMessage } from './startup.js';
+import { createSingleFlight, observeAuthStartup, getLoginErrorMessage, getDataLoadErrorMessage, LOGIN_STAGES } from './startup.js';
 import { createSessionId } from './session-id.js';
 
 test('duplicate login notifications share one pending load', async () => {
@@ -75,6 +75,20 @@ test('auth SDK errors are reported instead of leaving a spinner', () => {
     stop();
     assert.match(getLoginErrorMessage({ code: 'auth/popup-blocked' }), /彈出式視窗/);
     assert.match(getLoginErrorMessage(failure), /網路/);
+});
+
+test('signed-in failures identify the failed data step without exposing raw account details', () => {
+    for (const [stage, label] of Object.entries(LOGIN_STAGES)) {
+        const message = getDataLoadErrorMessage({ code: 'invalid-argument', message: 'private@example.com/users/secret' }, stage);
+        assert.match(message, /Google 已登入/);
+        assert.ok(message.includes(label));
+        assert.ok(message.includes(`${stage} / invalid-argument`));
+        assert.ok(!message.includes('private@example.com'));
+    }
+    assert.match(getDataLoadErrorMessage({ code: 'startup/arena-state-changed' }, 'arena-sync'), /其他分頁或裝置/);
+    assert.match(getDataLoadErrorMessage(new TypeError('sensitive record'), 'profile-upgrade'), /TypeError/);
+    assert.match(getDataLoadErrorMessage({ code: 'permission-denied' }, 'profile-read'), /資料存取被拒絕/);
+    assert.match(getDataLoadErrorMessage({ code: 'unavailable' }, 'clock-sync'), /連線不穩/);
 });
 
 test('session IDs work without randomUUID and retain UUID v4 format and uniqueness', () => {

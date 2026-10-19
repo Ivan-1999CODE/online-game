@@ -55,7 +55,7 @@ export const makeArenaAttempt = (result, context = {}) => {
 };
 
 export const mergeArenaAttempt = (history = {}, attempt) => {
-    if (Object.hasOwn(history, attempt.id)) return history;
+    if (Object.prototype.hasOwnProperty.call(history, attempt.id)) return history;
     return { ...history, [attempt.id]: attempt };
 };
 
