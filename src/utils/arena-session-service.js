@@ -9,15 +9,18 @@ export const arenaNow = () => clockAnchor
 export const hasArenaServerClock = () => Boolean(clockAnchor);
 
 // The server timestamp is independent of changes to the device wall clock.
-export const synchronizeArenaClock = async (db, userId) => {
+export const synchronizeArenaSession = async (db, userId) => {
     const ref = doc(db, 'users', userId);
     await setDoc(ref, { arenaClock: serverTimestamp() }, { merge: true });
     const snapshot = await getDocFromServer(ref);
     const serverMs = snapshot.data()?.arenaClock?.toMillis();
     if (!Number.isFinite(serverMs)) throw new Error('無法取得伺服器時間，請連線後重試。');
     clockAnchor = { serverMs, monotonicMs: performance.now() };
-    return serverMs;
+    return { serverMs, snapshot };
 };
+
+export const synchronizeArenaClock = async (db, userId) =>
+    (await synchronizeArenaSession(db, userId)).serverMs;
 
 export const publicArenaSummary = (userId, data, range) => {
     const stats = getArenaWeeklyStats(Object.values(data.arenaHistory || {}), range);

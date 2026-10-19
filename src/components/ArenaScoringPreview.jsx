@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createSessionId } from '../utils/session-id';
 import ArenaScoreSummary from './ArenaScoreSummary';
 import { ARENA_V2_START, ARENA_DAY_MS, arenaWeekRange, getArenaWeeklyStats, getArenaRoundScore } from '../utils/arena-scoring';
 
@@ -11,7 +12,7 @@ export default function ArenaScoringPreview() {
             score, completed: true, plannedQuestions: 10, totalQuestions: 10, correctCount: 10 }))).flat());
     const [last, setLast] = useState(null);
     const add = (plannedQuestions, completed = true) => {
-        const attempt = { id: crypto.randomUUID(), scoringVersion: 2, timestamp: new Date(nowMs).toISOString(),
+        const attempt = { id: createSessionId(), scoringVersion: 2, timestamp: new Date(nowMs).toISOString(),
             score: plannedQuestions * 95, completed, plannedQuestions, totalQuestions: plannedQuestions,
             correctCount: plannedQuestions };
         setHistory(previous => [...previous, attempt]);

@@ -8,7 +8,42 @@
 </head>
 
 <body>
-    <div id="root"></div>
+    <div id="root">
+        <main style="min-height:100vh;box-sizing:border-box;display:flex;align-items:center;justify-content:center;padding:24px;background:#201533;color:#fff;font:16px/1.7 sans-serif;text-align:center">
+            <div style="max-width:360px">
+                <h1 style="color:#ffcc00">ENGLISH HERO</h1>
+                <p id="startup-message" role="status">正在開啟英文冒險…</p>
+                <button id="startup-retry" hidden onclick="window.location.reload()" style="padding:10px 18px;border:2px solid #ffcc00;background:#283345;color:#fff;font:inherit;cursor:pointer">重新載入網站</button>
+                <noscript><p>請啟用瀏覽器的 JavaScript，並使用 Chrome、Edge 或 Safari 開啟網站。</p></noscript>
+            </div>
+        </main>
+    </div>
+    <script>
+        // This small fallback also works when the app bundle cannot be downloaded.
+        (function () {
+            function showStartupProblem(message) {
+                var label = document.getElementById('startup-message');
+                if (!label) return; // React has already replaced the startup screen.
+                label.textContent = message;
+                document.getElementById('startup-retry').hidden = false;
+            }
+            if (window.location.protocol === 'file:') {
+                showStartupProblem('請透過老師提供的網站連結開啟，下載的 HTML 檔案無法單獨執行遊戲。');
+                return;
+            }
+            setTimeout(function () {
+                showStartupProblem('載入時間較長，請確認網路後重新載入。若仍無法開啟，請更新 Chrome 或 Edge，並將目前網址提供給老師。');
+            }, 15000);
+            window.addEventListener('error', function (event) {
+                if (event.target && (event.target.tagName === 'SCRIPT' || event.target.tagName === 'LINK')) {
+                    showStartupProblem('網站檔案未能載入，請確認網路後重新載入網站。');
+                }
+            }, true);
+        }());
+    </script>
+    <script nomodule>
+        document.getElementById('startup-message').textContent = '瀏覽器版本過舊，請使用更新後的 Chrome 或 Edge 開啟網站。';
+    </script>
     <script type="module" src="/src/main.jsx"></script>
 </body>
 

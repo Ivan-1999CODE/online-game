@@ -14,12 +14,6 @@ body {
   background-size: 20px 20px;
   font-family: 'DotGothic16', 'VT323', monospace;
   color: #333;
-  opacity: 0;
-  transition: opacity 0.5s;
-}
-
-body.loaded {
-  opacity: 1;
 }
 
 /* Pixel Border Effect */

@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
+    "test:startup": "node --test src/utils/startup.test.js",
     "import:phrases": "node scripts/import_phrase_library.mjs",
     "validate:phrases": "node scripts/validate_phrase_library.mjs",
     "test:phrases": "node --test src/utils/phrase-library.test.js",

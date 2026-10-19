@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
-import { getAuth, GoogleAuthProvider, setPersistence, browserLocalPersistence } from 'firebase/auth';
+import { initializeAuth, GoogleAuthProvider, browserLocalPersistence, indexedDBLocalPersistence, browserSessionPersistence, inMemoryPersistence } from 'firebase/auth';
 
 // Firebase configuration for English-Quest project
 const firebaseConfig = {
@@ -15,13 +15,14 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const auth = getAuth(app);
+// Do not load a cross-site redirect iframe just to display the login screen.
+// Preserve existing sessions, with fallbacks when a browser blocks a storage API.
+const auth = initializeAuth(app, {
+    persistence: [browserLocalPersistence, indexedDBLocalPersistence, browserSessionPersistence, inMemoryPersistence]
+});
 const googleProvider = new GoogleAuthProvider();
 
 // Always let the player choose a Google account after signing out.
 googleProvider.setCustomParameters({ prompt: 'select_account' });
-
-// Set explicitly to localStorage to prevent mobile browsers returning to new sessions
-setPersistence(auth, browserLocalPersistence).catch(console.error);
 
 export { app, db, auth, googleProvider };

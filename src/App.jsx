@@ -5,13 +5,16 @@ import {
     HelpCircle, Backpack, Gem, Flame, Skull as SkullIcon, Book, User,
     List, Grid, ArrowLeft, Lightbulb, MessageCircle, Clock, Award, ShieldCheck, Home, Lock, LogOut, Headphones, CalendarDays, Search
 } from 'lucide-react';
-import { collection, query, where, getDocs, doc, getDoc, getDocFromServer, setDoc, updateDoc, FieldPath, runTransaction } from 'firebase/firestore';
-import { signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut } from 'firebase/auth';
+import { collection, query, where, getDocs, doc, getDoc, setDoc, updateDoc, FieldPath, runTransaction } from 'firebase/firestore';
+import { signInWithPopup, browserPopupRedirectResolver, onAuthStateChanged, signOut } from 'firebase/auth';
 import { db, auth, googleProvider } from './config/firebase';
 import { speakText, playSound, shuffleArray, playMusic, stopMusic, setMute, getMuteStatus, setVolume, unlockAudio, getTtsPilotVoice, setTtsPilotVoice } from './utils/audio';
 import { getTtsAudio } from './constants/ttsAudioData';
 import TeacherDashboard from './components/TeacherDashboard.jsx';
 import ArenaScoreSummary from './components/ArenaScoreSummary.jsx';
+import LoadingScreen from './components/LoadingScreen.jsx';
+import { createSingleFlight, observeAuthStartup, getLoginErrorMessage } from './utils/startup';
+import { createSessionId } from './utils/session-id';
 const ArenaScoringPreview = React.lazy(() => import('./components/ArenaScoringPreview.jsx'));
 import { TRIVIA_CARDS, TRIVIA_CATEGORIES, TRIVIA_GROUPS, TRIVIA_LEGACY_ID_MAP, TRIVIA_SOURCES } from './constants/triviaData';
 import { hasAmbiguousTranslation, needsEnglishPrompt } from './constants/quizOptionRules';
@@ -50,7 +53,7 @@ import {
     maskArenaName as maskStudentName
 } from './utils/arena-simulations';
 import { ARENA_V2_START, isArenaV2Week, getArenaRoundScore, getArenaWeeklyStats, getArenaHistory, arenaWeekRange, arenaDateKey, makeArenaAttempt } from './utils/arena-scoring';
-import { arenaNow, synchronizeArenaClock, saveArenaAttempt, publishArenaSummary, touchArenaActivity, saveLearningUpdates } from './utils/arena-session-service';
+import { arenaNow, synchronizeArenaSession, saveArenaAttempt, publishArenaSummary, touchArenaActivity, saveLearningUpdates } from './utils/arena-session-service';
 
 // --- Pixel Art SVGs ---
 const PixelArt = {
@@ -610,51 +613,60 @@ const ProgressBar = ({ value, max, color = "bg-rpg-success", label = "HP" }) => 
 
 // --- UI Components ---
 // --- Screens ---
-const LoadingScreen = () => (
-    <div className="flex flex-col items-center justify-center h-full bg-rpg-bg z-50 absolute inset-0">
-        <div className="w-16 h-16 border-4 border-rpg-accent animate-spin rounded-full border-t-transparent"></div>
-        <p className="text-white font-pixel text-sm mt-4 animate-pulse">LOADING DATA...</p>
-    </div>
-);
-
-const LoginScreen = ({ onLogin }) => {
+const LoginScreen = ({ onRetry, errorMessage, canRetry }) => {
+    const [submitting, setSubmitting] = useState(false);
+    const [loginError, setLoginError] = useState('');
+    const [slowLogin, setSlowLogin] = useState(false);
+    useEffect(() => {
+        if (!submitting) {
+            setSlowLogin(false);
+            return;
+        }
+        const timer = setTimeout(() => setSlowLogin(true), 15000);
+        return () => clearTimeout(timer);
+    }, [submitting]);
+    const visibleError = loginError || errorMessage || (slowLogin
+        ? '請查看是否有 Google 登入視窗。若沒有出現，請允許此網站的彈出式視窗，或以 Chrome、Edge 開啟網址後重試。'
+        : '');
     const handleGoogleLogin = async () => {
+        if (submitting) return;
+        setLoginError('');
+        const userAgent = navigator.userAgent || '';
+        if (/Line|FBAN|FBAV|Instagram/i.test(userAgent)) {
+            setLoginError('請使用右上角選單，以 Chrome、Edge 或 Safari 開啟這個網址，再登入 Google。');
+            return;
+        }
+        setSubmitting(true);
         playSound('start');
         unlockAudio(); // Unlock audio context on user gesture
-
-        const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-        const isInAppBrowser = /Line|FBAN|FBAV|Instagram/i.test(userAgent);
-
         try {
-            if (isInAppBrowser) {
-                // 僅針對 LINE, FB, IG 等會擋 Popup 的內建瀏覽器使用 Redirect
-                await signInWithRedirect(auth, googleProvider);
-            } else {
-                // 桌面版與一般手機瀏覽器 (Safari, Chrome) 預設使用 Popup
-                // 這樣能避開 iOS Safari 預設阻擋跨站追蹤 (ITP) 造成的 Redirect 失敗問題
-                const result = await signInWithPopup(auth, googleProvider);
-                onLogin(result.user);
-            }
+            // The auth observer is the single entry point for loading player data.
+            await signInWithPopup(auth, googleProvider, browserPopupRedirectResolver);
         } catch (error) {
             console.error("Login Failed:", error);
-            // If popup is blocked on desktop, fallback to redirect
-            if (error.code === 'auth/popup-blocked') {
-                await signInWithRedirect(auth, googleProvider);
-            }
+            setLoginError(getLoginErrorMessage(error));
+        } finally {
+            setSubmitting(false);
         }
     };
 
     return (
-        <div className="flex flex-col items-center justify-center h-full p-6 text-center bg-rpg-bg">
-            <div className="mb-8 relative">
+        <div className="flex flex-col items-center justify-center h-full p-4 text-center bg-rpg-bg overflow-y-auto">
+            <div className="mb-4 relative shrink-0">
                 <Sword size={80} className="text-rpg-primary relative z-10" />
             </div>
             <h1 className="font-pixel text-4xl text-rpg-accent mb-2 text-shadow tracking-widest">ENGLISH<br />HERO</h1>
-            <p className="font-retro text-gray-300 mb-8 tracking-widest">PRESS START</p>
+            <p className="font-retro text-gray-300 mb-4 tracking-widest">PRESS START</p>
 
-            <RPGButton onClick={handleGoogleLogin} color="primary" className="w-full max-w-xs py-4 text-lg">
-                GOOGLE LOGIN
+            <RPGButton onClick={handleGoogleLogin} disabled={submitting} color="primary" className="w-full max-w-xs py-3 text-lg shrink-0">
+                {submitting ? '等待 Google 登入…' : 'GOOGLE LOGIN'}
             </RPGButton>
+            {visibleError && <div role="alert" className="mt-4 max-w-xs text-sm text-amber-200 space-y-3">
+                <p>{visibleError}</p>
+                <button type="button" onClick={canRetry ? onRetry : () => window.location.reload()} className="border-2 border-amber-300 bg-slate-800 px-3 py-2 text-white hover:bg-slate-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow-300">
+                    {canRetry ? '重新讀取學習資料' : '重新載入網站'}
+                </button>
+            </div>}
         </div>
     );
 };
@@ -5833,7 +5845,7 @@ const BattleMode = ({ quizData, optionPool = null, isBoss, isChallenge = false, 
     const [battleLog, setBattleLog] = useState([]); // 戰鬥回顧記錄
     const [isSubmitting, setIsSubmitting] = useState(false); // 防止重复提交
     const [quizMode, setQuizMode] = useState(null); // 'standard' = 有發音, 'simple' = 無發音
-    const [sessionId] = useState(() => crypto.randomUUID());
+    const [sessionId] = useState(() => createSessionId());
     const completedAtRef = useRef(null);
     const [saveError, setSaveError] = useState('');
     const submittingRef = useRef(false);
@@ -6546,7 +6558,11 @@ const App = () => {
 
     // New State for Async Loading
     const [loading, setLoading] = useState(false);
-    const [authChecking, setAuthChecking] = useState(true); // Added to prevent double clicking during redirect login
+    const [authChecking, setAuthChecking] = useState(true);
+    const [loginError, setLoginError] = useState('');
+    const [loginStage, setLoginStage] = useState('');
+    const loginFlight = useRef(createSingleFlight());
+    const loadedUserId = useRef(null);
     const [levelDataCache, setLevelDataCache] = useState({});
 
     // 老師後台相關狀態
@@ -6591,32 +6607,29 @@ const App = () => {
         };
     }, [currentUser?.uid, Boolean(userData), loading]);
 
-    useEffect(() => { document.body.classList.add('loaded'); }, []);
-
     useEffect(() => {
-        let isMounted = true;
-
-        // Ensure we wait for redirect processing before abandoning the loading screen
-        getRedirectResult(auth)
-            .then(() => {
-                if (isMounted) setAuthChecking(false);
-            })
-            .catch(err => {
-                console.error("Redirect login error:", err);
-                if (isMounted) setAuthChecking(false);
-            });
-
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-            if (user && view === 'login') {
-                handleLogin(user);
-                if (isMounted) setAuthChecking(false);
+        return observeAuthStartup({
+            subscribe: (next, error) => onAuthStateChanged(auth, next, error),
+            onChange: user => {
+                setAuthChecking(false);
+                setLoginError('');
+                if (user) {
+                    handleLogin(user);
+                } else {
+                    loadedUserId.current = null;
+                    setCurrentUser(null);
+                    setUserName('');
+                    setUserData(null);
+                    setLoading(false);
+                    setView('login');
+                }
+            },
+            onFailure: error => {
+                console.error('Auth initialization failed:', error);
+                setAuthChecking(false);
+                setLoginError(getLoginErrorMessage(error));
             }
         });
-
-        return () => {
-            isMounted = false;
-            unsubscribe();
-        };
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     // --- Background Music Logic ---
@@ -6661,13 +6674,18 @@ const App = () => {
         });
     };
 
-    const handleLogin = async (user) => {
+    const handleLogin = user => loginFlight.current(user.uid, async () => {
+        if (loadedUserId.current === user.uid) return;
+        const isCurrentUser = () => auth.currentUser?.uid === user.uid;
+        setLoginError('');
+        setLoginStage('正在讀取學習紀錄…');
         setUserName(user.displayName);
         setCurrentUser(user);
         setLoading(true);
         const userRef = doc(db, 'users', user.uid);
         try {
             const userSnap = await getDoc(userRef);
+            if (!isCurrentUser()) return;
             let baseData = userSnap.exists() ? userSnap.data() : {
                 avgAccuracy: 0,
                 totalSessions: 0,
@@ -6684,8 +6702,10 @@ const App = () => {
                 correctWordIds: [],
                 phraseProgress: {}
             };
-            await synchronizeArenaClock(db, user.uid);
-            baseData = { ...baseData, ...(await getDocFromServer(userRef)).data() };
+            setLoginStage('正在同步學習紀錄…');
+            const { snapshot: synchronizedUser } = await synchronizeArenaSession(db, user.uid);
+            if (!isCurrentUser()) return;
+            baseData = { ...baseData, ...synchronizedUser.data() };
             const triviaMigration = migrateTriviaProgress(baseData);
             const migratedBaseData = {
                 ...baseData,
@@ -6701,6 +6721,7 @@ const App = () => {
             };
             let preparedData = hydratedData;
             let settlementNotification = null;
+            setLoginStage('正在同步競技場進度…');
             try {
                 const arenaPreparation = await prepareWeeklyArenaOnLogin({
                     userId: user.uid,
@@ -6712,7 +6733,8 @@ const App = () => {
                 console.warn('競技場登入結算暫時無法完成，將於下次登入重試。', error);
                 throw error;
             }
-
+            if (!isCurrentUser()) return;
+            setLoginStage('正在完成登入…');
             await setDoc(userRef, {
                 photoURL: preparedData.photoURL,
                 email: preparedData.email,
@@ -6729,7 +6751,8 @@ const App = () => {
                 weeklyArenaResults: preparedData.weeklyArenaResults || {},
                 weeklyArenaGroupAssignments: preparedData.weeklyArenaGroupAssignments || {}
             }, { merge: true });
-
+            if (!isCurrentUser()) return;
+            loadedUserId.current = user.uid;
             setUserData(preparedData);
             const lastDemotion = preparedData.arenaTierProgress?.activity?.lastDemotedAt;
             if (lastDemotion && lastDemotion > (baseData.arenaTierProgress?.activity?.lastDemotedAt || 0)) {
@@ -6739,11 +6762,17 @@ const App = () => {
             setView('map');
         } catch (e) {
             console.error("Error loading user data:", e);
-            alert("載入資料失敗，請重試");
+            if (isCurrentUser()) {
+                setLoginError(getLoginErrorMessage(e));
+                setView('login');
+            }
         } finally {
-            setLoading(false);
+            if (isCurrentUser()) {
+                setLoading(false);
+                setLoginStage('');
+            }
         }
-    };
+    });
 
     const handleWeeklyArenaSettlementAction = (destination = 'map') => {
         if (!weeklyArenaSettlement || !auth.currentUser) return;
@@ -7590,10 +7619,10 @@ const App = () => {
 
     const renderContent = () => {
         // Show LoadingScreen if loading or checking initial auth
-        if (loading || authChecking) return <LoadingScreen />;
+        if (loading || authChecking) return <LoadingScreen message={authChecking ? '正在確認登入狀態…' : loginStage || '正在載入學習資料…'} />;
 
         switch (view) {
-            case 'login': return <LoginScreen onLogin={handleLogin} />;
+            case 'login': return <LoginScreen errorMessage={loginError} canRetry={Boolean(currentUser)} onRetry={() => auth.currentUser && handleLogin(auth.currentUser)} />;
             case 'map': return <WorldMap onLogout={handleLogout} onSelectNode={handleNodeSelect} onViewJourney={() => { playSound('click'); setView('journey'); }} onViewWeeklyReport={() => { playSound('click'); setView('weekly-report'); }} onOpenAchievements={() => { playSound('click'); setView('achievement-hall'); }} onOpenAlbum={() => { playSound('click'); setTriviaAlbumBackView('map'); setView('trivia-album'); }} rewardSummary={getPendingRewardSummary(userData)} userData={userData} onUltimateChallenge={() => { playSound('click'); setView('challenge-setup'); }} onViewMistakeNotebook={() => { playSound('click'); setView('mistake-notebook'); }} records={userData?.levelRecords} advMeta={advMeta} activeTab={worldTab} onChangeTab={setWorldTab} />;
             case 'weekly-report': return <WeeklyReport
                 onBack={() => { playSound('click'); setView('map'); }}
