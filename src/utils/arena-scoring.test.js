@@ -72,6 +72,42 @@ test('一天再多滿分仍最多一萬，一週再多滿分仍最多五萬', ()
     assert.equal(getArenaWeeklyStats(history, range).score, 50000);
 });
 
+test('一天只通關一場算一天；隔天多打不能補前一天的四個名額', () => {
+    const first = attempt('monday', 0, 1000);
+    const monday = getArenaWeeklyStats([first], range);
+    assert.equal(monday.activeDays, 1);
+    assert.equal(monday.score, 2000);
+    const history = [first, ...Array.from({ length: 9 }, (_, i) => attempt(`tuesday-${i}`, 1, 1000))];
+    const stats = getArenaWeeklyStats(history, range);
+    assert.equal(stats.sessions, 10);
+    assert.equal(stats.activeDays, 2);
+    assert.equal(stats.score, 12000);
+    assert.equal(stats.selectedDays.flatMap(day => day.selected).length, 6);
+});
+
+test('首日一場加後四天各五場採計二十一場，第六天可替換首日補足二十五場', () => {
+    const history = [attempt('monday', 0, 1000), ...Array.from({ length: 4 }, (_, day) =>
+        Array.from({ length: 5 }, (_, i) => attempt(`${day + 1}-${i}`, day + 1, 1000))).flat()];
+    assert.equal(getArenaWeeklyStats(history, range).score, 42000);
+    history.push(...Array.from({ length: 5 }, (_, i) => attempt(`saturday-${i}`, 5, 1000)));
+    const stats = getArenaWeeklyStats(history, range);
+    assert.equal(stats.score, 50000);
+    assert.equal(stats.activeDays, 6);
+    assert.equal(stats.sessions, 26);
+    assert.equal(stats.selectedDays.flatMap(day => day.selected).length, 25);
+    assert.ok(stats.selectedDays.every(day => !day.selected.some(a => a.id === 'monday')));
+});
+
+test('分散七天合計二十五場，仍可能因只取五天而未採滿二十五場', () => {
+    const history = [1, 4, 4, 4, 4, 4, 4].flatMap((count, day) =>
+        Array.from({ length: count }, (_, i) => attempt(`${day}-${i}`, day, 1000)));
+    const stats = getArenaWeeklyStats(history, range);
+    assert.equal(stats.sessions, 25);
+    assert.equal(stats.activeDays, 7);
+    assert.equal(stats.selectedDays.flatMap(day => day.selected).length, 20);
+    assert.equal(stats.score, 40000);
+});
+
 test('採計正確率每回等權，未採計回合不影響同分判定', () => {
     const history = [attempt('a', 0, 800, { correctCount: 8 }),
         attempt('b', 0, 1600, { plannedQuestions: 20, totalQuestions: 20, correctCount: 18 })];

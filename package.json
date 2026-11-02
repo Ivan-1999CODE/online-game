@@ -14,9 +14,10 @@
     "test:battle": "node --test src/utils/battle-timer.test.js src/utils/battle-scoring.test.js",
     "test:arena-tier": "node --test src/utils/arena-tiers.test.js",
     "test:arena-group": "node --test src/utils/arena-groups.test.js",
-    "test:arena-simulation": "node --test src/utils/arena-simulations.test.js",
+    "test:arena-simulation": "node --test src/utils/arena-simulations.test.js src/utils/arena-personalities.test.js",
+    "audit:arena-ai": "node scripts/audit_arena_ai.mjs",
     "test:arena-leaderboard": "node --test src/utils/arena-leaderboard.test.js",
-    "test:arena": "node --test src/utils/arena-tiers.test.js src/utils/arena-groups.test.js src/utils/arena-simulations.test.js src/utils/arena-leaderboard.test.js src/utils/arena-integration.test.js src/utils/arena-scoring.test.js src/utils/arena-v2.test.js",
+    "test:arena": "node --test src/utils/arena-tiers.test.js src/utils/arena-groups.test.js src/utils/arena-simulations.test.js src/utils/arena-leaderboard.test.js src/utils/arena-integration.test.js src/utils/arena-scoring.test.js src/utils/arena-v2.test.js src/utils/arena-weekly-25.test.js src/utils/arena-personalities.test.js",
     "audit:tts": "node scripts/audit_tts_audio.mjs",
     "audit:tts:waveform": "node scripts/audit_tts_waveform_server.mjs"
   },

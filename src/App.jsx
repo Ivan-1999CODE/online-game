@@ -53,7 +53,7 @@ import {
     fillArenaGroupForDisplay,
     maskArenaName as maskStudentName
 } from './utils/arena-simulations';
-import { ARENA_V2_START, isArenaV2Week, getArenaRoundScore, getArenaWeeklyStats, getArenaHistory, arenaWeekRange, arenaDateKey, makeArenaAttempt } from './utils/arena-scoring';
+import { ARENA_V2_START, isArenaV2Week, getArenaWeeklyScoringVersion, getArenaScoringRuleLabel, getArenaRoundScore, getArenaWeeklyStats, getArenaHistory, arenaWeekRange, arenaDateKey, makeArenaAttempt } from './utils/arena-scoring';
 import { arenaNow, synchronizeArenaSession, saveArenaAttempt, publishArenaSummary, touchArenaActivity, saveLearningUpdates } from './utils/arena-session-service';
 
 // --- Pixel Art SVGs ---
@@ -2174,7 +2174,7 @@ const prepareWeeklyArenaOnLogin = async ({ userId, userData }) => {
             const existingResult = results[String(weekStart)];
             let arenaResult = existingResult;
             if ((Number(existingResult?.version) || 0) < ARENA_RESULT_VERSION
-                || (isArenaV2Week(weekStart) && existingResult?.scoringVersion !== 2)) {
+                || (isArenaV2Week(weekStart) && existingResult?.scoringVersion !== getArenaWeeklyScoringVersion(weekStart))) {
                 const groupAssignment = groupAssignments[String(weekStart)];
                 const roster = rosters[String(weekStart)];
                 if (
@@ -2774,7 +2774,7 @@ const WeeklyReport = ({ onBack, onOpenAlbum, onViewLoginCalendar, currentUserId,
                         <div className="bg-black/35 border border-white/10 p-2"><div className="font-pixel text-lg text-purple-300">{currentStats.activeDays}</div><div className="font-retro text-[10px] text-gray-300">活躍天數</div></div>
                     </div>
                     <p className="font-retro text-[10px] text-gray-400 mt-3">
-                        {isArenaV2Week(range.startMs) ? '每週一 00:00 結算；每日最高 5 回、每週最高 5 天。同分依採計正確率與參賽天數排序。' : period === 'current' ? '每週一 00:00 重新累積，週日 23:59 結算。' : '排行依每場分數加總；同分時依準確率與挑戰場次排序。'}
+                        {isArenaV2Week(range.startMs) ? `每週一 00:00 結算；${getArenaScoringRuleLabel(range.startMs)}。同分依採計正確率與參賽天數排序。` : period === 'current' ? '每週一 00:00 重新累積，週日 23:59 結算。' : '排行依每場分數加總；同分時依準確率與挑戰場次排序。'}
                     </p>
                 </section>
 
@@ -6283,7 +6283,7 @@ const BattleMode = ({ quizData, optionPool = null, isBoss, isChallenge = false, 
                             {arenaCleared
                                 ? `排行榜成績：${arenaScore} / 2000${questions.length === 10 ? '（10 題分數 × 2）' : ''}`
                                 : '未達通關條件，本回競技積分為 0；錯題仍會保存。'}
-                            <p>每天最高 5 回・每週最高 5 天</p>
+                            <p>{getArenaScoringRuleLabel(roundRange.startMs)}</p>
                             <p>請在本週結束前按下 CONTINUE 或 RETRY 儲存成績。</p>
                             {isArenaV2Week(roundRange.startMs) && <p>本回儲存後：今日 +{dayScore(afterStats) - dayScore(beforeStats)} 分 · 本週 +{afterStats.score - beforeStats.score} 分</p>}
                             {completedAtRef.current < ARENA_V2_START && <p>新版規則將於 10 月 19 日開始，當週聯賽沿用舊制。</p>}

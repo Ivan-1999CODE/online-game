@@ -1,5 +1,5 @@
 import { getSharedArenaBotEntry } from './arena-simulations.js';
-import { isArenaV2Week } from './arena-scoring.js';
+import { isArenaV2Week, getArenaWeeklyScoringVersion } from './arena-scoring.js';
 
 const emptyWeeklyStats = () => ({
     score: 0,
@@ -25,7 +25,7 @@ const normalizeWeeklyStats = (weekly = {}) => ({
 export const sortArenaLeaderboard = (entries = []) => [...entries].sort((a, b) => (
     b.weekly.score - a.weekly.score
     || b.weekly.accuracy - a.weekly.accuracy
-    || (a.weekly.scoringVersion === 2 || b.weekly.scoringVersion === 2
+    || (a.weekly.scoringVersion >= 2 || b.weekly.scoringVersion >= 2
         ? Math.min(5, b.weekly.activeDays || 0) - Math.min(5, a.weekly.activeDays || 0)
         : b.weekly.sessions - a.weekly.sessions)
     || String(a.id).localeCompare(String(b.id))
@@ -46,8 +46,9 @@ export const buildSharedArenaEntries = ({
         const publicEntry = publicById.get(userId);
         const localFallback = userId === currentUserId ? currentUserEntry : null;
         const member = membersById.get(userId);
-        const candidate = publicEntry || localFallback;
-        const source = isArenaV2Week(group.weekStart) && candidate?.weekly?.scoringVersion !== 2 ? null : candidate;
+        const isCurrent = entry => entry && (!isArenaV2Week(group.weekStart)
+            || entry.weekly?.scoringVersion === getArenaWeeklyScoringVersion(group.weekStart));
+        const source = isCurrent(publicEntry) ? publicEntry : isCurrent(localFallback) ? localFallback : null;
         return {
             id: userId,
             maskedName: source?.maskedName || member?.maskedName || '神秘勇者',

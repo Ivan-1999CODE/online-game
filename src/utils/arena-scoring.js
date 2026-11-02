@@ -1,9 +1,16 @@
 // A complete Taipei week is the migration boundary. Old results are never re-scored.
 export const ARENA_V2_START = Date.parse('2026-10-19T00:00:00+08:00');
+export const ARENA_WEEKLY_25_START = Date.parse('2026-11-02T00:00:00+08:00');
+// Attempt validation stays at v2; only weekly selection changes at this boundary.
 export const ARENA_SCORING_VERSION = 2;
 export const ARENA_DAY_MS = 86400000;
 export const ARENA_WEEK_MS = 7 * ARENA_DAY_MS;
 export const isArenaV2Week = weekStart => Number(weekStart) >= ARENA_V2_START;
+export const getArenaWeeklyScoringVersion = weekStart => Number(weekStart) >= ARENA_WEEKLY_25_START
+    ? 3 : isArenaV2Week(weekStart) ? 2 : 1;
+export const getArenaScoringRuleLabel = weekStart => getArenaWeeklyScoringVersion(weekStart) >= 3
+    ? '每日最高 5 回・整週 7 天合計取最高 25 回'
+    : '每日最高 5 回・每週最高 5 天';
 export const arenaDateKey = ms => new Date(Number(ms) + 8 * 3600000).toISOString().slice(0, 10);
 export const arenaWeekRange = ms => {
     const local = new Date(Number(ms) + 8 * 3600000);
@@ -86,15 +93,26 @@ export const getArenaWeeklyStats = (history = [], range) => {
         if (!byDate.has(key)) byDate.set(key, []);
         byDate.get(key).push({ ...attempt, arenaScore: getArenaRoundScore(attempt) });
     }
+    const scoringVersion = getArenaWeeklyScoringVersion(range.startMs);
+    const compareAttempts = (a, b) => b.arenaScore - a.arenaScore
+        || (scoringVersion >= 3 ? Date.parse(a.timestamp) - Date.parse(b.timestamp) : 0)
+        || a.id.localeCompare(b.id);
     const daily = [...byDate].map(([date, attempts]) => {
-        const selected = attempts.sort((a, b) => b.arenaScore - a.arenaScore || a.id.localeCompare(b.id)).slice(0, 5);
+        const selected = attempts.sort(compareAttempts).slice(0, 5);
         return { date, selected, sessions: attempts.length, score: selected.reduce((sum, a) => sum + a.arenaScore, 0) };
     }).sort((a, b) => b.score - a.score || a.date.localeCompare(b.date));
-    const selectedDays = daily.slice(0, 5);
-    const counted = selectedDays.flatMap(day => day.selected);
+    const counted = scoringVersion >= 3
+        ? daily.flatMap(day => day.selected).sort(compareAttempts).slice(0, 25)
+        : daily.slice(0, 5).flatMap(day => day.selected);
+    const countedIds = new Set(counted.map(attempt => attempt.id));
+    const selectedDays = daily.map(day => {
+        const selected = day.selected.filter(attempt => countedIds.has(attempt.id));
+        return { ...day, selected, score: selected.reduce((sum, attempt) => sum + attempt.arenaScore, 0) };
+    }).filter(day => day.selected.length > 0);
     return {
-        scoringVersion: ARENA_SCORING_VERSION,
-        score: selectedDays.reduce((sum, day) => sum + day.score, 0),
+        scoringVersion,
+        score: counted.reduce((sum, attempt) => sum + attempt.arenaScore, 0),
+        countedSessions: counted.length,
         sessions: clears.length,
         activeDays: daily.length,
         accuracy: counted.length ? counted.reduce((sum, a) => sum + a.correctCount / a.plannedQuestions * 100, 0) / counted.length : 0,

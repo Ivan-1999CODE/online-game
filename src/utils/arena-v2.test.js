@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { ARENA_V2_START as START, ARENA_WEEK_MS as WEEK, getArenaWeeklyStats, getArenaRoundScore } from './arena-scoring.js';
 import { settleArenaTier, applyArenaInactivity } from './arena-tiers.js';
-import { buildSharedArenaBots, getSharedArenaBotEntry } from './arena-simulations.js';
+import { ARENA_V2_PROFILES, buildSharedArenaBots, getSharedArenaBotEntry } from './arena-simulations.js';
 import { buildSharedArenaEntries, sortArenaLeaderboard } from './arena-leaderboard.js';
 
 const progress = { currentTier: 'gold', highestTier: 'diamond', activity: { anchorAt: START, processed: 0, credits: [] } };
@@ -96,6 +96,45 @@ test('跨多組模擬驗證高牌位更強、木牌有必須跨日才能超越�
     }
     const mean = a => a.reduce((sum, n) => sum + n, 0) / a.length;
     assert.ok(mean(totals.warlord) > mean(totals.wood) * 1.5);
+});
+
+test('九階 AI 逐場檢查時間、失敗場次、單日與單週上限，並獨立核算最終積分', () => {
+    for (const tier of Object.keys(ARENA_V2_PROFILES)) {
+        for (let group = 0; group < 10; group++) {
+            const bots = buildSharedArenaBots({ groupId: `audit-${group}`, weekStart: START, tier, count: 7 });
+            for (const bot of bots) {
+                assert.equal(getSharedArenaBotEntry(bot, START - 1).weekly.score, 0);
+                let previous = 0;
+                const dayScores = Array.from({ length: 7 }, () => []);
+                for (const update of bot.updates) {
+                    assert.ok(update.atMs >= START && update.atMs < START + WEEK);
+                    assert.equal(Date.parse(update.timestamp), update.atMs);
+                    assert.ok(update.correctCount <= update.totalQuestions);
+                    assert.ok(update.score >= 0 && update.score <= update.correctCount * 100);
+                    const before = getSharedArenaBotEntry(bot, update.atMs - 1).weekly;
+                    const after = getSharedArenaBotEntry(bot, update.atMs).weekly;
+                    assert.equal(before.score, previous);
+                    assert.ok(after.score >= before.score && after.score - before.score <= 2000);
+                    assert.ok(after.score <= 50000);
+                    assert.ok(after.daily.every(day => day.score <= 10000 && day.selected.length <= 5));
+                    assert.ok(after.selectedDays.length <= 5);
+                    if (!update.completed) {
+                        assert.equal(after.score, before.score);
+                        assert.equal(after.activeDays, before.activeDays);
+                        assert.equal(after.sessions, before.sessions);
+                    } else {
+                        const day = Math.floor((update.atMs - START) / 86400000);
+                        dayScores[day].push(Math.round(update.score * 20 / update.plannedQuestions));
+                    }
+                    previous = after.score;
+                }
+                const expected = dayScores.map(scores => scores.sort((a, b) => b - a).slice(0, 5)
+                    .reduce((sum, score) => sum + score, 0)).sort((a, b) => b - a).slice(0, 5)
+                    .reduce((sum, score) => sum + score, 0);
+                assert.equal(getSharedArenaBotEntry(bot, START + WEEK).weekly.score, expected);
+            }
+        }
+    }
 });
 
 test('新週不採用舊版未封頂的公開摘要；同分不靠刷場次決勝', () => {

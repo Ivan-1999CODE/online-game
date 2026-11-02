@@ -26,7 +26,7 @@ export const publicArenaSummary = (userId, data, range) => {
     const stats = getArenaWeeklyStats(Object.values(data.arenaHistory || {}), range);
     const assignment = data.weeklyArenaGroupAssignments?.[String(range.startMs)];
     return {
-        userId, weekStart: range.startMs, scoringVersion: 2,
+        userId, weekStart: range.startMs, scoringVersion: stats.scoringVersion,
         maskedName: maskArenaName(data.studentName || '神秘勇者'),
         groupId: assignment?.groupId || null,
         tier: assignment?.tier || normalizeArenaTierProgress(data.arenaTierProgress).currentTier,

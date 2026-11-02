@@ -2,8 +2,10 @@ import { normalizeArenaTier } from './arena-tiers.js';
 import { ARENA_GROUP_MEMBER_LIMIT } from './arena-groups.js';
 import { getArenaWeeklyStats, arenaWeekRange, isArenaV2Week } from './arena-scoring.js';
 
-export const ARENA_SIMULATION_VERSION = 2;
-export const getArenaSimulationVersion = weekStart => isArenaV2Week(weekStart) ? 2 : 1;
+export const ARENA_SIMULATION_VERSION = 3;
+export const ARENA_PERSONALITY_START = Date.parse('2026-11-02T00:00:00+08:00');
+export const getArenaSimulationVersion = weekStart => Number(weekStart) >= ARENA_PERSONALITY_START
+    ? 3 : isArenaV2Week(weekStart) ? 2 : 1;
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 export const ARENA_SIMULATION_PROFILES = Object.freeze({
@@ -58,6 +60,136 @@ const randomInteger = (random, min, max) => (
 
 const roundToTen = value => Math.round(value / 10) * 10;
 
+// [weekly attempts min/max, individual baseline score min/max]. Scores are
+// normalized to 2,000; final totals always go through the player's scoring path.
+export const ARENA_V3_PROFILES = Object.freeze({
+    unranked: { light: [4, 6, 900, 1100], steady: [7, 10, 1000, 1200], strong: [11, 14, 1050, 1250] },
+    wood: { light: [8, 11, 1000, 1150], steady: [12, 16, 1100, 1250], strong: [17, 22, 1150, 1300] },
+    stone: { light: [10, 13, 1100, 1250], steady: [14, 19, 1200, 1350], strong: [20, 26, 1250, 1400] },
+    bronze: { light: [12, 16, 1150, 1300], steady: [17, 22, 1250, 1450], strong: [23, 28, 1350, 1500] },
+    silver: { light: [14, 18, 1250, 1400], steady: [19, 25, 1350, 1500], strong: [25, 30, 1450, 1600] },
+    gold: { light: [16, 20, 1350, 1500], steady: [22, 28, 1450, 1600], strong: [27, 32, 1550, 1700] },
+    platinum: { light: [18, 22, 1450, 1600], steady: [24, 29, 1500, 1650], strong: [28, 34, 1650, 1800] },
+    diamond: { light: [20, 24, 1550, 1700], steady: [25, 31, 1650, 1780], strong: [30, 36, 1780, 1900] },
+    warlord: { light: [22, 26, 1650, 1800], steady: [27, 33, 1780, 1880], strong: [32, 38, 1880, 1960] }
+});
+
+export const ARENA_ROLE_WEIGHTS = Object.freeze({ strong: 20, steady: 50, light: 30 });
+const ARENA_PERSONAS = Object.freeze({
+    precise: { volume: 0.9, skill: 70, spread: 65, failure: 0.025 },
+    persistent: { volume: 1.1, skill: -60, spread: 100, failure: 0.06 },
+    steady: { volume: 1, skill: 0, spread: 80, failure: 0.04 },
+    variable: { volume: 1, skill: 0, spread: 220, failure: 0.10 }
+});
+
+const shuffled = (values, random) => {
+    const result = [...values];
+    for (let i = result.length - 1; i > 0; i--) {
+        const j = randomInteger(random, 0, i);
+        [result[i], result[j]] = [result[j], result[i]];
+    }
+    return result;
+};
+
+const chooseWeighted = (entries, random) => {
+    let roll = random() * entries.reduce((sum, [, weight]) => sum + weight, 0);
+    for (const [value, weight] of entries) {
+        roll -= weight;
+        if (roll < 0) return value;
+    }
+    return entries[entries.length - 1][0];
+};
+
+const buildV3Roles = random => {
+    // Stable prefixes also keep existing preview opponents unchanged as new
+    // real members take seats during the matching window. Fewer than 3 AI get
+    // a random subset; 3+ always have all three roles.
+    const roles = shuffled(['strong', 'steady', 'light'], random);
+    while (roles.length < ARENA_GROUP_MEMBER_LIMIT) {
+        const weights = Object.entries(ARENA_ROLE_WEIGHTS).filter(([role]) =>
+            role !== 'strong' || roles.filter(value => value === 'strong').length < 2);
+        roles.push(chooseWeighted(weights, random));
+    }
+    return roles;
+};
+
+const buildV3Updates = ({ random, tier, weekStart, botIndex, role }) => {
+    const [minCount, maxCount, minScore, maxScore] = ARENA_V3_PROFILES[tier][role];
+    const persona = Object.keys(ARENA_PERSONAS)[randomInteger(random, 0, 3)];
+    const style = ARENA_PERSONAS[persona];
+    const count = Math.max(minCount, Math.min(maxCount,
+        Math.round(randomInteger(random, minCount, maxCount) * style.volume)));
+    const baselineScore = Math.min(1960, randomInteger(random, minScore, maxScore) + style.skill);
+    const failureRate = style.failure + random() * 0.025;
+    const dayRange = role === 'light' ? [3, 5] : role === 'steady' ? [4, 6] : [5, 7];
+    const dayCount = Math.max(Math.ceil(count / 6), Math.min(count, randomInteger(random, ...dayRange)));
+    const weekendFocus = random() < 0.3;
+    const dayOrder = weekendFocus
+        ? [...shuffled([5, 6], random), ...shuffled([0, 1, 2, 3, 4], random)]
+        : shuffled([0, 1, 2, 3, 4, 5, 6], random);
+    const activityDays = dayOrder.slice(0, dayCount).sort((a, b) => a - b);
+    const sessionsByDay = new Map(activityDays.map(day => [day, 1]));
+    const dayWeights = activityDays.map(day => [day, 0.5 + random() + (weekendFocus && day >= 5 ? 0.5 : 0)]);
+    for (let i = dayCount; i < count; i++) {
+        const day = chooseWeighted(dayWeights.filter(([value]) => sessionsByDay.get(value) < 6), random);
+        sessionsByDay.set(day, sessionsByDay.get(day) + 1);
+    }
+    const preferredMinute = randomInteger(random, 8 * 60, 21 * 60);
+    const updates = [];
+    for (const [day, sessions] of sessionsByDay) {
+        const dailyForm = randomInteger(random, -45, 45);
+        for (let i = 0; i < sessions; i++) {
+            const index = updates.length;
+            const minute = random() < 0.25 ? randomInteger(random, 7 * 60, 22 * 60 + 59)
+                : Math.max(7 * 60, Math.min(22 * 60 + 59, preferredMinute + randomInteger(random, -90, 90)));
+            const atMs = Number(weekStart) + day * DAY_MS + minute * 60000 + index;
+            const plannedQuestions = random() < 0.5 ? 10 : 20;
+            const completed = random() >= failureRate;
+            const target = Math.max(0, Math.min(2000,
+                baselineScore + dailyForm + randomInteger(random, -style.spread, style.spread)));
+            const totalQuestions = completed ? plannedQuestions : randomInteger(random, 3, plannedQuestions - 1);
+            const correctCount = completed ? Math.min(plannedQuestions,
+                Math.max(Math.ceil(plannedQuestions * 0.8), Math.ceil(target * plannedQuestions / 2000))
+                + randomInteger(random, 0, 1)) : Math.max(0, totalQuestions - 3);
+            const score = Math.min(correctCount * 100, Math.round(target * plannedQuestions / 20));
+            updates.push({ id: `bot-${botIndex}-${index}`, atMs, timestamp: new Date(atMs).toISOString(),
+                scoringVersion: 2, score, plannedQuestions, totalQuestions, correctCount,
+                completed, cleared: completed });
+        }
+    }
+    updates.sort((a, b) => a.atMs - b.atMs);
+    return { role, persona, baselineScore, failureRate, activityDays, weekendFocus, updates };
+};
+
+const buildV3Bots = ({ groupId, weekStart, tier, count }) => {
+    const seed = `${groupId}:${Number(weekStart)}:${tier}:shared-v3`;
+    const roles = buildV3Roles(createSeededRandom(`${seed}:roles`));
+    const nameRandom = createSeededRandom(`${seed}:names`);
+    const availableNames = [...SHARED_ARENA_NAMES];
+    const usedMaskedNames = new Set();
+    return Array.from({ length: count }, (_, index) => {
+        const names = availableNames.filter(name => !usedMaskedNames.has(maskArenaName(name)));
+        const selectedName = names[randomInteger(nameRandom, 0, names.length - 1)];
+        availableNames.splice(availableNames.indexOf(selectedName), 1);
+        const maskedName = maskArenaName(selectedName);
+        usedMaskedNames.add(maskedName);
+        return {
+            id: `shared-bot-${getSeedNumber(`${groupId}:${index}`).toString(36)}`,
+            maskedName, simulated: true, simulationVersion: 3, weekStart: Number(weekStart), tier,
+            ...buildV3Updates({ random: createSeededRandom(`${seed}:bot:${index}`), tier, weekStart,
+                botIndex: index, role: roles[index] })
+        };
+    });
+};
+
+// A stored roster is fixed for its week, including rosters generated before an
+// update was deployed. Never silently replace its opponents on login.
+export const shouldKeepArenaSimulation = group => (
+    (Number(group.simulationVersion) || 0) >= getArenaSimulationVersion(group.weekStart)
+    || (Array.isArray(group.simulatedRivals) && (group.simulatedRivals.length > 0
+        || group.simulationStatus === 'ready'))
+);
+
 export const ARENA_V2_PROFILES = Object.freeze({
     unranked: { sessions: [8, 14], score: [1000, 1500] },
     wood: { sessions: [14, 20], score: [1150, 1600] },
@@ -106,7 +238,8 @@ export const buildSharedArenaBots = ({
     const normalizedTier = normalizeArenaTier(tier);
     const version = getArenaSimulationVersion(weekStart);
     const profile = ARENA_SIMULATION_PROFILES[normalizedTier];
-    const safeCount = Math.max(0, Math.min(8, Number(count) || 0));
+    const safeCount = Math.floor(Math.max(0, Math.min(8, Number(count) || 0)));
+    if (version === 3) return buildV3Bots({ groupId, weekStart, tier: normalizedTier, count: safeCount });
     const random = createSeededRandom(`${groupId}:${Number(weekStart)}:${normalizedTier}:shared-v1`);
     const availableNames = [...SHARED_ARENA_NAMES];
     const usedMaskedNames = new Set();
@@ -188,7 +321,7 @@ export const getSharedArenaBotEntry = (bot, asOfMs = Date.now()) => {
         maskedName: maskArenaName(bot.maskedName),
         simulated: true,
         tier: normalizeArenaTier(bot.tier),
-        weekly: bot.simulationVersion === 2 ? getArenaWeeklyStats(completedUpdates, arenaWeekRange(bot.weekStart)) : {
+        weekly: bot.simulationVersion >= 2 ? getArenaWeeklyStats(completedUpdates, arenaWeekRange(bot.weekStart)) : {
             score: completedUpdates.reduce(
                 (sum, update) => sum + (Number(update.score) || 0),
                 0

@@ -15,7 +15,8 @@ import {
 import { normalizeArenaTier } from './arena-tiers.js';
 import {
     getArenaSimulationVersion,
-    buildSharedArenaBots
+    buildSharedArenaBots,
+    shouldKeepArenaSimulation
 } from './arena-simulations.js';
 
 const GROUPS_COLLECTION = 'weeklyArenaGroups';
@@ -201,8 +202,7 @@ export const ensureWeeklyArenaGroupSimulation = async ({
 
         const group = groupSnapshot.data();
         const expectedVersion = getArenaSimulationVersion(group.weekStart);
-        // Never replace already stored old-week simulations with new-week rules.
-        if ((Number(group.simulationVersion) || 0) >= expectedVersion) {
+        if (shouldKeepArenaSimulation(group)) {
             return group;
         }
 
