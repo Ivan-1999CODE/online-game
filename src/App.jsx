@@ -11,6 +11,11 @@ import { db, auth, googleProvider } from './config/firebase';
 import { speakText, playSound, shuffleArray, playMusic, stopMusic, setMute, getMuteStatus, setVolume, unlockAudio, getTtsPilotVoice, setTtsPilotVoice } from './utils/audio';
 import { getTtsAudio } from './constants/ttsAudioData';
 import TeacherDashboard from './components/TeacherDashboard.jsx';
+import MistakeNotebook from './components/MistakeNotebook.jsx';
+import { isPendingMistake } from './utils/mistake-notebook.js';
+import { saveMistakeNotebookChange, getMistakeNotebookUpdates } from './utils/mistake-notebook-service.js';
+const MistakeNotebookPreview = import.meta.env.DEV
+    ? React.lazy(() => import('./components/MistakeNotebookPreview.jsx')) : null;
 import ArenaScoreSummary from './components/ArenaScoreSummary.jsx';
 import LoadingScreen from './components/LoadingScreen.jsx';
 import { createSingleFlight, observeAuthStartup, getLoginErrorMessage, getDataLoadErrorMessage, LOGIN_STAGES } from './utils/startup';
@@ -3878,7 +3883,7 @@ const AdvancedJourneyView = ({ records = {}, advMeta = null, mistakeStats = {} }
                 : { label: '表現穩定', color: 'text-blue-300', symbol: '→' };
 
     const advancedMistakes = Object.values(mistakeStats).filter(data =>
-        data?.source === 'advanced' && Number.isFinite(Number(data?.lesson)) && (data.count || 0) > 0
+        data?.source === 'advanced' && Number.isFinite(Number(data?.lesson)) && isPendingMistake(data)
     );
     const mistakeByLesson = advancedMistakes.reduce((groups, data) => {
         const lesson = Number(data.lesson);
@@ -4104,7 +4109,7 @@ const PhraseJourneyView = ({ progressByGroup = {}, mistakeStats = {} }) => {
     const ungradedCount = attemptedGroups.filter(({ progress }) => !progress.bestGrade).length;
 
     const phraseMistakes = Object.values(mistakeStats).filter(data =>
-        data?.source === 'phrases' && Boolean(data?.groupId) && (data.count || 0) > 0
+        data?.source === 'phrases' && Boolean(data?.groupId) && isPendingMistake(data)
     );
     const mistakesByGroup = phraseMistakes.reduce((groups, data) => {
         const groupId = data.groupId;
@@ -4838,296 +4843,6 @@ const TrialLogView = ({ onBack, onRetry, trialHistory = [] }) => {
     );
 };
 
-
-// --- 錯題筆記本元件：顯示學生常錯單字 ---
-const MistakeNotebook = ({ onBack, mistakeStats = {}, onClearMistakes, onRemoveMistake }) => {
-    const [showConfirm, setShowConfirm] = useState(false); // 清空全部確認
-    const [showSlashConfirm, setShowSlashConfirm] = useState(false); // 斬除個別確認
-    const [pendingRemoveId, setPendingRemoveId] = useState(null); // 待刪除的單字 ID
-    const [selectedUnit, setSelectedUnit] = useState('all'); // 新增：單元選擇狀態
-    const [activeTab, setActiveTab] = useState('main'); // 'main' | 'adv' | 'phrases'
-
-    useEffect(() => {
-        setSelectedUnit('all');
-    }, [activeTab]);
-
-    const isAdvancedMistake = (data = {}) => data.source === 'advanced' && Number.isFinite(Number(data.lesson));
-    const isPhraseMistake = (data = {}) => data.source === 'phrases' && Boolean(data.groupId);
-
-    // 將 mistakeStats 轉換為陣列並排序（按錯誤次數由多到少）
-    const sortedMistakes = Object.entries(mistakeStats)
-        .filter(([, data]) => data.count > 0)
-        .filter(([, data]) => {
-            if (activeTab === 'adv') return isAdvancedMistake(data);
-            if (activeTab === 'phrases') return isPhraseMistake(data);
-            return !isAdvancedMistake(data) && !isPhraseMistake(data);
-        })
-        .sort((a, b) => b[1].count - a[1].count);
-
-    const availableUnits = activeTab === 'adv'
-        ? [...new Set(sortedMistakes.map(([, data]) => Number(data.lesson)))].sort((a, b) => a - b)
-            .map(value => ({ value: String(value), label: `第 ${value} 課` }))
-        : activeTab === 'phrases'
-            ? [...new Map(sortedMistakes.map(([, data]) => [data.groupId, data.groupTitle || data.groupId])).entries()]
-                .map(([value, label]) => ({ value, label }))
-            : Array.from({ length: 16 }, (_, i) => ({ value: String(i + 1), label: `Unit ${i + 1}` }));
-
-    // 根據選擇的單元過濾錯題
-    const filteredMistakes = selectedUnit === 'all'
-        ? sortedMistakes
-        : sortedMistakes.filter(([, data]) => {
-            if (activeTab === 'adv') return Number(data.lesson) === parseInt(selectedUnit, 10);
-            if (activeTab === 'phrases') return data.groupId === selectedUnit;
-            return data.gameUnitId === parseInt(selectedUnit, 10);
-        });
-
-    const totalMistakes = sortedMistakes.reduce((sum, [id, data]) => sum + data.count, 0);
-    const activeScopeLabel = activeTab === 'adv' ? '進階' : activeTab === 'phrases' ? '片語' : '一般';
-
-    // 處理斬除按鈕點擊
-    const handleSlashClick = (id) => {
-        setPendingRemoveId(id);
-        setShowSlashConfirm(true);
-    };
-
-    // 確認斬除
-    const confirmSlash = () => {
-        if (pendingRemoveId) {
-            onRemoveMistake(pendingRemoveId);
-            setPendingRemoveId(null);
-        }
-        setShowSlashConfirm(false);
-    };
-
-    // 取消斬除
-    const cancelSlash = () => {
-        setPendingRemoveId(null);
-        setShowSlashConfirm(false);
-    };
-
-    return (
-        <div className="flex flex-col h-full bg-black">
-            {/* 頂部標題區 - 發紅光懸賞名單風格 */}
-            <div className="bg-gradient-to-b from-red-900/50 to-black p-4 border-b-4 border-red-800 relative">
-                {/* 紅光效果 */}
-                <div className="absolute inset-0 bg-red-600/10 animate-pulse pointer-events-none"></div>
-
-                {/* 返回按鈕 */}
-                <button
-                    onClick={onBack}
-                    className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/70 p-2 rounded-full text-white hover:bg-red-600 transition-colors z-10"
-                >
-                    <ArrowLeft size={20} />
-                </button>
-
-                {/* 標題 */}
-                <div className="flex flex-col items-center gap-2">
-                    <div className="flex items-center gap-2">
-                        <Skull size={24} className="text-red-500" />
-                        <h2 className="font-pixel text-red-400 text-lg tracking-wider" style={{ textShadow: '0 0 10px rgba(255,0,0,0.5)' }}>
-                            錯題筆記本
-                        </h2>
-                        <Skull size={24} className="text-red-500" />
-                    </div>
-                    <p className="font-retro text-xs text-gray-500">WANTED LIST</p>
-                </div>
-
-                {/* 統計 */}
-                <div className="flex justify-center mt-2">
-                    <div className="bg-black/60 px-4 py-1 rounded border border-red-800 flex items-center gap-2">
-                        <span className="font-pixel text-xs text-gray-400">殘留魔物:</span>
-                        <span className="font-pixel text-sm text-red-400" style={{ textShadow: '0 0 5px rgba(255,0,0,0.5)' }}>
-                            {sortedMistakes.length} {activeTab === 'phrases' ? '筆' : '字'} / {totalMistakes} 次
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            {/* 一般／進階／片語錯題切換 */}
-            <div className="flex bg-black/80 border-b-2 border-red-800">
-                <button
-                    onClick={() => { playSound('click'); setActiveTab('main'); }}
-                    className={`min-w-0 flex-1 py-2 px-1 font-pixel text-[9px] sm:text-xs transition-colors ${activeTab === 'main' ? 'bg-red-900 text-white' : 'text-gray-500 hover:text-gray-200'}`}
-                >
-                    ⚔ 一般錯題
-                </button>
-                <button
-                    onClick={() => { playSound('click'); setActiveTab('adv'); }}
-                    className={`min-w-0 flex-1 py-2 px-1 font-pixel text-[9px] sm:text-xs transition-colors ${activeTab === 'adv' ? 'bg-purple-800 text-white' : 'text-gray-500 hover:text-gray-200'}`}
-                >
-                    ✦ 進階錯題
-                </button>
-                <button
-                    onClick={() => { playSound('click'); setActiveTab('phrases'); }}
-                    className={`min-w-0 flex-1 py-2 px-1 font-pixel text-[9px] sm:text-xs transition-colors ${activeTab === 'phrases' ? 'bg-teal-800 text-white' : 'text-gray-500 hover:text-gray-200'}`}
-                >
-                    ▣ 片語錯題
-                </button>
-            </div>
-
-            {/* 單元切換標籤列 - 橫向可捲動 */}
-            <div className="bg-black/60 p-2 border-b-2 border-red-800/50 overflow-x-auto whitespace-nowrap flex gap-2" style={{ WebkitOverflowScrolling: 'touch' }}>
-                {/* 全部 */}
-                <button
-                    onClick={() => setSelectedUnit('all')}
-                    className={`px-3 py-1 font-pixel text-xs transition-colors flex-shrink-0 ${selectedUnit === 'all'
-                        ? 'text-red-500 border-b-2 border-red-500'
-                        : 'text-gray-400 hover:text-gray-200'
-                        }`}
-                >
-                    全部
-                </button>
-
-                {/* 一般顯示 16 單元，進階與片語只顯示目前有錯題的群組 */}
-                {availableUnits.map(unit => (
-                    <button
-                        key={unit.value}
-                        onClick={() => setSelectedUnit(unit.value)}
-                        className={`px-3 py-1 font-pixel text-xs transition-colors flex-shrink-0 ${selectedUnit === unit.value
-                            ? 'text-red-500 border-b-2 border-red-500'
-                            : 'text-gray-400 hover:text-gray-200'
-                            }`}
-                    >
-                        {unit.label}
-                    </button>
-                ))}
-            </div>
-
-            {/* 錯題清單 - 可捲動 */}
-            <div className="flex-1 overflow-y-auto p-4 bg-[url('https://www.transparenttextures.com/patterns/dark-leather.png')]">
-                {sortedMistakes.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center h-full text-center">
-                        <CheckCircle size={64} className="text-green-500 opacity-50 mb-4" />
-                        <p className="font-pixel text-gray-400 text-sm">尚無{activeScopeLabel}錯題</p>
-                        <p className="font-retro text-gray-600 text-xs mt-2">太棒了！繼續保持！</p>
-                    </div>
-                ) : filteredMistakes.length === 0 ? (
-                    // 選擇了特定單元但該單元無錯題
-                    <div className="flex flex-col items-center justify-center h-full text-center">
-                        <CheckCircle size={64} className="text-green-500 opacity-50 mb-4" />
-                        <p className="font-pixel text-gray-400 text-sm">本{activeTab === 'phrases' ? '群組' : activeTab === 'adv' ? '課' : '單元'}無戰敗紀錄</p>
-                        <p className="font-retro text-gray-600 text-xs mt-2">勇者繼續保持！</p>
-                    </div>
-                ) : (
-                    <div className="space-y-3 pb-20">
-                        {filteredMistakes.map(([id, data], index) => (
-                            <div
-                                key={id}
-                                className="bg-gradient-to-r from-gray-900 to-gray-800 border-2 border-red-800/50 p-3 relative hover:border-red-600 transition-colors"
-                                style={{ boxShadow: '0 0 10px rgba(255,0,0,0.1)' }}
-                            >
-                                {/* 排名標籤 */}
-                                <div className="absolute -top-2 -left-2 bg-red-800 border-2 border-black w-7 h-7 flex items-center justify-center rounded-full">
-                                    <span className="font-pixel text-[10px] text-white">#{index + 1}</span>
-                                </div>
-
-                                {/* 骷髏頭計數 */}
-                                <div className="absolute -top-2 -right-2 bg-black border-2 border-red-700 px-2 py-1 rounded flex items-center gap-1">
-                                    <span className="text-lg">💀</span>
-                                    <span className="font-pixel text-sm text-red-400">x{data.count}</span>
-                                </div>
-
-                                {/* 單字內容 */}
-                                <div className="mt-2 ml-4">
-                                    <div className="flex items-center gap-2 mb-1">
-                                        <h3 className="font-retro text-xl text-white font-bold">{data.word}</h3>
-                                        <button
-                                            onClick={() => speakText(data.word)}
-                                            className="text-gray-400 hover:text-white p-1"
-                                        >
-                                            <Volume2 size={16} />
-                                        </button>
-                                    </div>
-                                    <p className="font-retro text-sm text-gray-400 leading-relaxed">{data.chinese}</p>
-                                    {data.source === 'phrases' && (
-                                        <p className="font-pixel text-[8px] text-teal-400 mt-2 pr-16">{data.groupTitle || data.groupId}</p>
-                                    )}
-                                </div>
-
-                                {/* 個別刪除按鈕 - 右下角 */}
-                                <button
-                                    onClick={(e) => {
-                                        e.stopPropagation(); // 防止觸發卡片其他點擊事件
-                                        handleSlashClick(id);
-                                    }}
-                                    className="absolute bottom-2 right-2 text-[10px] font-pixel px-2 py-1 border border-red-500/50 text-red-400 hover:bg-red-500/20 hover:text-red-300 transition-all animate-pulse"
-                                >
-                                    🗡️ 斬除
-                                </button>
-                            </div>
-                        ))}
-                    </div>
-                )}
-            </div>
-
-            {/* 底部：清空紀錄按鈕 */}
-            {sortedMistakes.length > 0 && (
-                <div className="absolute bottom-0 w-full p-4 bg-black/90 border-t-4 border-red-800">
-                    <button
-                        onClick={() => setShowConfirm(true)}
-                        className="w-full bg-gradient-to-r from-gray-800 to-gray-700 border-4 border-gray-600 p-3 font-pixel text-gray-400 text-sm hover:from-red-900 hover:to-red-800 hover:border-red-600 hover:text-red-300 transition-all active:translate-y-1 flex items-center justify-center gap-2"
-                    >
-                        <XCircle size={16} />
-                        清空{activeScopeLabel}錯題
-                    </button>
-                </div>
-            )}
-
-            {/* 斬除確認對話框 */}
-            {showSlashConfirm && (
-                <div className="absolute inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-                    <div className="bg-gray-900 border-4 border-red-600 p-6 w-full max-w-xs text-center" style={{ boxShadow: '0 0 30px rgba(220,38,38,0.5)' }}>
-                        <Sword size={48} className="text-red-500 mx-auto mb-4" />
-                        <h3 className="font-pixel text-lg text-red-400 mb-2">[ 最終決斷 ]</h3>
-                        <p className="font-retro text-sm text-gray-300 mb-6 leading-relaxed">
-                            確認要斬除此單字魔物嗎？<br />
-                            <span className="text-xs text-gray-500">(淨化後將從名單中永久消失)</span>
-                        </p>
-                        <div className="flex gap-4 justify-center">
-                            <button
-                                onClick={cancelSlash}
-                                className="bg-gray-700 border-2 border-gray-500 px-4 py-2 font-pixel text-sm text-white hover:bg-gray-600 transition-colors"
-                            >
-                                [ 暫緩 ]
-                            </button>
-                            <button
-                                onClick={confirmSlash}
-                                className="bg-red-800 border-2 border-red-500 px-4 py-2 font-pixel text-sm text-white hover:bg-red-700 transition-colors"
-                            >
-                                [ 斬除 ]
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {/* 清空全部確認對話框 */}
-            {showConfirm && (
-                <div className="absolute inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-                    <div className="bg-gray-900 border-4 border-red-700 p-6 w-full max-w-xs text-center" style={{ boxShadow: '0 0 30px rgba(255,0,0,0.3)' }}>
-                        <Skull size={48} className="text-red-500 mx-auto mb-4" />
-                        <h3 className="font-pixel text-lg text-white mb-2">確定要清空{activeScopeLabel}錯題嗎?</h3>
-                        <p className="font-retro text-sm text-gray-400 mb-6">另一個頁籤的錯題會保留，此操作無法復原</p>
-                        <div className="flex gap-4 justify-center">
-                            <button
-                                onClick={() => setShowConfirm(false)}
-                                className="bg-gray-700 border-2 border-gray-500 px-4 py-2 font-pixel text-sm text-white hover:bg-gray-600"
-                            >
-                                取消
-                            </button>
-                            <button
-                                onClick={() => { setShowConfirm(false); onClearMistakes(activeTab); }}
-                                className="bg-red-800 border-2 border-red-500 px-4 py-2 font-pixel text-sm text-white hover:bg-red-700"
-                            >
-                                確定清空
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
-        </div>
-    );
-};
 
 const ChallengeSetup = ({ onBack, onStart, advMeta = null }) => {
     const [selectedUnits, setSelectedUnits] = useState([]);
@@ -6974,7 +6689,10 @@ const App = () => {
                         groupTitle: log.targetGroupTitle || group?.title || groupId,
                         partId: log.targetPartId || selectedNode.partId,
                         phraseId: log.targetId,
-                        lastWrongAt: playedAt
+                        lastWrongAt: playedAt,
+                        reviewStatus: 'pending',
+                        familiarAt: null,
+                        lastPracticeCorrect: false
                     };
                 });
                 updatedUserData.mistakeStats = currentMistakeStats;
@@ -7036,7 +6754,7 @@ const App = () => {
                 const getGameUnitId = (book, unit) => {
                     for (let gameUnitId = 1; gameUnitId <= 16; gameUnitId++) {
                         const mapping = LEVEL_MAPPING[gameUnitId];
-                        if (mapping && mapping.book === book && mapping.unit === unit) return gameUnitId;
+                        if (mapping && Number(mapping.book) === Number(book) && String(mapping.unit) === String(unit)) return gameUnitId;
                     }
                     return null;
                 };
@@ -7056,7 +6774,13 @@ const App = () => {
                             : null;
 
                         if (currentMistakeStats[key]) {
-                            currentMistakeStats[key].count += 1;
+                            currentMistakeStats[key] = {
+                                ...currentMistakeStats[key],
+                                count: (Number(currentMistakeStats[key].count) || 0) + 1,
+                                reviewStatus: 'pending',
+                                familiarAt: null,
+                                lastPracticeCorrect: false
+                            };
                             if (gameUnitId !== null) currentMistakeStats[key].gameUnitId = gameUnitId;
                             currentMistakeStats[key].lastWrongAt = new Date().toISOString();
                             if (isPhrase) {
@@ -7083,7 +6807,8 @@ const App = () => {
                                             phraseId: log.targetId
                                         }
                                         : { source: 'main' }),
-                                lastWrongAt: new Date().toISOString()
+                                lastWrongAt: new Date().toISOString(),
+                                reviewStatus: 'pending'
                             };
                         }
                     }
@@ -7519,61 +7244,35 @@ const App = () => {
         return shuffleArray(finalPool);
     };
 
-    // 只清空目前頁籤的錯題，避免一般／進階互相誤刪
-    const handleClearMistakes = async (scope = 'main') => {
-        if (!auth.currentUser || !userData) return;
-        try {
-            const currentMistakeStats = { ...(userData.mistakeStats || {}) };
-            const remainingMistakes = Object.fromEntries(
-                Object.entries(currentMistakeStats).filter(([, data]) => {
-                    const isAdvanced = data?.source === 'advanced' && Number.isFinite(Number(data?.lesson));
-                    const isPhrase = data?.source === 'phrases' && Boolean(data?.groupId);
-                    if (scope === 'adv') return !isAdvanced;
-                    if (scope === 'phrases') return !isPhrase;
-                    return isAdvanced || isPhrase;
-                })
-            );
-
-            const updatedUserData = { ...userData, mistakeStats: remainingMistakes };
-            setUserData(updatedUserData);
-
-            const userRef = doc(db, 'users', auth.currentUser.uid);
-            await updateDoc(userRef, {
-                mistakeStats: remainingMistakes
-            });
-        } catch (e) {
-            console.error("Failed to clear mistakes:", e);
+    const commitMistakeChange = async change => {
+        const userId = auth.currentUser?.uid;
+        if (!userId || !userData) throw new Error('登入已失效，請重新登入後再試。');
+        const mistakeStats = await saveMistakeNotebookChange(db, userId, change);
+        if (auth.currentUser?.uid === userId) {
+            setUserData(previous => previous ? { ...previous, mistakeStats } : previous);
         }
+        return mistakeStats;
     };
 
-    const handleRemoveMistake = async (wordId) => {
-        if (!auth.currentUser || !userData) return;
-        try {
-            // 建立新的 mistakeStats 副本，移除指定的 wordId
-            const currentMistakeStats = { ...(userData.mistakeStats || {}) };
-            delete currentMistakeStats[wordId];
+    const handleClearFamiliarMistakes = (scope, unit, ids) => commitMistakeChange({ type: 'clear-familiar', scope, unit, ids });
+    const handleRemoveMistake = id => commitMistakeChange({ type: 'remove', ids: [id] });
+    const handleSaveMistakePractice = result => commitMistakeChange({ type: 'practice', result });
+    const handleMistakeReviewStatus = (ids, status, options = {}) => commitMistakeChange({
+        type: 'status', ids, status, correctSessionId: options.correctSessionId,
+        changedAt: new Date().toISOString()
+    });
 
-            // 更新本地狀態
-            const updatedUserData = { ...userData, mistakeStats: currentMistakeStats };
-            setUserData(updatedUserData);
-
-            // 更新 Firestore
-            const userRef = doc(db, 'users', auth.currentUser.uid);
-            await updateDoc(userRef, {
-                mistakeStats: currentMistakeStats
-            });
-        } catch (e) {
-            console.error("Failed to remove mistake:", e);
-        }
-    };
-
+    const getMistakeOptionPool = () => [
+        ...Object.entries(userData?.mistakeStats || {}).map(([id, entry]) => ({ ...entry, id })),
+        ...Object.values(levelDataCache).flatMap(content => Object.values(content || {}).filter(Array.isArray).flat())
+    ];
     const getPhraseBattleData = () => {
         if (selectedNode?.type !== 'phrase') return [];
         const group = PHRASE_GROUP_BY_ID.get(selectedNode.id);
         if (!group) return [];
         const progress = normalizePhraseProgress(userData?.phraseProgress?.[group.id]);
         const wrongPhraseIds = Object.values(userData?.mistakeStats || {})
-            .filter(data => data?.source === 'phrases' && data.groupId === group.id && data.count > 0)
+            .filter(data => data?.source === 'phrases' && data.groupId === group.id && isPendingMistake(data))
             .map(data => data.phraseId);
         const phrases = group.phrases.map(phrase => withPhraseAudio({ ...phrase, groupTitle: group.title }));
         return selectSmartPhrases(phrases, {
@@ -7638,7 +7337,7 @@ const App = () => {
             case 'trivia-album': return <TriviaAlbum onBack={() => { playSound('click'); setView(triviaAlbumBackView); }} userData={userData} onClaimTrivia={handleClaimTrivia} />;
             case 'login-calendar': return <LoginCalendar onBack={() => { playSound('click'); setView('weekly-report'); }} userData={userData} />;
             case 'achievement-hall': return <AchievementHall onBack={() => { playSound('click'); setView('map'); }} userData={userData} />;
-            case 'mistake-notebook': return <MistakeNotebook onBack={() => { playSound('click'); setView('map'); }} mistakeStats={userData?.mistakeStats} onClearMistakes={handleClearMistakes} onRemoveMistake={handleRemoveMistake} />;
+            case 'mistake-notebook': return <MistakeNotebook onBack={() => { playSound('click'); setView('map'); }} mistakeStats={userData?.mistakeStats} onClearFamiliarMistakes={handleClearFamiliarMistakes} onRemoveMistake={handleRemoveMistake} onSavePractice={handleSaveMistakePractice} onReviewStatusChange={handleMistakeReviewStatus} optionPool={getMistakeOptionPool()} />;
             case 'journey': return <JourneyMode onBack={() => { playSound('click'); setView('map'); }} onViewTrialLog={() => { playSound('click'); setView('trial-log'); }} records={userData?.levelRecords} advMeta={advMeta} mistakeStats={userData?.mistakeStats} phraseProgress={userData?.phraseProgress} arenaTierProgress={userData?.arenaTierProgress} />;
             case 'trial-log': return <TrialLogView onBack={() => { playSound('click'); setView('journey'); }} onRetry={() => { playSound('click'); setView('challenge-setup'); }} trialHistory={userData?.trialHistory} />;
             case 'challenge-setup': return <ChallengeSetup onBack={() => { playSound('click'); setView('map'); }} onStart={handleStartChallenge} advMeta={advMeta} />;
@@ -7884,7 +7583,7 @@ const PhraseLibraryPreviewLab = () => {
     const previewChallengeOptionPool = isPhraseChallengeSelection(previewChallengeUnits)
         ? getPhraseChallengeOptionPool(previewChallengeUnits)
         : [];
-    const previewPhraseMistakes = {
+    const [previewNotebookData, setPreviewNotebookData] = useState({ mistakeStats: {
         [`phrases:${firstGroup.id}:${firstGroup.phrases[0].id}`]: {
             count: 2,
             word: firstGroup.phrases[0].word,
@@ -7895,6 +7594,12 @@ const PhraseLibraryPreviewLab = () => {
             partId: firstGroup.partId,
             phraseId: firstGroup.phrases[0].id
         }
+    } });
+    const previewPhraseMistakes = previewNotebookData.mistakeStats;
+    const handlePreviewNotebookChange = async change => {
+        const updates = getMistakeNotebookUpdates(previewNotebookData, change);
+        setPreviewNotebookData(previous => ({ ...previous, ...updates }));
+        return updates?.mistakeStats || previewPhraseMistakes;
     };
 
     const handlePreviewComplete = result => {
@@ -7950,8 +7655,14 @@ const PhraseLibraryPreviewLab = () => {
         content = <MistakeNotebook
             onBack={() => setScreen('map')}
             mistakeStats={previewPhraseMistakes}
-            onClearMistakes={() => {}}
-            onRemoveMistake={() => {}}
+            optionPool={PHRASE_GROUPS.flatMap(group => group.phrases)}
+            onSavePractice={result => handlePreviewNotebookChange({ type: 'practice', result })}
+            onReviewStatusChange={(ids, status, options = {}) => handlePreviewNotebookChange({
+                type: 'status', ids, status, correctSessionId: options.correctSessionId,
+                changedAt: new Date().toISOString()
+            })}
+            onClearFamiliarMistakes={(scope, unit, ids) => handlePreviewNotebookChange({ type: 'clear-familiar', scope, unit, ids })}
+            onRemoveMistake={id => handlePreviewNotebookChange({ type: 'remove', ids: [id] })}
         />;
     } else if (screen === 'study' && selectedGroup && selectedPart) {
         content = <PhraseGroupStudy
@@ -8005,6 +7716,9 @@ const PhraseLibraryPreviewLab = () => {
 };
 
 const RootApp = () => {
+    if (import.meta.env.DEV && new URLSearchParams(window.location.search).get('mistake-preview') === '1') {
+        return <React.Suspense fallback={<div>載入測試畫面…</div>}><MistakeNotebookPreview /></React.Suspense>;
+    }
     if (import.meta.env.DEV && new URLSearchParams(window.location.search).get('arena-scoring-preview') === '1') {
         return <React.Suspense fallback={<div>載入測試畫面…</div>}><ArenaScoringPreview /></React.Suspense>;
     }
