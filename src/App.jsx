@@ -5542,14 +5542,60 @@ const PhraseGroupStudy = ({ group, part, onBack, onStartQuiz }) => {
     );
 };
 
+const createBattleQuestionSet = ({ quizData, optionPool, isPhrase, questionLimit }) => {
+    if (!Array.isArray(quizData) || quizData.length === 0) {
+        return {
+            questions: [],
+            questionBuildError: isPhrase
+                ? '找不到可用的題目，請返回片語列表後再試一次。'
+                : '找不到可用的題目，請返回上一頁後再試一次。'
+        };
+    }
+    try {
+        if (isPhrase) {
+            const questions = buildPhraseQuestions({
+                selectedPhrases: quizData,
+                groupPhrases: quizData,
+                partPhrases: Array.isArray(optionPool) && optionPool.length > 0 ? optionPool : quizData
+            });
+            if (questions.length === 0) throw new Error('片語題組為空');
+            return { questions, questionBuildError: '' };
+        }
+        const generatedQuestions = quizData.flatMap(item => {
+            const otherItems = quizData.filter(i => i.id !== item.id);
+            // Avoid distractors with the same (or near-identical) translation.
+            const eligibleDistractors = otherItems.filter(option => !hasAmbiguousTranslation(item, option));
+            if (eligibleDistractors.length < 3) return [];
+            const distractors = shuffleArray(eligibleDistractors).slice(0, 3);
+            const options = shuffleArray([item, ...distractors]);
+            const hasAmbiguousChinesePrompt = otherItems.some(option => hasAmbiguousTranslation(item, option));
+            const mode = needsEnglishPrompt(item) || hasAmbiguousChinesePrompt || Math.random() > 0.5
+                ? 'en-ch'
+                : 'ch-en';
+            return [{ target: item, options, mode }];
+        });
+        const limit = Math.min(generatedQuestions.length, questionLimit);
+        const questions = shuffleArray(generatedQuestions).slice(0, limit);
+        if (questions.length === 0) throw new Error('找不到足夠的有效選項');
+        return { questions, questionBuildError: '' };
+    } catch (error) {
+        console.error('Battle question setup failed:', error);
+        return { questions: [], questionBuildError: '題目建立失敗，請返回上一頁後重新開始。' };
+    }
+};
+
 const BattleMode = ({ quizData, optionPool = null, isBoss, isChallenge = false, isPhrase = false, requiresPassingGrade = false, difficulty = 'hard', questionLimit = 20, onComplete, onFlee, currentRecord = null, arenaHistory = {} }) => {
     // 所有模式都先顯示 menu 選擇作答模式
     const isEasy = !isPhrase && difficulty === 'easy';
     const maxHp = isPhrase ? 3 : (isEasy ? 5 : 3); // 片語固定 3 條命
     const [status, setStatus] = useState('menu');
     const [currentQIndex, setCurrentQIndex] = useState(0);
-    const [questions, setQuestions] = useState([]);
-    const [questionBuildError, setQuestionBuildError] = useState('');
+    // A mounted BattleMode owns one run. Audio controls and background profile
+    // updates may supply fresh arrays, but must not redraw an active question.
+    // RETRY changes battleKey and mounts a new run with a fresh question set.
+    const [{ questions, questionBuildError }, setQuestionSet] = useState(() =>
+        createBattleQuestionSet({ quizData, optionPool, isPhrase, questionLimit })
+    );
     const [score, setScore] = useState(0);
     const [hp, setHp] = useState(maxHp);
     const [feedback, setFeedback] = useState(null);
@@ -5572,53 +5618,6 @@ const BattleMode = ({ quizData, optionPool = null, isBoss, isChallenge = false, 
     const questionDeadlineRef = useRef(null);
     const timeoutHandledRef = useRef(false);
     const lastTickSecondRef = useRef(null);
-
-    useEffect(() => {
-        if (!Array.isArray(quizData) || quizData.length === 0) {
-            setQuestions([]);
-            setQuestionBuildError(isPhrase
-                ? '找不到可用的題目，請返回片語列表後再試一次。'
-                : '找不到可用的題目，請返回上一頁後再試一次。');
-            return;
-        }
-        try {
-            setQuestionBuildError('');
-            if (isPhrase) {
-                const phraseQuestions = buildPhraseQuestions({
-                    selectedPhrases: quizData,
-                    groupPhrases: quizData,
-                    partPhrases: Array.isArray(optionPool) && optionPool.length > 0 ? optionPool : quizData
-                });
-                if (phraseQuestions.length === 0) throw new Error('片語題組為空');
-                setQuestions(phraseQuestions);
-                return;
-            }
-            const generatedQuestions = quizData.flatMap(item => {
-                const otherItems = quizData.filter(i => i.id !== item.id);
-                // A direct translation question is unfair when two choices have the
-                // same (or near-identical) Chinese meaning. Prefer unambiguous
-                // distractors, regardless of the chapter the words came from.
-                const eligibleDistractors = otherItems.filter(option => !hasAmbiguousTranslation(item, option));
-                if (eligibleDistractors.length < 3) return [];
-                const distractors = shuffleArray(eligibleDistractors).slice(0, 3);
-                const options = shuffleArray([item, ...distractors]);
-                // Randomly decide mode: 'en-ch' (English Q, Chinese A) or 'ch-en' (Chinese Q, English A)
-                const hasAmbiguousChinesePrompt = otherItems.some(option => hasAmbiguousTranslation(item, option));
-                const mode = needsEnglishPrompt(item) || hasAmbiguousChinesePrompt || Math.random() > 0.5
-                    ? 'en-ch'
-                    : 'ch-en';
-                return [{ target: item, options, mode }];
-            });
-            const limit = Math.min(generatedQuestions.length, questionLimit);
-            const nextQuestions = shuffleArray(generatedQuestions).slice(0, limit);
-            if (nextQuestions.length === 0) throw new Error('找不到足夠的有效選項');
-            setQuestions(nextQuestions);
-        } catch (error) {
-            console.error('Battle question setup failed:', error);
-            setQuestions([]);
-            setQuestionBuildError('題目建立失敗，請返回上一頁後重新開始。');
-        }
-    }, [quizData, optionPool, isBoss, isPhrase, questionLimit]);
 
     // 簡易 / 聽力模式：每題出現時自動播放正確單字的發音
     useEffect(() => {
@@ -5908,7 +5907,10 @@ const BattleMode = ({ quizData, optionPool = null, isBoss, isChallenge = false, 
                         if (questions.length === 0 || questionBuildError) return;
                         // 聽力模式：所有題目統一為「聽英文發音、選中文」(en-ch)
                         if (quizMode === 'listening') {
-                            setQuestions(prev => prev.map(q => ({ ...q, mode: 'en-ch' })));
+                            setQuestionSet(prev => ({
+                                ...prev,
+                                questions: prev.questions.map(q => ({ ...q, mode: 'en-ch' }))
+                            }));
                         }
                         setStatus('playing');
                     }}

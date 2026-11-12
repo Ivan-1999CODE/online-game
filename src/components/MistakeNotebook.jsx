@@ -67,6 +67,7 @@ function MistakePractice({ run, mistakeStats, onBack, onRetry, onSavePractice, o
     const [showQuit, setShowQuit] = useState(false);
     const answerLock = useRef(false);
     const saveLock = useRef(false);
+    const savePracticeRef = useRef(onSavePractice);
     const markLock = useRef(false);
     const submission = useRef(null);
     const headingRef = useRef(null);
@@ -81,6 +82,12 @@ function MistakePractice({ run, mistakeStats, onBack, onRetry, onSavePractice, o
         headingRef.current?.focus();
         if (contentRef.current) contentRef.current.scrollTop = 0;
     }, [index, finished]);
+
+    // Keep the latest save handler without restarting the answer's advance timer
+    // when unrelated parent state (such as music volume) changes.
+    useEffect(() => {
+        savePracticeRef.current = onSavePractice;
+    }, [onSavePractice]);
 
     const recordAnswer = value => {
         if (answerLock.current || feedback || finished || showQuit) return;
@@ -98,14 +105,14 @@ function MistakePractice({ run, mistakeStats, onBack, onRetry, onSavePractice, o
         setSaveState('saving');
         setSaveError('');
         try {
-            if (!onSavePractice) throw new Error('missing-save-handler');
-            await onSavePractice(payload);
+            if (!savePracticeRef.current) throw new Error('missing-save-handler');
+            await savePracticeRef.current(payload);
             setSaveState('saved');
         } catch {
             setSaveState('error');
             setSaveError('練習結果尚未儲存。請確認連線後重試，單字仍保留在筆記本。');
         } finally { saveLock.current = false; }
-    }, [onSavePractice]);
+    }, []);
 
     // One selection per question, then advance automatically. The latest render
     // includes the final answer; cleanup pauses on the quit dialog and cancels
