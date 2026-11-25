@@ -1,4 +1,4 @@
-import { hasAmbiguousTranslation } from '../constants/quizOptionRules.js';
+import { selectQuizOptions } from '../constants/quizOptionRules.js';
 
 export const PHRASE_CLEAR_TARGET = 3;
 export const PHRASE_QUESTION_LIMIT = 10;
@@ -107,25 +107,17 @@ export const selectSmartPhrases = (phrases, {
     return shuffleWith(ordered.slice(0, Math.min(limit, phrases.length)), random);
 };
 
-const addDistinctDistractors = (choices, candidates, target, limit) => {
-    for (const candidate of candidates) {
-        if (choices.length >= limit) break;
-        if (candidate.id === target.id || choices.some(choice => choice.id === candidate.id)) continue;
-        if (choices.some(choice => hasAmbiguousTranslation(choice, candidate))) continue;
-        choices.push(candidate);
-    }
-    return choices;
-};
-
 export const buildPhraseQuestions = ({
     selectedPhrases = [],
     groupPhrases = [],
     partPhrases = [],
     random = Math.random
 } = {}) => selectedPhrases.map(target => {
-    const choices = [target];
-    addDistinctDistractors(choices, shuffleWith(groupPhrases, random), target, 4);
-    addDistinctDistractors(choices, shuffleWith(partPhrases, random), target, 4);
+    const groupCandidates = shuffleWith(groupPhrases, random);
+    let choices = selectQuizOptions(target, groupCandidates);
+    if (choices.length < 4) {
+        choices = selectQuizOptions(target, [...groupCandidates, ...shuffleWith(partPhrases, random)]);
+    }
     if (choices.length < 4) throw new Error(`片語 ${target.id} 找不到 3 個不重複的有效選項`);
 
     return {

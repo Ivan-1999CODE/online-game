@@ -1,69 +1,84 @@
-// Rules for vocabulary that cannot be fairly tested as direct translations.
-// Keep this list data-driven: add a word to a group instead of adding a
-// chapter-specific condition in the quiz component.
-const SEMANTIC_CONFLICT_GROUPS = [
-    ['boy', 'man', 'guy', 'male', 'gentleman'],
-    ['girl', 'woman', 'female', 'lady'],
-    ['good', 'great', 'nice', 'fine', 'wonderful', 'excellent'],
-    ['beautiful', 'pretty', 'nice-looking', 'handsome'],
-    ['thin', 'slim', 'slender'],
-    ['smart', 'intelligent', 'clever'],
-    ['big', 'large'], ['small', 'little'], ['tall', 'high'],
-    ['doctor', 'dr.'], ['mr.', 'sir'],
-    ['job', 'work'], ['begin', 'start'], ['die', 'death'],
-    ['dinner', 'supper'], ['soccer', 'football'], ['hello', 'hi'],
-    ['mistake', 'error'], ['fact', 'truth'], ['far', 'distant'],
-    ['country', 'nation'], ['america', 'usa'], ['sunny', 'clear'],
-    ['humid', 'wet'], ['certain', 'sure'], ['almost', 'nearly'],
-    ['maybe', 'perhaps', 'probably'], ['also', 'too', 'either'],
-    ['many', 'much', 'a lot of'], ['garbage', 'trash'], ['hat', 'cap'],
-    ['arrive', 'get to', 'arrive at', 'arrive in'],
-    ['invite', 'invitation'], ['pollution', 'pollute'],
-    ['discussion', 'discuss'], ['talent', 'genius'],
-    ['pleased', 'glad'], ['foolish', 'silly'],
-    ['hard-working', 'diligent'], ['sincere', 'honest'],
-    ['everyone', 'everybody'], ['i', 'me'], ['we', 'us'],
-    ['they', 'them'], ['your', 'yours'], ['her', 'hers'],
-    ['our', 'ours'], ['their', 'theirs'],
-    ['because', 'because of'], ['do exercise', 'play sports'],
-    ['sit down', 'have / take a seat'], ['pack', 'pack up']
-];
+import { SEMANTIC_CONFLICT_GROUPS } from './quizConflictGroups.js';
+import { CHINESE_MEANING_GROUPS } from './chineseMeaningGroups.js';
 
-const normaliseWord = (value = '') => String(value).trim().toLowerCase();
+export const normaliseEnglish = value => String(value ?? '').normalize('NFKC')
+    .replace(/[‘’]/g, "'").trim().replace(/\s+/g, ' ').toLowerCase();
 
-// Parenthetical notes explain usage but should not make
-// the option eligible as a separate translation choice.
-export const normaliseChineseMeaning = (value = '') => String(value)
+// 只比對完整義項，例如「小孩；兒童」和「名: 小孩 / 動: 開玩笑」都包含「小孩」。
+const partOfSpeechPrefix = /^(?:\[[^\]]+\]|(?:名|動|形容?|副|介|代|連接|助動|感嘆|數|量)(?:詞)?\s*:)\s*/;
+const chineseSenses = value => String(value ?? '').normalize('NFKC')
     .replace(/\([^)]*\)/g, '')
-    .replace(/\uFF08[^\uFF09]*\uFF09/g, '')
-    .replace(/[\u3001\uFF0C,\/\uFF0F]/g, ' ')
+    .replace(/\.{3,}/g, '…')
     .replace(/\s+/g, ' ')
-    .trim();
+    .split(/[;,、/]/)
+    .map(sense => sense.trim()
+        .replace(partOfSpeechPrefix, '')
+        .replace(/[。.!?]+$/g, '').trim())
+    .filter(Boolean);
 
-const CONFLICT_GROUP_BY_WORD = new Map();
-SEMANTIC_CONFLICT_GROUPS.forEach((group, index) => {
-    group.forEach(word => {
-        const key = normaliseWord(word);
-        const groups = CONFLICT_GROUP_BY_WORD.get(key) || new Set();
-        groups.add(index);
-        CONFLICT_GROUP_BY_WORD.set(key, groups);
+export const normaliseChineseMeaning = value => chineseSenses(value).join('；');
+
+const indexGroups = (groups, keysFor) => {
+    const byTerm = new Map();
+    groups.forEach((terms, group) => {
+        for (const term of terms) {
+            for (const key of keysFor(term)) {
+                if (!byTerm.has(key)) byTerm.set(key, new Set());
+                byTerm.get(key).add(group);
+            }
+        }
     });
+    return byTerm;
+};
+
+const englishGroups = indexGroups(SEMANTIC_CONFLICT_GROUPS, term => [normaliseEnglish(term)]);
+const chineseGroups = indexGroups(CHINESE_MEANING_GROUPS, term => {
+    const key = normaliseChineseMeaning(term);
+    // 只展開清單裡形容詞的「的」，保留「目的地」、「不漂亮」等完整語義。
+    return key.endsWith('的') && key.length > 2 ? [key, key.slice(0, -1)] : [key];
 });
 
-const sharesConflictGroup = (leftWord, rightWord) => {
-    const leftGroups = CONFLICT_GROUP_BY_WORD.get(normaliseWord(leftWord));
-    const rightGroups = CONFLICT_GROUP_BY_WORD.get(normaliseWord(rightWord));
-    return Boolean(leftGroups && rightGroups && [...leftGroups].some(group => rightGroups.has(group)));
+const shareGroup = (index, left, right) => {
+    const leftGroups = index.get(left);
+    const rightGroups = index.get(right);
+    if (!leftGroups || !rightGroups) return false;
+    for (const group of leftGroups) {
+        if (rightGroups.has(group)) return true;
+    }
+    return false;
 };
 
 export const hasAmbiguousTranslation = (left, right) => {
-    if (!left || !right || left.id === right.id) return false;
-    const leftMeaning = normaliseChineseMeaning(left.chinese);
-    const rightMeaning = normaliseChineseMeaning(right.chinese);
-    return Boolean(leftMeaning && leftMeaning === rightMeaning)
-        || sharesConflictGroup(left.word, right.word);
+    if (!left || !right) return false;
+    const leftWord = normaliseEnglish(left.word);
+    const rightWord = normaliseEnglish(right.word);
+    if (leftWord && (leftWord === rightWord || shareGroup(englishGroups, leftWord, rightWord))) return true;
+    const rightSenses = chineseSenses(right.chinese);
+    return chineseSenses(left.chinese).some(a => rightSenses.some(b => a === b || shareGroup(chineseGroups, a, b)));
 };
 
-// A direct Chinese prompt is not a reliable one-to-one question for
-// words in a conflict group. Use English-to-Chinese for those targets.
-export const needsEnglishPrompt = (item) => CONFLICT_GROUP_BY_WORD.has(normaliseWord(item?.word));
+export const needsEnglishPrompt = item => englishGroups.has(normaliseEnglish(item?.word));
+
+// Candidates are already in the caller's preferred (usually shuffled) order.
+// A word with two senses can block two otherwise compatible choices. Try the
+// next combination before returning a short question to a small practice pool.
+export const selectQuizOptions = (target, orderedCandidates) => {
+    const choices = [target];
+    let best = choices.slice();
+    const search = start => {
+        if (choices.length > best.length) best = choices.slice();
+        if (best.length === 4) return true;
+        for (let i = start; i < orderedCandidates.length; i++) {
+            if (choices.length + orderedCandidates.length - i <= best.length) break;
+            const candidate = orderedCandidates[i];
+            if (choices.some(choice => (choice.id != null && String(choice.id) === String(candidate.id))
+                || hasAmbiguousTranslation(choice, candidate))) continue;
+            choices.push(candidate);
+            if (search(i + 1)) return true;
+            choices.pop();
+        }
+        return false;
+    };
+    search(0);
+    return best;
+};

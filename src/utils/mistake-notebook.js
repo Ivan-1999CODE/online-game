@@ -1,9 +1,7 @@
-import { hasAmbiguousTranslation, normaliseChineseMeaning } from '../constants/quizOptionRules.js';
+import { normaliseEnglish, selectQuizOptions } from '../constants/quizOptionRules.js';
 
 const own = (value, key) => Object.prototype.hasOwnProperty.call(value, key);
 const count = value => Math.max(0, Number(value) || 0);
-const normaliseEnglish = value => String(value ?? '').normalize('NFKC')
-    .replace(/[\u2018\u2019]/g, "'").trim().replace(/\s+/g, ' ').toLowerCase();
 
 export const getMistakeScope = (data = {}) => {
     if (data?.source === 'advanced' && data.lesson != null && Number.isFinite(Number(data.lesson))) return 'adv';
@@ -48,26 +46,17 @@ const shuffled = (items, random) => {
 };
 
 const isUsableWord = entry => entry && entry.id != null && normaliseEnglish(entry.word) && String(entry.chinese ?? '').trim();
-const conflicts = (left, right) => String(left.id) === String(right.id)
-    || normaliseEnglish(left.word) === normaliseEnglish(right.word)
-    || normaliseChineseMeaning(left.chinese) === normaliseChineseMeaning(right.chinese)
-    || hasAmbiguousTranslation(left, right);
 
 // Every selected notebook entry is a target exactly once. The wider pool only supplies choices.
 export const buildMistakePracticeQuestions = (entries = [], optionPool = [], random = Math.random) => {
     const targets = [...new Map(entries.filter(isUsableWord).map(entry => [String(entry.id), entry])).values()];
     const pool = [...targets, ...optionPool.filter(isUsableWord)];
     return shuffled(targets, random).map(target => {
-        const distractors = [];
-        for (const candidate of shuffled(pool, random)) {
-            if (conflicts(target, candidate) || distractors.some(option => conflicts(option, candidate))) continue;
-            distractors.push(candidate);
-            if (distractors.length === 3) break;
-        }
+        const choices = selectQuizOptions(target, shuffled(pool, random));
         return {
             target,
-            mode: distractors.length ? 'en-ch' : 'spelling',
-            options: distractors.length ? shuffled([target, ...distractors], random) : []
+            mode: choices.length > 1 ? 'en-ch' : 'spelling',
+            options: choices.length > 1 ? shuffled(choices, random) : []
         };
     });
 };

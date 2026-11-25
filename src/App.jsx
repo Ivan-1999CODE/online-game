@@ -23,7 +23,7 @@ import { assertArenaLoginStateUnchanged } from './utils/arena-login-state';
 import { createSessionId } from './utils/session-id';
 const ArenaScoringPreview = React.lazy(() => import('./components/ArenaScoringPreview.jsx'));
 import { TRIVIA_CARDS, TRIVIA_CATEGORIES, TRIVIA_GROUPS, TRIVIA_LEGACY_ID_MAP, TRIVIA_SOURCES } from './constants/triviaData';
-import { hasAmbiguousTranslation, needsEnglishPrompt } from './constants/quizOptionRules';
+import { createBattleQuestionSet } from './utils/battle-questions.js';
 import { getBattleTimerSnapshot } from './utils/battle-timer';
 import { getBattleAnswerScore } from './utils/battle-scoring';
 import phraseLibrary from './data/phraseLibrary.json';
@@ -31,7 +31,6 @@ import {
     PHRASE_CLEAR_TARGET,
     PHRASE_QUESTION_LIMIT,
     addPhraseAttempt,
-    buildPhraseQuestions,
     getPhraseGrade,
     normalizePhraseProgress,
     selectSmartPhrases
@@ -5542,48 +5541,6 @@ const PhraseGroupStudy = ({ group, part, onBack, onStartQuiz }) => {
     );
 };
 
-const createBattleQuestionSet = ({ quizData, optionPool, isPhrase, questionLimit }) => {
-    if (!Array.isArray(quizData) || quizData.length === 0) {
-        return {
-            questions: [],
-            questionBuildError: isPhrase
-                ? '找不到可用的題目，請返回片語列表後再試一次。'
-                : '找不到可用的題目，請返回上一頁後再試一次。'
-        };
-    }
-    try {
-        if (isPhrase) {
-            const questions = buildPhraseQuestions({
-                selectedPhrases: quizData,
-                groupPhrases: quizData,
-                partPhrases: Array.isArray(optionPool) && optionPool.length > 0 ? optionPool : quizData
-            });
-            if (questions.length === 0) throw new Error('片語題組為空');
-            return { questions, questionBuildError: '' };
-        }
-        const generatedQuestions = quizData.flatMap(item => {
-            const otherItems = quizData.filter(i => i.id !== item.id);
-            // Avoid distractors with the same (or near-identical) translation.
-            const eligibleDistractors = otherItems.filter(option => !hasAmbiguousTranslation(item, option));
-            if (eligibleDistractors.length < 3) return [];
-            const distractors = shuffleArray(eligibleDistractors).slice(0, 3);
-            const options = shuffleArray([item, ...distractors]);
-            const hasAmbiguousChinesePrompt = otherItems.some(option => hasAmbiguousTranslation(item, option));
-            const mode = needsEnglishPrompt(item) || hasAmbiguousChinesePrompt || Math.random() > 0.5
-                ? 'en-ch'
-                : 'ch-en';
-            return [{ target: item, options, mode }];
-        });
-        const limit = Math.min(generatedQuestions.length, questionLimit);
-        const questions = shuffleArray(generatedQuestions).slice(0, limit);
-        if (questions.length === 0) throw new Error('找不到足夠的有效選項');
-        return { questions, questionBuildError: '' };
-    } catch (error) {
-        console.error('Battle question setup failed:', error);
-        return { questions: [], questionBuildError: '題目建立失敗，請返回上一頁後重新開始。' };
-    }
-};
-
 const BattleMode = ({ quizData, optionPool = null, isBoss, isChallenge = false, isPhrase = false, requiresPassingGrade = false, difficulty = 'hard', questionLimit = 20, onComplete, onFlee, currentRecord = null, arenaHistory = {} }) => {
     // 所有模式都先顯示 menu 選擇作答模式
     const isEasy = !isPhrase && difficulty === 'easy';
@@ -7293,6 +7250,12 @@ const App = () => {
         })));
     };
 
+    const getUnitOptionPool = () => {
+        if (view !== 'quiz' || selectedNode?.type !== 'unit') return [];
+        const content = levelDataCache[selectedNode.id] || GAME_DATA[selectedNode.id].content;
+        return [...content.vocab, ...content.collocation, ...content.polysemy, ...content.sentences];
+    };
+
     const getQuizData = () => {
         // 終極試煉模式 - 使用混合出題
         if (view === 'challenge-quiz') {
@@ -7390,7 +7353,7 @@ const App = () => {
                 return <BattleMode
                     key={battleKey}
                     quizData={getQuizData()}
-                    optionPool={isPhraseChallenge ? getPhraseChallengeOptionPool(challengeUnits) : null}
+                    optionPool={isPhraseChallenge ? getPhraseChallengeOptionPool(challengeUnits) : getUnitOptionPool()}
                     isBoss={selectedNode?.type === 'boss'}
                     isChallenge={view === 'challenge-quiz'}
                     isPhrase={isPhraseChallenge}

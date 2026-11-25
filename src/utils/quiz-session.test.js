@@ -4,6 +4,8 @@ import React from 'react';
 import TestRenderer, { act } from 'react-test-renderer';
 import { loadQuizComponents } from '../../scripts/test-helpers/load-quiz-components.mjs';
 import { createSeededRandom } from './phrase-library.js';
+import { buildMistakePracticeQuestions } from './mistake-notebook.js';
+import { selectQuizOptions } from '../constants/quizOptionRules.js';
 
 const { BattleMode, StudyMode, PhraseGroupStudy, MistakePractice, audioCalls } = await loadQuizComponents();
 const words = Array.from({ length: 24 }, (_, index) => ({
@@ -52,6 +54,74 @@ const modes = [
     ['片語終極試煉', { isPhrase: true, isChallenge: true }]
 ];
 const styles = [['standard', '標準模式'], ['simple', '簡易模式'], ['listening', '聽力模式']];
+
+// A four-option question must contain one entry from each row.
+const optionGroups = [
+    [['human', '人；人類的'], ['person', '人'], ['people', '人們']],
+    [['spring', '春天；泉水'], ['fountain', '噴泉，泉水']],
+    [['bat', '蝙蝠'], ['bat', '球棒']],
+    [['pencil', '鉛筆']]
+];
+const ambiguityPool = optionGroups.flat().map(([word, chinese], id) => ({ id: String(id), word, chinese }));
+const groupOfLabel = label => optionGroups.findIndex(group => group.some(entry => entry.includes(label)));
+const assertDistinctChoices = labels => {
+    assert.deepEqual(labels.map(groupOfLabel).sort(), [0, 1, 2, 3], labels.join(' / '));
+};
+
+function playEveryTarget(t, { quizData, ...props }, checkChoices) {
+    const clock = setup(t);
+    const renderer = clock.mount(React.createElement(BattleMode, {
+        quizData, ...props, onComplete() {}, onFlee() {}
+    }));
+    click(button(renderer, '標準模式'));
+    click(button(renderer, 'FIGHT!'));
+    const seenIds = new Set();
+    for (let index = 0; index < quizData.length; index++) {
+        const { question: [prompt], options, wave: progress } = currentQuestion(renderer);
+        assert.equal(progress, `WAVE ${index + 1}/${quizData.length}`);
+        checkChoices(options);
+        const target = quizData.find(item =>
+            (item.word === prompt && options.includes(item.chinese)) || (item.chinese === prompt && options.includes(item.word)));
+        assert.ok(target, `找不到與題目 ${prompt} 相符的答案`);
+        seenIds.add(target.id);
+        const answer = prompt === target.word ? target.chinese : target.word;
+        click(optionButtons(renderer)[options.indexOf(answer)]);
+        clock.tick(1000);
+    }
+    assert.equal(seenIds.size, quizData.length);
+}
+
+for (const [name, isPhrase] of [['一般戰鬥', false], ['片語戰鬥', true]]) {
+    test(`${name}每題保留四個可區分的選項，近義字也能各自當題目`, t =>
+        playEveryTarget(t, { quizData: ambiguityPool, isPhrase }, assertDistinctChoices));
+}
+
+test('一般第 8 單元的四個搭配字遇到衝突時，從同單元補選項並保留四個原題目', t => {
+    const quizData = [
+        ['get along', '相處'], ['get in', '上（小車）'], ['get on', '上（大型交通工具）'], ['get off', '下車']
+    ].map(([word, chinese]) => ({ id: word, word, chinese }));
+    const optionPool = [...quizData, { id: 'bus', word: 'bus', chinese: '公車' }];
+    playEveryTarget(t, { quizData, optionPool }, options => {
+        assert.equal(options.length, 4);
+        assert.ok(options.includes('bus') || options.includes('公車'));
+        const boarding = ['get in', '上（小車）', 'get on', '上（大型交通工具）'];
+        assert.equal(options.filter(label => boarding.includes(label)).length, 1);
+    });
+});
+
+test('錯題練習也會避開彼此近義、部分中譯相同或英文相同的選項', () => {
+    const questions = buildMistakePracticeQuestions(ambiguityPool, [], createSeededRandom(123));
+    assert.deepEqual(new Set(questions.map(question => question.target.id)), new Set(ambiguityPool.map(item => item.id)));
+    for (const { options } of questions) assertDistinctChoices(options.map(option => option.chinese));
+});
+
+test('先抽到多義字卡住其他選項時，仍能找出原本可用的三個干擾選項', () => {
+    const [target, ...candidates] = [
+        ['pencil', '鉛筆'], ['spring', '春天；泉水'], ['springtime', '春天'], ['fountain', '泉水'], ['lamp', '燈']
+    ].map(([word, chinese]) => ({ id: word, word, chinese }));
+    const distractors = selectQuizOptions(target, candidates).filter(option => option.id !== target.id);
+    assert.deepEqual(distractors.map(option => option.word).sort(), ['fountain', 'lamp', 'springtime']);
+});
 
 for (const [name, modeProps] of modes) {
     for (const [style, styleLabel] of styles) {
